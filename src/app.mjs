@@ -1,0 +1,347 @@
+import { WIDTH, HEIGHT, UPGRADES, createRun, step, chooseUpgrade, startNextWave, activateSpecial } from './engine.mjs';
+import { drawElNegro, drawChair, drawZombie, drawAdministrator, drawAnime } from './sprites.mjs';
+import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
+
+const content = document.querySelector('#content');
+const keys = new Set();
+let screen = 'home';
+let storyPage = 0;
+let run = null;
+let paused = false;
+let lastFrame = 0;
+let lastPhase = '';
+let hudElapsed = 0;
+let facing = 1;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
+
+const stories = [
+  { title: 'Una partida. Era todo lo que pedíamos.', label: '01 / EL ÚLTIMO MENSAJE', symbol: '⌁', tag: 'CANAL DE VOZ · 23:47',
+    text: 'Una noche cualquiera. Uno quiere jugar al LoL, otro al Diablo, otro al Zomboid. El Negro no quiere instalar nada. Después de horas sin decidir, alguien propone Monopoly.',
+    quote: 'El servidor no soportó una discusión más. Literalmente.' },
+  { title: 'Bienvenidos al apocalipsis de los boludos.', label: '02 / CONEXIÓN PERDIDA', symbol: '☠', tag: 'MUNDO 01 · ZONA INFECTADA',
+    text: 'El Discord colapsó y mezcló todos los mundos que jugaban. Ahora hay zombis en el servidor, demonios esperando loot y cobradores de alquiler. Esta primera incursión empieza entre los muertos.',
+    quote: 'Los zombis te persiguen. Los corredores llegan antes. Ninguno respeta el AFK.' },
+  { title: 'Sobreviví. Después discutimos.', label: '03 / LA ÚLTIMA PARTIDA', symbol: '♜', tag: 'OBJETIVO · VOLVER AL DISCORD',
+    text: 'Controlá al Negro, sobreviví tres oleadas y comprá mejoras entre rondas. En la cuarta te espera El Administrador del Servidor. Derrotalo para cerrar esta primera partida.',
+    quote: 'Vos caminá. El control remoto pega solo. Si no te movés por dos segundos, recuperás vida.' },
+];
+
+function show(name) {
+  screen = name;
+  content.dataset.screen = name;
+  keys.clear();
+  if (name !== 'game') run = null;
+  paused = false;
+  document.body.classList.toggle('in-game', name === 'game');
+  if (name === 'home') home();
+  if (name === 'characters') characters();
+  if (name === 'story') story();
+  if (name === 'game') game();
+  content.focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+}
+
+function home() {
+  content.innerHTML = `
+    <section class="home-screen" aria-label="Menú principal">
+      <canvas id="menu-scene" class="scene-backdrop" width="480" height="270" role="img" aria-label="Habitación pixel art: El Negro con buzo amarillo en el sillón, frente a su computadora"></canvas>
+      <div class="home-content">
+        <p class="chapter-label">UNA NOCHE MÁS EN EL SERVIDOR</p>
+        <h1 class="sr-only">Discord Survivors — La última partida</h1>
+        <canvas id="title-art" class="title-art" width="174" height="63" aria-hidden="true"></canvas>
+        <p class="title-subtitle">— La última partida —</p>
+        <nav class="main-menu" aria-label="Opciones del juego">
+          <button class="primary" data-action="characters">EMPEZAR PARTIDA</button>
+          <button class="pixel-button" data-action="controls">CONTROLES</button>
+        </nav>
+        <p class="menu-caption">El servidor se cayó.<br>Levantarse del sillón ya no es opcional.</p>
+        <p class="menu-help">↑ ↓ ELEGIR &nbsp; / &nbsp; ENTER CONFIRMAR</p>
+      </div>
+      <div class="room-caption"><b>EL NEGRO</b>TANQUE SEDENTARIO</div>
+      <div class="game-status"><span><b>●</b> UN JUGADOR · SIN CONEXIÓN AL SERVIDOR</span><span>PROTOTIPO 0.2 / PIXEL EDITION</span></div>
+      <div id="menu-overlay"></div>
+    </section>`;
+  drawTitle(document.querySelector('#title-art'));
+  drawRoom(document.querySelector('#menu-scene').getContext('2d'));
+}
+
+function characters() {
+  content.innerHTML = `
+    <section class="screen">
+    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">1 / 7 DISPONIBLE</span></header>
+    <div class="character-layout"><section aria-label="Personajes">
+      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">EL NEGRO</span></div>
+      <div class="roster"><div class="roster-card selected" aria-label="El Negro, seleccionado"><canvas id="roster-portrait" width="40" height="48" aria-hidden="true"></canvas></div>${['Maxi', 'Jhonny', 'Solao', 'Papafrita', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}</div>
+      <p class="roster-note">? PERSONAJES EN DESARROLLO · TODAVÍA NO DESBLOQUEABLES</p>
+    </section><section class="detail-panel" aria-label="Habilidades de El Negro">
+      <div class="eyebrow">Tanque sedentario · Dificultad fácil</div><h2>EL NEGRO</h2>
+      <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
+      <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
+      <div class="stats"><div><b>+50%</b><small>VIDA MÁXIMA</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b class="penalty">−25%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>CONTROL REMOTO</b><p>Ataque automático que rebota hasta tres enemigos. Cambiar de canal nunca fue tan violento.</p></div></div>
+      <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
+      <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una compañera anime que dispara durante 8 segundos. Recarga: 20 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 25 segundos.</p></div></div>
+    </section></div>
+    <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
+  drawElNegro(document.querySelector('#roster-portrait').getContext('2d'), 20, 47, { scale: 1 });
+  drawPreview(0);
+}
+
+function story() {
+  const page = stories[storyPage];
+  content.innerHTML = `<section class="story-screen">
+    <canvas id="story-scene" class="story-art" width="480" height="270" role="img" aria-label="${storyPage === 0 ? 'El Negro en su habitación' : storyPage === 1 ? 'El Negro rodeado de zombis' : 'El Administrador espera con su martillo'}"></canvas>
+    <div class="story-chapter">${page.tag}</div>
+    <div class="dialogue"><div class="eyebrow">${page.label}</div><h2>${page.title}</h2><p>${page.text}</p><p class="story-quote">“${page.quote}”</p>
+    <div class="story-nav"><button class="secondary" data-action="story-back">← ATRÁS</button><div class="story-dots" aria-label="Página ${storyPage + 1} de 3">${stories.map((_, i) => `<span class="${i === storyPage ? 'current' : ''}">◆</span>`).join('')}</div><div class="actions">${storyPage < 2 ? '<button class="secondary" data-action="play">SALTAR HISTORIA</button>' : ''}<button class="primary" data-action="story-next">${storyPage === 2 ? 'ENTRAR AL CAOS' : 'CONTINUAR'} ▶</button></div></div></div></section>`;
+  drawStory(document.querySelector('#story-scene'), storyPage, 0);
+  content.focus({ preventScroll: true });
+}
+
+function game() {
+  run = createRun();
+  facing = 1;
+  lastPhase = '';
+  content.innerHTML = `
+    <section class="game-screen">
+    <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
+    <div class="arena-wrap"><canvas width="1040" height="680" aria-label="Arena de supervivencia. Movete con WASD o las flechas. Q invoca a tu compañera y E activa el sillón."></canvas>
+      <div class="hud"><div class="health-box"><div class="hud-label"><span>EL NEGRO</span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div><div id="game-overlay"></div>
+    </div>
+    <div class="game-controls"><div class="key-help"><kbd>W A S D</kbd> / <kbd>↑ ← ↓ →</kbd> Mover <span>·</span> Ataque automático <span>·</span><kbd>ESC</kbd> Pausa</div>
+      <div class="touch-pad" aria-label="Movimiento táctil"><button data-direction="up" aria-label="Arriba">↑</button><button data-direction="left" aria-label="Izquierda">←</button><button data-direction="down" aria-label="Abajo">↓</button><button data-direction="right" aria-label="Derecha">→</button></div>
+      <div class="ability-buttons"><button class="ability" data-special="anime"><kbd>Q</kbd> <span>Modo Otaku</span></button><button class="ability" data-special="chair"><kbd>E</kbd> <span>Me da paja</span></button></div></div>
+    <p class="game-note">4 OLEADAS · MEJORAS DURANTE LA PARTIDA · SIN GUARDADO PERMANENTE</p></section>`;
+  const canvas = document.querySelector('.arena-wrap canvas');
+  canvas.width = WIDTH / 2;
+  canvas.height = HEIGHT / 2;
+  updateHUD();
+}
+
+function overlay() {
+  const box = document.querySelector('#game-overlay');
+  if (!box || !run) return;
+  const phase = paused ? 'paused' : run.phase;
+  if (lastPhase === phase) return;
+  lastPhase = phase;
+  if (phase === 'playing') { box.innerHTML = ''; return; }
+  let body = '';
+  if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
+  if (phase === 'shop') body = `<div class="eyebrow">Oleada ${run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín antes de que alguien proponga Monopoly.<br><b>${run.coins} fichas disponibles</b> · +12 por sobrevivir</p><div class="shop-grid">${UPGRADES.map(u => `<button class="upgrade" data-upgrade="${u.id}" ${run.purchases.has(u.id) || run.coins < u.cost ? 'disabled' : ''}><b>${u.icon} ${u.name}</b><span>${u.description}</span><small>${run.purchases.has(u.id) ? '✓ COMPRADO' : `${u.cost} FICHAS`}</small></button>`).join('')}</div><button class="primary" data-action="next-wave">${run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button>`;
+  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
+  box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div>${body}</div></div>`;
+  box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
+}
+
+function updateHUD() {
+  const p = run.player;
+  document.querySelector('#hp-label').textContent = `${Math.ceil(p.hp)}/${p.maxHp}`;
+  document.querySelector('#hp-fill').style.width = `${p.hp / p.maxHp * 100}%`;
+  document.querySelector('#coins').textContent = `◈ ${run.coins}`;
+  document.querySelector('#timer').textContent = run.wave === 4 ? `☠ JEFE · ${formatTime(run.time)}` : formatTime(Math.max(0, run.duration - run.time));
+  document.querySelector('#wave-title').innerHTML = `${run.wave === 4 ? 'EL ADMINISTRADOR' : `OLEADA 0${run.wave}`} <span class="muted">/ 04</span>`;
+  for (const type of ['anime', 'chair']) {
+    const button = document.querySelector(`[data-special="${type}"]`);
+    const cooldown = p[`${type}Cooldown`];
+    button.disabled = cooldown > 0 || paused || run.phase !== 'playing';
+    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : type === 'anime' ? 'Modo Otaku' : 'Me da paja';
+  }
+}
+
+function rounded(ctx, x, y, width, height, radius, fill) {
+  ctx.fillStyle = fill;
+  ctx.fillRect(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
+}
+
+function pixelRing(ctx, x, y, radius, color) {
+  ctx.save();
+  ctx.globalAlpha *= 0.65;
+  ctx.fillStyle = color;
+  for (let i = 0; i < 48; i++) {
+    const angle = i / 48 * Math.PI * 2;
+    ctx.fillRect(Math.round((x + Math.cos(angle) * radius) / 4) * 4, Math.round((y + Math.sin(angle) * radius) / 4) * 4, 4, 4);
+  }
+  ctx.restore();
+}
+
+function controls() {
+  document.querySelector('#menu-overlay').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Controles"><div>
+    <div class="eyebrow">Manual de supervivencia</div><h2>CON LO MÍNIMO ALCANZA</h2>
+    <p><kbd>WASD</kbd> / <kbd>↑ ← ↓ →</kbd> Moverse<br>El control remoto ataca automáticamente.</p>
+    <p><kbd>Q</kbd> Modo Otaku · <kbd>E</kbd> Me da paja<br><kbd>ESC</kbd> Pausar la partida</p>
+    <p>Quedate quieto 2 segundos para regenerar vida.<br>En pantalla táctil usá las flechas y los botones.</p>
+    <button class="primary" data-action="close-controls">ENTENDIDO</button>
+    </div></div>`;
+  document.querySelector('[data-action="close-controls"]').focus();
+}
+
+function closeControls() {
+  document.querySelector('#menu-overlay').innerHTML = '';
+  document.querySelector('[data-action="controls"]').focus();
+}
+
+function drawPreview(time) {
+  const canvas = document.querySelector('#sprite-preview');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#211c2d'; ctx.fillRect(0, 0, 256, 190);
+  for (let y = 0; y < 155; y += 16) {
+    for (let x = 0; x < 256; x += 24) {
+      rounded(ctx, x + 1, y + 1, 22, 14, 0, (x + y) % 5 ? '#292133' : '#2e2538');
+    }
+  }
+  rounded(ctx, 38, 151, 180, 10, 0, '#6a536b');
+  rounded(ctx, 44, 161, 168, 5, 0, '#392b42');
+  rounded(ctx, 42, 151, 172, 2, 0, '#ad8a99');
+  const cycle = time % 10;
+  const isSitting = cycle > 6.6;
+  const moving = cycle < 3.4;
+  const previewFacing = isSitting ? 1 : cycle < 5 ? 1 : -1;
+  if (isSitting) drawChair(ctx, 128, 150, { scale: 2 });
+  drawElNegro(ctx, 128, 150, { time, moving, facing: previewFacing, sitting: isSitting, scale: 2 });
+}
+
+function draw() {
+  const canvas = document.querySelector('.arena-wrap canvas');
+  const ctx = canvas?.getContext('2d');
+  if (!ctx || !run) return;
+  const ratio = canvas.width / WIDTH;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  drawArena(ctx);
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  const p = run.player;
+  if (p.chair > 0) {
+    ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
+    pixelRing(ctx, p.x, p.y, 145, '#a18aff');
+  }
+  const figures = [...run.enemies];
+  if (p.chair > 0) figures.push({ x: p.x, y: p.y - 0.6, kind: 'chair' });
+  figures.push({ x: p.x, y: p.y, kind: 'player' });
+  figures.sort((a, b) => a.y - b.y);
+  for (const figure of figures) {
+    if (figure.kind === 'chair') { drawChair(ctx, figure.x, figure.y + 35); continue; }
+    if (figure.kind === 'player' && p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
+    if (figure.kind === 'player') {
+      drawElNegro(ctx, figure.x, figure.y + 35, { time: run.elapsed, moving: p.still === 0, facing, sitting: p.chair > 0 });
+    } else if (figure.kind === 'boss') {
+      drawAdministrator(ctx, figure.x, figure.y + 70, { time: run.elapsed });
+    } else {
+      drawZombie(ctx, figure.x, figure.y + 28, { kind: figure.kind, time: run.elapsed, seed: figure.id });
+    }
+    ctx.globalAlpha = 1;
+    if (figure.kind !== 'player' && (figure.kind === 'boss' || figure.hp < figure.maxHp)) {
+      const width = figure.kind === 'boss' ? 90 : 30;
+      const y = Math.max(6, figure.y - (figure.kind === 'boss' ? 138 : 62));
+      rounded(ctx, figure.x - width / 2, y, width, 4, 2, '#070b0b');
+      rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.kind === 'boss' ? '#b499f2' : '#d7f779');
+    }
+  }
+  if (p.anime > 0) drawAnime(ctx, p.x + 46, p.y - 36, { time: run.elapsed });
+  if (p.still >= 2 && p.hp < p.maxHp) {
+    pixelRing(ctx, p.x, p.y + 28, 34, '#bfd890');
+    pixelText(ctx, 'REGEN', p.x - 28, p.y - 70, 2, '#bfd890');
+  }
+  for (const shot of run.projectiles) {
+    ctx.save(); ctx.translate(Math.round(shot.x / 2) * 2, Math.round(shot.y / 2) * 2); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
+    if (shot.kind === 'remote') {
+      rounded(ctx, -6, -14, 12, 28, 3, '#30313d'); rounded(ctx, -4, -12, 8, 6, 1, '#d7f779');
+      ctx.fillStyle = '#afa9c0'; ctx.fillRect(-2, -2, 4, 4); ctx.fillRect(-2, 5, 4, 4);
+    } else { rounded(ctx, -6, -2, 12, 4, 0, '#d4b6ff'); rounded(ctx, -2, -6, 4, 12, 0, '#e7d8f2'); }
+    ctx.restore();
+  }
+  ctx.textAlign = 'center'; ctx.font = 'bold 14px monospace';
+  for (const effect of run.effects) { ctx.globalAlpha = Math.min(1, effect.ttl * 2); ctx.fillStyle = effect.loot ? '#d7f779' : '#f4e9dc'; ctx.fillText(effect.text, effect.x, effect.y); }
+  ctx.globalAlpha = 1;
+}
+
+function frame(timestamp) {
+  const dt = lastFrame ? (timestamp - lastFrame) / 1000 : 0;
+  lastFrame = timestamp;
+  if (screen === 'game' && run) {
+    const input = {
+      x: (keys.has('d') || keys.has('arrowright') ? 1 : 0) - (keys.has('a') || keys.has('arrowleft') ? 1 : 0),
+      y: (keys.has('s') || keys.has('arrowdown') ? 1 : 0) - (keys.has('w') || keys.has('arrowup') ? 1 : 0),
+    };
+    if (input.x) facing = input.x > 0 ? 1 : -1;
+    if (!paused) step(run, dt, input);
+    draw();
+    hudElapsed += dt;
+    if (hudElapsed > 0.08 || run.phase !== lastPhase) { updateHUD(); hudElapsed = 0; }
+    overlay();
+  }
+  const animationTime = reducedMotion.matches ? 4 : timestamp / 1000;
+  if (screen === 'characters') drawPreview(animationTime);
+  if (screen === 'home') drawRoom(document.querySelector('#menu-scene').getContext('2d'), animationTime);
+  if (screen === 'story') drawStory(document.querySelector('#story-scene'), storyPage, animationTime);
+  requestAnimationFrame(frame);
+}
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (!button || button.disabled) return;
+  const action = button.dataset.action;
+  if (action === 'controls') controls();
+  if (action === 'close-controls') closeControls();
+  if (['home', 'characters'].includes(action)) show(action);
+  if (action === 'story-start') { storyPage = 0; show('story'); }
+  if (action === 'story-back') { if (storyPage > 0) { storyPage--; story(); } else show('characters'); }
+  if (action === 'story-next') { if (storyPage < 2) { storyPage++; story(); } else show('game'); }
+  if (action === 'play') show('game');
+  if (action === 'pause' && run?.phase === 'playing') { paused = !paused; keys.clear(); }
+  if (action === 'resume') { paused = false; keys.clear(); }
+  if (action === 'next-wave') { startNextWave(run); keys.clear(); }
+  if (button.dataset.special && run && !paused) activateSpecial(run, button.dataset.special);
+  if (button.dataset.upgrade && run) { chooseUpgrade(run, button.dataset.upgrade); lastPhase = ''; overlay(); updateHUD(); }
+});
+
+document.addEventListener('keydown', event => {
+  const key = event.key.toLowerCase();
+  if (key === 'tab' && document.querySelector('.overlay')) {
+    const buttons = [...document.querySelectorAll('.overlay button:not(:disabled)')];
+    const first = buttons[0]; const last = buttons.at(-1);
+    if (event.shiftKey && document.activeElement === first) { last?.focus(); event.preventDefault(); }
+    if (!event.shiftKey && document.activeElement === last) { first?.focus(); event.preventDefault(); }
+  }
+  if (screen !== 'game') {
+    if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeControls();
+    if (['arrowup', 'arrowdown'].includes(key) && !document.querySelector('.overlay')) {
+      const buttons = [...content.querySelectorAll('button:not(:disabled)')];
+      const current = buttons.indexOf(document.activeElement);
+      const next = current < 0 ? 0 : (current + (key === 'arrowdown' ? 1 : -1) + buttons.length) % buttons.length;
+      buttons[next]?.focus();
+      event.preventDefault();
+    }
+    if (key === 'enter' && document.activeElement === content) {
+      content.querySelector('button.primary')?.click();
+      event.preventDefault();
+    }
+    return;
+  }
+  if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
+  if (key === 'escape' && !event.repeat && run.phase === 'playing') { paused = !paused; keys.clear(); }
+  if (!paused && !event.repeat && run.phase === 'playing') {
+    if (key === 'q') activateSpecial(run, 'anime');
+    if (key === 'e') activateSpecial(run, 'chair');
+  }
+  if (!paused) keys.add(key);
+});
+document.addEventListener('keyup', event => keys.delete(event.key.toLowerCase()));
+const directions = { up: 'w', left: 'a', down: 's', right: 'd' };
+document.addEventListener('pointerdown', event => {
+  const button = event.target.closest('[data-direction]');
+  if (!button) return;
+  event.preventDefault(); button.setPointerCapture(event.pointerId); keys.add(directions[button.dataset.direction]);
+});
+for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) document.addEventListener(name, event => {
+  const button = event.target.closest('[data-direction]');
+  if (button) keys.delete(directions[button.dataset.direction]);
+});
+function suspend() { keys.clear(); if (screen === 'game' && run?.phase === 'playing') paused = true; }
+window.addEventListener('blur', suspend);
+document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
+show('home');
+requestAnimationFrame(frame);
