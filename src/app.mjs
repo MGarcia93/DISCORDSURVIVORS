@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, UPGRADES, createRun, step, chooseUpgrade, startNextWave, activateSpecial } from './engine.mjs';
+import { WIDTH, HEIGHT, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
 import { drawElNegro, drawChair, drawZombie, drawAdministrator, drawAnime } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
 
@@ -113,7 +113,7 @@ function game() {
     <div class="game-controls"><div class="key-help"><kbd>W A S D</kbd> / <kbd>↑ ← ↓ →</kbd> Mover <span>·</span> Ataque automático <span>·</span><kbd>ESC</kbd> Pausa</div>
       <div class="touch-pad" aria-label="Movimiento táctil"><button data-direction="up" aria-label="Arriba">↑</button><button data-direction="left" aria-label="Izquierda">←</button><button data-direction="down" aria-label="Abajo">↓</button><button data-direction="right" aria-label="Derecha">→</button></div>
       <div class="ability-buttons"><button class="ability" data-special="anime"><kbd>Q</kbd> <span>Modo Otaku</span></button><button class="ability" data-special="chair"><kbd>E</kbd> <span>Me da paja</span></button></div></div>
-    <p class="game-note">4 OLEADAS · MEJORAS DURANTE LA PARTIDA · SIN GUARDADO PERMANENTE</p></section>`;
+    <p class="game-note">4 OLEADAS DE 60 SEGUNDOS · MEJORAS ACUMULABLES · SIN GUARDADO PERMANENTE</p></section>`;
   const canvas = document.querySelector('.arena-wrap canvas');
   canvas.width = WIDTH / 2;
   canvas.height = HEIGHT / 2;
@@ -129,9 +129,20 @@ function overlay() {
   if (phase === 'playing') { box.innerHTML = ''; return; }
   let body = '';
   if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
-  if (phase === 'shop') body = `<div class="eyebrow">Oleada ${run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín antes de que alguien proponga Monopoly.<br><b>${run.coins} fichas disponibles</b> · +12 por sobrevivir</p><div class="shop-grid">${UPGRADES.map(u => `<button class="upgrade" data-upgrade="${u.id}" ${run.purchases.has(u.id) || run.coins < u.cost ? 'disabled' : ''}><b>${u.icon} ${u.name}</b><span>${u.description}</span><small>${run.purchases.has(u.id) ? '✓ COMPRADO' : `${u.cost} FICHAS`}</small></button>`).join('')}</div><button class="primary" data-action="next-wave">${run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button>`;
+  if (phase === 'shop') {
+    const cards = UPGRADES.map(u => {
+      const level = run.upgrades[u.id] || 0;
+      const maxed = level >= u.costs.length;
+      const cost = maxed ? 0 : u.costs[level];
+      const disabled = maxed || run.coins < cost;
+      return `<button class="upgrade" data-upgrade="${u.id}" ${disabled ? 'disabled' : ''}><b>${u.icon} ${u.name}</b><span>${u.description}</span><small>${maxed ? `NIVEL ${level}/${u.costs.length} · MÁXIMO` : `NIVEL ${level}/${u.costs.length} · ${cost} FICHAS`}</small></button>`;
+    }).join('');
+    const full = run.player.hp >= run.player.maxHp;
+    const healDisabled = full || run.coins < HEAL_COST;
+    body = `<div class="eyebrow">Oleada ${run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín. Las mejoras se acumulan y cada nivel cuesta más.<br><b>${run.coins} fichas disponibles</b> · +20 por sobrevivir</p><p class="shop-hint">DESLIZÁ PARA VER TODAS LAS MEJORAS ↓</p><div class="shop-grid">${cards}<button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Te hacés traer ${HEAL_AMOUNT} de vida ahora mismo.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
+  }
   if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
-  box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div>${body}</div></div>`;
+  box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' ? 'shop-dialog' : ''}">${body}</div></div>`;
   box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
 }
 
@@ -296,6 +307,7 @@ document.addEventListener('click', event => {
   if (action === 'next-wave') { startNextWave(run); keys.clear(); }
   if (button.dataset.special && run && !paused) activateSpecial(run, button.dataset.special);
   if (button.dataset.upgrade && run) { chooseUpgrade(run, button.dataset.upgrade); lastPhase = ''; overlay(); updateHUD(); }
+  if (button.dataset.heal && run) { buyHeal(run); lastPhase = ''; overlay(); updateHUD(); }
 });
 
 document.addEventListener('keydown', event => {

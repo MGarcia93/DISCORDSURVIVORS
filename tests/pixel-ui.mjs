@@ -53,7 +53,7 @@ try {
     await page.getByRole('button', { name: 'CONTINUAR', exact: false }).click();
     await page.getByRole('button', { name: 'CONTINUAR', exact: false }).click();
     await page.getByRole('button', { name: 'ENTRAR AL CAOS' }).click();
-    await page.waitForFunction(() => document.querySelector('#timer')?.textContent === '00:29');
+    await page.waitForFunction(() => document.querySelector('#timer')?.textContent === '00:59');
     await page.keyboard.press('q');
     await page.waitForFunction(() => document.querySelector('[data-special="anime"]')?.disabled);
     await page.keyboard.press('e');

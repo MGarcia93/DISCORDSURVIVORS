@@ -23,7 +23,7 @@ Open **http://localhost:5173** in a current browser. No build, package install, 
 | Me da paja | E or the ability button; six-second chair aura, twenty-five-second cooldown |
 | Pause / resume | Escape or the pause / resume buttons |
 
-Leaving the browser tab automatically pauses combat. Between waves, spend dropped currency on upgrades or continue without buying. Each upgrade is available once per shop. Surviving a wave gives twelve bonus currency. Defeat the Administrator to win; waiting out the final wave is not enough. Retry creates a fresh run.
+Leaving the browser tab automatically pauses combat. Between waves, spend dropped currency on upgrades, heal at the delivery button, or continue without buying. Upgrades stack through several levels with rising prices; levels persist for the whole run. Surviving a wave gives twenty bonus currency. Defeat the Administrator to win; waiting out the final wave is not enough. Retry creates a fresh run.
 
 The title menu supports Up/Down to choose and Enter to confirm. Open **CONTROLES** for the in-game control panel; Escape closes it. Menus honour the system reduced-motion preference.
 
@@ -38,8 +38,8 @@ Sprites are drawn with hard-edged rectangles on a low-resolution canvas and enla
 ## Prototype boundaries
 
 - Only El Negro is playable. The other confirmed members are unavailable placeholders, not unlockable content yet.
-- The three regular waves last 30, 35, and 40 seconds. The final boss wave has no time limit. These short rounds are for testing, not the proposed 15–20 minute final format.
-- One arena, two normal enemy types, one boss, one weapon, two active abilities, and four shop upgrades.
+- The three regular waves last 60 seconds each. The final boss wave has no time limit. This is a prototype format, not the proposed 15–20 minute final run.
+- One arena, two normal enemy types, one boss, one weapon, two active abilities, six stackable upgrades, and a repeatable delivery heal.
 - No permanent progression, saves, audio, multiplayer, or additional worlds yet.
 - The supplied gamer illustration remains in `assets/` as a reference; the UI now uses original pixel sprites instead. Other supplied photographs have not been copied into the project.
 - UI and story copy follow the supplied Spanish concept. Technical identifiers and developer documentation are English.
@@ -57,16 +57,17 @@ node --check src/sprites.mjs
 node --check src/scenes.mjs
 ```
 
-The deterministic engine tests cover movement, the stationary passive, automatic attacks, shop transactions, abilities, death/retry, and the final boss victory condition. The engine takes an injectable random function and has no browser dependency.
+The deterministic engine tests cover movement, the stationary passive, automatic attacks, 60-second waves, stacking upgrade levels and prices, the delivery heal, abilities, death/retry, and the final boss victory condition. The engine takes an injectable random function and has no browser dependency.
 
 An optional browser smoke check is available when Playwright and its Chromium browser are installed in your test environment. With the local server running:
 
 ```sh
 node tests/browser-smoke.mjs
 node tests/pixel-ui.mjs
+node tests/shop-ui.mjs
 ```
 
-For a separate test-tools installation, set `PLAYWRIGHT_MODULE` to the absolute path of Playwright's `index.mjs` and optionally `CHROMIUM_PATH` to an existing Chromium executable. `GAME_URL` overrides the local URL. The checks exercise desktop navigation, abilities, pause/resume, touch controls, the new title/character/story screens, and removal of the website shell. Visual likeness still requires human review.
+For a separate test-tools installation, set `PLAYWRIGHT_MODULE` to the absolute path of Playwright's `index.mjs` and optionally `CHROMIUM_PATH` to an existing Chromium executable. `GAME_URL` overrides the local URL. The checks exercise desktop navigation, abilities, pause/resume, touch controls, the title/character/story screens, and removal of the website shell. The shop check accelerates a wave with Playwright's clock, then verifies all six upgrades, stacking purchases, the visible continue button, and the transition to wave two on desktop and mobile. Visual likeness still requires human review.
 
 ## Files
 
@@ -76,6 +77,8 @@ For a separate test-tools installation, set `PLAYWRIGHT_MODULE` to the absolute 
 - `src/sprites.mjs`: photo-referenced pixel character, enemies, chair, and summon.
 - `src/scenes.mjs`: pixel room, arena tiles, story scenes, and bitmap title.
 - `tests/game.test.mjs`: deterministic simulation checks.
+- `tests/balance.test.mjs`: wave length, stacking economy, delivery heal, and survival bonus.
+- `tests/shop-ui.mjs`: accelerated desktop/mobile shop and purchase flow.
 - `assets/negro-gamer.png`: user-supplied character illustration.
 
 To share a link later, publish this directory on a static host. No deployment or public upload is performed by the local server command.

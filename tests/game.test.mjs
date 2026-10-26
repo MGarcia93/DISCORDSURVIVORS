@@ -29,11 +29,11 @@ test('automatic remotes kill nearby enemies and award currency', () => {
   run.spawnIn = 100;
   for (let i = 0; i < 30; i++) step(run, 0.05, {});
   assert.equal(run.enemies.length, 0);
-  assert.ok(run.coins > 0);
+  assert.equal(run.coins, 2);
   assert.equal(run.kills, 1);
 });
 
-test('surviving a wave opens the shop; only affordable upgrades can be bought', () => {
+test('surviving a wave opens the shop and upgrades can stack', () => {
   const run = createRun(() => 0.5);
   run.time = run.duration - 0.01;
   step(run, 0.05, {});
@@ -42,14 +42,18 @@ test('surviving a wave opens the shop; only affordable upgrades can be bought', 
   const damage = run.player.damage;
   assert.equal(chooseUpgrade(run, 'damage'), false);
   assert.equal(run.player.damage, damage);
-  run.coins = 30;
+  run.coins = 60;
   assert.equal(chooseUpgrade(run, 'damage'), true);
-  assert.equal(run.coins, 18);
+  assert.equal(run.coins, 40);
+  assert.equal(chooseUpgrade(run, 'damage'), true);
+  assert.equal(run.coins, 10);
   assert.ok(run.player.damage > damage);
   assert.equal(chooseUpgrade(run, 'damage'), false);
+  assert.equal(run.upgrades.damage, 2);
   assert.equal(startNextWave(run), true);
   assert.equal(run.wave, 2);
   assert.equal(run.phase, 'playing');
+  assert.equal(run.duration, 60);
 });
 
 test('specials have cooldowns and the chair reduces movement', () => {

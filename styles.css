@@ -105,12 +105,19 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .overlay p { font-size: 12px; color: #c2aec6; line-height: 1.8; margin: 14px 0; }
 .overlay .actions { justify-content: center; margin-top: 20px; }
 .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+.shop-dialog { display: flex; flex-direction: column; text-align: center; }
+.shop-dialog .shop-grid { grid-template-columns: repeat(3, 1fr); flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 12px 0; padding-right: 4px; }
+.shop-footer { flex-shrink: 0; padding-top: 4px; }
+.shop-footer .primary { width: 100%; }
+.shop-hint { display: none; }
 .upgrade { border: 2px solid #6c5578; background: #32253e; padding: 13px; text-align: left; }
 .upgrade:not(:disabled):hover { border-color: var(--green); background: #3e3544; }
 .upgrade:disabled { opacity: 0.45; }
 .upgrade b { display: block; color: var(--paper); font-size: 11px; margin-bottom: 6px; }
 .upgrade span { display: block; color: #b8a3bd; font-size: 10px; line-height: 1.7; }
 .upgrade small { display: block; color: var(--green); font-size: 10px; margin-top: 10px; }
+.shop-heal { grid-column: 1 / -1; text-align: center; background: #3a2b35; border-color: #8b6572; }
+.shop-heal b { color: #e7c4bd; }
 .touch-pad { display: none; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(2, 36px); gap: 5px; touch-action: none; }
 .touch-pad button { border: 2px solid #75607f; background: #33263f; color: #d8c9df; touch-action: none; user-select: none; }
 .touch-pad [data-direction="up"] { grid-column: 2; }
@@ -150,6 +157,8 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .ability-buttons { gap: 6px; } .ability { padding: 7px; font-size: 8px; } .ability kbd { min-width: 20px; height: 24px; font-size: 10px; }
   .key-help { flex-wrap: wrap; font-size: 8px; } .overlay { padding: 8px; } .overlay > div { padding: 15px 10px; }
   .overlay h2 { font-size: 17px; } .overlay p { font-size: 10px; margin: 8px 0; } .shop-grid { gap: 6px; margin: 10px 0; }
+  .shop-dialog .shop-grid { grid-template-columns: repeat(2, 1fr); }
+  .shop-hint { display: block; color: #b9a3bd; font-size: 8px; letter-spacing: 1px; margin: 0 0 6px; }
   .upgrade { padding: 8px; } .upgrade b { font-size: 9px; } .upgrade span { font-size: 8px; } .upgrade small { margin-top: 6px; font-size: 8px; }
 }
 @media (max-height: 600px) and (min-width: 651px) {
