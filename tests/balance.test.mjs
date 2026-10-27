@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, step, chooseUpgrade, buyHeal, startNextWave, UPGRADES } from '../src/engine.mjs';
+import { WIDTH, HEIGHT, WORLD_SCALE, createRun, step, chooseUpgrade, buyHeal, startNextWave, UPGRADES } from '../src/engine.mjs';
+
+test('the zoomed-out arena exposes a world 10% larger while keeping movement scale-aware', () => {
+  const run = createRun(() => 0.5);
+  assert.equal(WIDTH, 1144);
+  assert.equal(HEIGHT, 748);
+  assert.equal(WORLD_SCALE, 1.1);
+  assert.equal(run.player.speed, 165 * WORLD_SCALE);
+});
 
 test('normal waves last 60 seconds', () => {
   const run = createRun(() => 0.5);

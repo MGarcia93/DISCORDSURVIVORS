@@ -69,7 +69,7 @@ test('specials have cooldowns and the chair reduces movement', () => {
 test('death is terminal and retry starts a clean run', () => {
   const run = createRun(() => 0.5);
   run.player.hp = 1;
-  run.enemies.push({ id: 1, x: 520, y: 340, hp: 999, maxHp: 999, radius: 20, speed: 0, kind: 'zombie' });
+  run.enemies.push({ id: 1, x: run.player.x + 30, y: run.player.y, hp: 999, maxHp: 999, radius: 20, speed: 0, kind: 'zombie' });
   step(run, 0.05, {});
   assert.equal(run.phase, 'dead');
   const time = run.time;
