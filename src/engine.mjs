@@ -1,6 +1,3 @@
-export const WORLD_SCALE = 1.1;
-export const WIDTH = 1144;
-export const HEIGHT = 748;
 export const UPGRADES = [
   { id: 'damage', name: 'Pilas nuevas', description: '+30% de daño del control. Se puede comprar varias veces.', costs: [20, 30, 40, 50], icon: 'ϟ' },
   { id: 'rate', name: 'Menos paja, más clics', description: '-8% de recarga del control remoto.', costs: [20, 30, 40, 50], icon: '↻' },
@@ -11,42 +8,45 @@ export const UPGRADES = [
 ];
 export const HEAL_COST = 12;
 export const HEAL_AMOUNT = 60;
+import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
+export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
+import { getCharacter } from './characters/index.mjs';
 
 export function createRun(random = Math.random, character = 'negro') {
-  const selectedCharacter = character === 'solago' ? 'solago' : 'negro';
-  const solago = selectedCharacter === 'solago';
-  return {
+  const characterDef = getCharacter(character);
+  const s = characterDef.stats;
+  const run = {
     phase: 'playing', wave: 1, duration: 60, time: 0, elapsed: 0, coins: 0, kills: 0,
-    random, character: selectedCharacter, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0, summonIn: 0, auraIn: 0, standIn: 0,
-    player: { character: selectedCharacter, x: WIDTH / 2, y: HEIGHT / 2,
-      hp: solago ? 100 : 150, maxHp: solago ? 100 : 150, speed: 165 * WORLD_SCALE,
-      defense: solago ? 0.15 : 0.2, damage: solago ? 30 * 1.35 : 30,
-      hitRadius: (solago ? 15 : 17) * WORLD_SCALE,
-      attackRange: solago ? 72 * 0.95 * WORLD_SCALE : Infinity,
-      regen: 4, still: 0, immune: 0, shotInterval: solago ? 0.56 : 0.45,
-      attackFlash: 0,
-      chair: 0, anime: 0, stand: 0,
-      chairCooldown: 0, animeCooldown: 0, standCooldown: 0,
-      smile: 0, smileCooldown: solago ? 6 : 0,
-      taskKills: 0, permissionNeeded: 8, permissionActive: 0 },
+    random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0,
+    player: {
+      character: characterDef.id, characterDef,
+      x: WIDTH / 2, y: HEIGHT / 2,
+      hp: s.maxHp, maxHp: s.maxHp, defense: s.defense, damage: s.damage,
+      hitRadius: s.hitRadius, attackRange: s.attackRange, shotInterval: s.shotInterval,
+      speed: s.speed,
+      regen: 4, still: 0, immune: 0, attackFlash: 0,
+      smile: 0, smileCooldown: 0,
+    },
     enemies: [], projectiles: [], effects: [],
     upgrades: { damage: 0, rate: 0, health: 0, armor: 0, regen: 0, speed: 0 },
   };
+  for (const special of characterDef.specials) {
+    run[`${special.key}In`] = 0;
+    run.player[special.key] = 0;
+    run.player[`${special.key}Cooldown`] = 0;
+  }
+  characterDef.initPlayer?.(run.player);
+  return run;
 }
 
 export function activateSpecial(run, type) {
   if (run.phase !== 'playing') return false;
   const player = run.player;
-  if (player.character === 'solago') {
-    if (type !== 'stand' || player.standCooldown > 0) return false;
-    player.stand = 7;
-    player.standCooldown = 26;
-    return true;
-  }
-  if (!['chair', 'anime'].includes(type)) return false;
-  if (player[`${type}Cooldown`] > 0) return false;
-  player[type] = type === 'chair' ? 6 : 8;
-  player[`${type}Cooldown`] = type === 'chair' ? 22 : 18;
+  const spec = player.characterDef.specials.find(special => special.key === type);
+  if (!spec || player[`${type}Cooldown`] > 0) return false;
+  player[type] = spec.duration;
+  player[`${type}Cooldown`] = spec.cooldown;
+  spec.onStart?.(run, player);
   return true;
 }
 
@@ -127,7 +127,8 @@ function attackMelee(run) {
   const p = run.player;
   const target = nearest(run, p);
   if (!target || distance(target, p) > p.attackRange) return;
-  const damage = p.damage * (p.permissionActive > 0 ? 1.3 : 1);
+  const combat = p.characterDef.combat || {};
+  const damage = p.damage * (p.permissionActive > 0 ? (combat.permissionDamageMult ?? 1) : 1);
   hit(run, target, damage, 'bite');
   p.attackFlash = 0.22;
   run.effects.push({ x: target.x, y: target.y - target.radius - 12, text: '✦', ttl: 0.35, kind: 'bite' });
@@ -137,35 +138,46 @@ export function step(run, seconds, input = {}) {
   if (run.phase !== 'playing') return;
   const dt = Math.min(0.05, Math.max(0, seconds));
   const p = run.player;
+  const def = p.characterDef;
+  const ctx = { hit, distance, nearest, fire };
   run.time += dt;
   run.elapsed += dt;
-  const standWasActive = p.stand > 0;
-  for (const key of ['immune', 'chair', 'anime', 'stand', 'attackFlash', 'chairCooldown', 'animeCooldown', 'standCooldown', 'smile', 'permissionActive']) {
-    p[key] = Math.max(0, p[key] - dt);
-  }
-  if (p.character === 'solago') {
-    p.smileCooldown = Math.max(0, p.smileCooldown - dt);
-    if (p.smileCooldown === 0 && p.smile === 0) {
-      p.smile = 2.5;
-      p.smileCooldown = 12;
-      run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: 'JA!', ttl: 0.8, kind: 'smile' });
+  const decayKeys = [
+    'immune', 'attackFlash',
+    ...def.specials.flatMap(special => [special.key, `${special.key}Cooldown`]),
+    ...def.passives.flatMap(passive => [passive.key, `${passive.key}Cooldown`]),
+    ...def.decays,
+  ];
+  const wasActive = def.specials.map(special => p[special.key] > 0);
+  for (const key of decayKeys) p[key] = Math.max(0, p[key] - dt);
+  for (const passive of def.passives) passive.tick?.(run, p, dt, ctx);
+  def.specials.forEach((special, i) => {
+    if (wasActive[i] && p[special.key] <= 0) special.onExpire?.(run, p, ctx);
+  });
+  let speedFactor = 1;
+  let contactFactor = 1;
+  let immobilized = false;
+  for (const special of def.specials) {
+    if (p[special.key] > 0) {
+      speedFactor *= special.speedFactor ?? 1;
+      contactFactor *= special.contactFactor ?? 1;
+      immobilized ||= special.immobilize === true;
     }
   }
-  if (standWasActive && p.stand === 0) {
-    p.hp = Math.max(0, p.hp - 15);
-    run.effects.push({ x: p.x, y: p.y - 55 * WORLD_SCALE, text: '¡YA VOY!', ttl: 1, kind: 'panic' });
-  }
-  const mx = p.stand > 0 ? 0 : (input.x || 0);
-  const my = p.stand > 0 ? 0 : (input.y || 0);
+  const mx = immobilized ? 0 : (input.x || 0);
+  const my = immobilized ? 0 : (input.y || 0);
   const magnitude = Math.hypot(mx, my);
   if (magnitude) {
-    const speed = p.speed * (p.chair > 0 ? 0.12 : 1);
+    const speed = p.speed * speedFactor;
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
     p.still = 0;
   } else {
     p.still += dt;
-    if (p.still >= 2) p.hp = Math.min(p.maxHp, p.hp + p.regen * dt);
+    if (p.still >= 2) {
+      p.hp = Math.min(p.maxHp, p.hp + p.regen * dt);
+      def.onStill?.(run, p);
+    }
   }
 
   run.spawnIn -= dt;
@@ -175,26 +187,13 @@ export function step(run, seconds, input = {}) {
   }
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
-    if (p.character === 'solago') attackMelee(run);
-    else fire(run, p, p.damage, 'remote');
-    run.shotIn = p.shotInterval * (p.permissionActive > 0 ? 0.72 : 1);
+    if (def.attack.type === 'melee') attackMelee(run);
+    else fire(run, p, p.damage, def.attack.device);
+    const combat = def.combat || {};
+    run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1);
   }
-  run.summonIn -= dt;
-  if (p.anime > 0 && run.summonIn <= 0) {
-    fire(run, { x: p.x + 40 * WORLD_SCALE, y: p.y - 40 * WORLD_SCALE }, p.damage * 1.5, 'magic');
-    run.summonIn = 0.3;
-  }
-  run.auraIn -= dt;
-  if (p.chair > 0 && run.auraIn <= 0) {
-    for (const enemy of run.enemies) if (distance(enemy, p) < 145 * WORLD_SCALE) hit(run, enemy, p.damage * 0.8);
-    run.auraIn = 0.5;
-  }
-  run.standIn -= dt;
-  if (p.stand > 0 && run.standIn <= 0) {
-    for (const enemy of run.enemies) {
-      if (distance(enemy, p) < 170 * WORLD_SCALE) hit(run, enemy, p.damage * 0.9, 'stand');
-    }
-    run.standIn = 0.4;
+  for (const special of def.specials) {
+    if (p[special.key] > 0) special.onTick?.(run, p, dt, ctx);
   }
 
   for (const enemy of run.enemies) {
@@ -203,8 +202,8 @@ export function step(run, seconds, input = {}) {
     enemy.x += (p.x - enemy.x) / dist * enemy.speed * dt;
     enemy.y += (p.y - enemy.y) / dist * enemy.speed * dt;
     if (dist < enemy.radius + p.hitRadius && p.immune <= 0) {
-      const smileDefense = p.smile > 0 ? 0.25 : 0;
-      p.hp = Math.max(0, p.hp - (enemy.kind === 'boss' ? 30 : 12) * (1 - Math.min(0.75, p.defense + smileDefense)) * (p.chair > 0 ? 0.2 : 1));
+      const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
+      p.hp = Math.max(0, p.hp - (enemy.kind === 'boss' ? 30 : 12) * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);
       p.immune = 0.65;
     }
   }
@@ -238,14 +237,7 @@ export function step(run, seconds, input = {}) {
     run.kills++;
     run.coins += enemy.kind === 'boss' ? 30 : 2;
     run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
-    if (p.character === 'solago') {
-      p.taskKills++;
-      if (p.taskKills >= p.permissionNeeded) {
-        p.taskKills = 0;
-        p.permissionActive = 8;
-        run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE, text: '¡PERMISO!', ttl: 1.2, kind: 'permission' });
-      }
-    }
+    if (def.onKill) def.onKill(run, p, enemy, ctx);
   }
   run.enemies = run.enemies.filter(enemy => enemy.hp > 0);
   run.projectiles = run.projectiles.filter(shot => shot.ttl > 0);
