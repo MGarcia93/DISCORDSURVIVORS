@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, activateSpecial, step } from '../src/engine.mjs';
+import { WORLD_SCALE, createRun, activateSpecial, step } from '../src/engine.mjs';
 import { CHARACTERS, getCharacter } from '../src/characters/index.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
 
@@ -11,6 +11,22 @@ test('characters are registered data objects with behavior, and the engine resol
   assert.equal(getCharacter('any-other-id'), CHARACTERS.negro, 'unknown ids fall back to negro');
   assert.equal(createRun().player.characterDef, CHARACTERS.negro);
   assert.equal(createRun(Math.random, 'solago').player.characterDef, CHARACTERS.solago);
+});
+
+test('Warrior is a registered controller running on the percentage core', () => {
+  assert.ok(CHARACTERS.warrior, 'Warrior must be registered in the roster');
+  assert.equal(CHARACTERS.warrior.id, 'warrior');
+  const w = createRun(Math.random, 'warrior').player;
+  // Stat sheet from the character md, translated to percentages of BASE_STATS:
+  // life 85%, defense 100% (10 standard points), attack 80%, attackSpeed 90%,
+  // attackDistance 120%, moveSpeed 3300% (normal game mobility).
+  assert.equal(w.maxHp, 85);
+  assert.equal(w.defense, 0.5);
+  assert.equal(w.damage, 8);
+  assert.equal(w.attackRange, 120 * UNIT_PX);
+  assert.ok(Math.abs(w.shotInterval - 100 / 90) < 1e-9);
+  assert.equal(w.speed, 165 * WORLD_SCALE);
+  assert.equal(CHARACTERS.warrior.attack.device, 'shroom', 'his basic attack config lives in the sheet');
 });
 
 test('specials come from the character definition with unchanged durations and cooldowns', () => {

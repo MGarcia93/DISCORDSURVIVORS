@@ -1,6 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, PALETTE } from '../src/sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, PALETTE } from '../src/sprites.mjs';
+
+test('drawWarrior draws his photo outfit in both facings', () => {
+  for (const facing of [1, -1]) {
+    const rectangles = [];
+    const ctx = { save() {}, restore() {}, scale() {}, getTransform: () => ({ a: 1, d: 1 }),
+      translate() {}, fillRect(...args) { rectangles.push([...args, this.fillStyle]); } };
+    drawWarrior(ctx, 100, 100, { scale: 1, time: 1, moving: true, facing });
+    assert.ok(rectangles.length > 20, 'a full sketch, not an empty frame');
+    assert.ok(rectangles.some(r => r[4] === '#c4404e'), 'red headband from the photo');
+    assert.ok(rectangles.some(r => r[4] === '#e2627d'), 'salmon shorts from the photo');
+    assert.ok(rectangles.some(r => r[4] === '#f2eee1'), 'white training tank');
+  }
+});
 
 function record(options = {}) {
   const rectangles = [];

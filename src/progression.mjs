@@ -35,7 +35,8 @@ export function isCharacterUnlocked(character, storage) {
   const progress = readProgress(storage);
   if (!progress) return false;
   if (progress.debugUnlockAll === true) return true;
-  return character === 'solago' && progress.solagoUnlocked === true;
+  if (character === 'solago') return progress.solagoUnlocked === true;
+  return character === 'warrior' && progress.warriorUnlocked === true;
 }
 
 export function isDebugUnlockAll(storage) {
@@ -57,8 +58,25 @@ export function unlockSolago(storage) {
   }
 }
 
+// Victory unlock chain: negro wins the map -> Solago; Solago wins -> Warrior.
+export function unlockWarrior(storage) {
+  try {
+    const target = resolveStorage(storage);
+    if (!target) return false;
+    const record = readProgressRecord(target);
+    if (!record.valid) return false;
+    record.progress.warriorUnlocked = true;
+    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(record.progress));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function recordMapVictory(character, storage) {
-  return character === 'negro' ? unlockSolago(storage) : false;
+  if (character === 'negro') return unlockSolago(storage);
+  if (character === 'solago') return unlockWarrior(storage);
+  return false;
 }
 
 export function unlockAllForTesting(storage) {
@@ -75,10 +93,11 @@ export function unlockAllForTesting(storage) {
 }
 
 // Solago unlock lives behind the waveCleared bus event instead of the UI
-// overlay: a negro victory on the boss map is the only progression trigger.
+// overlay: any map victory advances the unlock chain (negro -> solago ->
+// warrior) through recordMapVictory.
 export function handleWaveClearedEvent(event, storage) {
   const run = event?.run;
-  if (run?.character === 'negro' && run?.phase === 'won') return recordMapVictory('negro', storage);
+  if (run?.phase === 'won') return recordMapVictory(run.character, storage);
   return false;
 }
 

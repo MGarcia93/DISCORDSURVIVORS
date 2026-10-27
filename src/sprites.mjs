@@ -327,6 +327,50 @@ export function drawPatrona(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+// Warrior: the gym physique from his photo (red headband, white print tank,
+// open 80s windbreaker, salmon shorts), rolling shaman smoke as idle detail.
+export function drawWarrior(ctx, x, y, options = {}) {
+  const { time = 0, moving = false, facing = 1, scale = 2 } = options;
+  const step = moving ? Math.floor(time * 8) % 2 : 0;
+  const puff = Math.floor(time * 3) % 3;
+  pose(ctx, x, y, scale, facing);
+  pixel(ctx, -12, 0, 24, 3, '#11141c');
+  pixel(ctx, -15, 9 - puff * 2, 4, 4, '#8d86a866');
+  pixel(ctx, 12, 5 + puff * 2, 4, 4, '#8d86a866');
+  pixel(ctx, -18, 2 + puff, 3, 3, '#8d86a866');
+  ctx.translate(0, -36 + step);
+  // Bare shins and clean white sneakers straight from the gym floor.
+  pixel(ctx, -7, 29, 6, 5, '#b57a4e');
+  pixel(ctx, 1, 29, 6, 5, '#b57a4e');
+  pixel(ctx, -8, 33 - step, 8, 3, '#efe9dc');
+  pixel(ctx, 0, 33 + step, 8, 3, '#efe9dc');
+  // Salmon shorts worn high, gym-bro style.
+  pixel(ctx, -9, 23, 18, 6, '#e2627d');
+  pixel(ctx, -9, 23, 18, 2, '#ef8aa4');
+  // Hard-won tan, bare forearms out of the windbreaker.
+  pixel(ctx, -16, 13, 3, 9, '#d99e6d');
+  pixel(ctx, 13, 13, 3, 9, '#d99e6d');
+  // Open color-blocked windbreaker: pink on the light side, purple behind.
+  pixel(ctx, -13, 11, 5, 12, '#e267ab');
+  pixel(ctx, 8, 11, 5, 12, '#7a57cf');
+  pixel(ctx, -13, 10, 21, 2, '#7a57cf');
+  pixel(ctx, -13, 10, 21, 1, '#46bfc4');
+  // White training tank with the motivational print rows.
+  pixel(ctx, -8, 12, 16, 11, '#f2eee1');
+  pixel(ctx, 4, 12, 4, 11, '#d8d2c0');
+  pixel(ctx, -6, 14, 9, 2, '#3d7f8a');
+  pixel(ctx, -5, 17, 7, 2, '#e267ab');
+  pixel(ctx, -4, 19, 5, 2, '#3d7f8a');
+  // Flat dark hair under the red headband; the eyes are famously red.
+  pixel(ctx, -7, -2, 14, 3, '#232028');
+  pixel(ctx, -8, 1, 16, 2, '#c4404e');
+  pixel(ctx, -7, 3, 14, 9, '#d99e6d');
+  pixel(ctx, -5, 5, 3, 2, '#8a2b33');
+  pixel(ctx, 2, 5, 3, 2, '#8a2b33');
+  pixel(ctx, -4, 10, 6, 1, '#6d4433');
+  ctx.restore();
+}
+
 export function drawGamerProjectile(ctx, device) {
   if (device === 'remote') {
     pixel(ctx, -6, -14, 12, 28, '#171722');

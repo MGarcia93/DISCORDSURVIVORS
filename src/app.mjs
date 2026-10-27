@@ -16,13 +16,16 @@ let hudElapsed = 0;
 let facing = 1;
 let selectedCharacter = 'negro';
 let solagoUnlocked = isCharacterUnlocked('solago');
+let warriorUnlocked = isCharacterUnlocked('warrior');
 let debugUnlockAll = isDebugUnlockAll();
-// The negro boss victory passes through the bus: progression records the
-// unlock, app reads it back to refresh the character roster cache.
+// Any map victory passes through the bus: progression records the unlock and
+// app reads it back to refresh the character roster cache.
 on('waveCleared', ({ run: clearedRun }) => {
-  if (clearedRun.character !== 'negro' || clearedRun.phase !== 'won') return;
+  if (clearedRun.phase !== 'won') return;
   solagoUnlocked = isCharacterUnlocked('solago');
+  warriorUnlocked = isCharacterUnlocked('warrior');
   clearedRun.unlockedSolago = solagoUnlocked;
+  clearedRun.unlockedWarrior = warriorUnlocked;
 });
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
@@ -80,12 +83,25 @@ function home() {
 
 function characters() {
   solagoUnlocked = isCharacterUnlocked('solago');
+  warriorUnlocked = isCharacterUnlocked('warrior');
   debugUnlockAll = isDebugUnlockAll();
-  if (!solagoUnlocked) selectedCharacter = 'negro';
+  if (!solagoUnlocked && selectedCharacter === 'solago') selectedCharacter = 'negro';
+  if (!warriorUnlocked && selectedCharacter === 'warrior') selectedCharacter = 'negro';
   const solago = selectedCharacter === 'solago' && solagoUnlocked;
+  const warrior = selectedCharacter === 'warrior' && warriorUnlocked;
   const rosterButton = (id, name, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${id}" aria-label="${name}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el primer mapa para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${name}</small></button>`;
-  const roster = `${rosterButton('negro', 'Negro', true, !solago)}${rosterButton('solago', 'Solago', solagoUnlocked, solago)}${['Maxi', 'Jhonny', 'Papafrita', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
-  const profile = solago ? `
+  const roster = `${rosterButton('negro', 'Negro', true, !solago && !warrior)}${rosterButton('solago', 'Solago', solagoUnlocked, solago)}${rosterButton('warrior', 'Warrior', warriorUnlocked, warrior)}${['Maxi', 'Jhonny', 'Papafrita', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
+  const unlockedCount = 1 + (solagoUnlocked ? 1 : 0) + (warriorUnlocked ? 1 : 0);
+  const warriorProfile = `
+      <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
+      <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
+      <p class="character-quote">«Yo soy argentino, boludo».</p>
+      <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b class="penalty">−20%</b><small>DAÑO DIRECTO</small></div><div><b>+20%</b><small>ALCANCE</small></div><div><b>0,9</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
+      <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>`;
+  const profile = warrior ? warriorProfile : solago ? `
       <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
@@ -104,17 +120,19 @@ function characters() {
       <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`;
   content.innerHTML = `
     <section class="screen">
-    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${solagoUnlocked ? '2' : '1'} / 7 DISPONIBLES</span></header>
+    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / 8 DISPONIBLES</span></header>
     <div class="character-layout"><section aria-label="Personajes">
-      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${solago ? 'SOLAGO' : 'EL NEGRO'}</span></div>
+      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${warrior ? 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80' : solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${warrior ? 'WARRIOR' : solago ? 'SOLAGO' : 'EL NEGRO'}</span></div>
       <div class="roster">${roster}</div>
-      <p class="roster-note">${debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : solagoUnlocked ? 'SOLAGO DESBLOQUEADO · MAPA 01 COMPLETADO' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
-    </section><section class="detail-panel" aria-label="Habilidades de ${solago ? 'Solago' : 'El Negro'}">${profile}</section></div>
+      <p class="roster-note">${debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : warriorUnlocked ? 'WARRIOR DESBLOQUEADO · CADENA DE MAPAS COMPLETADA' : solagoUnlocked ? 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
+    </section><section class="detail-panel" aria-label="Habilidades de ${warrior ? 'Warrior' : solago ? 'Solago' : 'El Negro'}">${profile}</section></div>
     <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
   const negroRoster = document.querySelector('#roster-negro');
   if (negroRoster) drawElNegro(negroRoster.getContext('2d'), 20, 47, { scale: 1 });
   const solagoRoster = document.querySelector('#roster-solago');
   if (solagoRoster) drawSolago(solagoRoster.getContext('2d'), 26, 47, { scale: 1 });
+  const warriorRoster = document.querySelector('#roster-warrior');
+  if (warriorRoster) drawWarrior(warriorRoster.getContext('2d'), 28, 46, { scale: 1 });
   drawPreview(0);
 }
 
@@ -140,7 +158,7 @@ function game() {
   content.innerHTML = `
     <section class="game-screen">
     <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
-    <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q invoca a tu waifu y E activa el sillón."></canvas>
+    <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q y E activan tus habilidades."></canvas>
       <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
       <div id="task-panel" class="task-panel" ${def.taskHud ? '' : 'hidden'}><div><b>PERMISO PARA JUGAR</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
       <div id="game-overlay"></div>
@@ -251,6 +269,10 @@ function drawPreview(time) {
   rounded(ctx, 44, 161, 168, 5, 0, '#392b42');
   rounded(ctx, 42, 151, 172, 2, 0, '#ad8a99');
   const cycle = time % 10;
+  if (selectedCharacter === 'warrior' && warriorUnlocked) {
+    drawWarrior(ctx, 128, 150, { time, moving: cycle < 3.4, scale: 2 });
+    return;
+  }
   if (selectedCharacter === 'solago' && solagoUnlocked) {
     drawPatrona(ctx, 145, 151, { time, scale: 1.2 });
     drawSolago(ctx, 124, 150, { time, moving: cycle < 3.4, scale: 2 });
@@ -397,6 +419,7 @@ document.addEventListener('keydown', event => {
       if (unlockAllForTesting()) {
         debugUnlockAll = true;
         solagoUnlocked = true;
+        warriorUnlocked = true;
         selectedCharacter = 'negro';
         show('characters');
       }

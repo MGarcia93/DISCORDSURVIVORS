@@ -21,12 +21,20 @@ test('beating the first map can persist Solago unlocked in local storage', () =>
   assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 1, solagoUnlocked: true });
 });
 
+test('Warrior also starts locked and is the reward for winning the map chain as Solago', () => {
+  const storage = memoryStorage();
+  assert.equal(isCharacterUnlocked('warrior', storage), false);
+  assert.equal(recordMapVictory('solago', storage), true);
+  assert.equal(isCharacterUnlocked('warrior', storage), true);
+  assert.equal(isSolagoUnlocked(storage), false, 'a solago win grants Warrior, not Solago');
+});
+
 test('only El Negro winning the first map unlocks Solago', () => {
   const storage = memoryStorage();
-  assert.equal(recordMapVictory('solago', storage), false);
   assert.equal(isSolagoUnlocked(storage), false);
   assert.equal(recordMapVictory('negro', storage), true);
   assert.equal(isSolagoUnlocked(storage), true);
+  assert.equal(isCharacterUnlocked('warrior', storage), false, 'a negro win still only grants Solago');
 });
 
 test('one debug storage flag unlocks all registered and future character IDs', () => {
