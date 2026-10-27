@@ -33,6 +33,8 @@ Dado un porcentaje `P` sobre cada estadística:
 ## Criterios generales
 
 - Las **fichas de entidad** (personajes en `src/characters/`, enemigos en `src/enemies.mjs`) declaran las seis estadísticas como porcentajes; los valores absolutos se derivan siempre en `src/stats.mjs`, nunca a mano.
+- El **alcance rige para todo ataque**: no hay ningún ataque (mordida o proyectil) que ignore la distancia de ataque. `Infinity` es solo un valor de ficha para "le pegar a todo el mapa"; ninguna entidad actual la usa.
+- La **defensa rige para todo**: mitiga el daño recibido de cualquier entidad que la lleve en su ficha, no solo de los personajes.
 - Las estadísticas por ola (curvas de enemigos) se declaran como funciones del número de ola que devuelven el porcentaje de esa ola.
 - El **tamaño de colisión** (radios, `hitRadius`) no integra la tabla de estadísticas: se declara aparte, en píxeles sin escalar, porque la distancia de ataque es independiente del tamaño de la entidad.
 - Las habilidades, armas y estados temporales modifican o utilizan los valores **ya resueltos**; no forman parte de esta tabla ni de las fórmulas de conversión.

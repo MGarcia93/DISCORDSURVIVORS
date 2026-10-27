@@ -21,7 +21,7 @@ const negro = {
       defense: 40,           // 4 defense points -> 20% mitigation
       attack: 300,           // 30 damage per shot
       attackSpeed: 222.22,   // ~2.22 attacks/s (~0.45s between shots)
-      attackDistance: Infinity, // ranged auto-aim: unlimited reach
+      attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
       moveSpeed: 3300,       // 165 scaled px/s
     }),
   },

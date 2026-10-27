@@ -20,7 +20,8 @@ export const HEAL_AMOUNT = 60;
 import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
-import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyHp, enemySpeed } from './enemies.mjs';
+import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies.mjs';
+import { DEFENSE_MITIGATION_CAP } from './stats.mjs';
 import { emit } from './bus.mjs';
 
 export function createRun(random = Math.random, character = 'negro') {
@@ -87,7 +88,8 @@ function enemyFromKind(run, kind, x, y) {
   const def = ENEMY_KINDS[kind];
   const hp = enemyHp(kind, run.wave);
   return { id: ++run.serial, kind, x, y,
-    hp, maxHp: hp, radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) };
+    hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
+    radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) };
 }
 
 export function startNextWave(run) {
@@ -117,13 +119,14 @@ function spawn(run) {
 
 function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
-function nearest(run, origin, excluded = []) {
-  return run.enemies.filter(e => e.hp > 0 && !excluded.includes(e.id))
+function nearest(run, origin, excluded = [], maxDistance = Infinity) {
+  return run.enemies.filter(e => e.hp > 0 && !excluded.includes(e.id)
+      && distance(e, origin) <= maxDistance)
     .sort((a, b) => distance(a, origin) - distance(b, origin))[0];
 }
 
-function fire(run, source, damage, kind) {
-  const target = nearest(run, source);
+function fire(run, source, damage, kind, maxDistance = Infinity) {
+  const target = nearest(run, source, [], maxDistance);
   if (!target) return;
   const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3] : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
@@ -131,7 +134,7 @@ function fire(run, source, damage, kind) {
 }
 
 function hit(run, enemy, damage, kind = 'damage') {
-  enemy.hp -= damage;
+  enemy.hp -= damage * (1 - Math.min(DEFENSE_MITIGATION_CAP, enemy.defense ?? 0));
   run.effects.push({ x: enemy.x, y: enemy.y - enemy.radius, text: `${Math.round(damage)}`, ttl: 0.65, kind });
 }
 
@@ -200,7 +203,7 @@ export function step(run, seconds, input = {}) {
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
     if (def.attack.type === 'melee') attackMelee(run);
-    else fire(run, p, p.damage, def.attack.device);
+    else fire(run, p, p.damage, def.attack.device, p.attackRange);
     const combat = def.combat || {};
     run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1);
   }

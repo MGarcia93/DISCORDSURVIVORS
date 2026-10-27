@@ -1,4 +1,4 @@
-import { resolveDamagePercent, resolveLifePercent, resolveMoveSpeedPercent, statAt } from './stats.mjs';
+import { resolveDamagePercent, resolveDefensePercent, resolveLifePercent, resolveMoveSpeedPercent, statAt } from './stats.mjs';
 
 // Enemy stat sheets, as percentages over BASE_STATS (src/stats.mjs).
 // Wave-dependent stats are per-wave functions returning the percentage for
@@ -52,6 +52,10 @@ export function enemySpeed(kind, wave = 1) {
 
 export function enemyContactDamage(kind, wave = 1) {
   return resolveDamagePercent(statAt(getEnemyKind(kind).stats, 'attack', wave));
+}
+
+export function enemyDefense(kind, wave = 1) {
+  return resolveDefensePercent(statAt(getEnemyKind(kind).stats, 'defense', wave));
 }
 
 export function enemyBounty(kind) {

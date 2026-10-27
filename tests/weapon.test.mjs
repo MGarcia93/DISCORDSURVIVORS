@@ -1,6 +1,44 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRun, step } from '../src/engine.mjs';
+import { UNIT_PX } from '../src/stats.mjs';
+
+test('ranged attacks are bounded by the attackDistance stat like every other attack', () => {
+  const run = createRun(() => 0.5);
+  run.spawnIn = 100;
+  run.shotIn = 0.001;
+  run.enemies.push({ id: 1, x: run.player.x + 400, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+
+  step(run, 0.05, {});
+
+  assert.equal(run.enemies[0].hp, 500, 'outside the attack range means no shot');
+  assert.equal(run.projectiles.length, 0, 'no projectile leaves without a target in range');
+
+  const near = createRun(() => 0.5);
+  near.spawnIn = 100;
+  near.shotIn = 0.001;
+  near.enemies.push({ id: 1, x: near.player.x + 280, y: near.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+
+  step(near, 0.05, {});
+
+  assert.ok(near.projectiles.length >= 1, 'inside the attack range the shot fires');
+});
+
+test('enemy defense mitigates the damage enemies receive, the same rule for every entity', () => {
+  const run = createRun(() => 0.5); // EL NEGRO: 30 damage per shot
+  run.spawnIn = 100;
+  run.shotIn = 0.001;
+  run.enemies.push({ id: 1, x: run.player.x + 280, y: run.player.y, hp: 1000, maxHp: 1000, speed: 0, radius: 10, kind: 'zombie', defense: 0.2 });
+
+  for (let i = 0; i < 24; i++) step(run, 0.05, {}); // ~1.2s: enough for two shots (~0.45s apart) to land
+
+  assert.ok(Math.abs(run.enemies[0].hp - (1000 - 2 * 30 * 0.8)) < 1e-6);
+});
+
+test('EL NEGRO canonically holds a quarter-of-screen attack range from his sheet', () => {
+  const negro = createRun(() => 0.5).player;
+  assert.equal(negro.attackRange, 260 * UNIT_PX);
+});
 
 test('a projectile whose locked target dies disappears instead of changing targets', () => {
   const run = createRun(() => 0.5);
