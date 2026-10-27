@@ -1,8 +1,15 @@
 import { WORLD_SCALE } from '../constants.mjs';
+import { drawSolago } from '../sprites.mjs';
 
 const solago = {
   id: 'solago',
   name: 'SOLAGO',
+  gameNote: 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E',
+  draw(ctx, x, y, context) {
+    drawSolago(ctx, x, y, {
+      time: context.time, moving: context.moving, facing: context.facing,
+      attacking: context.player.attackFlash > 0, crouching: context.player.stand > 0, scale: 2 });
+  },
   stats: {
     hp: 100, maxHp: 100, defense: 0.15, damage: 30 * 1.35,
     hitRadius: 15 * WORLD_SCALE, attackRange: 72 * 0.95 * WORLD_SCALE,
@@ -12,12 +19,22 @@ const solago = {
   decays: ['permissionActive'],
   combat: { permissionDamageMult: 1.3, permissionRateMult: 0.72 },
   contactDefenseBonus(p) { return p.smile > 0 ? 0.25 : 0; },
+  regenHud(p) { return { ringY: p.y + 2, radius: 34, textX: p.x - 31, textY: p.y - 46 }; },
   initPlayer(p) {
     p.smile = 0;
     p.smileCooldown = 6;
     p.taskKills = 0;
     p.permissionNeeded = 8;
     p.permissionActive = 0;
+  },
+  taskHud(p) {
+    return {
+      percentage: p.permissionActive > 0 ? 100 : p.taskKills / p.permissionNeeded * 100,
+      label: p.permissionActive > 0
+        ? `${Math.ceil(p.permissionActive)}s · ¡TE DIERON PERMISO!`
+        : `${p.taskKills}/${p.permissionNeeded} BAJAS`,
+      active: p.permissionActive > 0,
+    };
   },
   passives: [
     {
@@ -40,7 +57,7 @@ const solago = {
   },
   specials: [
     {
-      key: 'stand', name: 'La Patrona', duration: 7, cooldown: 26,
+      key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26,
       immobilize: true,
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;

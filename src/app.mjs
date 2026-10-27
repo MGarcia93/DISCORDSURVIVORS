@@ -133,19 +133,22 @@ function game() {
   run = createRun(Math.random, selectedCharacter);
   facing = 1;
   lastPhase = '';
-  const solago = run.character === 'solago';
+  const def = run.player.characterDef;
+  const abilityButtons = def.specials
+    .map(special => `<button class="ability" data-special="${special.key}"><kbd>${special.hotkey.toUpperCase()}</kbd> <span>${special.name}</span></button>`)
+    .join('');
   content.innerHTML = `
     <section class="game-screen">
     <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
     <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q invoca a tu waifu y E activa el sillón."></canvas>
       <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
-      <div id="task-panel" class="task-panel" ${solago ? '' : 'hidden'}><div><b>PERMISO PARA JUGAR</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
+      <div id="task-panel" class="task-panel" ${def.taskHud ? '' : 'hidden'}><div><b>PERMISO PARA JUGAR</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
       <div id="game-overlay"></div>
     </div>
     <div class="game-controls"><div class="key-help"><kbd>W A S D</kbd> / <kbd>↑ ← ↓ →</kbd> Mover <span>·</span> Ataque automático <span>·</span><kbd>ESC</kbd> Pausa</div>
       <div class="touch-pad" aria-label="Movimiento táctil"><button data-direction="up" aria-label="Arriba">↑</button><button data-direction="left" aria-label="Izquierda">←</button><button data-direction="down" aria-label="Abajo">↓</button><button data-direction="right" aria-label="Derecha">→</button></div>
-      <div class="ability-buttons">${solago ? '<button class="ability" data-special="stand"><kbd>E</kbd> <span>La Patrona</span></button>' : '<button class="ability" data-special="anime"><kbd>Q</kbd> <span>Modo Otaku</span></button><button class="ability" data-special="chair"><kbd>E</kbd> <span>Me da paja</span></button>'}</div></div>
-    <p class="game-note">${solago ? 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E' : '4 OLEADAS DE 60 SEGUNDOS · MEJORAS ACUMULABLES · SOLAGO SE DESBLOQUEA AL GANAR'}</p></section>`;
+      <div class="ability-buttons">${abilityButtons}</div></div>
+    <p class="game-note">${def.gameNote}</p></section>`;
   const canvas = document.querySelector('.arena-wrap canvas');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
@@ -180,25 +183,24 @@ function overlay() {
 
 function updateHUD() {
   const p = run.player;
-  document.querySelector('#player-name').textContent = p.character === 'solago' ? 'SOLAGO' : 'EL NEGRO';
+  document.querySelector('#player-name').textContent = p.characterDef.name;
   document.querySelector('#hp-label').textContent = `${Math.ceil(p.hp)}/${p.maxHp}`;
   document.querySelector('#hp-fill').style.width = `${p.hp / p.maxHp * 100}%`;
   document.querySelector('#coins').textContent = `◈ ${run.coins}`;
   document.querySelector('#timer').textContent = run.wave === 4 ? `☠ JEFE · ${formatTime(run.time)}` : formatTime(Math.max(0, run.duration - run.time));
   document.querySelector('#wave-title').innerHTML = `${run.wave === 4 ? 'EL ADMINISTRADOR' : `OLEADA 0${run.wave}`} <span class="muted">/ 04</span>`;
   const taskPanel = document.querySelector('#task-panel');
-  if (taskPanel && p.character === 'solago') {
-    const percentage = p.permissionActive > 0 ? 100 : p.taskKills / p.permissionNeeded * 100;
-    document.querySelector('#task-fill').style.width = `${percentage}%`;
-    document.querySelector('#task-label').textContent = p.permissionActive > 0 ? `${Math.ceil(p.permissionActive)}s · ¡TE DIERON PERMISO!` : `${p.taskKills}/${p.permissionNeeded} BAJAS`;
-    taskPanel.classList.toggle('boost-active', p.permissionActive > 0);
+  const task = p.characterDef.taskHud?.(p);
+  if (taskPanel && task) {
+    document.querySelector('#task-fill').style.width = `${task.percentage}%`;
+    document.querySelector('#task-label').textContent = task.label;
+    taskPanel.classList.toggle('boost-active', task.active);
   }
-  const specials = p.character === 'solago' ? ['stand'] : ['anime', 'chair'];
-  for (const type of specials) {
-    const button = document.querySelector(`[data-special="${type}"]`);
-    const cooldown = p[`${type}Cooldown`];
+  for (const special of p.characterDef.specials) {
+    const button = document.querySelector(`[data-special="${special.key}"]`);
+    const cooldown = p[`${special.key}Cooldown`];
     button.disabled = cooldown > 0 || paused || run.phase !== 'playing';
-    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : type === 'anime' ? 'Modo Otaku' : type === 'chair' ? 'Me da paja' : 'La Patrona';
+    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : special.name;
   }
 }
 
@@ -261,6 +263,14 @@ function drawPreview(time) {
   drawElNegro(ctx, 128, 150, { time, moving, facing: previewFacing, sitting: isSitting, scale: 2 });
 }
 
+// Sprite map: kind -> drawer for the non-player figures. Adding a character or
+// a special figure only needs an entry here, not new branching in draw().
+const FIGURE_DRAWERS = {
+  chair: (ctx, figure) => drawChair(ctx, figure.x, figure.y, { scale: 2 }),
+  stand: (ctx, figure, time) => drawPatrona(ctx, figure.x, figure.y + 38 * WORLD_SCALE, { time, scale: 2 }),
+  boss: (ctx, figure, time) => drawAdministrator(ctx, figure.x, figure.y + 77, { time, scale: 4 }),
+};
+
 function draw() {
   const canvas = document.querySelector('.arena-wrap canvas');
   const ctx = canvas?.getContext('2d');
@@ -279,14 +289,12 @@ function draw() {
   figures.push({ x: p.x, y: p.y, kind: 'player' });
   figures.sort((a, b) => a.y - b.y);
   for (const figure of figures) {
-    if (figure.kind === 'chair') { drawChair(ctx, figure.x, figure.y, { scale: 2 }); continue; }
-    if (figure.kind === 'stand') { drawPatrona(ctx, figure.x, figure.y + 38 * WORLD_SCALE, { time: run.elapsed, scale: 2 }); continue; }
     if (figure.kind === 'player' && p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
     if (figure.kind === 'player') {
-      if (p.character === 'solago') drawSolago(ctx, figure.x, figure.y + 38, { time: run.elapsed, moving: p.still === 0, facing, attacking: p.attackFlash > 0, crouching: p.stand > 0, scale: 2 });
-      else drawElNegro(ctx, figure.x, figure.y + 38, { time: run.elapsed, moving: p.still === 0, facing, sitting: p.chair > 0, scale: 2 });
-    } else if (figure.kind === 'boss') {
-      drawAdministrator(ctx, figure.x, figure.y + 77, { time: run.elapsed, scale: 4 });
+      p.characterDef.draw(ctx, figure.x, figure.y + 38,
+        { time: run.elapsed, moving: p.still === 0, facing, player: p });
+    } else if (FIGURE_DRAWERS[figure.kind]) {
+      FIGURE_DRAWERS[figure.kind](ctx, figure, run.elapsed);
     } else {
       drawZombie(ctx, figure.x, figure.y + 31, { kind: figure.kind, time: run.elapsed, seed: figure.id, scale: 2 });
     }
@@ -306,9 +314,11 @@ function draw() {
   }
   if (p.stand > 0) pixelRing(ctx, p.x, p.y, 170 * WORLD_SCALE, '#a89ac6');
   if (p.still >= 2 && p.hp < p.maxHp) {
-    const solago = p.character === 'solago';
-    pixelRing(ctx, p.x, solago ? p.y + 2 : p.y + 31, solago ? 34 : 37, '#bfd890');
-    pixelText(ctx, 'REGEN', p.x - 31, solago ? p.y - 46 : p.y - 77, 2, '#bfd890');
+    const regen = p.characterDef.regenHud?.(p);
+    if (regen) {
+      pixelRing(ctx, p.x, regen.ringY, regen.radius, '#bfd890');
+      pixelText(ctx, 'REGEN', regen.textX, regen.textY, 2, '#bfd890');
+    }
   }
   for (const shot of run.projectiles) {
     ctx.save(); ctx.translate(Math.round(shot.x), Math.round(shot.y)); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
@@ -409,11 +419,8 @@ document.addEventListener('keydown', event => {
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
   if (key === 'escape' && !event.repeat && run.phase === 'playing') { paused = !paused; keys.clear(); }
   if (!paused && !event.repeat && run.phase === 'playing') {
-    if (run.character === 'solago') {
-      if (key === 'e') activateSpecial(run, 'stand');
-    } else {
-      if (key === 'q') activateSpecial(run, 'anime');
-      if (key === 'e') activateSpecial(run, 'chair');
+    for (const special of run.player.characterDef.specials) {
+      if (special.hotkey === key) activateSpecial(run, special.key);
     }
   }
   if (!paused) keys.add(key);
