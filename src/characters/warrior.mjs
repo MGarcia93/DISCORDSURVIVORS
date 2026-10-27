@@ -25,7 +25,13 @@ const warrior = {
       moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
     }),
   },
-  attack: { type: 'ranged', device: 'shroom' },
+  // Mushroom bombs: direct impact plus a small blast area. The ttl already
+  // includes his +35% effect duration (4s base -> 5.4s); the radius keeps his
+  // +25% area proposal (70px base -> 77 unscaled).
+  attack: {
+    type: 'ranged', device: 'shroom',
+    blast: { radius: 77 * WORLD_SCALE, stacks: 1, ttl: 5.4 },
+  },
   decays: [],
   passives: [],   // T3: humo de procedencia dudosa
   specials: [],   // T4: viaje astral + me desaparezco

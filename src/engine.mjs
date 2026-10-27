@@ -119,22 +119,54 @@ function spawn(run) {
 
 function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
+// Confusion: Warrior's controlled state. Stacks 1-2 slow length movement,
+// stack 3 adds disorientation and the +50% elemental damage bonus in hit().
+// Bosses resist mass CC: they cap at one stack and keep chasing.
+const CONFUSION_SLOW = [0, 0.25, 0.4, 0.55];
+
+function applyConfusion(enemy, stacks, ttl) {
+  const cap = enemy.kind === 'boss' ? 1 : 3;
+  enemy.confusionStacks = Math.min(cap, (enemy.confusionStacks ?? 0) + stacks);
+  enemy.confusionTtl = Math.max(enemy.confusionTtl ?? 0, ttl);
+}
+
+function confusionSlowFactor(enemy) {
+  return 1 - (CONFUSION_SLOW[enemy.confusionStacks ?? 0] ?? 0);
+}
+
+// A confused mind does not chase: it stumbles on a slow, deterministic drift.
+function disorientedDrift(enemy, elapsed) {
+  const angle = (elapsed * 2.2 + enemy.id * 1.7) % (Math.PI * 2);
+  return { x: Math.cos(angle), y: Math.sin(angle) };
+}
+
+function shroomBlast(run, shot, impact) {
+  for (const enemy of run.enemies) {
+    if (enemy.hp <= 0 || shot.hit.includes(enemy.id)) continue;
+    if (distance(enemy, impact) > shot.attack.blast.radius) continue;
+    hit(run, enemy, shot.damage, 'spore');
+    applyConfusion(enemy, shot.attack.blast.stacks ?? 1, shot.attack.blast.ttl ?? 5.4);
+  }
+  run.effects.push({ x: impact.x, y: impact.y, text: '☁', ttl: 0.5, kind: 'spore' });
+}
+
 function nearest(run, origin, excluded = [], maxDistance = Infinity) {
   return run.enemies.filter(e => e.hp > 0 && !excluded.includes(e.id)
       && distance(e, origin) <= maxDistance)
     .sort((a, b) => distance(a, origin) - distance(b, origin))[0];
 }
 
-function fire(run, source, damage, kind, maxDistance = Infinity) {
+function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) {
   const target = nearest(run, source, [], maxDistance);
   if (!target) return;
   const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3] : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
-    damage, kind, device, hit: [], ttl: 3, angle: 0 });
+    damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
 }
 
 function hit(run, enemy, damage, kind = 'damage') {
-  enemy.hp -= damage * (1 - Math.min(DEFENSE_MITIGATION_CAP, enemy.defense ?? 0));
+  const elemental = (enemy.confusionStacks ?? 0) >= 3 ? 1.5 : 1;
+  enemy.hp -= damage * elemental * (1 - Math.min(DEFENSE_MITIGATION_CAP, enemy.defense ?? 0));
   run.effects.push({ x: enemy.x, y: enemy.y - enemy.radius, text: `${Math.round(damage)}`, ttl: 0.65, kind });
 }
 
@@ -203,7 +235,7 @@ export function step(run, seconds, input = {}) {
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
     if (def.attack.type === 'melee') attackMelee(run);
-    else fire(run, p, p.damage, def.attack.device, p.attackRange);
+    else fire(run, p, p.damage, def.attack.device, p.attackRange, def.attack);
     const combat = def.combat || {};
     run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1);
   }
@@ -214,13 +246,25 @@ export function step(run, seconds, input = {}) {
   for (const enemy of run.enemies) {
     if (enemy.hp <= 0) continue;
     const dist = distance(enemy, p) || 1;
-    enemy.x += (p.x - enemy.x) / dist * enemy.speed * dt;
-    enemy.y += (p.y - enemy.y) / dist * enemy.speed * dt;
-    if (dist < enemy.radius + p.hitRadius && p.immune <= 0) {
+    const confusedSlow = confusionSlowFactor(enemy);
+    enemy.attackCd = Math.max(0, (enemy.attackCd ?? 0) - dt);
+    enemy.confusionTtl = Math.max(0, (enemy.confusionTtl ?? 0) - dt);
+    if ((enemy.confusionTtl ?? 0) <= 0) enemy.confusionStacks = 0;
+    if ((enemy.confusionStacks ?? 0) >= 3 && enemy.kind !== 'boss') {
+      const drift = disorientedDrift(enemy, run.elapsed);
+      const stumble = enemy.speed * confusedSlow * 0.6;
+      enemy.x += drift.x * stumble * dt;
+      enemy.y += drift.y * stumble * dt;
+    } else {
+      enemy.x += (p.x - enemy.x) / dist * enemy.speed * confusedSlow * dt;
+      enemy.y += (p.y - enemy.y) / dist * enemy.speed * confusedSlow * dt;
+    }
+    if (dist < enemy.radius + p.hitRadius && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0) {
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
       const contactDamage = enemyContactDamage(enemy.kind);
       p.hp = Math.max(0, p.hp - contactDamage * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);
       p.immune = 0.65;
+      if ((enemy.confusionStacks ?? 0) >= 2) enemy.attackCd = 0.8; // slowed mind, slower swings
     }
   }
   for (const shot of run.projectiles) {
@@ -238,6 +282,10 @@ export function step(run, seconds, input = {}) {
       shot.y = target.y;
       hit(run, target, shot.damage);
       shot.hit.push(target.id);
+      if (shot.attack?.blast) {
+        applyConfusion(target, shot.attack.blast.stacks ?? 1, shot.attack.blast.ttl ?? 5.4);
+        shroomBlast(run, shot, target);
+      }
       const next = nearest(run, shot, shot.hit);
       if (shot.kind === 'remote' && shot.hit.length < 3 && next && distance(next, shot) < 300 * WORLD_SCALE) {
         shot.target = next.id;
