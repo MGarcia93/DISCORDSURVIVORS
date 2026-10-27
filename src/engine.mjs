@@ -1,10 +1,19 @@
+const applyDamage = player => { player.damage *= 1.3; };
+const applyRate = player => { player.shotInterval *= 0.92; };
+const applyHealth = player => {
+  player.maxHp += 25;
+  player.hp = Math.min(player.maxHp, player.hp + 50);
+};
+const applyArmor = player => { player.defense = Math.min(0.6, player.defense + 0.05); };
+const applyRegen = player => { player.regen += 2.5; };
+const applySpeed = player => { player.speed *= 1.08; };
 export const UPGRADES = [
-  { id: 'damage', name: 'Pilas nuevas', description: '+30% de daño del control. Se puede comprar varias veces.', costs: [20, 30, 40, 50], icon: 'ϟ' },
-  { id: 'rate', name: 'Menos paja, más clics', description: '-8% de recarga del control remoto.', costs: [20, 30, 40, 50], icon: '↻' },
-  { id: 'health', name: 'Delivery de emergencia', description: '+25 de vida máxima y recuperás 50 de vida.', costs: [20, 30, 40], icon: '✚' },
-  { id: 'armor', name: 'Modo avión', description: '+5% de defensa. Que te peguen menos.', costs: [18, 26, 34], icon: '⛨' },
-  { id: 'regen', name: 'Cinco minutitos más', description: '+2,5 de regeneración por segundo al estar quieto.', costs: [15, 22, 30], icon: '☾' },
-  { id: 'speed', name: 'Hay comida en la cocina', description: '+8% de velocidad. Una causa noble.', costs: [15, 25], icon: '»' },
+  { id: 'damage', name: 'Pilas nuevas', description: '+30% de daño del control. Se puede comprar varias veces.', costs: [20, 30, 40, 50], icon: 'ϟ', apply: applyDamage },
+  { id: 'rate', name: 'Menos paja, más clics', description: '-8% de recarga del control remoto.', costs: [20, 30, 40, 50], icon: '↻', apply: applyRate },
+  { id: 'health', name: 'Delivery de emergencia', description: '+25 de vida máxima y recuperás 50 de vida.', costs: [20, 30, 40], icon: '✚', apply: applyHealth },
+  { id: 'armor', name: 'Modo avión', description: '+5% de defensa. Que te peguen menos.', costs: [18, 26, 34], icon: '⛨', apply: applyArmor },
+  { id: 'regen', name: 'Cinco minutitos más', description: '+2,5 de regeneración por segundo al estar quieto.', costs: [15, 22, 30], icon: '☾', apply: applyRegen },
+  { id: 'speed', name: 'Hay comida en la cocina', description: '+8% de velocidad. Una causa noble.', costs: [15, 25], icon: '»', apply: applySpeed },
 ];
 export const HEAL_COST = 12;
 export const HEAL_AMOUNT = 60;
@@ -61,12 +70,7 @@ export function chooseUpgrade(run, id) {
   run.coins -= cost;
   run.upgrades[id] = level + 1;
   const p = run.player;
-  if (id === 'damage') p.damage *= 1.3;
-  if (id === 'rate') p.shotInterval *= 0.92;
-  if (id === 'health') { p.maxHp += 25; p.hp = Math.min(p.maxHp, p.hp + 50); }
-  if (id === 'armor') p.defense = Math.min(0.6, p.defense + 0.05);
-  if (id === 'regen') p.regen += 2.5;
-  if (id === 'speed') p.speed *= 1.08;
+  upgrade.apply(p, level);
   return true;
 }
 
