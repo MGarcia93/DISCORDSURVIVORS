@@ -11,6 +11,7 @@ export const HEAL_AMOUNT = 60;
 import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
+import { ENEMY_KINDS, getEnemyKind } from './enemies.mjs';
 
 export function createRun(random = Math.random, character = 'negro') {
   const characterDef = getCharacter(character);
@@ -76,6 +77,13 @@ export function buyHeal(run) {
   return true;
 }
 
+function enemyFromKind(run, kind, x, y) {
+  const def = ENEMY_KINDS[kind];
+  const hp = def.hp(run.wave);
+  return { id: ++run.serial, kind, x, y,
+    hp, maxHp: hp, radius: def.radius * WORLD_SCALE, speed: def.speed(run.wave) * WORLD_SCALE };
+}
+
 export function startNextWave(run) {
   if (run.phase !== 'shop') return false;
   run.wave++;
@@ -86,8 +94,7 @@ export function startNextWave(run) {
   run.enemies = [];
   run.projectiles = [];
   if (run.wave === 4) {
-    run.enemies.push({ id: ++run.serial, kind: 'boss', x: WIDTH / 2, y: 80 * WORLD_SCALE,
-      hp: 2200, maxHp: 2200, speed: 52 * WORLD_SCALE, radius: 38 * WORLD_SCALE });
+    run.enemies.push(enemyFromKind(run, 'boss', WIDTH / 2, 80 * WORLD_SCALE));
   }
   return true;
 }
@@ -95,12 +102,11 @@ export function startNextWave(run) {
 function spawn(run) {
   const edge = Math.floor(run.random() * 4);
   const kind = run.wave > 1 && run.random() < 0.3 ? 'runner' : 'zombie';
-  const hp = kind === 'runner' ? 28 + run.wave * 5 : 40 + run.wave * 6;
-  run.enemies.push({ id: ++run.serial, kind,
-    x: edge === 0 ? -20 * WORLD_SCALE : edge === 1 ? WIDTH + 20 * WORLD_SCALE : run.random() * WIDTH,
-    y: edge === 2 ? -20 * WORLD_SCALE : edge === 3 ? HEIGHT + 20 * WORLD_SCALE : run.random() * HEIGHT,
-    hp, maxHp: hp, radius: (kind === 'runner' ? 13 : 17) * WORLD_SCALE,
-    speed: ((kind === 'runner' ? 88 : 40) + run.wave * 4 + run.random() * 10) * WORLD_SCALE });
+  const enemy = enemyFromKind(run, kind,
+    edge === 0 ? -20 * WORLD_SCALE : edge === 1 ? WIDTH + 20 * WORLD_SCALE : run.random() * WIDTH,
+    edge === 2 ? -20 * WORLD_SCALE : edge === 3 ? HEIGHT + 20 * WORLD_SCALE : run.random() * HEIGHT);
+  enemy.speed += run.random() * 10 * WORLD_SCALE;
+  run.enemies.push(enemy);
 }
 
 function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
@@ -203,7 +209,8 @@ export function step(run, seconds, input = {}) {
     enemy.y += (p.y - enemy.y) / dist * enemy.speed * dt;
     if (dist < enemy.radius + p.hitRadius && p.immune <= 0) {
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
-      p.hp = Math.max(0, p.hp - (enemy.kind === 'boss' ? 30 : 12) * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);
+      const contactDamage = getEnemyKind(enemy.kind).contactDamage;
+      p.hp = Math.max(0, p.hp - contactDamage * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);
       p.immune = 0.65;
     }
   }
@@ -235,7 +242,7 @@ export function step(run, seconds, input = {}) {
   const killed = run.enemies.filter(enemy => enemy.hp <= 0);
   for (const enemy of killed) {
     run.kills++;
-    run.coins += enemy.kind === 'boss' ? 30 : 2;
+    run.coins += getEnemyKind(enemy.kind).bounty;
     run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
     if (def.onKill) def.onKill(run, p, enemy, ctx);
   }
