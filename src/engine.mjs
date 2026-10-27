@@ -246,7 +246,13 @@ export function step(run, seconds, input = {}) {
   for (const enemy of run.enemies) {
     if (enemy.hp <= 0) continue;
     const dist = distance(enemy, p) || 1;
-    const confusedSlow = confusionSlowFactor(enemy);
+    const smoke = def.passives.find(passive => passive.kind === 'smoke');
+    const zone = smoke && run.effects.find(effect => effect.kind === 'smoke' && distance(enemy, effect) <= effect.r);
+    if (zone) enemy.smokeIn = Math.min(smoke.stackCap, (enemy.smokeIn ?? 0) + dt);
+    else enemy.smokeIn = Math.max(0, (enemy.smokeIn ?? 0) - dt);
+    // Smoke stacks on the mind: base slow plus what this enemy has inhaled.
+    const smokeSlow = zone ? smoke.slow + enemy.smokeIn * smoke.stackSlow : 0;
+    const confusedSlow = confusionSlowFactor(enemy) * (1 - smokeSlow);
     enemy.attackCd = Math.max(0, (enemy.attackCd ?? 0) - dt);
     enemy.confusionTtl = Math.max(0, (enemy.confusionTtl ?? 0) - dt);
     if ((enemy.confusionTtl ?? 0) <= 0) enemy.confusionStacks = 0;
@@ -260,6 +266,10 @@ export function step(run, seconds, input = {}) {
       enemy.y += (p.y - enemy.y) / dist * enemy.speed * confusedSlow * dt;
     }
     if (dist < enemy.radius + p.hitRadius && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0) {
+      if (zone && run.random() < smoke.missChance) {
+        enemy.attackCd = smoke.missCd ?? 1; // the swing connects with smoke, not flesh
+        continue;
+      }
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
       const contactDamage = enemyContactDamage(enemy.kind);
       p.hp = Math.max(0, p.hp - contactDamage * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);

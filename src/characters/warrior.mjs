@@ -33,7 +33,26 @@ const warrior = {
     blast: { radius: 77 * WORLD_SCALE, stacks: 1, ttl: 5.4 },
   },
   decays: [],
-  passives: [],   // T3: humo de procedencia dudosa
+  passives: [{
+    // Passive: HUMO DE PROCEDENCIA DUDOSA. Warrior drops a periodic cloud
+    // around himself; enemies inside move slower and their swings can miss.
+    // Every number lives here so balancing stays a one-file change.
+    key: 'smokeCloud',
+    kind: 'smoke',
+    interval: 6,          // seconds between clouds
+    r: 90 * WORLD_SCALE,  // cloud radius
+    ttl: 5.4,             // cloud lifetime (4s base with his +35% effect duration)
+    slow: 0.35,           // base movement slow inside the cloud
+    stackSlow: 0.1,       // extra slow per second spent inside
+    stackCap: 3,          // staying longer stops stacking here (0.65 total slow)
+    missChance: 0.2,      // roll for an enemy swing to miss inside the cloud
+    missCd: 1,            // swing cooldown applied on a miss
+    tick(run, p) {
+      if (p[this.key + 'Cooldown'] > 0) return;
+      p[this.key + 'Cooldown'] = this.interval;
+      run.effects.push({ x: p.x, y: p.y, kind: 'smoke', r: this.r, ttl: this.ttl });
+    },
+  }],
   specials: [],   // T4: viaje astral + me desaparezco
 };
 
