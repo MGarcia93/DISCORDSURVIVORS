@@ -1,5 +1,5 @@
 import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
-import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile } from './sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile, drawWarrior } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
 import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
 import { on } from './bus.mjs';
