@@ -15,8 +15,17 @@ test('drawWarrior draws his photo outfit in both facings', () => {
   }
 });
 
-function record(options = {}) {
+test('the shroom projectile is a little tumbling mushroom with a capped head', () => {
   const rectangles = [];
+  const ctx = { save() {}, restore() {}, translate() {}, fillRect(...args) { rectangles.push([...args, this.fillStyle]); } };
+  drawGamerProjectile(ctx, 'shroom');
+  assert.ok(rectangles.length >= 5, 'a full little shroom, not a bare frame');
+  assert.ok(rectangles.some(r => r[4] === '#c9556b'), 'the pink hongo cap from the kit');
+  assert.ok(rectangles.some(r => r[4] === '#e9dfc8'), 'cream stem');
+  assert.ok(rectangles.some(r => r[4] === '#f2e9d8'), 'cap spots');
+});
+
+function record(options = {}) {  const rectangles = [];
   const translations = [];
   const ctx = {
     save() {}, restore() {}, scale() {}, getTransform: () => ({ a: 1, d: 1 }),

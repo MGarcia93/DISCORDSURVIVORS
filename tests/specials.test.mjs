@@ -30,6 +30,11 @@ test('Viaje Astral config lives on the sheet', () => {
   assert.equal(vanish.contactFactor, 0);
 });
 
+test('Warrior owns his own game-over line', () => {
+  assert.equal(CHARACTERS.warrior.deathLine, 'WARRIOR SE DESCONECTÓ DE LA REALIDAD.');
+  assert.equal(CHARACTERS.negro.deathLine, undefined, 'the others keep the generic line');
+});
+
 test('Viaje Astral deals continuous area damage, disorients normal enemies and briefly immobilizes the weak', () => {
   const { run, p, weak, strong, faraway } = actors();
   assert.equal(activateSpecial(run, 'astral'), true);

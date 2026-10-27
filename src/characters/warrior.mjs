@@ -10,6 +10,7 @@ const warrior = {
   id: 'warrior',
   name: 'WARRIOR',
   gameNote: 'CHAMÁN DEL NORTE · CONTROL DE MASAS · SE CREE ARGENTINO',
+  deathLine: 'WARRIOR SE DESCONECTÓ DE LA REALIDAD.',
   draw(ctx, x, y, context) {
     drawWarrior(ctx, x, y, {
       time: context.time, moving: context.moving, facing: context.facing, scale: 2 });

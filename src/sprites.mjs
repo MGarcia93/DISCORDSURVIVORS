@@ -372,6 +372,16 @@ export function drawWarrior(ctx, x, y, options = {}) {
 }
 
 export function drawGamerProjectile(ctx, device) {
+  if (device === 'shroom') {
+    // A chubby little hongo tumbling through the air: cap, spots, cream stem.
+    pixel(ctx, -3, -4, 6, 9, '#e9dfc8');
+    pixel(ctx, -2, 5, 4, 2, '#c9a97c');
+    pixel(ctx, -8, -9, 16, 6, '#c9556b');
+    pixel(ctx, -9, -6, 18, 2, '#a83c56');
+    pixel(ctx, -6, -8, 3, 2, '#f2e9d8');
+    pixel(ctx, 3, -9, 3, 2, '#f2e9d8');
+    return;
+  }
   if (device === 'remote') {
     pixel(ctx, -6, -14, 12, 28, '#171722');
     pixel(ctx, -4, -13, 8, 25, '#393747');
