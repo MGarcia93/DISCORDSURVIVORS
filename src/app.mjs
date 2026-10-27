@@ -1,7 +1,8 @@
 import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
 import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
-import { isCharacterUnlocked, isDebugUnlockAll, recordMapVictory, unlockAllForTesting } from './progression.mjs';
+import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
+import { on } from './bus.mjs';
 
 const content = document.querySelector('#content');
 const keys = new Set();
@@ -16,6 +17,13 @@ let facing = 1;
 let selectedCharacter = 'negro';
 let solagoUnlocked = isCharacterUnlocked('solago');
 let debugUnlockAll = isDebugUnlockAll();
+// The negro boss victory passes through the bus: progression records the
+// unlock, app reads it back to refresh the character roster cache.
+on('waveCleared', ({ run: clearedRun }) => {
+  if (clearedRun.character !== 'negro' || clearedRun.phase !== 'won') return;
+  solagoUnlocked = isCharacterUnlocked('solago');
+  clearedRun.unlockedSolago = solagoUnlocked;
+});
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 
@@ -150,10 +158,6 @@ function overlay() {
   const phase = paused ? 'paused' : run.phase;
   if (lastPhase === phase) return;
   lastPhase = phase;
-  if (phase === 'won' && run.character === 'negro' && !solagoUnlocked) {
-    solagoUnlocked = recordMapVictory(run.character);
-    run.unlockedSolago = solagoUnlocked;
-  }
   if (phase === 'playing') { box.innerHTML = ''; return; }
   let body = '';
   if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;

@@ -21,6 +21,7 @@ import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
 import { ENEMY_KINDS, getEnemyKind } from './enemies.mjs';
+import { emit } from './bus.mjs';
 
 export function createRun(random = Math.random, character = 'negro') {
   const characterDef = getCharacter(character);
@@ -57,6 +58,7 @@ export function activateSpecial(run, type) {
   player[type] = spec.duration;
   player[`${type}Cooldown`] = spec.cooldown;
   spec.onStart?.(run, player);
+  emit('specialActivated', { run, player, special: type });
   return true;
 }
 
@@ -249,17 +251,23 @@ export function step(run, seconds, input = {}) {
     run.coins += getEnemyKind(enemy.kind).bounty;
     run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
     if (def.onKill) def.onKill(run, p, enemy, ctx);
+    emit('kill', { run, player: p, enemy });
   }
   run.enemies = run.enemies.filter(enemy => enemy.hp > 0);
   run.projectiles = run.projectiles.filter(shot => shot.ttl > 0);
   for (const effect of run.effects) { effect.ttl -= dt; effect.y -= dt * 20; }
   run.effects = run.effects.filter(effect => effect.ttl > 0);
-  if (p.hp <= 0) run.phase = 'dead';
-  else if (killed.some(enemy => enemy.kind === 'boss')) run.phase = 'won';
-  else if (run.wave < 4 && run.time >= run.duration) {
+  if (p.hp <= 0) {
+    run.phase = 'dead';
+    emit('playerDown', { run, player: p });
+  } else if (killed.some(enemy => enemy.kind === 'boss')) {
+    run.phase = 'won';
+    emit('waveCleared', { run });
+  } else if (run.wave < 4 && run.time >= run.duration) {
     run.phase = 'shop';
     run.coins += 20;
     run.enemies = [];
     run.projectiles = [];
+    emit('waveCleared', { run });
   }
 }

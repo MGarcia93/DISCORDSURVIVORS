@@ -73,3 +73,14 @@ export function unlockAllForTesting(storage) {
     return false;
   }
 }
+
+// Solago unlock lives behind the waveCleared bus event instead of the UI
+// overlay: a negro victory on the boss map is the only progression trigger.
+export function handleWaveClearedEvent(event, storage) {
+  const run = event?.run;
+  if (run?.character === 'negro' && run?.phase === 'won') return recordMapVictory('negro', storage);
+  return false;
+}
+
+import { on } from './bus.mjs';
+on('waveCleared', event => handleWaveClearedEvent(event));
