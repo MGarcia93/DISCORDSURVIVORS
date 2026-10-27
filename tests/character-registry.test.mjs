@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRun, activateSpecial, step } from '../src/engine.mjs';
 import { CHARACTERS, getCharacter } from '../src/characters/index.mjs';
+import { UNIT_PX } from '../src/stats.mjs';
 
 test('characters are registered data objects with behavior, and the engine resolves unknown ids to negro', () => {
   assert.ok(CHARACTERS.negro && CHARACTERS.solago, 'both implemented characters must be registered');

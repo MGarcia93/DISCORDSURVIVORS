@@ -1,4 +1,5 @@
 import { WORLD_SCALE } from '../constants.mjs';
+import { resolveEntityStats } from '../stats.mjs';
 import { drawElNegro } from '../sprites.mjs';
 
 const negro = {
@@ -11,10 +12,18 @@ const negro = {
       time: context.time, moving: context.moving, facing: context.facing,
       sitting: context.player.chair > 0, scale: 2 });
   },
+  // Stat sheet: percentages over BASE_STATS (src/stats.mjs), resolved to the
+  // attacker values the engine reads.
   stats: {
-    hp: 150, maxHp: 150, defense: 0.2, damage: 30,
-    hitRadius: 17 * WORLD_SCALE, attackRange: Infinity,
-    shotInterval: 0.45, speed: 165 * WORLD_SCALE,
+    hitRadius: 17 * WORLD_SCALE, // collision size: not one of the six combat stats
+    ...resolveEntityStats({
+      life: 150,             // 150 points of damage
+      defense: 40,           // 4 defense points -> 20% mitigation
+      attack: 300,           // 30 damage per shot
+      attackSpeed: 222.22,   // ~2.22 attacks/s (~0.45s between shots)
+      attackDistance: Infinity, // ranged auto-aim: unlimited reach
+      moveSpeed: 3300,       // 165 scaled px/s
+    }),
   },
   attack: { type: 'ranged', device: 'remote' },
   decays: [],

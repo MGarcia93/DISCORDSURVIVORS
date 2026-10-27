@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, step, activateSpecial } from '../src/engine.mjs';
+import { UNIT_PX } from '../src/stats.mjs';
 
 test('Solago has normal health and speed, 15% defense, stronger short-range melee and no projectiles', () => {
   const run = createRun(() => 0.5, 'solago');
@@ -10,7 +11,7 @@ test('Solago has normal health and speed, 15% defense, stronger short-range mele
   assert.equal(p.speed, negro.player.speed);
   assert.equal(p.defense, 0.15);
   assert.equal(p.damage, 30 * 1.35);
-  assert.equal(p.attackRange, 72 * 0.95 * WORLD_SCALE);
+  assert.equal(p.attackRange, 68.4 * UNIT_PX);
   assert.ok(p.hitRadius < negro.player.hitRadius, 'Solago has a narrower collision box than the tank');
   run.spawnIn = 100;
   run.enemies.push({ id: 1, x: p.x + p.attackRange - 4, y: p.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });

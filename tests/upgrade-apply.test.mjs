@@ -18,7 +18,9 @@ test('chooseUpgrade delegates to apply and preserves exact stat effects', () => 
   };
 
   assert.equal(buy('damage').damage, 30 * 1.3);
-  assert.equal(buy('rate').shotInterval, 0.45 * 0.92);
+  // attackSpeed is authored as a percentage (222.22%) whose resolved interval
+  // rounds to 0.45s within float tolerance.
+  assert.ok(Math.abs(buy('rate').shotInterval - 0.45 * 0.92) < 0.001);
   const health = buy('health');
   assert.equal(health.maxHp, 175);
   assert.equal(health.hp, 175);

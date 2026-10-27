@@ -20,7 +20,7 @@ export const HEAL_AMOUNT = 60;
 import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
-import { ENEMY_KINDS, getEnemyKind } from './enemies.mjs';
+import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyHp, enemySpeed } from './enemies.mjs';
 import { emit } from './bus.mjs';
 
 export function createRun(random = Math.random, character = 'negro') {
@@ -85,9 +85,9 @@ export function buyHeal(run) {
 
 function enemyFromKind(run, kind, x, y) {
   const def = ENEMY_KINDS[kind];
-  const hp = def.hp(run.wave);
+  const hp = enemyHp(kind, run.wave);
   return { id: ++run.serial, kind, x, y,
-    hp, maxHp: hp, radius: def.radius * WORLD_SCALE, speed: def.speed(run.wave) * WORLD_SCALE };
+    hp, maxHp: hp, radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) };
 }
 
 export function startNextWave(run) {
@@ -215,7 +215,7 @@ export function step(run, seconds, input = {}) {
     enemy.y += (p.y - enemy.y) / dist * enemy.speed * dt;
     if (dist < enemy.radius + p.hitRadius && p.immune <= 0) {
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
-      const contactDamage = getEnemyKind(enemy.kind).contactDamage;
+      const contactDamage = enemyContactDamage(enemy.kind);
       p.hp = Math.max(0, p.hp - contactDamage * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);
       p.immune = 0.65;
     }
@@ -248,7 +248,7 @@ export function step(run, seconds, input = {}) {
   const killed = run.enemies.filter(enemy => enemy.hp <= 0);
   for (const enemy of killed) {
     run.kills++;
-    run.coins += getEnemyKind(enemy.kind).bounty;
+    run.coins += enemyBounty(enemy.kind);
     run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
     if (def.onKill) def.onKill(run, p, enemy, ctx);
     emit('kill', { run, player: p, enemy });

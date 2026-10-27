@@ -1,25 +1,25 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, startNextWave, step } from '../src/engine.mjs';
-import { ENEMY_KINDS } from '../src/enemies.mjs';
+import { WORLD_SCALE, createRun, startNextWave, step } from '../src/engine.mjs';
+import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyHp, enemySpeed } from '../src/enemies.mjs';
 
-test('enemy kinds are a data table with per-wave formulas and combat fields', () => {
-  assert.equal(ENEMY_KINDS.zombie.hp(1), 46);
-  assert.equal(ENEMY_KINDS.zombie.hp(10), 100);
-  assert.equal(ENEMY_KINDS.runner.hp(2), 38);
-  assert.equal(ENEMY_KINDS.zombie.speed(5), 60);
-  assert.equal(ENEMY_KINDS.runner.speed(5), 108);
-  assert.equal(ENEMY_KINDS.boss.hp(4), 2200);
+test('enemy sheets are percentages over the base stats with per-wave curves', () => {
+  assert.equal(enemyHp('zombie', 1), 46);
+  assert.equal(enemyHp('zombie', 10), 100);
+  assert.equal(enemyHp('runner', 2), 38);
+  assert.equal(enemySpeed('zombie', 5), 60 * WORLD_SCALE);
+  assert.equal(enemySpeed('runner', 5), 108 * WORLD_SCALE);
+  assert.equal(enemyHp('boss', 4), 2200);
   assert.equal(ENEMY_KINDS.zombie.radius, 17);
   assert.equal(ENEMY_KINDS.runner.radius, 13);
   assert.equal(ENEMY_KINDS.boss.radius, 38);
-  assert.equal(ENEMY_KINDS.boss.speed(4), 52);
+  assert.equal(enemySpeed('boss', 4), 52 * WORLD_SCALE);
   for (const kind of ['zombie', 'runner']) {
-    assert.equal(ENEMY_KINDS[kind].contactDamage, 12);
-    assert.equal(ENEMY_KINDS[kind].bounty, 2);
+    assert.equal(enemyContactDamage(kind), 12);
+    assert.equal(enemyBounty(kind), 2);
   }
-  assert.equal(ENEMY_KINDS.boss.contactDamage, 30);
-  assert.equal(ENEMY_KINDS.boss.bounty, 30);
+  assert.equal(enemyContactDamage('boss'), 30);
+  assert.equal(enemyBounty('boss'), 30);
 });
 
 test('spawned zombies and runners read hp, radius and speed from the table', () => {

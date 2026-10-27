@@ -1,4 +1,5 @@
 import { WORLD_SCALE } from '../constants.mjs';
+import { resolveEntityStats } from '../stats.mjs';
 import { drawSolago } from '../sprites.mjs';
 
 const solago = {
@@ -10,10 +11,18 @@ const solago = {
       time: context.time, moving: context.moving, facing: context.facing,
       attacking: context.player.attackFlash > 0, crouching: context.player.stand > 0, scale: 2 });
   },
+  // Stat sheet: percentages over BASE_STATS (src/stats.mjs), resolved to the
+  // attacker values the engine reads.
   stats: {
-    hp: 100, maxHp: 100, defense: 0.15, damage: 30 * 1.35,
-    hitRadius: 15 * WORLD_SCALE, attackRange: 72 * 0.95 * WORLD_SCALE,
-    shotInterval: 0.56, speed: 165 * WORLD_SCALE,
+    hitRadius: 15 * WORLD_SCALE, // collision size: not one of the six combat stats
+    ...resolveEntityStats({
+      life: 100,            // 100 points of damage
+      defense: 30,          // 3 defense points -> 15% mitigation
+      attack: 405,          // 40.5 damage per bite (135% of EL NEGRO's shot)
+      attackSpeed: 178.57,  // ~1.79 attacks/s (~0.56s between bites)
+      attackDistance: 68.4, // 68.4% of the base 100-unit reach
+      moveSpeed: 3300,      // 165 scaled px/s
+    }),
   },
   attack: { type: 'melee' },
   decays: ['permissionActive'],
