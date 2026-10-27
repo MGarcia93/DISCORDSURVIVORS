@@ -186,7 +186,7 @@ export function step(run, seconds, input = {}) {
   const dt = Math.min(0.05, Math.max(0, seconds));
   const p = run.player;
   const def = p.characterDef;
-  const ctx = { hit, distance, nearest, fire };
+  const ctx = { hit, distance, nearest, fire, confuse: applyConfusion };
   run.time += dt;
   run.elapsed += dt;
   const decayKeys = [
@@ -246,6 +246,7 @@ export function step(run, seconds, input = {}) {
   for (const enemy of run.enemies) {
     if (enemy.hp <= 0) continue;
     const dist = distance(enemy, p) || 1;
+    enemy.stunTtl = Math.max(0, (enemy.stunTtl ?? 0) - dt);
     const smoke = def.passives.find(passive => passive.kind === 'smoke');
     const zone = smoke && run.effects.find(effect => effect.kind === 'smoke' && distance(enemy, effect) <= effect.r);
     if (zone) enemy.smokeIn = Math.min(smoke.stackCap, (enemy.smokeIn ?? 0) + dt);
@@ -256,7 +257,9 @@ export function step(run, seconds, input = {}) {
     enemy.attackCd = Math.max(0, (enemy.attackCd ?? 0) - dt);
     enemy.confusionTtl = Math.max(0, (enemy.confusionTtl ?? 0) - dt);
     if ((enemy.confusionTtl ?? 0) <= 0) enemy.confusionStacks = 0;
-    if ((enemy.confusionStacks ?? 0) >= 3 && enemy.kind !== 'boss') {
+    if ((enemy.stunTtl ?? 0) > 0) {
+      // too dazed to walk: spored enemies stand still
+    } else if ((enemy.confusionStacks ?? 0) >= 3 && enemy.kind !== 'boss') {
       const drift = disorientedDrift(enemy, run.elapsed);
       const stumble = enemy.speed * confusedSlow * 0.6;
       enemy.x += drift.x * stumble * dt;

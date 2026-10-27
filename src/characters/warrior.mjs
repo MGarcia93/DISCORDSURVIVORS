@@ -53,7 +53,56 @@ const warrior = {
       run.effects.push({ x: p.x, y: p.y, kind: 'smoke', r: this.r, ttl: this.ttl });
     },
   }],
-  specials: [],   // T4: viaje astral + me desaparezco
+  // Q: VIAJE ASTRAL. A spore circle around Warrior: continuous area damage,
+  // disorients normal enemies (drift) and briefly stuns the weak ones; strong
+  // enemies and bosses only get slowed.
+  specials: [{
+    key: 'astral', name: 'Viaje Astral', hotkey: 'q', duration: 6, cooldown: 20,
+    radius: 170 * WORLD_SCALE, tickRate: 0.4, tickFactor: 0.6,
+    stacksPerTick: 2, confusionTtl: 6, stunThreshold: 150, stunWindow: 1.2,
+    onTick(run, p, dt, ctx) {
+      run.astralIn = (run.astralIn ?? 0) - dt;
+      if (run.astralIn > 0) return;
+      run.astralIn = this.tickRate;
+      for (const enemy of run.enemies) {
+        if (enemy.hp <= 0 || ctx.distance(enemy, p) > this.radius) continue;
+        ctx.hit(run, enemy, p.damage * this.tickFactor, 'spore');
+        ctx.confuse(enemy, this.stacksPerTick, this.confusionTtl);
+        if (enemy.kind !== 'boss' && (enemy.maxHp ?? 0) <= this.stunThreshold) enemy.stunTtl = this.stunWindow;
+      }
+      run.effects.push({ x: p.x, y: p.y, text: '✿', ttl: 0.5, kind: 'spore' });
+    },
+  }, {
+    // E: ME DESAPAREZCO. Short full invulnerability inside smoke, then he
+    // reappears at the safest nearby spot with a spore explosion.
+    key: 'vanish', name: 'Me Desaparezco', hotkey: 'e', duration: 2, cooldown: 30,
+    contactFactor: 0,
+    blink: 90 * WORLD_SCALE, burstRadius: 120 * WORLD_SCALE,
+    burstFactor: 1.5, burstStacks: 2,
+    onStart(run, p) {
+      run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE, text: '¡YA VUELVO!', ttl: 1.2, kind: 'smoketext' });
+    },
+    onExpire(run, p, ctx) {
+      // Safe reappearance: scan 8 blink candidates and keep the one the
+      // nearest enemy is farthest from. Deterministic, no rng.
+      let best = null, bestGap = -Infinity;
+      for (let i = 0; i < 8; i++) {
+        const angle = i * Math.PI / 4;
+        const candidate = { x: p.x + Math.cos(angle) * this.blink, y: p.y + Math.sin(angle) * this.blink };
+        let gap = Infinity;
+        for (const enemy of run.enemies) if (enemy.hp > 0) gap = Math.min(gap, ctx.distance(enemy, candidate));
+        if (gap > bestGap) { bestGap = gap; best = candidate; }
+      }
+      p.x = best.x; p.y = best.y;
+      for (const enemy of run.enemies) {
+        if (enemy.hp <= 0 || ctx.distance(enemy, p) > this.burstRadius) continue;
+        ctx.hit(run, enemy, p.damage * this.burstFactor, 'spore');
+        ctx.confuse(enemy, this.burstStacks, 5.4);
+      }
+      run.effects.push({ x: p.x, y: p.y, text: '¿QUÉ PASÓ?', ttl: 1.2, kind: 'smoketext' });
+      run.effects.push({ x: p.x, y: p.y, text: '☁', ttl: 0.6, kind: 'spore' });
+    },
+  }],
 };
 
 export default warrior;
