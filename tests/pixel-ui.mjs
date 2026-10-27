@@ -11,7 +11,7 @@ try {
     await page.locator('#menu-scene').waitFor();
     assert.equal(await page.locator('#menu-scene').evaluate(canvas => getComputedStyle(canvas).imageRendering), 'pixelated');
     const pixelCheck = await page.evaluate(async () => {
-      const { drawElNegro, drawChair, drawZombie, drawAdministrator, drawAnime, PALETTE } = await import('/src/sprites.mjs');
+      const { drawElNegro, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile } = await import('/src/sprites.mjs');
       const canvas = document.createElement('canvas');
       canvas.width = 256; canvas.height = 256;
       const ctx = canvas.getContext('2d');
@@ -20,7 +20,15 @@ try {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, 256, 256);
         ctx.scale(0.5, 0.5);
-        draw(ctx, 200.7, 250.3, { time: 1.5 });
+        draw(ctx, 200.7, 250.3, { time: 1.5, ...(draw === drawAnime ? { scale: 2 } : {}) });
+        const data = ctx.getImageData(0, 0, 256, 256).data;
+        for (let i = 3; i < data.length; i += 4) if (data[i] !== 0 && data[i] !== 255) partialAlpha++;
+      }
+      for (const device of ['remote', 'joystick', 'phone']) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, 256, 256);
+        ctx.translate(128, 128);
+        drawGamerProjectile(ctx, device);
         const data = ctx.getImageData(0, 0, 256, 256).data;
         for (let i = 3; i < data.length; i += 4) if (data[i] !== 0 && data[i] !== 255) partialAlpha++;
       }
@@ -46,6 +54,9 @@ try {
     assert.match(description, /coloradas/i);
     assert.match(description, /Hello Kitty Girls/);
     assert.match(description, /sin papá/i);
+    const characterPanel = await page.locator('.detail-panel').innerText();
+    assert.match(characterPanel, /ARSENAL GAMER[\s\S]*joystick y celular/i);
+    assert.match(characterPanel, /MODO OTAKU[\s\S]*18 segundos/i);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.equal(await page.locator('#sprite-preview').evaluate(canvas => getComputedStyle(canvas).imageRendering), 'pixelated');
     await page.getByRole('button', { name: 'QUE EMPIECE EL DESASTRE' }).click();

@@ -48,8 +48,10 @@ button, h1, h2, h3 { font-weight: 900; }
 .stage-label { position: absolute; top: 12px; left: 14px; color: var(--green); font-size: 10px; letter-spacing: 2px; }
 .sprite-name { position: absolute; bottom: 13px; left: 0; right: 0; text-align: center; font-size: 10px; color: var(--gold); letter-spacing: 3px; }
 .roster { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; margin-top: 16px; }
-.roster-card { min-width: 0; border: 2px solid #43364c; height: 68px; background: #211b2d; text-align: center; display: grid; place-content: center; gap: 3px; }
+.roster-card { min-width: 0; border: 2px solid #43364c; height: 68px; background: #211b2d; color: var(--paper); font: inherit; text-align: center; display: grid; place-content: center; gap: 3px; padding: 0; cursor: pointer; }
 .roster-card.selected { border-color: var(--green); box-shadow: inset 0 0 0 2px #46553e; background: #333c32; }
+.roster-card:disabled { cursor: not-allowed; }
+.roster-card.locked-card { opacity: 0.68; }
 .roster-card canvas { width: 40px; height: 44px; margin: auto; }
 .roster-card span { color: #695a78; font-size: 20px; font-weight: bold; }
 .roster-card small { font-size: 7px; color: #99889f; text-overflow: ellipsis; overflow: hidden; }
@@ -62,6 +64,9 @@ button, h1, h2, h3 { font-weight: 900; }
 .stats b { color: var(--green); font-size: 21px; display: block; }
 .stats small { color: #b9aabb; font-size: 9px; letter-spacing: 1px; }
 .stats .penalty { color: #d88d80; }
+.stats.solago-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.solago-stats b { font-size: 18px; }
+.solago-stats small { font-size: 7px; letter-spacing: 0; }
 .skill { display: flex; gap: 12px; margin: 15px 0; }
 kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; border-bottom: 3px solid #5b4965; padding: 2px 5px; min-width: 26px; height: 26px; color: #e9d9df; background: #3b2c47; font: bold 12px monospace; flex-shrink: 0; }
 .skill b { font-size: 11px; color: #ded0dc; text-transform: uppercase; }
@@ -84,12 +89,20 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .arena-header .eyebrow { font-size: 8px; letter-spacing: 1px; }
 .arena-header .secondary { font-size: 10px; padding: 10px; }
 .arena-wrap { position: relative; width: min(100%, calc((100dvh - 212px) * 1040 / 680)); margin: auto; border: 3px solid #5d5b4b; box-shadow: 0 0 0 2px #151620; background: #202a29; }
-.arena-wrap > canvas { width: 100%; height: auto; aspect-ratio: 1040 / 680; }
+.arena-wrap > canvas { width: 100%; height: auto; aspect-ratio: 1144 / 748; }
 .hud { position: absolute; top: 13px; left: 13px; right: 13px; display: flex; justify-content: space-between; gap: 10px; pointer-events: none; }
 .health-box { width: 195px; background: #171c23ed; border: 2px solid #636655; padding: 9px 12px; }
 .hud-label { font-size: 10px; display: flex; justify-content: space-between; color: #ddd5bc; }
 .hp-track { height: 7px; background: #41333b; margin-top: 7px; }
 .hp-fill { height: 100%; background: repeating-linear-gradient(90deg, #b9d689 0px 7px, #829f63 7px 8px); }
+.task-panel { position: absolute; z-index: 2; top: 84px; left: 14px; width: 230px; padding: 8px 10px; background: #191a25e8; border: 2px solid #746086; color: #e1d1e7; font-size: 9px; }
+.task-panel[hidden] { display: none; }
+.task-panel > div:first-child { display: flex; justify-content: space-between; gap: 5px; }
+.task-panel b { color: #d4b9e7; letter-spacing: 1px; }
+.task-panel span { white-space: nowrap; }
+.task-track { height: 6px; margin-top: 6px; background: #46384f; }
+.task-fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, #d2b5e7 0 7px, #9b83b4 7px 8px); transition: width 120ms linear; }
+.task-panel.boost-active { border-color: #e6cc92; box-shadow: 0 0 10px #ddc18366; }
 .hud-numbers { display: flex; gap: 8px; align-items: flex-start; }
 .hud-numbers span { padding: 10px; background: #171c23ed; border: 2px solid #636655; color: #d9c694; font-size: 11px; }
 .game-controls { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
@@ -99,13 +112,13 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .ability kbd { margin-right: 4px; }
 .ability:disabled { opacity: 0.5; }
 .game-note { text-align: center; color: #83778d; font-size: 9px; }
-.overlay { position: absolute; z-index: 5; inset: 0; background: #0e101bda; display: grid; place-items: center; padding: 20px; overflow: auto; }
+.overlay { position: fixed; z-index: 20; inset: 0; background: #0e101bda; display: grid; place-items: center; padding: 20px; overflow: auto; }
 .overlay > div { width: min(100%, 580px); background: #261e31; border: 3px solid #9d7da4; box-shadow: inset 0 0 0 3px #41314e, 5px 5px #0c0d15; text-align: center; padding: 28px; max-height: 100%; overflow: auto; }
 .overlay h2 { font-size: 25px; line-height: 1.4; color: var(--gold); margin: 12px 0; }
 .overlay p { font-size: 12px; color: #c2aec6; line-height: 1.8; margin: 14px 0; }
 .overlay .actions { justify-content: center; margin-top: 20px; }
 .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
-.shop-dialog { display: flex; flex-direction: column; text-align: center; }
+.shop-dialog { display: flex; flex-direction: column; text-align: center; height: 100%; }
 .shop-dialog .shop-grid { grid-template-columns: repeat(3, 1fr); flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 12px 0; padding-right: 4px; }
 .shop-footer { flex-shrink: 0; padding-top: 4px; }
 .shop-footer .primary { width: 100%; }
@@ -144,6 +157,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .menu-help, .room-caption { display: none; } .game-status { padding: 17px 14px; font-size: 7px; letter-spacing: 0; }
   .screen { padding: 25px 18px; } .screen-heading { padding-bottom: 18px; } .screen-heading .screen-counter { display: none; }
   .screen-heading h1 { font-size: 18px; } .eyebrow { font-size: 9px; } .character-layout { grid-template-columns: 1fr; margin-top: 20px; }
+  .stats.solago-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sprite-stage canvas { max-height: 270px; } .roster-card { height: 59px; } .roster-card small { font-size: 6px; }
   .detail-panel h2 { font-size: 24px; } .stats { gap: 30px; } .bottom-actions { flex-wrap: wrap; }
   .primary, .secondary { font-size: 10px; padding: 13px 15px; } .bottom-actions > .primary { flex: 1; }
@@ -151,8 +165,9 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .story-chapter { top: 18px; left: 14px; font-size: 9px; } .story-art { object-position: 65% center; }
   .story-nav { flex-wrap: wrap; gap: 15px; } .story-nav .actions { gap: 10px; } .story-nav .secondary, .story-nav .primary { font-size: 9px; padding: 11px; }
   .game-screen { padding: 12px 8px; gap: 15px; } .arena-header h2 { font-size: 12px; } .arena-header .eyebrow { font-size: 7px; }
-  .arena-wrap { width: 100%; } .arena-wrap > canvas { aspect-ratio: 1040 / 1000; object-fit: contain; }
+  .arena-wrap { width: 100%; } .arena-wrap > canvas { aspect-ratio: 1144 / 748; object-fit: contain; }
   .hud { top: 7px; left: 7px; right: 7px; } .health-box { width: 125px; padding: 6px; } .hud-label { font-size: 8px; }
+  .task-panel { top: 58px; left: 7px; width: 170px; font-size: 7px; padding: 5px 6px; }
   .hud-numbers { gap: 5px; } .hud-numbers span { font-size: 8px; padding: 7px; } .game-controls { padding: 0 4px; }
   .ability-buttons { gap: 6px; } .ability { padding: 7px; font-size: 8px; } .ability kbd { min-width: 20px; height: 24px; font-size: 10px; }
   .key-help { flex-wrap: wrap; font-size: 8px; } .overlay { padding: 8px; } .overlay > div { padding: 15px 10px; }

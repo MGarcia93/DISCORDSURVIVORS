@@ -1,6 +1,7 @@
-import { WIDTH, HEIGHT, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
-import { drawElNegro, drawChair, drawZombie, drawAdministrator, drawAnime } from './sprites.mjs';
+import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
+import { isCharacterUnlocked, isDebugUnlockAll, recordMapVictory, unlockAllForTesting } from './progression.mjs';
 
 const content = document.querySelector('#content');
 const keys = new Set();
@@ -12,6 +13,9 @@ let lastFrame = 0;
 let lastPhase = '';
 let hudElapsed = 0;
 let facing = 1;
+let selectedCharacter = 'negro';
+let solagoUnlocked = isCharacterUnlocked('solago');
+let debugUnlockAll = isDebugUnlockAll();
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 
@@ -23,7 +27,7 @@ const stories = [
     text: 'El Discord colapsó y mezcló todos los mundos que jugaban. Ahora hay zombis en el servidor, demonios esperando loot y cobradores de alquiler. Esta primera incursión empieza entre los muertos.',
     quote: 'Los zombis te persiguen. Los corredores llegan antes. Ninguno respeta el AFK.' },
   { title: 'Sobreviví. Después discutimos.', label: '03 / LA ÚLTIMA PARTIDA', symbol: '♜', tag: 'OBJETIVO · VOLVER AL DISCORD',
-    text: 'Controlá al Negro, sobreviví tres oleadas y comprá mejoras entre rondas. En la cuarta te espera El Administrador del Servidor. Derrotalo para cerrar esta primera partida.',
+    text: 'Elegí a tu sobreviviente, aguantá tres oleadas y comprá mejoras entre rondas. En la cuarta te espera El Administrador del Servidor. Derrotalo para cerrar esta primera partida.',
     quote: 'Vos caminá. El control remoto pega solo. Si no te movés por dos segundos, recuperás vida.' },
 ];
 
@@ -67,25 +71,42 @@ function home() {
 }
 
 function characters() {
-  content.innerHTML = `
-    <section class="screen">
-    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">1 / 7 DISPONIBLE</span></header>
-    <div class="character-layout"><section aria-label="Personajes">
-      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">EL NEGRO</span></div>
-      <div class="roster"><div class="roster-card selected" aria-label="El Negro, seleccionado"><canvas id="roster-portrait" width="40" height="48" aria-hidden="true"></canvas></div>${['Maxi', 'Jhonny', 'Solao', 'Papafrita', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}</div>
-      <p class="roster-note">? PERSONAJES EN DESARROLLO · TODAVÍA NO DESBLOQUEABLES</p>
-    </section><section class="detail-panel" aria-label="Habilidades de El Negro">
+  solagoUnlocked = isCharacterUnlocked('solago');
+  debugUnlockAll = isDebugUnlockAll();
+  if (!solagoUnlocked) selectedCharacter = 'negro';
+  const solago = selectedCharacter === 'solago' && solagoUnlocked;
+  const rosterButton = (id, name, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${id}" aria-label="${name}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el primer mapa para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${name}</small></button>`;
+  const roster = `${rosterButton('negro', 'Negro', true, !solago)}${rosterButton('solago', 'Solago', solagoUnlocked, solago)}${['Maxi', 'Jhonny', 'Papafrita', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
+  const profile = solago ? `
+      <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
+      <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
+      <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
+      <div class="stats solago-stats"><div><b>100</b><small>VIDA NORMAL</small></div><div><b>+35%</b><small>DAÑO MELEE</small></div><div><b>−5%</b><small>ALCANCE</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: +25% de defensa durante 2,5 segundos.</p></div></div>
+      <div class="skill"><kbd>8×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 8 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>` : `
       <div class="eyebrow">Tanque sedentario · Dificultad fácil</div><h2>EL NEGRO</h2>
       <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
       <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
       <div class="stats"><div><b>+50%</b><small>VIDA MÁXIMA</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b class="penalty">−25%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>CONTROL REMOTO</b><p>Ataque automático que rebota hasta tres enemigos. Cambiar de canal nunca fue tan violento.</p></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Cada tiro puede rebotar hasta tres enemigos.</p></div></div>
       <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una compañera anime que dispara durante 8 segundos. Recarga: 20 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 25 segundos.</p></div></div>
-    </section></div>
+      <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`;
+  content.innerHTML = `
+    <section class="screen">
+    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${solagoUnlocked ? '2' : '1'} / 7 DISPONIBLES</span></header>
+    <div class="character-layout"><section aria-label="Personajes">
+      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${solago ? 'SOLAGO' : 'EL NEGRO'}</span></div>
+      <div class="roster">${roster}</div>
+      <p class="roster-note">${debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : solagoUnlocked ? 'SOLAGO DESBLOQUEADO · MAPA 01 COMPLETADO' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
+    </section><section class="detail-panel" aria-label="Habilidades de ${solago ? 'Solago' : 'El Negro'}">${profile}</section></div>
     <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
-  drawElNegro(document.querySelector('#roster-portrait').getContext('2d'), 20, 47, { scale: 1 });
+  const negroRoster = document.querySelector('#roster-negro');
+  if (negroRoster) drawElNegro(negroRoster.getContext('2d'), 20, 47, { scale: 1 });
+  const solagoRoster = document.querySelector('#roster-solago');
+  if (solagoRoster) drawSolago(solagoRoster.getContext('2d'), 26, 47, { scale: 1 });
   drawPreview(0);
 }
 
@@ -101,22 +122,25 @@ function story() {
 }
 
 function game() {
-  run = createRun();
+  run = createRun(Math.random, selectedCharacter);
   facing = 1;
   lastPhase = '';
+  const solago = run.character === 'solago';
   content.innerHTML = `
     <section class="game-screen">
     <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
-    <div class="arena-wrap"><canvas width="1040" height="680" aria-label="Arena de supervivencia. Movete con WASD o las flechas. Q invoca a tu compañera y E activa el sillón."></canvas>
-      <div class="hud"><div class="health-box"><div class="hud-label"><span>EL NEGRO</span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div><div id="game-overlay"></div>
+    <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q invoca a tu waifu y E activa el sillón."></canvas>
+      <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
+      <div id="task-panel" class="task-panel" ${solago ? '' : 'hidden'}><div><b>PERMISO PARA JUGAR</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
+      <div id="game-overlay"></div>
     </div>
     <div class="game-controls"><div class="key-help"><kbd>W A S D</kbd> / <kbd>↑ ← ↓ →</kbd> Mover <span>·</span> Ataque automático <span>·</span><kbd>ESC</kbd> Pausa</div>
       <div class="touch-pad" aria-label="Movimiento táctil"><button data-direction="up" aria-label="Arriba">↑</button><button data-direction="left" aria-label="Izquierda">←</button><button data-direction="down" aria-label="Abajo">↓</button><button data-direction="right" aria-label="Derecha">→</button></div>
-      <div class="ability-buttons"><button class="ability" data-special="anime"><kbd>Q</kbd> <span>Modo Otaku</span></button><button class="ability" data-special="chair"><kbd>E</kbd> <span>Me da paja</span></button></div></div>
-    <p class="game-note">4 OLEADAS DE 60 SEGUNDOS · MEJORAS ACUMULABLES · SIN GUARDADO PERMANENTE</p></section>`;
+      <div class="ability-buttons">${solago ? '<button class="ability" data-special="stand"><kbd>E</kbd> <span>La Patrona</span></button>' : '<button class="ability" data-special="anime"><kbd>Q</kbd> <span>Modo Otaku</span></button><button class="ability" data-special="chair"><kbd>E</kbd> <span>Me da paja</span></button>'}</div></div>
+    <p class="game-note">${solago ? 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E' : '4 OLEADAS DE 60 SEGUNDOS · MEJORAS ACUMULABLES · SOLAGO SE DESBLOQUEA AL GANAR'}</p></section>`;
   const canvas = document.querySelector('.arena-wrap canvas');
-  canvas.width = WIDTH / 2;
-  canvas.height = HEIGHT / 2;
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
   updateHUD();
 }
 
@@ -126,6 +150,10 @@ function overlay() {
   const phase = paused ? 'paused' : run.phase;
   if (lastPhase === phase) return;
   lastPhase = phase;
+  if (phase === 'won' && run.character === 'negro' && !solagoUnlocked) {
+    solagoUnlocked = recordMapVictory(run.character);
+    run.unlockedSolago = solagoUnlocked;
+  }
   if (phase === 'playing') { box.innerHTML = ''; return; }
   let body = '';
   if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
@@ -141,23 +169,32 @@ function overlay() {
     const healDisabled = full || run.coins < HEAL_COST;
     body = `<div class="eyebrow">Oleada ${run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín. Las mejoras se acumulan y cada nivel cuesta más.<br><b>${run.coins} fichas disponibles</b> · +20 por sobrevivir</p><p class="shop-hint">DESLIZÁ PARA VER TODAS LAS MEJORAS ↓</p><div class="shop-grid">${cards}<button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Te hacés traer ${HEAL_AMOUNT} de vida ahora mismo.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
   }
-  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
+  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? run.unlockedSolago ? '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' ? 'shop-dialog' : ''}">${body}</div></div>`;
   box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
 }
 
 function updateHUD() {
   const p = run.player;
+  document.querySelector('#player-name').textContent = p.character === 'solago' ? 'SOLAGO' : 'EL NEGRO';
   document.querySelector('#hp-label').textContent = `${Math.ceil(p.hp)}/${p.maxHp}`;
   document.querySelector('#hp-fill').style.width = `${p.hp / p.maxHp * 100}%`;
   document.querySelector('#coins').textContent = `◈ ${run.coins}`;
   document.querySelector('#timer').textContent = run.wave === 4 ? `☠ JEFE · ${formatTime(run.time)}` : formatTime(Math.max(0, run.duration - run.time));
   document.querySelector('#wave-title').innerHTML = `${run.wave === 4 ? 'EL ADMINISTRADOR' : `OLEADA 0${run.wave}`} <span class="muted">/ 04</span>`;
-  for (const type of ['anime', 'chair']) {
+  const taskPanel = document.querySelector('#task-panel');
+  if (taskPanel && p.character === 'solago') {
+    const percentage = p.permissionActive > 0 ? 100 : p.taskKills / p.permissionNeeded * 100;
+    document.querySelector('#task-fill').style.width = `${percentage}%`;
+    document.querySelector('#task-label').textContent = p.permissionActive > 0 ? `${Math.ceil(p.permissionActive)}s · ¡TE DIERON PERMISO!` : `${p.taskKills}/${p.permissionNeeded} BAJAS`;
+    taskPanel.classList.toggle('boost-active', p.permissionActive > 0);
+  }
+  const specials = p.character === 'solago' ? ['stand'] : ['anime', 'chair'];
+  for (const type of specials) {
     const button = document.querySelector(`[data-special="${type}"]`);
     const cooldown = p[`${type}Cooldown`];
     button.disabled = cooldown > 0 || paused || run.phase !== 'playing';
-    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : type === 'anime' ? 'Modo Otaku' : 'Me da paja';
+    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : type === 'anime' ? 'Modo Otaku' : type === 'chair' ? 'Me da paja' : 'La Patrona';
   }
 }
 
@@ -208,6 +245,11 @@ function drawPreview(time) {
   rounded(ctx, 44, 161, 168, 5, 0, '#392b42');
   rounded(ctx, 42, 151, 172, 2, 0, '#ad8a99');
   const cycle = time % 10;
+  if (selectedCharacter === 'solago' && solagoUnlocked) {
+    drawPatrona(ctx, 145, 151, { time, scale: 1.2 });
+    drawSolago(ctx, 124, 150, { time, moving: cycle < 3.4, scale: 2 });
+    return;
+  }
   const isSitting = cycle > 6.6;
   const moving = cycle < 3.4;
   const previewFacing = isSitting ? 1 : cycle < 5 ? 1 : -1;
@@ -219,53 +261,66 @@ function draw() {
   const canvas = document.querySelector('.arena-wrap canvas');
   const ctx = canvas?.getContext('2d');
   if (!ctx || !run) return;
-  const ratio = canvas.width / WIDTH;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.imageSmoothingEnabled = false;
-  drawArena(ctx);
-  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  drawArena(ctx, WIDTH, HEIGHT);
   const p = run.player;
   if (p.chair > 0) {
     ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
-    pixelRing(ctx, p.x, p.y, 145, '#a18aff');
+    pixelRing(ctx, p.x, p.y, 145 * 1.1, '#a18aff');
   }
   const figures = [...run.enemies];
   if (p.chair > 0) figures.push({ x: p.x, y: p.y - 0.6, kind: 'chair' });
+  if (p.stand > 0) figures.push({ x: p.x + 13 * WORLD_SCALE, y: p.y - 1, kind: 'stand' });
   figures.push({ x: p.x, y: p.y, kind: 'player' });
   figures.sort((a, b) => a.y - b.y);
   for (const figure of figures) {
-    if (figure.kind === 'chair') { drawChair(ctx, figure.x, figure.y + 35); continue; }
+    if (figure.kind === 'chair') { drawChair(ctx, figure.x, figure.y, { scale: 2 }); continue; }
+    if (figure.kind === 'stand') { drawPatrona(ctx, figure.x, figure.y + 38 * WORLD_SCALE, { time: run.elapsed, scale: 2 }); continue; }
     if (figure.kind === 'player' && p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
     if (figure.kind === 'player') {
-      drawElNegro(ctx, figure.x, figure.y + 35, { time: run.elapsed, moving: p.still === 0, facing, sitting: p.chair > 0 });
+      if (p.character === 'solago') drawSolago(ctx, figure.x, figure.y + 38, { time: run.elapsed, moving: p.still === 0, facing, attacking: p.attackFlash > 0, crouching: p.stand > 0, scale: 2 });
+      else drawElNegro(ctx, figure.x, figure.y + 38, { time: run.elapsed, moving: p.still === 0, facing, sitting: p.chair > 0, scale: 2 });
     } else if (figure.kind === 'boss') {
-      drawAdministrator(ctx, figure.x, figure.y + 70, { time: run.elapsed });
+      drawAdministrator(ctx, figure.x, figure.y + 77, { time: run.elapsed, scale: 4 });
     } else {
-      drawZombie(ctx, figure.x, figure.y + 28, { kind: figure.kind, time: run.elapsed, seed: figure.id });
+      drawZombie(ctx, figure.x, figure.y + 31, { kind: figure.kind, time: run.elapsed, seed: figure.id, scale: 2 });
     }
     ctx.globalAlpha = 1;
     if (figure.kind !== 'player' && (figure.kind === 'boss' || figure.hp < figure.maxHp)) {
-      const width = figure.kind === 'boss' ? 90 : 30;
-      const y = Math.max(6, figure.y - (figure.kind === 'boss' ? 138 : 62));
+      const width = (figure.kind === 'boss' ? 90 : 30) * 1.1;
+      const y = Math.max(6, figure.y - (figure.kind === 'boss' ? 138 : 62) * 1.1);
       rounded(ctx, figure.x - width / 2, y, width, 4, 2, '#070b0b');
       rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.kind === 'boss' ? '#b499f2' : '#d7f779');
     }
   }
-  if (p.anime > 0) drawAnime(ctx, p.x + 46, p.y - 36, { time: run.elapsed });
+  if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time: run.elapsed, scale: 1 });
+  if (p.smile > 0) {
+    // Solago's aura hugs his half-width, shorter frame instead of the tank-sized ring.
+    pixelRing(ctx, p.x, p.y + 2, 34 * WORLD_SCALE, '#e8dfa1');
+    pixelText(ctx, 'JA!', p.x - 16 * WORLD_SCALE, p.y - 42 * WORLD_SCALE, 2, '#e8dfa1');
+  }
+  if (p.stand > 0) pixelRing(ctx, p.x, p.y, 170 * WORLD_SCALE, '#a89ac6');
   if (p.still >= 2 && p.hp < p.maxHp) {
-    pixelRing(ctx, p.x, p.y + 28, 34, '#bfd890');
-    pixelText(ctx, 'REGEN', p.x - 28, p.y - 70, 2, '#bfd890');
+    const solago = p.character === 'solago';
+    pixelRing(ctx, p.x, solago ? p.y + 2 : p.y + 31, solago ? 34 : 37, '#bfd890');
+    pixelText(ctx, 'REGEN', p.x - 31, solago ? p.y - 46 : p.y - 77, 2, '#bfd890');
   }
   for (const shot of run.projectiles) {
-    ctx.save(); ctx.translate(Math.round(shot.x / 2) * 2, Math.round(shot.y / 2) * 2); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
-    if (shot.kind === 'remote') {
-      rounded(ctx, -6, -14, 12, 28, 3, '#30313d'); rounded(ctx, -4, -12, 8, 6, 1, '#d7f779');
-      ctx.fillStyle = '#afa9c0'; ctx.fillRect(-2, -2, 4, 4); ctx.fillRect(-2, 5, 4, 4);
-    } else { rounded(ctx, -6, -2, 12, 4, 0, '#d4b6ff'); rounded(ctx, -2, -6, 4, 12, 0, '#e7d8f2'); }
+    ctx.save(); ctx.translate(Math.round(shot.x), Math.round(shot.y)); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
+    if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone') {
+      drawGamerProjectile(ctx, shot.device);
+    } else {
+      rounded(ctx, -6, -2, 12, 4, 0, '#d4b6ff'); rounded(ctx, -2, -6, 4, 12, 0, '#e7d8f2');
+    }
     ctx.restore();
   }
   ctx.textAlign = 'center'; ctx.font = 'bold 14px monospace';
-  for (const effect of run.effects) { ctx.globalAlpha = Math.min(1, effect.ttl * 2); ctx.fillStyle = effect.loot ? '#d7f779' : '#f4e9dc'; ctx.fillText(effect.text, effect.x, effect.y); }
+  for (const effect of run.effects) {
+    ctx.globalAlpha = Math.min(1, effect.ttl * 2);
+    ctx.fillStyle = effect.loot ? '#d7f779' : effect.kind === 'stand' ? '#d9c4ef' : effect.kind === 'smile' ? '#fff0ae' : '#f4e9dc';
+    ctx.fillText(effect.text, effect.x, effect.y);
+  }
   ctx.globalAlpha = 1;
 }
 
@@ -295,6 +350,10 @@ document.addEventListener('click', event => {
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
   const action = button.dataset.action;
+  if (button.dataset.character && isCharacterUnlocked(button.dataset.character)) {
+    selectedCharacter = button.dataset.character;
+    characters();
+  }
   if (action === 'controls') controls();
   if (action === 'close-controls') closeControls();
   if (['home', 'characters'].includes(action)) show(action);
@@ -320,6 +379,16 @@ document.addEventListener('keydown', event => {
   }
   if (screen !== 'game') {
     if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeControls();
+    if (screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
+      if (unlockAllForTesting()) {
+        debugUnlockAll = true;
+        solagoUnlocked = true;
+        selectedCharacter = 'negro';
+        show('characters');
+      }
+      event.preventDefault();
+      return;
+    }
     if (['arrowup', 'arrowdown'].includes(key) && !document.querySelector('.overlay')) {
       const buttons = [...content.querySelectorAll('button:not(:disabled)')];
       const current = buttons.indexOf(document.activeElement);
@@ -336,8 +405,12 @@ document.addEventListener('keydown', event => {
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
   if (key === 'escape' && !event.repeat && run.phase === 'playing') { paused = !paused; keys.clear(); }
   if (!paused && !event.repeat && run.phase === 'playing') {
-    if (key === 'q') activateSpecial(run, 'anime');
-    if (key === 'e') activateSpecial(run, 'chair');
+    if (run.character === 'solago') {
+      if (key === 'e') activateSpecial(run, 'stand');
+    } else {
+      if (key === 'q') activateSpecial(run, 'anime');
+      if (key === 'e') activateSpecial(run, 'chair');
+    }
   }
   if (!paused) keys.add(key);
 });

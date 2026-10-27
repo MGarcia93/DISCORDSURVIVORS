@@ -1,6 +1,6 @@
 # Discord Survivors — La última partida
 
-A playable pixel-art browser prototype based on the supplied Discord Survivors concept. Start → select El Negro → three short story scenes → survive three waves → defeat the Administrator in wave four.
+A playable pixel-art browser prototype based on the supplied Discord Survivors concept. Start → select a survivor → three short story scenes → survive three waves → defeat the Administrator in wave four. Solago unlocks after the first map is won.
 
 ## Play locally
 
@@ -17,30 +17,42 @@ Open **http://localhost:5173** in a current browser. No build, package install, 
 | Action | Control |
 | --- | --- |
 | Move | WASD, arrow keys, or touch direction buttons |
-| Attack | Automatic; remotes bounce through up to three targets |
+| Attack | Automatic alternating remote, joystick, and phone shots; a shot locks its target in flight and vanishes if it dies, while a successful remote hit can bounce to up to two more enemies |
 | Regenerate health | Stand still for two seconds |
-| Modo Otaku | Q or the ability button; eight-second summon, twenty-second cooldown |
+| Modo Otaku | Q or the ability button; smaller eight-second waifu summon, eighteen-second cooldown |
 | Me da paja | E or the ability button; six-second chair aura, twenty-five-second cooldown |
+| Solago's Mordida de paleta | Automatic short-range melee attack |
+| Sonrisa blindada | Automatic temporary defense boost |
+| STAND: ¡LA PATRONA! | E or the ability button; Solago crouches and stays still while she attacks for seven seconds, then takes one scissors hit |
+| Test-unlock characters | At the main menu press **Alt+Shift+U**; writes one global debug-unlock flag to local storage |
 | Pause / resume | Escape or the pause / resume buttons |
 
 Leaving the browser tab automatically pauses combat. Between waves, spend dropped currency on upgrades, heal at the delivery button, or continue without buying. Upgrades stack through several levels with rising prices; levels persist for the whole run. Surviving a wave gives twenty bonus currency. Defeat the Administrator to win; waiting out the final wave is not enough. Retry creates a fresh run.
 
 The title menu supports Up/Down to choose and Enter to confirm. Open **CONTROLES** for the in-game control panel; Escape closes it. Menus honour the system reduced-motion preference.
 
+Solago's chore meter fills every eight kills. When full, it grants +30% damage and attack speed for eight seconds. **Alt+Shift+U** on the title screen sets one `debugUnlockAll` flag in the versioned local-storage record. The shared character-unlock check uses that same flag for every implemented character and future characters registered through it. Without the debug flag, normal map-one victory unlocks Solago. This is local browser progress, not account sync. The cheat only changes local storage; it does not edit the run or character data.
+
+Solago plays as a short-range fighter: an animated palette-bite attack, a slightly extended melee reach and narrower hitbox, timed Smile Armor defense, and the E-key Patrona Stand ultimate with a scissors slash. Every eight kills fill the chore-task meter; the temporary buff starts automatically. While the Stand is active Solago crouches and cannot move; when it expires he takes a scissors hit but remains where the player left him.
+
 ## Visual direction
 
-The interface is a game screen, not a promotional website: a pixel-art room with El Negro in his chair, a local bitmap title, a sprite roster, illustrated story scenes, pixel-framed dialogs, and an arena HUD. There is no website navigation rail, promotional card grid, or footer.
+The interface is a game screen, not a promotional website: a pixel-art room with El Negro in his chair, a local bitmap title, a sprite roster, illustrated story scenes, pixel-framed dialogs, and an arena HUD. There is no website navigation rail, promotional card grid, or footer. The combat camera is zoomed out 10% to show a slightly wider playfield, with proportionally adjusted movement and collision distances and crisp, modestly smaller sprites.
 
 El Negro's sprite uses the supplied photographs and humorous references: broad yellow hoodie, dark hair tied back, glasses, facial hair, ear jewellery, and facial piercings. The same sprite appears in the room, roster, preview, story, and combat, with standing, walking, and seated poses. This is a first pixel-art interpretation, not a claim of final likeness approval.
 
-Sprites are drawn with hard-edged rectangles on a low-resolution canvas and enlarged without smoothing. Character selection and the menu use integer sprite scales. Combat keeps its original world coordinates and physics while rendering to a half-resolution canvas with pixel-aligned character positions.
+Sprites are drawn with hard-edged rectangles on a pixelated canvas and enlarged without smoothing. Character selection and the menu use integer sprite scales. Combat has a 10% wider world view with proportionally scaled movement and physics distances.
+
+The two silhouettes stay deliberately distinct at gameplay scale: El Negro is the broad, heavy tank, while Solago is roughly a fifth shorter and half as wide, with thin arms, a narrow tee, short legs, and a large head that carries his overbite. Both share the same ground line, so the height difference reads instead of hiding behind an offset.
 
 ## Prototype boundaries
 
-- Only El Negro is playable. The other confirmed members are unavailable placeholders, not unlockable content yet.
+- El Negro is the starter. Solago is the second playable character and unlocks after beating the first map. Other confirmed members remain unavailable placeholders until their kits are implemented.
 - The three regular waves last 60 seconds each. The final boss wave has no time limit. This is a prototype format, not the proposed 15–20 minute final run.
-- One arena, two normal enemy types, one boss, one weapon, two active abilities, six stackable upgrades, and a repeatable delivery heal.
-- No permanent progression, saves, audio, multiplayer, or additional worlds yet.
+- One arena, two normal enemy types, one boss, three attacks/abilities for El Negro and Solago, six stackable upgrades, and a repeatable delivery heal.
+- Only character unlock progress is stored; there are no run saves, accounts, audio, multiplayer, or additional worlds yet.
+- The gamer volley alternates between a TV remote, joystick, and cellphone. Each shot locks onto its first target and disappears if that enemy dies before impact, instead of homing toward an unrelated enemy. A landed hit can still bounce through up to two more targets. The smaller, long-haired waifu companion has her own layered hairstyle, outfit, and pixel-art silhouette.
+- The anime summon is a smaller, detailed pixel-art companion with its own outfit and long lilac hair.
 - The supplied gamer illustration remains in `assets/` as a reference; the UI now uses original pixel sprites instead. Other supplied photographs have not been copied into the project.
 - UI and story copy follow the supplied Spanish concept. Technical identifiers and developer documentation are English.
 - All runtime visuals and text work offline once served locally. No external font or image requests are required; the title uses a local bitmap alphabet.
@@ -65,20 +77,24 @@ An optional browser smoke check is available when Playwright and its Chromium br
 node tests/browser-smoke.mjs
 node tests/pixel-ui.mjs
 node tests/shop-ui.mjs
+node tests/solago-unlock-ui.mjs
 ```
 
-For a separate test-tools installation, set `PLAYWRIGHT_MODULE` to the absolute path of Playwright's `index.mjs` and optionally `CHROMIUM_PATH` to an existing Chromium executable. `GAME_URL` overrides the local URL. The checks exercise desktop navigation, abilities, pause/resume, touch controls, the title/character/story screens, and removal of the website shell. The shop check accelerates a wave with Playwright's clock, then verifies all six upgrades, stacking purchases, the visible continue button, and the transition to wave two on desktop and mobile. Visual likeness still requires human review.
+For a separate test-tools installation, set `PLAYWRIGHT_MODULE` to the absolute path of Playwright's `index.mjs` and optionally `CHROMIUM_PATH` to an existing Chromium executable. `GAME_URL` overrides the local URL. The Solago browser check exercises the debug shortcut, character selection, melee HUD, Stand ability and local-storage persistence. The other checks cover desktop/mobile navigation, combat, pixel-art presentation and shop progression.
 
 ## Files
 
 - `index.html`, `styles.css`: shell, responsive layout, and presentation.
 - `src/app.mjs`: screen navigation, input, rendering, pause, and HUD.
 - `src/engine.mjs`: combat, waves, currency, and upgrades.
+- `src/progression.mjs`: versioned local-storage unlock state and debug unlock flag.
 - `src/sprites.mjs`: photo-referenced pixel character, enemies, chair, and summon.
 - `src/scenes.mjs`: pixel room, arena tiles, story scenes, and bitmap title.
 - `tests/game.test.mjs`: deterministic simulation checks.
 - `tests/balance.test.mjs`: wave length, stacking economy, delivery heal, and survival bonus.
 - `tests/shop-ui.mjs`: accelerated desktop/mobile shop and purchase flow.
+- `tests/solago.test.mjs`, `tests/progression.test.mjs`, `tests/solago-unlock-ui.mjs`: Solago mechanics, save gating, and test unlock.
+- `art/solago-pixel-concept.png`: visual reference for Solago and the Patrona; in-game sprites are drawn procedurally and do not load this preview.
 - `assets/negro-gamer.png`: user-supplied character illustration.
 
 To share a link later, publish this directory on a static host. No deployment or public upload is performed by the local server command.
