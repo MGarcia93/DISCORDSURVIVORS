@@ -58,6 +58,58 @@ test('specials come from the character definition with unchanged durations and c
     [['anime', 8, 18], ['chair', 6, 22]]);
 });
 
+test('La seña taxes Papazito coin awards and drops him into a 5s panic', () => {
+  const run = createRun(Math.random, 'papazito');
+  run.spawnIn = 100;
+  run.coins = 100;
+  run.shotIn = 0.001;
+  run.enemies.push({ id: 1, x: run.player.x + 80, y: run.player.y, hp: 1, maxHp: 1, speed: 0, radius: 10, kind: 'zombie' });
+
+  for (let i = 0; i < 6; i++) step(run, 0.05, {});
+
+  // bounty 2 lands first (100 + 2 = 102); the seña takes min(15, round(10%)) = 10
+  assert.equal(run.coins, 102 - 10, 'the cariñosa cuts 10% capped at 15, never more');
+  assert.ok(run.player.panicTtl > 4.8 && run.player.panicTtl <= 5, 'the panic window is exactly 5 seconds (decayed by the walk loop)');
+  assert.ok(run.player.senaCooldown > 24.8 && run.player.senaCooldown <= 25, 'the seña frequency cooldown is 25s (decayed by the walk loop)');
+  assert.ok(run.effects.some(e => e.kind === 'panic' && e.text === '¡ME RE CAGARON!'));
+});
+
+test('the seña cooldown blocks a second tax in the same window', () => {
+  const run = createRun(Math.random, 'papazito');
+  const p = run.player;
+  p.panicTtl = 3; // re-armable check starts from the def hook directly
+  p.senaCooldown = 10;
+  run.coins = 100;
+  p.characterDef.onCoinsGained?.(run, p, 10);
+  assert.equal(run.coins, 100, 'no coins are cut while the seña is cooling down');
+  assert.equal(p.panicTtl, 3, 'no panic refresh while the seña is cooling down');
+});
+
+test('panic from La seña gallops him exactly +30% movement and -40% shot interval, never damage', () => {
+  const run = createRun(Math.random, 'papazito');
+  const p = run.player;
+  const x0 = p.x;
+  p.panicTtl = 5;
+  step(run, 0.05, { x: 1, y: 0 });
+  assert.ok(Math.abs(p.x - x0 - 148.5 * WORLD_SCALE * 0.05 * 1.3) < 1e-6, '+30% move speed only');
+
+  run.shotIn = 0;
+  step(run, 0.05, {});
+  assert.ok(Math.abs(run.shotIn - (100 / 90) * 0.6) < 1e-9, '+40% attack speed only');
+  assert.equal(p.damage, 11.5, 'no extra damage from the panic');
+});
+
+test('penniless Papazito does not trigger the seña tax twice in a row for nothing', () => {
+  const run = createRun(Math.random, 'papazito');
+  const p = run.player;
+  p.panicTtl = 0;
+  p.senaCooldown = 0;
+  run.coins = 4; // round(10%) = 0: nothing to extort yet
+  p.characterDef.onCoinsGained?.(run, p, 4);
+  assert.equal(run.coins, 4);
+  assert.equal(p.panicTtl, 0, 'no panic when there is nothing to lose');
+});
+
 test('activateSpecial drives timers from the definition', () => {
   const base = createRun();
   assert.equal(activateSpecial(base, 'anime'), true);

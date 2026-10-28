@@ -174,6 +174,13 @@ function hit(run, enemy, damage, kind = 'damage') {
   run.effects.push({ x: enemy.x, y: enemy.y - enemy.radius, text: `${Math.round(damage)}`, ttl: 0.65, kind });
 }
 
+// Every coin award funnels through here (kill bounty and survival bonus) so
+// a character can react to gaining money without the engine knowing its lore.
+function awardCoins(run, amount) {
+  run.coins += amount;
+  run.player.characterDef.onCoinsGained?.(run, run.player, amount);
+}
+
 function attackMelee(run) {
   const p = run.player;
   const target = nearest(run, p);
@@ -221,7 +228,7 @@ export function step(run, seconds, input = {}) {
   if (magnitude) {
     p.lastMoveX = mx / magnitude;
     p.lastMoveY = my / magnitude;
-    const speed = p.speed * speedFactor;
+    const speed = p.speed * speedFactor * (def.passiveSpeedMult?.(p) ?? 1);
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
     p.still = 0;
@@ -243,7 +250,8 @@ export function step(run, seconds, input = {}) {
     if (def.attack.type === 'melee') attackMelee(run);
     else fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1), def.attack.device, p.attackRange, def.attack);
     const combat = def.combat || {};
-    run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1);
+    run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1)
+      * (def.passiveRateMult?.(p) ?? 1);
   }
   for (const special of def.specials) {
     if (p[special.key] > 0) special.onTick?.(run, p, dt, ctx);
@@ -318,7 +326,7 @@ export function step(run, seconds, input = {}) {
   const killed = run.enemies.filter(enemy => enemy.hp <= 0);
   for (const enemy of killed) {
     run.kills++;
-    run.coins += enemyBounty(enemy.kind);
+    awardCoins(run, enemyBounty(enemy.kind));
     run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
     if (def.onKill) def.onKill(run, p, enemy, ctx);
     emit('kill', { run, player: p, enemy });
@@ -338,7 +346,7 @@ export function step(run, seconds, input = {}) {
     emit('waveCleared', { run });
   } else if (run.wave < 4 && run.time >= run.duration) {
     run.phase = 'shop';
-    run.coins += 20;
+    awardCoins(run, 20);
     run.enemies = [];
     run.projectiles = [];
     emit('waveCleared', { run });

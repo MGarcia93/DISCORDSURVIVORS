@@ -29,9 +29,29 @@ const papazito = {
     }),
   },
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
+  // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   attack: { type: 'ranged', device: 'brick' },
-  decays: [],
-  passives: [],
+  decays: ['panicTtl'],
+  // Pasiva «La seña» (ficha §4.2). Coins only stream through the kill bounty
+  // and the survival bonus, so the tax hooks def.onCoinsGained. Ficha rules:
+  // a 25s cooldown, keep a small cut (10% of current coins, capped at 15),
+  // only when there is something to lose; the 5s panic adds +30% movement and
+  // +40% attack speed, NEVER direct damage.
+  passives: [{ key: 'sena', kind: 'sena' }],
+  senaCooldownSeconds: 25,
+  onCoinsGained(run, p, _amount) {
+    const cut = Math.min(15, Math.round(run.coins * 0.1));
+    const cooldown = p.senaCooldown ?? 0;
+    if (cooldown > 0 || cut < 1) return;
+    run.coins -= cut;
+    p.senaCooldown = this.senaCooldownSeconds;
+    p.panicTtl = 5; // ¡ME RE CAGARON!
+    run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE, text: '📱 ¡ME ESCRIBIÓ!', ttl: 1.4, kind: 'panic' });
+    run.effects.push({ x: p.x, y: p.y - 78 * WORLD_SCALE, text: '¡ME RE CAGARON!', ttl: 1.6, kind: 'panic' });
+    run.effects.push({ x: p.x, y: p.y - 96 * WORLD_SCALE, text: '¡LA CONCHA DE TU MADRE, ME ESTAFARON!', ttl: 1.8, kind: 'panic' });
+  },
+  passiveSpeedMult: p => (p.panicTtl > 0 ? 1.3 : 1),
+  passiveRateMult: p => (p.panicTtl > 0 ? 0.6 : 1),
   specials: [],
 };
 
