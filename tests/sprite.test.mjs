@@ -55,6 +55,70 @@ test('Papazito sprites as a heavier, stockier silhouette than Warrior', () => {
     'the seña survivor is the bulk frame of the roster');
 });
 
+// House-style contract for the late-roster sprites: Warrior and Papazito must
+// sit on El Negro's grid and share his closed ink contour, so the whole cast
+// reads as one set instead of four different pixel-art languages.
+const CONTOUR_INK = '#171526';
+
+function castPixels(draw) {
+  const pixels = new Map();
+  let tx = 0, ty = 0, sx = 1, sy = 1;
+  const ctx = {
+    save() {}, restore() {},
+    getTransform: () => ({ a: sx, d: sy }),
+    translate(x, y) { tx += x * sx; ty += y * sy; },
+    scale(x, y) { sx *= x; sy *= y; },
+    fillRect(x, y, w, h) {
+      for (let row = 0; row < h; row++) for (let col = 0; col < w; col++) {
+        pixels.set(`${Math.floor(tx + (x + col + 0.5) * sx)},${Math.floor(ty + (y + row + 0.5) * sy)}`, this.fillStyle);
+      }
+    },
+  };
+  draw(ctx, 64, 64, { scale: 1, time: 0, moving: false, facing: 1 });
+  return pixels;
+}
+
+function silhouetteBounds(pixels) {
+  const box = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
+  for (const [key, color] of pixels) {
+    // The ground shadow and the alpha smoke puffs are staging, not body.
+    if (color === '#11141c' || color.length === 9) continue;
+    const [x, y] = key.split(',').map(Number);
+    box.left = Math.min(box.left, x); box.right = Math.max(box.right, x + 1);
+    box.top = Math.min(box.top, y); box.bottom = Math.max(box.bottom, y + 1);
+  }
+  return { ...box, width: box.right - box.left, height: box.bottom - box.top };
+}
+
+test('Warrior and Papazito share El Negro’s 46px grid', () => {
+  const negro = silhouetteBounds(castPixels(drawElNegro));
+  for (const [name, draw] of [['Warrior', drawWarrior], ['Papazito', drawPapazito]]) {
+    const sprite = silhouetteBounds(castPixels(draw));
+    assert.ok(Math.abs(sprite.height - negro.height) <= 1,
+      `${name} is ${sprite.height}px tall and must sit on El Negro’s ${negro.height}px grid`);
+  }
+});
+
+test('Warrior and Papazito carry the same closed ink contour as the rest of the cast', () => {
+  for (const [name, draw] of [['Warrior', drawWarrior], ['Papazito', drawPapazito]]) {
+    const pixels = castPixels(draw);
+    // Torso band on the shared grid: both silhouettes must be fully present
+    // there, so the outermost pixel of every row has to be the outline ink.
+    for (let y = 34; y < 55; y++) {
+      let left = null, right = null;
+      for (const [key, color] of pixels) {
+        const [x, py] = key.split(',').map(Number);
+        if (py !== y) continue;
+        if (!left || x < left.x) left = { x, color };
+        if (!right || x > right.x) right = { x, color };
+      }
+      assert.ok(left && right, `${name} must be present at row ${y}`);
+      assert.equal(left.color, CONTOUR_INK, `${name} left edge at row ${y} must be the contour ink`);
+      assert.equal(right.color, CONTOUR_INK, `${name} right edge at row ${y} must be the contour ink`);
+    }
+  }
+});
+
 test('drawWarrior draws his photo outfit in both facings', () => {
   for (const facing of [1, -1]) {
     const rectangles = [];

@@ -1,0 +1,68 @@
+{
+  "guide": {
+    "name": "Sample guide",
+    "sprite": "negro",
+    "expressions": { "neutral": "portraits/guide-neutral.svg", "surprised": "portraits/guide-surprised.svg" }
+  },
+  "guest": {
+    "name": "Sample visitor",
+    "sprite": "warrior",
+    "expressions": { "neutral": "portraits/guest-neutral.svg" }
+  },
+  "maxi-negro": {
+    "name": "Maxi Negro",
+    "sprite": "negro",
+    "expressions": {
+      "neutral": "portraits/negro/neutral.svg",
+      "happy": "portraits/negro/happy.svg",
+      "annoyed": "portraits/negro/annoyed.svg",
+      "angry": "portraits/negro/angry.svg",
+      "surprised": "portraits/negro/surprised.svg",
+      "scared": "portraits/negro/scared.svg",
+      "tired": "portraits/negro/tired.svg",
+      "disgusted": "portraits/negro/disgusted.svg"
+    }
+  },
+  "solago": {
+    "name": "Solago",
+    "sprite": "solago",
+    "expressions": {
+      "neutral": "portraits/solago/neutral.svg",
+      "happy": "portraits/solago/happy.svg",
+      "annoyed": "portraits/solago/annoyed.svg",
+      "angry": "portraits/solago/angry.svg",
+      "surprised": "portraits/solago/surprised.svg",
+      "scared": "portraits/solago/scared.svg",
+      "tired": "portraits/solago/tired.svg",
+      "disgusted": "portraits/solago/disgusted.svg"
+    }
+  },
+  "warrior": {
+    "name": "Warrior",
+    "sprite": "warrior",
+    "expressions": {
+      "neutral": "portraits/warrior/neutral.svg",
+      "happy": "portraits/warrior/happy.svg",
+      "annoyed": "portraits/warrior/annoyed.svg",
+      "angry": "portraits/warrior/angry.svg",
+      "surprised": "portraits/warrior/surprised.svg",
+      "scared": "portraits/warrior/scared.svg",
+      "tired": "portraits/warrior/tired.svg",
+      "disgusted": "portraits/warrior/disgusted.svg"
+    }
+  },
+  "papasito": {
+    "name": "Papasito",
+    "sprite": "papazito",
+    "expressions": {
+      "neutral": "portraits/papazito/neutral.svg",
+      "happy": "portraits/papazito/happy.svg",
+      "annoyed": "portraits/papazito/annoyed.svg",
+      "angry": "portraits/papazito/angry.svg",
+      "surprised": "portraits/papazito/surprised.svg",
+      "scared": "portraits/papazito/scared.svg",
+      "tired": "portraits/papazito/tired.svg",
+      "disgusted": "portraits/papazito/disgusted.svg"
+    }
+  }
+}

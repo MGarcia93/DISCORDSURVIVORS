@@ -1,16 +1,21 @@
+import { CHARACTERS, ROSTER } from './characters/index.mjs';
+
 export const PROGRESS_STORAGE_KEY = 'discord-survivors.progress.v1';
 
-// Victory unlock chain: negro is always playable; winning a map with the
-// previous character unlocks the next one in this order.
-export const UNLOCK_CHAIN = ['solago', 'warrior', 'papazito'];
+// Victory unlock chain: winning a map with one roster entry unlocks the next
+// one. The order and the flags live on the characters themselves, so this
+// module never names a character.
+export const UNLOCK_CHAIN = ROSTER.filter(character => character.unlock.flag).map(character => character.id);
 
 function resolveStorage(storage) {
   if (storage !== undefined) return storage;
   try { return globalThis.localStorage; } catch { return null; }
 }
 
-export function isSolagoUnlocked(storage) {
-  return isCharacterUnlocked('solago', storage);
+// Unknown ids have no descriptor; a descriptor with a null flag means the
+// character is always playable.
+function unlockDescriptor(character) {
+  return Object.hasOwn(CHARACTERS, character) ? CHARACTERS[character].unlock : null;
 }
 
 function readProgressRecord(storage) {
@@ -34,70 +39,46 @@ function readProgress(storage) {
   return record.valid ? record.progress : null;
 }
 
+function writeProgressFlag(flag, storage) {
+  try {
+    const target = resolveStorage(storage);
+    if (!target) return false;
+    const record = readProgressRecord(target);
+    if (!record.valid) return false;
+    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify({ ...record.progress, [flag]: true }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function isCharacterUnlocked(character, storage) {
-  if (character === 'negro') return true;
+  const descriptor = unlockDescriptor(character);
+  if (descriptor && descriptor.flag === null) return true;
   const progress = readProgress(storage);
   if (!progress) return false;
   if (progress.debugUnlockAll === true) return true;
-  if (character === 'solago') return progress.solagoUnlocked === true;
-  if (character === 'warrior') return progress.warriorUnlocked === true;
-  return character === 'papazito' && progress.papazitoUnlocked === true;
+  if (!descriptor) return false;
+  return progress[descriptor.flag] === true;
 }
 
 export function isDebugUnlockAll(storage) {
   return readProgress(storage)?.debugUnlockAll === true;
 }
 
-export function unlockSolago(storage) {
-  try {
-    const target = resolveStorage(storage);
-    if (!target) return false;
-    const record = readProgressRecord(target);
-    if (!record.valid) return false;
-    const progress = record.progress;
-    progress.solagoUnlocked = true;
-    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
-    return true;
-  } catch {
-    return false;
-  }
+export function unlockCharacter(character, storage) {
+  const flag = unlockDescriptor(character)?.flag;
+  if (!flag) return false;
+  return writeProgressFlag(flag, storage);
 }
 
-// Victory unlock chain: negro wins the map -> Solago; Solago wins -> Warrior;
-// Warrior wins -> Papazito.
-export function unlockWarrior(storage) {
-  try {
-    const target = resolveStorage(storage);
-    if (!target) return false;
-    const record = readProgressRecord(target);
-    if (!record.valid) return false;
-    record.progress.warriorUnlocked = true;
-    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(record.progress));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export function unlockPapazito(storage) {
-  try {
-    const target = resolveStorage(storage);
-    if (!target) return false;
-    const record = readProgressRecord(target);
-    if (!record.valid) return false;
-    record.progress.papazitoUnlocked = true;
-    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(record.progress));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
+// A victory grants the next roster entry; the last entry grants nothing.
 export function recordMapVictory(character, storage) {
-  if (character === 'negro') return unlockSolago(storage);
-  if (character === 'solago') return unlockWarrior(storage);
-  if (character === 'warrior') return unlockPapazito(storage);
-  return false;
+  const index = ROSTER.findIndex(entry => entry.id === character);
+  if (index < 0) return false;
+  const next = ROSTER[index + 1];
+  if (!next) return false;
+  return unlockCharacter(next.id, storage);
 }
 
 export function unlockAllForTesting(storage) {
@@ -113,9 +94,8 @@ export function unlockAllForTesting(storage) {
   }
 }
 
-// Solago unlock lives behind the waveCleared bus event instead of the UI
-// overlay: any map victory advances the unlock chain (negro -> solago ->
-// warrior) through recordMapVictory.
+// The unlock chain hangs off the waveCleared bus event instead of the UI
+// overlay: any map victory advances it through recordMapVictory.
 export function handleWaveClearedEvent(event, storage) {
   const run = event?.run;
   if (run?.phase === 'won') return recordMapVictory(run.character, storage);

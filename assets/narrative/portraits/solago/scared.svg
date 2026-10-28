@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges" data-expression="scared">
+  <title>Solago — scared</title>
+  <desc>Retrato para cinematicas 160x200: cabeza del mismo tamaño que otros personajes, cabello corto con fade, torso estrecho y corto, dos grandes dientes frontales. Capas SVG independientes para expresiones.</desc>
+  <g id="frame-shift" transform="translate(0 20)">
+    <g id="body-outline">
+      <path fill="#18171e" d="M59 112h48v5h9v5h9v7h6v9h4v42H28v-42h4v-9h6v-7h10v-5h11z" />
+    </g>
+    <g id="neck">
+      <path fill="#744c41" d="M70 100h33v15h5v9H65v-9h5z" />
+      <path fill="#ae7158" d="M74 103h27v12h4v6H69v-6h5z" />
+      <path fill="#d69a73" d="M77 105h20v10H77z" />
+      <path fill="#865443" d="M68 113h8v6h24v-5h6v9H68z" />
+    </g>
+    <g id="shirt">
+      <path fill="#312e38" d="M56 117h12v8h34v-8h9v5h10v8h6v10h4v40H32v-39h4v-11h8v-8h12z" />
+      <path fill="#403c46" d="M49 124h10v11h-9v13h-7v26h-7v-31h4v-11h9zM111 123h9v9h6v14h4v34h-9v-28h-6v-15h-4z" />
+      <path fill="#25232c" d="M62 122h7v10h10v5h21v-5h9v-10h8v14h-10v9H68v-9h-10v-13z" />
+      <path fill="#23212a" d="M54 143h9v12h12v7h27v-7h12v-11h7v36H44v-18h6v-12h4z" />
+      <path fill="#49444d" d="M45 130h7v6h-7zM115 129h5v6h-5zM39 147h4v17h-4zM123 153h4v18h-4z" />
+      <path fill="#35313c" d="M55 160h10v5H55zM83 171h17v4H83zM47 175h15v5H47zM109 171h10v9h-10z" />
+      <path fill="#15141b" d="M68 128h10v5h23v-5h7v9h-7v4H69v-6h-7v-7z" />
+    </g>
+    <g id="head">
+      <path fill="#24212b" d="M48 30h11v-6h44v4h16v8h8v11h5v31h-5v14h-8v10h-11v6h-12v4H66v-5H55v-8H46v-12h-7V53h4V38h5z" />
+      <path fill="#965b4b" d="M51 39h13v-7h40v5h15v10h7v29h-5v13h-8v9h-13v8H70v-5H58v-9h-9V75h-5V53h7z" />
+      <path fill="#bd7958" d="M57 42h14v-7h34v6h13v8h5v26h-5v12h-8v10h-11v7H71v-6H60v-11h-8V73h-4V55h9z" />
+      <path fill="#d89b73" d="M66 40h39v5h11v17h5v15h-7v11h-10v8H84v5H72v-7H62v-11h-7V66h2V53h9z" />
+      <path fill="#e5b085" d="M73 43h28v7H70v-4h3zM105 51h10v9h-10zM64 63h9v13h-9zM77 80h14v9H77zM98 86h11v5H98z" />
+      <path fill="#b77658" d="M50 60h7v26h7v9h-7v-8h-7zM61 90h9v8h9v4H66v-5h-5zM107 79h13v8h-8v9h-12v5H87v-5h13v-7h7z" />
+      <path fill="#895547" d="M53 76h6v13h7v9h10v5H63v-8h-7v-9h-3zM109 95h8v7h-9v5H95v-4h10v-5h4z" />
+      <path fill="#eeb88c" d="M78 53h21v4H78zM73 68h8v6h-8zM94 81h9v5h-9z" />
+    </g>
+    <g id="hair">
+      <path fill="#24212b" d="M45 60V41h6v-9h10v-7h15v-5h27v4h13v7h10v11h5v15h-8V45h-8v-6h-14v-4H68v8H57v16h-6v13h-6z" />
+      <path fill="#39323a" d="M50 41h8v-10h15v-5h26v3h15v6h10v9h-10v-5h-13v-4H72v8H61v11H51z" />
+      <path fill="#51444a" d="M58 33h14v-4h15v4H72v5H58zM85 25h14v3H85zM105 31h10v4h-10z" />
+      <path fill="#6a5555" d="M60 33h9v2h-9zM86 26h11v2H86zM113 34h6v2h-6z" />
+      <path fill="#27232d" d="M49 47h5v28h-6zM121 45h7v24h-5V55h-2z" />
+    </g>
+    <g id="hair-fade">
+      <path fill="#3d343a" d="M46 46h13v6h-4v9h-4v12h-5zM53 41h13v5H53z" />
+      <path fill="#56474a" d="M49 47h12v5h-5v7h-5v7h-2zM59 42h8v4h-8z" />
+      <path fill="#775b54" d="M52 53h8v7h-3v8h-5z" />
+      <path fill="#966e5e" d="M54 58h7v7h-4v7h-4v-8h1z" />
+      <path fill="#b27c65" d="M54 67h5v9h-5z" />
+      <path fill="#7c5650" d="M46 59h5v10h-5z" />
+    </g>
+    <g id="ear">
+      <path fill="#875245" d="M42 66h9v7h4v14h-6v5h-6v-7h-4V71h3z" />
+      <path fill="#c48563" d="M43 70h7v6h3v8h-5v5h-5z" />
+      <path fill="#e3a47b" d="M44 72h3v7h-3z" />
+      <path fill="#925b4a" d="M47 78h4v7h-4z" />
+    </g>
+    <g id="expression-neutral">
+      <g id="expression-brows">
+        <path fill="#332b32" d="M60 52h10v-4h13v4H60z" />
+        <path fill="#332b32" d="M96 48h13v4h10v3H96z" />
+        <path fill="#4a3f47" d="M63 49h8v1h-8zM100 47h7v1h-7z" />
+      </g>
+      <g id="expression-eyes">
+        <path fill="#945b4a" d="M60 58h26v11H60zM95 58h23v11H95z" />
+        <path fill="#e9c4a1" d="M63 59h20v9H63zM98 59h17v9H98z" />
+        <path fill="#3d3035" d="M74 61h5v6h-5zM107 61h5v6h-5z" />
+        <path fill="#26232b" d="M76 63h1v2h-1zM109 63h1v2h-1z" />
+        <path fill="#26232b" d="M61 57h24v2H61zM96 57h21v2H96z" />
+        <path fill="#cf8e68" d="M63 69h21v3H63zM98 69h17v3H98z" />
+      </g>
+      <g id="expression-nose">
+        <path fill="#b87658" d="M87 62h5v10h5v5h-10v3h-5v-5h5z" />
+        <path fill="#e8ad81" d="M92 67h5v6h5v3h-9z" />
+        <path fill="#875443" d="M84 77h6v2h-6zM100 75h4v3h-4z" />
+      </g>
+      <g id="expression-mouth">
+        <path fill="#a76550" d="M70 82h7v-2h29v2h8v7h-2v6h-8v5H81v-5h-7v-7h-4z" />
+        <path fill="#30252b" d="M73 85h36v4h4v8h-7v3H79v-3h-6v-8z" />
+        <path fill="#f4e8cd" d="M79 84h14v15H79zM95 84h14v15H95z" />
+        <path fill="#fff7e4" d="M80 85h11v11H80zM96 85h11v11H96z" />
+        <path fill="#cfc1a8" d="M79 96h14v3H79zM95 96h14v3H95z" />
+        <path fill="#34282a" d="M93 84h2v15h-2z" />
+        <path fill="#a25f4d" d="M72 95h6v6h7v3h19v-3h7v-5h4v6h-8v5H83v-4h-7v-4h-4z" />
+        <path fill="#d49470" d="M85 104h17v2H85z" />
+        <path fill="#7a5147" d="M66 88h4v5h-4zM113 88h4v5h-4z" />
+      </g>
+    </g>
+  </g>
+</svg>

@@ -6,6 +6,9 @@ const negro = {
   id: 'negro',
   name: 'EL NEGRO',
   gameNote: '4 OLEADAS DE 60 SEGUNDOS · MEJORAS ACUMULABLES · SOLAGO SE DESBLOQUEA AL GANAR',
+  // Unlock contract: a null flag means always playable. Progress reads this
+  // descriptor, so adding a character never adds a branch to progression.
+  unlock: { flag: null },
   // Selection screen metadata: label, profile block and preview pose belong
   // to the ficha. Adding a character never touches app.mjs or screens again.
   label: 'Negro',

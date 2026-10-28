@@ -1,0 +1,11 @@
+{
+  "id": "sample-conversation",
+  "repeat": "always",
+  "steps": [
+    { "type": "dialogue", "lines": [
+      { "speaker": "guide", "text": "This is a sample conversation, not part of the story. Advance when you are ready." },
+      { "speaker": "guest", "text": "Each line only needs a speaker, an optional expression and its text." },
+      { "speaker": "guide", "expression": "surprised", "text": "Change this JSON file to change the conversation. No combat code is involved." }
+    ] }
+  ]
+}
