@@ -68,7 +68,7 @@ export function createPresenter(root, catalog, onError) {
             .slice(0, 3);
           const placed = cast.map(entry => entry.x).filter(x => x !== null);
           const midpoint = placed.length > 1 ? (Math.min(...placed) + Math.max(...placed)) / 2 : null;
-          const facing = entry => (midpoint === null || entry.x === null ? '' : entry.x < midpoint ? ' facing-right' : '');
+          const facing = entry => (midpoint === null || entry.x === null ? '' : entry.x > midpoint ? ' mirrored' : '');
           content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === line.speaker ? 'speaking' : 'listening'}${facing(entry)}">${portrait(entry.id, entry.id === line.speaker ? line.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[line.speaker].name)}</strong><p>${escape(line.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
         } else if (player?.splash) {
           content.innerHTML = `<div class="narrative-splash">${portrait(player.splash.speaker)}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;

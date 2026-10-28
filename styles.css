@@ -195,9 +195,10 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-portraits { display: flex; justify-content: space-around; align-items: flex-end; min-height: 0; overflow: hidden; }
 .narrative-portraits > div { flex: 1 1 0; min-width: 0; max-width: 270px; }
 .narrative-portrait { display: block; width: 100%; max-height: 310px; object-fit: contain; image-rendering: pixelated; }
-/* Portraits are drawn facing the viewer's left. Anyone standing on the left
-   half turns inward, and whoever is not talking stays dimmed but readable. */
-.narrative-portraits .facing-right .narrative-portrait { transform: scaleX(-1); }
+/* Portraits are drawn facing the viewer's right, so the ones standing on the
+   right half are mirrored to look back at the conversation. Whoever is not
+   talking stays dimmed but readable. */
+.narrative-portraits .mirrored .narrative-portrait { transform: scaleX(-1); }
 .narrative-portraits .listening { filter: brightness(.5); }
 .narrative-text { border: 3px solid #bfd890; background: #191725f5; padding: 18px; pointer-events: auto; }
 .narrative-text strong, .narrative-banter strong { color: #d7f779; }
