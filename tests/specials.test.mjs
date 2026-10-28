@@ -45,8 +45,8 @@ test('Viaje Astral deals continuous area damage, disorients normal enemies and b
   assert.equal(strong.confusionStacks, 3, 'normal enemies inside the circle get disoriented');
   // 3 staggered ticks: the confusion reaches 3 stacks on tick 2, so hits are
   // 0-stacks, 2-stacks (no bonus) and 3-stacks (x1.5 bonus).
-  assert.ok(Math.abs(weak.hp - (50 - 4.8 * (1 + 1 + 1.5))) < 1e-6,
-    '8 damage * 0.6 tick factor, with the +50% bonus once disoriented');
+  assert.ok(Math.abs(weak.hp - (50 - 9 * (1 + 1 + 1.5))) < 1e-6,
+    'the astral special continues to scale from Warrior base damage');
   assert.equal(weak.x, weakBefore, 'the weak one is briefly immobilized: too dazed to walk');
   assert.ok(weak.stunTtl > 0, 'the stun keeps refreshing while the circle lasts');
   assert.ok(strong.x !== strongBefore, 'strong enemies keep walking, only slowed');
@@ -68,7 +68,7 @@ test('Strong enemies take the drop instead of the floor: bosses are only slowed'
   step(run, 0.05, {});
   assert.equal(boss.confusionStacks, 1, 'bosses cap at one stack: slow, never stunned');
   assert.equal(boss.stunTtl ?? 0, 0, 'no immobilization for a boss');
-  assert.ok(Math.abs(boss.hp - (2200 - 4.8)) < 1e-6, 'the circle still deals its tick damage');
+  assert.ok(Math.abs(boss.hp - (2200 - 9)) < 1e-6, 'the circle still deals its tick damage');
 });
 
 test('Me Desaparezco is total invulnerability and reappears away from the danger', () => {
@@ -102,6 +102,19 @@ test('the vanish explosion leaves far enemies untouched', () => {
   activateSpecial(run2, 'vanish');
   for (let i = 0; i < 44; i++) step(run2, 0.05, {});
   assert.equal(faraway.hp, 500, 'out of the burst radius nothing happens');
+});
+
+test('Me Desaparezco reappears in a straight line along the held movement direction', () => {
+  const { run, p, bruiser } = single();
+  bruiser.x = p.x - 180; // the old safest-point scan chose right, opposite the requested movement
+  activateSpecial(run, 'vanish');
+  for (let i = 0; i < 38; i++) step(run, 0.05, {});
+  step(run, 0.05, { x: 1, y: 0 }); // stale horizontal input must not leak into the next direction
+  const before = { x: p.x, y: p.y };
+  step(run, 0.05, { x: 0, y: -1 });
+
+  assert.ok(p.y < before.y - 90 * WORLD_SCALE, 'the blink follows the held upward direction');
+  assert.ok(Math.abs(p.x - before.x) < 2, 'the blink stays on one straight axis');
 });
 
 function single() {

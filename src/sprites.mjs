@@ -371,15 +371,89 @@ export function drawWarrior(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+export function drawSmokeCloud(ctx, x, y, radius, time = 0, opacity = 1) {
+  ctx.save();
+  ctx.globalAlpha *= opacity;
+  const puffs = 40;
+  for (let i = 0; i < puffs; i++) {
+    const angle = i / puffs * Math.PI * 2 + time * 0.12;
+    const wobble = Math.sin(time * 2 + i * 1.9) * 5;
+    const r = radius * (0.72 + (i % 4) * 0.055) + wobble;
+    const px = Math.round((x + Math.cos(angle) * r) / 4) * 4;
+    const py = Math.round((y + Math.sin(angle) * r * 0.72) / 4) * 4;
+    ctx.fillStyle = i % 3 === 0 ? '#b7a7ce' : '#817793';
+    ctx.fillRect(px - 5, py - 5, 10, 10);
+  }
+  for (let i = 0; i < 7; i++) {
+    const angle = time * 0.7 + i * Math.PI * 2 / 7;
+    const r = radius * (0.2 + (i % 3) * 0.09);
+    ctx.fillStyle = i % 2 ? '#a79bbb' : '#d1c4d9';
+    ctx.fillRect(Math.round(x + Math.cos(angle) * r) - 6, Math.round(y + Math.sin(angle) * r * 0.6) - 6, 12, 12);
+  }
+  ctx.restore();
+}
+
+export function drawShroomBlast(ctx, x, y, radius, progress = 0) {
+  const t = Math.max(0, Math.min(1, progress));
+  const wave = radius * (0.28 + t * 0.72);
+  ctx.save();
+  ctx.globalAlpha *= 1 - t * 0.72;
+  for (let ring = 0; ring < 2; ring++) {
+    const r = wave * (ring ? 0.72 : 1);
+    const count = ring ? 32 : 48;
+    ctx.fillStyle = ring ? '#f5c66b' : '#e85c79';
+    for (let i = 0; i < count; i++) {
+      const angle = i / count * Math.PI * 2 + (ring ? 0.08 : 0);
+      const px = Math.round((x + Math.cos(angle) * r) / 4) * 4;
+      const py = Math.round((y + Math.sin(angle) * r * 0.8) / 4) * 4;
+      ctx.fillRect(px - 4, py - 4, 8, 8);
+    }
+  }
+  ctx.fillStyle = '#f1a05f';
+  ctx.fillRect(Math.round(x) - 10, Math.round(y) - 6, 20, 12);
+  ctx.fillStyle = '#ffe3a6';
+  ctx.fillRect(Math.round(x) - 4, Math.round(y) - 3, 8, 6);
+  ctx.restore();
+}
+
+export function drawAstralAura(ctx, x, y, radius, time = 0, intensity = 1) {
+  ctx.save();
+  ctx.globalAlpha *= intensity;
+  for (let ring = 0; ring < 2; ring++) {
+    const count = ring ? 28 : 44;
+    const base = radius * (ring ? 0.76 : 1);
+    ctx.fillStyle = ring ? '#9de3d3' : '#bc8be8';
+    for (let i = 0; i < count; i++) {
+      const angle = i / count * Math.PI * 2 + time * (ring ? -0.8 : 0.55);
+      const r = base + Math.sin(time * 3 + i * 0.8) * 5;
+      const px = Math.round((x + Math.cos(angle) * r) / 4) * 4;
+      const py = Math.round((y + Math.sin(angle) * r * 0.8) / 4) * 4;
+      ctx.fillRect(px - 3, py - 3, 6, 6);
+    }
+  }
+  for (let i = 0; i < 5; i++) {
+    const angle = time * 1.8 + i * Math.PI * 2 / 5;
+    const r = radius * (0.36 + (i % 2) * 0.16);
+    const px = Math.round(x + Math.cos(angle) * r);
+    const py = Math.round(y + Math.sin(angle) * r * 0.7);
+    ctx.fillStyle = i % 2 ? '#f4c9ec' : '#c5f5da';
+    ctx.fillRect(px - 2, py - 8, 4, 16);
+    ctx.fillRect(px - 8, py - 2, 16, 4);
+  }
+  ctx.restore();
+}
+
 export function drawGamerProjectile(ctx, device) {
   if (device === 'shroom') {
-    // A chubby little hongo tumbling through the air: cap, spots, cream stem.
-    pixel(ctx, -3, -4, 6, 9, '#e9dfc8');
-    pixel(ctx, -2, 5, 4, 2, '#c9a97c');
-    pixel(ctx, -8, -9, 16, 6, '#c9556b');
-    pixel(ctx, -9, -6, 18, 2, '#a83c56');
-    pixel(ctx, -6, -8, 3, 2, '#f2e9d8');
-    pixel(ctx, 3, -9, 3, 2, '#f2e9d8');
+    // Oversized bomb mushroom: its silhouette stays readable while tumbling.
+    pixel(ctx, -6, -2, 12, 15, '#e9dfc8');
+    pixel(ctx, -5, 11, 10, 3, '#c9a97c');
+    pixel(ctx, -12, -11, 24, 8, '#c9556b');
+    pixel(ctx, -15, -7, 30, 5, '#a83c56');
+    pixel(ctx, -13, -4, 26, 4, '#c9556b');
+    pixel(ctx, -9, -10, 5, 3, '#f2e9d8');
+    pixel(ctx, 5, -11, 5, 3, '#f2e9d8');
+    pixel(ctx, -2, -7, 4, 3, '#f2e9d8');
     return;
   }
   if (device === 'remote') {

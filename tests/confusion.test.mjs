@@ -27,7 +27,9 @@ test('a mushroom impact explodes into a small area and stacks Confusion on every
   assert.equal(neighbor.hp, 400 - 8, 'inside the blast radius the neighbour is splashed with full damage');
   assert.equal(neighbor.confusionStacks, 1);
   assert.equal(farOne.hp, 400, 'outside the blast radius nothing happens');
-  assert.ok(run.effects.some(e => e.kind === 'spore'), 'the explosion leaves its effect');
+  const blast = run.effects.find(effect => effect.kind === 'shroomBlast');
+  assert.equal(blast?.radius, CHARACTERS.warrior.attack.blast.radius, 'the visible shockwave uses the same radius as its damage');
+  assert.ok(blast?.duration > 0, 'the explosion has a visible animation window');
 });
 
 test('Confusion caps at three stacks with bonus elemental damage, and bosses resist the CC', () => {

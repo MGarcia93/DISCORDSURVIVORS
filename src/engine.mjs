@@ -32,7 +32,8 @@ export function createRun(random = Math.random, character = 'negro') {
     random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0,
     player: {
       character: characterDef.id, characterDef,
-      x: WIDTH / 2, y: HEIGHT / 2,
+       x: WIDTH / 2, y: HEIGHT / 2,
+       lastMoveX: 0, lastMoveY: 0,
       hp: s.maxHp, maxHp: s.maxHp, defense: s.defense, damage: s.damage,
       hitRadius: s.hitRadius, attackRange: s.attackRange, shotInterval: s.shotInterval,
       speed: s.speed,
@@ -147,7 +148,8 @@ function shroomBlast(run, shot, impact) {
     hit(run, enemy, shot.damage, 'spore');
     applyConfusion(enemy, shot.attack.blast.stacks ?? 1, shot.attack.blast.ttl ?? 5.4);
   }
-  run.effects.push({ x: impact.x, y: impact.y, text: '☁', ttl: 0.5, kind: 'spore' });
+  run.effects.push({ x: impact.x, y: impact.y, radius: shot.attack.blast.radius,
+    ttl: 0.55, duration: 0.55, kind: 'shroomBlast' });
 }
 
 function nearest(run, origin, excluded = [], maxDistance = Infinity) {
@@ -159,7 +161,8 @@ function nearest(run, origin, excluded = [], maxDistance = Infinity) {
 function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) {
   const target = nearest(run, source, [], maxDistance);
   if (!target) return;
-  const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3] : 'magic';
+  const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3]
+    : kind === 'shroom' ? 'shroom' : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
     damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
 }
@@ -186,7 +189,7 @@ export function step(run, seconds, input = {}) {
   const dt = Math.min(0.05, Math.max(0, seconds));
   const p = run.player;
   const def = p.characterDef;
-  const ctx = { hit, distance, nearest, fire, confuse: applyConfusion };
+   const ctx = { hit, distance, nearest, fire, confuse: applyConfusion, movement: input };
   run.time += dt;
   run.elapsed += dt;
   const decayKeys = [
@@ -215,6 +218,8 @@ export function step(run, seconds, input = {}) {
   const my = immobilized ? 0 : (input.y || 0);
   const magnitude = Math.hypot(mx, my);
   if (magnitude) {
+    p.lastMoveX = mx / magnitude;
+    p.lastMoveY = my / magnitude;
     const speed = p.speed * speedFactor;
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
@@ -235,7 +240,7 @@ export function step(run, seconds, input = {}) {
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
     if (def.attack.type === 'melee') attackMelee(run);
-    else fire(run, p, p.damage, def.attack.device, p.attackRange, def.attack);
+    else fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1), def.attack.device, p.attackRange, def.attack);
     const combat = def.combat || {};
     run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1);
   }
@@ -319,7 +324,10 @@ export function step(run, seconds, input = {}) {
   }
   run.enemies = run.enemies.filter(enemy => enemy.hp > 0);
   run.projectiles = run.projectiles.filter(shot => shot.ttl > 0);
-  for (const effect of run.effects) { effect.ttl -= dt; effect.y -= dt * 20; }
+  for (const effect of run.effects) {
+    effect.ttl -= dt;
+    if (typeof effect.text === 'string') effect.y -= dt * 20;
+  }
   run.effects = run.effects.filter(effect => effect.ttl > 0);
   if (p.hp <= 0) {
     run.phase = 'dead';

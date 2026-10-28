@@ -1,5 +1,5 @@
 import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
-import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile, drawWarrior } from './sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile, drawWarrior, drawSmokeCloud, drawShroomBlast, drawAstralAura } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
 import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
 import { on } from './bus.mjs';
@@ -96,7 +96,7 @@ function characters() {
       <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
       <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
       <p class="character-quote">«Yo soy argentino, boludo».</p>
-      <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b class="penalty">−20%</b><small>DAÑO DIRECTO</small></div><div><b>+20%</b><small>ALCANCE</small></div><div><b>0,9</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b>+350%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,6</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
@@ -301,6 +301,10 @@ function draw() {
   ctx.imageSmoothingEnabled = false;
   drawArena(ctx, WIDTH, HEIGHT);
   const p = run.player;
+  const astral = p.characterDef.specials.find(special => special.key === 'astral');
+  if (p.astral > 0 && astral) {
+    drawAstralAura(ctx, p.x, p.y, astral.radius, run.elapsed, Math.min(1, p.astral / 0.4));
+  }
   if (p.chair > 0) {
     ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
     pixelRing(ctx, p.x, p.y, 145 * 1.1, '#a18aff');
@@ -344,7 +348,7 @@ function draw() {
   }
   for (const shot of run.projectiles) {
     ctx.save(); ctx.translate(Math.round(shot.x), Math.round(shot.y)); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
-    if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone') {
+    if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone' || shot.device === 'shroom') {
       drawGamerProjectile(ctx, shot.device);
     } else {
       rounded(ctx, -6, -2, 12, 4, 0, '#d4b6ff'); rounded(ctx, -2, -6, 4, 12, 0, '#e7d8f2');
@@ -354,6 +358,16 @@ function draw() {
   ctx.textAlign = 'center'; ctx.font = 'bold 14px monospace';
   for (const effect of run.effects) {
     ctx.globalAlpha = Math.min(1, effect.ttl * 2);
+    if (effect.kind === 'smoke') {
+      drawSmokeCloud(ctx, effect.x, effect.y, effect.r, run.elapsed, ctx.globalAlpha);
+      continue;
+    }
+    if (effect.kind === 'shroomBlast') {
+      drawShroomBlast(ctx, effect.x, effect.y, effect.radius,
+        1 - effect.ttl / effect.duration);
+      continue;
+    }
+    if (typeof effect.text !== 'string') continue;
     ctx.fillStyle = effect.loot ? '#d7f779' : effect.kind === 'stand' ? '#d9c4ef' : effect.kind === 'smile' ? '#fff0ae' : '#f4e9dc';
     ctx.fillText(effect.text, effect.x, effect.y);
   }

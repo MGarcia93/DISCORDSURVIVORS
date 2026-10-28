@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, PALETTE } from '../src/sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
 
 test('drawWarrior draws his photo outfit in both facings', () => {
   for (const facing of [1, -1]) {
@@ -20,9 +20,25 @@ test('the shroom projectile is a little tumbling mushroom with a capped head', (
   const ctx = { save() {}, restore() {}, translate() {}, fillRect(...args) { rectangles.push([...args, this.fillStyle]); } };
   drawGamerProjectile(ctx, 'shroom');
   assert.ok(rectangles.length >= 5, 'a full little shroom, not a bare frame');
+  const width = Math.max(...rectangles.map(r => r[0] + r[2])) - Math.min(...rectangles.map(r => r[0]));
+  assert.ok(width >= 28, 'the mushroom is large enough to read as a bomb in flight');
   assert.ok(rectangles.some(r => r[4] === '#c9556b'), 'the pink hongo cap from the kit');
   assert.ok(rectangles.some(r => r[4] === '#e9dfc8'), 'cream stem');
   assert.ok(rectangles.some(r => r[4] === '#f2e9d8'), 'cap spots');
+});
+
+test('smoke, mushroom blasts, and Viaje Astral each draw visible animated pixels', () => {
+  const rectangles = [];
+  const ctx = { save() {}, restore() {}, fillRect(...args) { rectangles.push([...args, this.fillStyle]); } };
+  drawSmokeCloud(ctx, 100, 100, 90, 1.2);
+  const smokeCount = rectangles.length;
+  drawShroomBlast(ctx, 100, 100, 80, 0.5);
+  const blastCount = rectangles.length - smokeCount;
+  drawAstralAura(ctx, 100, 100, 170, 1.2);
+  const astralCount = rectangles.length - smokeCount - blastCount;
+  assert.ok(smokeCount >= 20, 'smoke renders a broad cloud, not an undefined text label');
+  assert.ok(blastCount >= 30, 'the bomb renders an expanding area blast');
+  assert.ok(astralCount >= 30, 'Viaje Astral renders an animated orbiting aura');
 });
 
 function record(options = {}) {  const rectangles = [];

@@ -22,4 +22,15 @@ test('app.mjs imports every sprite renderer it references', () => {
       assert.ok(imported.includes(name), `app.mjs body references ${name}() and must import it`);
     }
   }
+  assert.match(app, /typeof effect\.text !== 'string'\) continue/, 'non-text effects must never be passed to fillText as undefined');
+  for (const name of ['drawSmokeCloud', 'drawShroomBlast', 'drawAstralAura']) {
+    assert.ok(imported.includes(name), `app.mjs must import ${name} for Warrior's visual effects`);
+  }
+  const updateHud = app.slice(app.indexOf('function updateHUD()'), app.indexOf('function rounded('));
+  const drawLoop = app.slice(app.indexOf('function draw()'), app.indexOf('function frame('));
+  assert.doesNotMatch(updateHud, /drawAstralAura/, 'HUD updates have no canvas context and must not render');
+  assert.match(drawLoop, /drawAstralAura\(/, 'the active astral aura renders inside the canvas draw loop');
+  assert.match(app, /<b>\+350%<\/b><small>DAÑO POR BOMBA/, 'Warrior profile reflects the bomb damage');
+  assert.match(app, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
+  assert.match(app, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
 });

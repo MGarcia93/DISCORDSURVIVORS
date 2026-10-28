@@ -1,11 +1,11 @@
-import { WORLD_SCALE } from '../constants.mjs';
+import { WORLD_SCALE, WIDTH, HEIGHT } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawWarrior } from '../sprites.mjs';
 
 // Warrior — El Chamán del Norte. Stat sheet: percentual values over BASE_STATS
-// (src/stats.mjs) per his character sheet (context/personajes) and the stat
-// table the user defined: life 85, defense 10 pts (standard), attack 8,
-// attack speed 0.9/s, attack distance 120, normal mobility.
+// (src/stats.mjs) per his character sheet (context/personajes) and subsequent
+// playtesting balance: life 85, defense 10 pts (standard), base attack 15,
+// mushroom damage x3, attack speed 0.6/s, attack distance 297px, normal mobility.
 const warrior = {
   id: 'warrior',
   name: 'WARRIOR',
@@ -20,9 +20,9 @@ const warrior = {
     ...resolveEntityStats({
       life: 85,              // 85 hp: frágil, sobrevive controlando
       defense: 100,          // defensa estándar: 10 puntos -> 50% de mitigación
-      attack: 80,            // 8 de daño directo; los hongos compensan con estados
-      attackSpeed: 90,       // 0.9 ataques/s: lanza hongos un poco más lento
-      attackDistance: 120,   // 132px: mantiene a los enemigos a distancia
+      attack: 150,           // 15 damage: 50% above the base attack value
+      attackSpeed: 60,       // 0.6 bombs/s: one deliberate bomb every 1.67s
+      attackDistance: 300,   // 330px: about 15% farther than El Negro's 286px reach
       moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
     }),
   },
@@ -30,7 +30,7 @@ const warrior = {
   // includes his +35% effect duration (4s base -> 5.4s); the radius keeps his
   // +25% area proposal (70px base -> 77 unscaled).
   attack: {
-    type: 'ranged', device: 'shroom',
+    type: 'ranged', device: 'shroom', damageMultiplier: 3,
     blast: { radius: 77 * WORLD_SCALE, stacks: 1, ttl: 5.4 },
   },
   decays: [],
@@ -84,15 +84,32 @@ const warrior = {
       run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE, text: '¡YA VUELVO!', ttl: 1.2, kind: 'smoketext' });
     },
     onExpire(run, p, ctx) {
-      // Safe reappearance: scan 8 blink candidates and keep the one the
-      // nearest enemy is farthest from. Deterministic, no rng.
-      let best = null, bestGap = -Infinity;
-      for (let i = 0; i < 8; i++) {
-        const angle = i * Math.PI / 4;
-        const candidate = { x: p.x + Math.cos(angle) * this.blink, y: p.y + Math.sin(angle) * this.blink };
-        let gap = Infinity;
-        for (const enemy of run.enemies) if (enemy.hp > 0) gap = Math.min(gap, ctx.distance(enemy, candidate));
-        if (gap > bestGap) { bestGap = gap; best = candidate; }
+      const currentMove = ctx.movement || {};
+      const hasCurrentMove = Math.hypot(currentMove.x || 0, currentMove.y || 0) > 0;
+      const moveX = hasCurrentMove ? currentMove.x : p.lastMoveX || 0;
+      const moveY = hasCurrentMove ? currentMove.y : p.lastMoveY || 0;
+      const magnitude = Math.hypot(moveX, moveY);
+      let best;
+      if (magnitude) {
+        // Follow the player's direction in a straight line, clamped inside
+        // the arena; the old enemy-scored 8-way scan ignored movement input.
+        best = {
+          x: Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + moveX / magnitude * this.blink)),
+          y: Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + moveY / magnitude * this.blink)),
+        };
+      } else {
+        // With no movement history, retain the safe deterministic fallback.
+        let bestGap = -Infinity;
+        for (let i = 0; i < 8; i++) {
+          const angle = i * Math.PI / 4;
+          const candidate = {
+            x: Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + Math.cos(angle) * this.blink)),
+            y: Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + Math.sin(angle) * this.blink)),
+          };
+          let gap = Infinity;
+          for (const enemy of run.enemies) if (enemy.hp > 0) gap = Math.min(gap, ctx.distance(enemy, candidate));
+          if (gap > bestGap) { bestGap = gap; best = candidate; }
+        }
       }
       p.x = best.x; p.y = best.y;
       for (const enemy of run.enemies) {

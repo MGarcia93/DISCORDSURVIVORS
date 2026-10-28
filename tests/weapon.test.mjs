@@ -40,6 +40,28 @@ test('EL NEGRO canonically holds a quarter-of-screen attack range from his sheet
   assert.equal(negro.attackRange, 260 * UNIT_PX);
 });
 
+test('Warrior ranged shots preserve the shroom device for mushroom rendering', () => {
+  const run = createRun(() => 0.5, 'warrior');
+  run.spawnIn = 100;
+  run.shotIn = 0.001;
+  run.enemies.push({ id: 1, x: run.player.x + 100, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+
+  step(run, 0.05, {});
+
+  assert.equal(run.projectiles[0]?.device, 'shroom');
+});
+
+test('a Warrior mushroom bomb deals 45 damage before its area splash', () => {
+  const run = createRun(() => 0.5, 'warrior');
+  run.spawnIn = 100;
+  run.shotIn = 0.001;
+  run.enemies.push({ id: 1, x: run.player.x + 100, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+
+  step(run, 0.05, {});
+
+  assert.equal(run.projectiles[0]?.damage, 45);
+});
+
 test('a projectile whose locked target dies disappears instead of changing targets', () => {
   const run = createRun(() => 0.5);
   run.spawnIn = 100;
