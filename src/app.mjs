@@ -1,12 +1,15 @@
 import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
-import { drawElNegro, drawSolago, drawPatrona, drawChair, drawWarrior, drawPapazito } from './sprites.mjs';
-import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
+import { drawRoom, drawStory } from './scenes.mjs';
 import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
 import { on } from './bus.mjs';
 import { state } from './app/state.mjs';
 import { updateHUD } from './game/hud.mjs';
 import { overlay } from './game/overlays.mjs';
-import { draw, rounded } from './game/renderer.mjs';
+import { draw } from './game/renderer.mjs';
+import { home, controls, closeControls } from './screens/home.mjs';
+import { story } from './screens/story.mjs';
+import { characters, drawPreview } from './screens/characters.mjs';
+import { game } from './screens/game.mjs';
 
 // Any map victory passes through the bus: progression records the unlock and
 // app reads it back to refresh the character roster cache.
@@ -29,18 +32,6 @@ on('specialActivated', ({ run: activatedRun, special }) => {
   state.sellMenuOpen = true;
   state.lastPhase = '';
 });
-const stories = [
-  { title: 'Una partida. Era todo lo que pedíamos.', label: '01 / EL ÚLTIMO MENSAJE', symbol: '⌁', tag: 'CANAL DE VOZ · 23:47',
-    text: 'Una noche cualquiera. Uno quiere jugar al LoL, otro al Diablo, otro al Zomboid. El Negro no quiere instalar nada. Después de horas sin decidir, alguien propone Monopoly.',
-    quote: 'El servidor no soportó una discusión más. Literalmente.' },
-  { title: 'Bienvenidos al apocalipsis de los boludos.', label: '02 / CONEXIÓN PERDIDA', symbol: '☠', tag: 'MUNDO 01 · ZONA INFECTADA',
-    text: 'El Discord colapsó y mezcló todos los mundos que jugaban. Ahora hay zombis en el servidor, demonios esperando loot y cobradores de alquiler. Esta primera incursión empieza entre los muertos.',
-    quote: 'Los zombis te persiguen. Los corredores llegan antes. Ninguno respeta el AFK.' },
-  { title: 'Sobreviví. Después discutimos.', label: '03 / LA ÚLTIMA PARTIDA', symbol: '♜', tag: 'OBJETIVO · VOLVER AL DISCORD',
-    text: 'Elegí a tu sobreviviente, aguantá tres oleadas y comprá mejoras entre rondas. En la cuarta te espera El Administrador del Servidor. Derrotalo para cerrar esta primera partida.',
-    quote: 'Vos caminá. El control remoto pega solo. Si no te movés por dos segundos, recuperás vida.' },
-];
-
 function show(name) {
   state.screen = name;
   state.content.dataset.screen = name;
@@ -55,188 +46,6 @@ function show(name) {
   if (name === 'game') game();
   state.content.focus({ preventScroll: true });
   window.scrollTo(0, 0);
-}
-
-function home() {
-  state.content.innerHTML = `
-    <section class="home-screen" aria-label="Menú principal">
-      <canvas id="menu-scene" class="scene-backdrop" width="480" height="270" role="img" aria-label="Habitación pixel art: El Negro con buzo amarillo en el sillón, frente a su computadora"></canvas>
-      <div class="home-content">
-        <p class="chapter-label">UNA NOCHE MÁS EN EL SERVIDOR</p>
-        <h1 class="sr-only">Discord Survivors — La última partida</h1>
-        <canvas id="title-art" class="title-art" width="174" height="63" aria-hidden="true"></canvas>
-        <p class="title-subtitle">— La última partida —</p>
-        <nav class="main-menu" aria-label="Opciones del juego">
-          <button class="primary" data-action="characters">EMPEZAR PARTIDA</button>
-          <button class="pixel-button" data-action="controls">CONTROLES</button>
-        </nav>
-        <p class="menu-caption">El servidor se cayó.<br>Levantarse del sillón ya no es opcional.</p>
-        <p class="menu-help">↑ ↓ ELEGIR &nbsp; / &nbsp; ENTER CONFIRMAR</p>
-      </div>
-      <div class="room-caption"><b>EL NEGRO</b>TANQUE SEDENTARIO</div>
-      <div class="game-status"><span><b>●</b> UN JUGADOR · SIN CONEXIÓN AL SERVIDOR</span><span>PROTOTIPO 0.2 / PIXEL EDITION</span></div>
-      <div id="menu-overlay"></div>
-    </section>`;
-  drawTitle(document.querySelector('#title-art'));
-  drawRoom(document.querySelector('#menu-scene').getContext('2d'));
-}
-
-function characters() {
-  state.solagoUnlocked = isCharacterUnlocked('solago');
-  state.warriorUnlocked = isCharacterUnlocked('warrior');
-  state.papazitoUnlocked = isCharacterUnlocked('papazito');
-  state.debugUnlockAll = isDebugUnlockAll();
-  if (!state.solagoUnlocked && state.selectedCharacter === 'solago') state.selectedCharacter = 'negro';
-  if (!state.warriorUnlocked && state.selectedCharacter === 'warrior') state.selectedCharacter = 'negro';
-  if (!state.papazitoUnlocked && state.selectedCharacter === 'papazito') state.selectedCharacter = 'negro';
-  const solago = state.selectedCharacter === 'solago' && state.solagoUnlocked;
-  const warrior = state.selectedCharacter === 'warrior' && state.warriorUnlocked;
-  const papazito = state.selectedCharacter === 'papazito' && state.papazitoUnlocked;
-  const rosterButton = (id, name, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${id}" aria-label="${name}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el mapa anterior para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${name}</small></button>`;
-  const roster = `${rosterButton('negro', 'Negro', true, !solago && !warrior && !papazito)}${rosterButton('solago', 'Solago', state.solagoUnlocked, solago)}${rosterButton('warrior', 'Warrior', state.warriorUnlocked, warrior)}${rosterButton('papazito', 'Papazito', state.papazitoUnlocked, papazito)}${['Maxi', 'Jhonny', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
-  const unlockedCount = 1 + (state.solagoUnlocked ? 1 : 0) + (state.warriorUnlocked ? 1 : 0) + (state.papazitoUnlocked ? 1 : 0);
-  const warriorProfile = `
-      <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
-      <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
-      <p class="character-quote">«Yo soy argentino, boludo».</p>
-      <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b>+350%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,6</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>`;
-  const papazitoProfile = `
-      <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
-      <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
-      <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
-      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+15%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>La cariñosa le cobra la extorsión y le recorta monedas: 5 segundos de pánico con +30% de velocidad y +40% de ataque.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
-      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Ataque de furia: lluvia de ladrillos en todas las direcciones durante 5 segundos. Recarga: 40 segundos.</p></div></div>`;
-  const profile = warrior ? warriorProfile : solago ? `
-      <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
-      <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
-      <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
-      <div class="stats solago-stats"><div><b>100</b><small>VIDA NORMAL</small></div><div><b>+35%</b><small>DAÑO MELEE</small></div><div><b>−5%</b><small>ALCANCE</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: +25% de defensa durante 2,5 segundos.</p></div></div>
-      <div class="skill"><kbd>8×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 8 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>` : `
-      <div class="eyebrow">Tanque sedentario · Dificultad fácil</div><h2>EL NEGRO</h2>
-      <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
-      <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
-      <div class="stats"><div><b>+50%</b><small>VIDA MÁXIMA</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b class="penalty">−25%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Cada tiro puede rebotar hasta tres enemigos.</p></div></div>
-      <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`;
-  const selectorLabel = warrior ? 'Warrior' : solago ? 'Solago' : papazito ? 'Papazito' : 'El Negro';
-  state.content.innerHTML = `
-    <section class="screen">
-    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / 8 DISPONIBLES</span></header>
-    <div class="character-layout"><section aria-label="Personajes">
-      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${warrior ? 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80' : solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : papazito ? 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y la copa en la mano' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${warrior ? 'WARRIOR' : solago ? 'SOLAGO' : papazito ? 'PAPAZITO' : 'EL NEGRO'}</span></div>
-      <div class="roster">${roster}</div>
-      <p class="roster-note">${state.debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : state.papazitoUnlocked ? 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA' : state.warriorUnlocked ? 'WARRIOR DESBLOQUEADO · GANÁ EL MAPA CON WARRIOR PARA PAPAZITO' : state.solagoUnlocked ? 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
-    </section><section class="detail-panel" aria-label="Habilidades de ${selectorLabel}">${profile}</section></div>
-    <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
-  const negroRoster = document.querySelector('#roster-negro');
-  if (negroRoster) drawElNegro(negroRoster.getContext('2d'), 20, 47, { scale: 1 });
-  const solagoRoster = document.querySelector('#roster-solago');
-  if (solagoRoster) drawSolago(solagoRoster.getContext('2d'), 26, 47, { scale: 1 });
-  const warriorRoster = document.querySelector('#roster-warrior');
-  if (warriorRoster) drawWarrior(warriorRoster.getContext('2d'), 28, 46, { scale: 1 });
-  const papazitoRoster = document.querySelector('#roster-papazito');
-  if (papazitoRoster) drawPapazito(papazitoRoster.getContext('2d'), 26, 46, { scale: 1 });
-  drawPreview(0);
-}
-
-function story() {
-  const page = stories[state.storyPage];
-  state.content.innerHTML = `<section class="story-screen">
-    <canvas id="story-scene" class="story-art" width="480" height="270" role="img" aria-label="${state.storyPage === 0 ? 'El Negro en su habitación' : state.storyPage === 1 ? 'El Negro rodeado de zombis' : 'El Administrador espera con su martillo'}"></canvas>
-    <div class="story-chapter">${page.tag}</div>
-    <div class="dialogue"><div class="eyebrow">${page.label}</div><h2>${page.title}</h2><p>${page.text}</p><p class="story-quote">“${page.quote}”</p>
-    <div class="story-nav"><button class="secondary" data-action="story-back">← ATRÁS</button><div class="story-dots" aria-label="Página ${state.storyPage + 1} de 3">${stories.map((_, i) => `<span class="${i === state.storyPage ? 'current' : ''}">◆</span>`).join('')}</div><div class="actions">${state.storyPage < 2 ? '<button class="secondary" data-action="play">SALTAR HISTORIA</button>' : ''}<button class="primary" data-action="story-next">${state.storyPage === 2 ? 'ENTRAR AL CAOS' : 'CONTINUAR'} ▶</button></div></div></div></section>`;
-  drawStory(document.querySelector('#story-scene'), state.storyPage, 0);
-  state.content.focus({ preventScroll: true });
-}
-
-function game() {
-  state.run = createRun(Math.random, state.selectedCharacter);
-  state.facing = 1;
-  state.lastPhase = '';
-  const def = state.run.player.characterDef;
-  const abilityButtons = def.specials
-    .map(special => `<button class="ability" data-special="${special.key}"><kbd>${special.hotkey.toUpperCase()}</kbd> <span>${special.name}</span></button>`)
-    .join('');
-  state.content.innerHTML = `
-    <section class="game-screen">
-    <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
-    <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q y E activan tus habilidades."></canvas>
-      <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
-      <div id="task-panel" class="task-panel" ${def.taskHud ? '' : 'hidden'}><div><b>PERMISO PARA JUGAR</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
-      <div id="game-overlay"></div>
-    </div>
-    <div class="game-controls"><div class="key-help"><kbd>W A S D</kbd> / <kbd>↑ ← ↓ →</kbd> Mover <span>·</span> Ataque automático <span>·</span><kbd>ESC</kbd> Pausa</div>
-      <div class="touch-pad" aria-label="Movimiento táctil"><button data-direction="up" aria-label="Arriba">↑</button><button data-direction="left" aria-label="Izquierda">←</button><button data-direction="down" aria-label="Abajo">↓</button><button data-direction="right" aria-label="Derecha">→</button></div>
-      <div class="ability-buttons">${abilityButtons}</div></div>
-    <p class="game-note">${def.gameNote}</p></section>`;
-  const canvas = document.querySelector('.arena-wrap canvas');
-  canvas.width = WIDTH;
-  canvas.height = HEIGHT;
-  updateHUD();
-}
-
-function controls() {
-  document.querySelector('#menu-overlay').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Controles"><div>
-    <div class="eyebrow">Manual de supervivencia</div><h2>CON LO MÍNIMO ALCANZA</h2>
-    <p><kbd>WASD</kbd> / <kbd>↑ ← ↓ →</kbd> Moverse<br>El control remoto ataca automáticamente.</p>
-    <p><kbd>Q</kbd> Modo Otaku · <kbd>E</kbd> Me da paja<br><kbd>ESC</kbd> Pausar la partida</p>
-    <p>Quedate quieto 2 segundos para regenerar vida.<br>En pantalla táctil usá las flechas y los botones.</p>
-    <button class="primary" data-action="close-controls">ENTENDIDO</button>
-    </div></div>`;
-  document.querySelector('[data-action="close-controls"]').focus();
-}
-
-function closeControls() {
-  document.querySelector('#menu-overlay').innerHTML = '';
-  document.querySelector('[data-action="controls"]').focus();
-}
-
-function drawPreview(time) {
-  const canvas = document.querySelector('#sprite-preview');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  ctx.imageSmoothingEnabled = false;
-  ctx.fillStyle = '#211c2d'; ctx.fillRect(0, 0, 256, 190);
-  for (let y = 0; y < 155; y += 16) {
-    for (let x = 0; x < 256; x += 24) {
-      rounded(ctx, x + 1, y + 1, 22, 14, 0, (x + y) % 5 ? '#292133' : '#2e2538');
-    }
-  }
-  rounded(ctx, 38, 151, 180, 10, 0, '#6a536b');
-  rounded(ctx, 44, 161, 168, 5, 0, '#392b42');
-  rounded(ctx, 42, 151, 172, 2, 0, '#ad8a99');
-  const cycle = time % 10;
-  if (state.selectedCharacter === 'warrior' && state.warriorUnlocked) {
-    drawWarrior(ctx, 128, 150, { time, moving: cycle < 3.4, scale: 2 });
-    return;
-  }
-  if (state.selectedCharacter === 'papazito' && state.papazitoUnlocked) {
-    drawPapazito(ctx, 128, 151, { time, moving: cycle < 3.4, scale: 2 });
-    return;
-  }
-  if (state.selectedCharacter === 'solago' && state.solagoUnlocked) {
-    drawPatrona(ctx, 145, 151, { time, scale: 1.2 });
-    drawSolago(ctx, 124, 150, { time, moving: cycle < 3.4, scale: 2 });
-    return;
-  }
-  const isSitting = cycle > 6.6;
-  const moving = cycle < 3.4;
-  const previewFacing = isSitting ? 1 : cycle < 5 ? 1 : -1;
-  if (isSitting) drawChair(ctx, 128, 150, { scale: 2 });
-  drawElNegro(ctx, 128, 150, { time, moving, facing: previewFacing, sitting: isSitting, scale: 2 });
 }
 
 function frame(timestamp) {

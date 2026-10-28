@@ -12,9 +12,21 @@ const sprites = read('../src/sprites.mjs');
 const hud = read('../src/game/hud.mjs');
 const overlays = read('../src/game/overlays.mjs');
 const renderer = read('../src/game/renderer.mjs');
+const home = read('../src/screens/home.mjs');
+const storyScreen = read('../src/screens/story.mjs');
+const charactersScreen = read('../src/screens/characters.mjs');
+const gameScreen = read('../src/screens/game.mjs');
 const stateModule = read('../src/app/state.mjs');
 
 const spritesExport = [...sprites.matchAll(/export function (\w+)/g)].map(match => match[1]);
+const DRAWING_MODULES = [
+  ['app.mjs', app],
+  ['screens/home.mjs', home],
+  ['screens/story.mjs', storyScreen],
+  ['screens/characters.mjs', charactersScreen],
+  ['screens/game.mjs', gameScreen],
+  ['game/renderer.mjs', renderer],
+];
 
 const pinSpriteImports = (module, importLine, label) => {
   assert.ok(importLine, `${label} imports sprites.mjs by name`);
@@ -28,12 +40,25 @@ const pinSpriteImports = (module, importLine, label) => {
   return imported;
 };
 
-test('app.mjs imports every sprite renderer it references', () => {
+test('every module that draws imports every sprite renderer it references', () => {
   assert.ok(spritesExport.includes('drawWarrior'), 'sprites.mjs still exports drawWarrior');
-  pinSpriteImports(app, app.match(/import \{([^}]*)\} from '\.\/sprites\.mjs';/), 'app.mjs');
-  assert.match(app, /<b>\+350%<\/b><small>DAÑO POR BOMBA/, 'Warrior profile reflects the bomb damage');
-  assert.match(app, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
-  assert.match(app, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
+  for (const [label, source] of DRAWING_MODULES) {
+    const importLine = source.match(/import \{([^}]*)\} from '\.\.?\/sprites\.mjs';/);
+    if (!importLine) {
+      for (const name of spritesExport) {
+        assert.doesNotMatch(source, new RegExp(`\\b${name}\\(`), `${label} references ${name}() but never imports it`);
+      }
+      continue;
+    }
+    pinSpriteImports(source, importLine, label);
+  }
+});
+
+test('character profiles live with the selection screen until they move into fichas', () => {
+  assert.match(charactersScreen, /<b>\+350%<\/b><small>DAÑO POR BOMBA/, 'Warrior profile reflects the bomb damage');
+  assert.match(charactersScreen, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
+  assert.match(charactersScreen, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
+  assert.match(charactersScreen, /'PAPAZITO'/, 'the selection stage can name Papazito');
 });
 
 test('Papazito contract: merchant menu pauses the run and the sold monitor vignette lives in the draw loop', () => {
@@ -43,7 +68,6 @@ test('Papazito contract: merchant menu pauses the run and the sold monitor vigne
   assert.match(frame, /!state\.paused && !state\.sellMenuOpen/, 'the run steps stop while the merchant menu is open');
   assert.match(hud, /state\.sellMenuOpen/, 'ability buttons disable while the merchant menu is open');
   assert.match(renderer, /sellVisionTtl/, 'the sold monitor vignette renders inside the draw loop');
-  assert.match(app, /'PAPAZITO'/, 'the selection stage can name Papazito');
 });
 
 test('renderer.mjs owns the canvas draw loop: sprite imports, text guard, aura and vignette', () => {
@@ -62,9 +86,26 @@ test('the game trio lives in src/game/* and app only consumes it', () => {
   assert.match(renderer, /export function draw/, 'renderer.mjs exports draw');
   assert.match(app, /import \{ updateHUD \} from '\.\/game\/hud\.mjs';/, 'app consumes the hud module');
   assert.match(app, /import \{ overlay \} from '\.\/game\/overlays\.mjs';/, 'app consumes the overlays module');
-  assert.match(app, /import \{ draw, rounded \} from '\.\/game\/renderer\.mjs';/, 'app consumes the renderer module');
+  assert.match(app, /import \{ draw \} from '\.\/game\/renderer\.mjs';/, 'app consumes the renderer draw');
+  assert.match(charactersScreen, /import \{ rounded \} from '\.\.\/game\/renderer\.mjs';/, 'the selection preview consumes the renderer helpers');
   assert.doesNotMatch(app, /\bfunction (updateHUD|overlay)\b/, 'app.mjs no longer owns the hud/overlay bodies');
   assert.doesNotMatch(app, /\bfunction draw\b/, 'app.mjs no longer owns the draw body');
+});
+
+test('screens live in src/screens/* and the composer only wires them', () => {
+  for (const [file, symbol] of [
+    ['home.mjs', 'home'], ['home.mjs', 'controls'], ['home.mjs', 'closeControls'],
+    ['story.mjs', 'story'], ['characters.mjs', 'characters'], ['characters.mjs', 'drawPreview'],
+    ['game.mjs', 'game'],
+  ]) {
+    const source = read(`../src/screens/${file}`);
+    assert.match(source, new RegExp(`export function ${symbol}\\b`), `src/screens/${file} exports ${symbol}`);
+  }
+  assert.match(app, /import \{ home, controls, closeControls \} from '\.\/screens\/home\.mjs';/, 'app wires the home screen');
+  assert.match(app, /import \{ story \} from '\.\/screens\/story\.mjs';/, 'app wires the story screen');
+  assert.match(app, /import \{ characters, drawPreview \} from '\.\/screens\/characters\.mjs';/, 'app wires the selection screen');
+  assert.match(app, /import \{ game \} from '\.\/screens\/game\.mjs';/, 'app wires the arena DOM builder');
+  assert.doesNotMatch(app, /\bfunction (home|story|characters|game|drawPreview|controls|closeControls)\b/, 'app.mjs no longer owns the screen DOM builders');
 });
 
 // T1 (app split): the shell's shared mutable state must live in one module so
