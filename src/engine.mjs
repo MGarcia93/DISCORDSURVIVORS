@@ -117,20 +117,21 @@ export function sellBelonging(run, key) {
   const proceeds = salePrice(run, item);
   run.coins += proceeds;
   p.characterDef.onSaleIncome?.(run, p, proceeds);
+  const penaltyScale = 1 - Math.min(0.4, p.rewardBonuses?.salePenalty ?? 0);
   if (item.damageFrac) {
     p.sellDamageFrac = Math.min(SELL_DAMAGE_BUFF_CAP, (p.sellDamageFrac ?? 0) + item.damageFrac);
     p.sellDamageTtl = Math.max(p.sellDamageTtl ?? 0, item.damageTtl);
   }
   if (item.moveSlowFrac) {
-    p.sellMoveSlowFrac = Math.min(SELL_MOVE_SLOW_CAP, (p.sellMoveSlowFrac ?? 0) + item.moveSlowFrac);
+    p.sellMoveSlowFrac = Math.min(SELL_MOVE_SLOW_CAP, (p.sellMoveSlowFrac ?? 0) + item.moveSlowFrac * penaltyScale);
     p.sellMoveSlowTtl = Math.max(p.sellMoveSlowTtl ?? 0, item.moveSlowTtl);
   }
   if (item.atkSlowFrac) {
-    p.sellAtkSlowFrac = Math.min(SELL_ATK_SLOW_CAP, (p.sellAtkSlowFrac ?? 0) + item.atkSlowFrac);
+    p.sellAtkSlowFrac = Math.min(SELL_ATK_SLOW_CAP, (p.sellAtkSlowFrac ?? 0) + item.atkSlowFrac * penaltyScale);
     p.sellAtkSlowTtl = Math.max(p.sellAtkSlowTtl ?? 0, item.atkSlowTtl);
   }
   if (item.defFrac) {
-    p.sellDefLossFrac = Math.min(SELL_DEF_LOSS_CAP, (p.sellDefLossFrac ?? 0) + item.defFrac);
+    p.sellDefLossFrac = Math.min(SELL_DEF_LOSS_CAP, (p.sellDefLossFrac ?? 0) + item.defFrac * penaltyScale);
     p.sellDefLossTtl = Math.max(p.sellDefLossTtl ?? 0, item.defTtl);
   }
   if (item.visionTtl) p.sellVisionTtl = Math.max(p.sellVisionTtl ?? 0, item.visionTtl);
@@ -203,13 +204,14 @@ function disorientedDrift(enemy, elapsed) {
 }
 
 function shroomBlast(run, shot, impact) {
+  const radius = shot.attack.blast.radius + (run.player.rewardBonuses.blastRadius ?? 0) * WORLD_SCALE;
   for (const enemy of run.enemies) {
     if (enemy.hp <= 0 || shot.hit.includes(enemy.id)) continue;
-    if (distance(enemy, impact) > shot.attack.blast.radius) continue;
+    if (distance(enemy, impact) > radius) continue;
     hit(run, enemy, shot.damage, 'spore');
     applyConfusion(enemy, shot.attack.blast.stacks ?? 1, shot.attack.blast.ttl ?? 5.4);
   }
-  run.effects.push({ x: impact.x, y: impact.y, radius: shot.attack.blast.radius,
+  run.effects.push({ x: impact.x, y: impact.y, radius,
     ttl: 0.55, duration: 0.55, kind: 'shroomBlast' });
 }
 
@@ -307,7 +309,7 @@ export function step(run, seconds, input = {}) {
     p.still = 0;
   } else {
     p.still += dt;
-    if (p.still >= 2) {
+    if (p.still >= Math.max(0.5, 2 - (p.rewardBonuses.stillThreshold ?? 0))) {
       p.hp = Math.min(p.maxHp, p.hp + p.regen * dt);
       def.onStill?.(run, p);
     }

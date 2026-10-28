@@ -77,8 +77,8 @@ const solago = {
       key: 'smile',
       tick(run, p, dt, ctx) {
         if (p.smileCooldown > 0 || p.smile > 0) return;
-        p.smile = 2.5;
-        p.smileCooldown = 12;
+        p.smile = 2.5 + (p.rewardBonuses.smileDuration ?? 0);
+        p.smileCooldown = Math.max(4, 12 - (p.rewardBonuses.smileCooldown ?? 0));
         run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: 'JA!', ttl: 0.8, kind: 'smile' });
       },
     },
@@ -98,8 +98,9 @@ const solago = {
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;
         if (run.standIn > 0) return;
+        const radius = (170 + (p.rewardBonuses.patronaRadius ?? 0)) * WORLD_SCALE;
         for (const enemy of run.enemies) {
-          if (ctx.distance(enemy, p) < 170 * WORLD_SCALE) ctx.hit(run, enemy, p.damage * 0.9, 'stand');
+          if (ctx.distance(enemy, p) < radius) ctx.hit(run, enemy, p.damage * 0.9, 'stand');
         }
         run.standIn = 0.4;
       },

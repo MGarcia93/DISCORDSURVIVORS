@@ -62,7 +62,7 @@ const negro = {
         run.animeIn -= dt;
         if (run.animeIn > 0) return;
         ctx.fire(run, { x: p.x + 40 * WORLD_SCALE, y: p.y - 40 * WORLD_SCALE }, p.damage * 1.5, 'magic');
-        run.animeIn = 0.3;
+        run.animeIn = Math.max(0.12, 0.3 - (p.rewardBonuses.waifuInterval ?? 0));
       },
     },
     {
@@ -71,7 +71,8 @@ const negro = {
       onTick(run, p, dt, ctx) {
         run.chairIn -= dt;
         if (run.chairIn > 0) return;
-        for (const enemy of run.enemies) if (ctx.distance(enemy, p) < 145 * WORLD_SCALE) ctx.hit(run, enemy, p.damage * 0.8);
+        const radius = (145 + (p.rewardBonuses.chairRadius ?? 0)) * WORLD_SCALE;
+        for (const enemy of run.enemies) if (ctx.distance(enemy, p) < radius) ctx.hit(run, enemy, p.damage * 0.8);
         run.chairIn = 0.5;
       },
     },

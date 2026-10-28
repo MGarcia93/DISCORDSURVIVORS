@@ -106,12 +106,19 @@ export function beginRewards(run) {
 export function chooseLevelReward(run, id) {
   if (run.phase !== 'shop' || !run.pendingLevels.length || !run.levelChoices?.some(entry => entry.id === id)) return false;
   const entry = run.levelChoices.find(choice => choice.id === id);
-  const rank = countOf(run.levelRanks, id);
-  if (!entry.ranks[rank] || !applyReward(run, `level:${id}:${rank}`, entry.ranks[rank])) return false;
-  run.levelRanks = { ...run.levelRanks, [id]: rank + 1 };
+  if (!applyUpgradeRank(run, entry)) return false;
   run.pendingLevels.shift();
   run.levelChoices = null;
   beginRewards(run);
+  return true;
+}
+
+// Applies the next rank of one catalog entry, validated against its cap.
+export function applyUpgradeRank(run, entry) {
+  if (!entry) return false;
+  const rank = countOf(run.levelRanks, entry.id);
+  if (!entry.ranks[rank] || !applyReward(run, `level:${entry.id}:${rank}`, entry.ranks[rank])) return false;
+  run.levelRanks = { ...run.levelRanks, [entry.id]: rank + 1 };
   return true;
 }
 

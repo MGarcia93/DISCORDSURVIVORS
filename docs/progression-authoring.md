@@ -92,12 +92,20 @@ bounty and survival amounts are compatibility fallbacks only when omitted
 from an explicitly supplied balance object.
 Gallina has `enabled: false` until its provisional range effect is confirmed.
 
-Character entries initially cover waifu, Patrona and smoke duration, sale
-value, and the Negro's prerequisite-gated bounce chain. These are only the
-first supported parameters, not all the planned character mechanics. The
-engine consumes these initial bonuses when activating waifu/Patrona, emitting
-smoke, computing sale proceeds and resolving bounce hits. Sale proceeds are
-rounded down to whole coins. Remaining character paths are not yet implemented.
+Character entries cover the parameters the game already owns: waifu and
+Patrona duration, smoke duration and radius, mushroom blast radius, Negro's
+regeneration threshold, chair pulse radius and waifu firing interval, Solago's
+smile duration and cooldown, Patrona radius, Papazito's sale value and softened
+sale penalties, and Negro's prerequisite-gated bounce chain. Each is consumed
+by the real combat or sale code. Sale proceeds round down to whole coins.
+
+New mechanics that change combat shape rather than tuning an existing value
+are not implemented: bite arcs, second bites, knockback, shielded
+counterattacks, Patrona finisher, extra mushroom projectiles, spore zones,
+smoke trails, confusion propagation, brick piercing/fragments/fan shots,
+next-attack-after-sale, panic extension and the señ a activation burst. They
+need their geometry and semantics defined before they can be authored, because
+the catalog only holds parameters, not executable behavior.
 
 ## Run reward state
 

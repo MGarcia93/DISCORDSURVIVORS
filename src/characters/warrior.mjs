@@ -76,7 +76,9 @@ const warrior = {
     tick(run, p) {
       if (p[this.key + 'Cooldown'] > 0) return;
       p[this.key + 'Cooldown'] = this.interval;
-      run.effects.push({ x: p.x, y: p.y, kind: 'smoke', r: this.r, ttl: this.ttl + (p.rewardBonuses?.smokeDuration ?? 0) });
+      run.effects.push({ x: p.x, y: p.y, kind: 'smoke',
+        r: this.r + (p.rewardBonuses?.smokeRadius ?? 0) * WORLD_SCALE,
+        ttl: this.ttl + (p.rewardBonuses?.smokeDuration ?? 0) });
     },
   }],
   // Q: VIAJE ASTRAL. A spore circle around Warrior: continuous area damage,

@@ -47,6 +47,14 @@ const duration = label => ({
   max: 4, validate: value => Number.isFinite(value) && value > 0,
   describe: value => `${label} +${value} s`,
 });
+const points = (label, max, unit = '') => ({
+  max, validate: value => Number.isFinite(value) && value > 0,
+  describe: value => `${label} +${value}${unit}`,
+});
+const faster = (label, max) => ({
+  max, validate: value => Number.isFinite(value) && value > 0,
+  describe: value => `${label} ${Math.round(value * 1000)} ms más rápido`,
+});
 export const EFFECTS = {
   waifuDuration: duration('Duración de Modo Otaku'),
   standDuration: duration('Duración de La Patrona'),
@@ -55,6 +63,15 @@ export const EFFECTS = {
     describe: value => `Rebotes +${value}` },
   saleBonus: { max: 0.3, validate: value => Number.isFinite(value) && value > 0,
     describe: value => `Precio de venta +${Math.round(value * 100)}%` },
+  salePenalty: points('Penalizaciones de venta reducidas', 0.4, ''),
+  stillThreshold: points('Regeneración empieza', 1.5, ' s antes'),
+  chairRadius: points('Radio del sillón', 60, ''),
+  waifuInterval: faster('Modo Otaku ataca', 0.18),
+  blastRadius: points('Radio de hongos', 45, ''),
+  smokeRadius: points('Radio del humo', 60, ''),
+  smileDuration: duration('Duración de Sonrisa blindada'),
+  smileCooldown: points('Espera de Sonrisa blindada', 6, ' s menos'),
+  patronaRadius: points('Radio de La Patrona', 85, ''),
 };
 
 export const LEVEL_UPGRADES = [
@@ -74,6 +91,20 @@ export const LEVEL_UPGRADES = [
   ].map(([id, name, characters, type]) => ({
     id, name, characters, minLevel: 2, requires: [],
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value: type === 'saleBonus' ? 0.1 : 1 }] })),
+  })),
+  ...[
+    ['rest-less', 'Menos paciencia para pararse', 'negro', 'stillThreshold', 0.25],
+    ['wider-chair', 'Sillón más generoso', 'negro', 'chairRadius', 20],
+    ['otaku-pace', 'Cambia de capítulo rápido', 'negro', 'waifuInterval', 0.03],
+    ['wider-blast', 'Hongo bien cargado', 'warrior', 'blastRadius', 15],
+    ['wider-smoke', 'Humo más espeso', 'warrior', 'smokeRadius', 20],
+    ['longer-smile', 'Risa que dura', 'solago', 'smileDuration', 0.5],
+    ['shorter-smile', 'Se ríe seguido', 'solago', 'smileCooldown', 1],
+    ['wider-patrona', 'Tijeretazos más amplios', 'solago', 'patronaRadius', 25],
+    ['softer-sale', 'Vende sin tanto llanto', 'papazito', 'salePenalty', 0.1],
+  ].map(([id, name, characters, type, value]) => ({
+    id, name, characters, minLevel: 3, requires: [],
+    ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   { id: 'remote-bounce', name: 'Rebote del control', characters: 'negro', minLevel: 3, requires: [],
     ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
