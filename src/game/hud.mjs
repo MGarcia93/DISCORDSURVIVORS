@@ -2,7 +2,7 @@ import { state } from '../app/state.mjs';
 
 // Heads-up display: DOM reads/writes of the shared run state. No canvas
 // rendering lives here — the renderer owns every draw call.
-const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
+export const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 
 export function updateHUD() {
   const p = state.run.player;
