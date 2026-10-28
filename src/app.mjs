@@ -271,7 +271,8 @@ function updateHUD() {
     const button = document.querySelector(`[data-special="${special.key}"]`);
     const cooldown = p[`${special.key}Cooldown`];
     button.disabled = cooldown > 0 || paused || sellMenuOpen || run.phase !== 'playing';
-    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : special.name;
+    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s`
+      : (p.characterDef.specialHudLabel?.(special, p) ?? special.name);
   }
 }
 

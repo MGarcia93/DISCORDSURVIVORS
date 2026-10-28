@@ -110,6 +110,25 @@ test('penniless Papazito does not trigger the seña tax twice in a row for nothi
   assert.equal(p.panicTtl, 0, 'no panic when there is nothing to lose');
 });
 
+test('ANAMENCUÁ is a 40s-cooldown r key unleashing a 5s radial brick rain', () => {
+  assert.deepEqual(CHARACTERS.papazito.specials.map(s => [s.key, s.name, s.hotkey]),
+    [['sell', 'Liquidó todo', 'q'], ['anamencua', '¡ANAMENCUÁ!', 'r']]);
+
+  const run = createRun(Math.random, 'papazito');
+  run.spawnIn = 100;
+  assert.equal(activateSpecial(run, 'anamencua'), true);
+  assert.equal(run.player.anamencua, 5);
+  assert.equal(run.player.anamencuaCooldown, 40);
+  assert.equal(activateSpecial(run, 'anamencua'), false, 'the cooldown blocks a second activation');
+
+  // Mute the basic attack to isolate the rain, then step 1.25s of furia.
+  run.shotIn = 100;
+  run.enemies.push({ id: 1, x: run.player.x + 260, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+  for (let i = 0; i < 25; i++) step(run, 0.05, {});
+  assert.ok(500 - run.enemies[0].hp >= 2 * 11.5, 'bricks land repeatedly, not just once');
+  assert.ok(run.effects.some(e => e.text === '¡ANAMENCUÁ!'), 'the fury shout is on screen');
+});
+
 test('the sell table lives in the sheet, once per belonging, reset by every new run', () => {
   const spec = CHARACTERS.papazito.specials.find(s => s.key === 'sell');
   assert.equal(spec.hotkey, 'q');
@@ -153,6 +172,18 @@ test('sell buffs and debuffs are capped and never touch the real build', () => {
   assert.equal(p.sellAtkSlowFrac, 0.3, 'the PC slows the attack rate 30%');
   assert.deepEqual(baselineUpgrades, run.upgrades, 'sales never remove real upgrades');
   assert.equal(sellBelonging(run, 'keyboard'), true, 'the other belongings remain sellable');
+});
+
+test('the sheet can relabel its ability HUD per state, so an empty change stays visible', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  const def = run.player.characterDef;
+  const sell = def.specials.find(s => s.key === 'sell');
+  assert.equal(typeof def.specialHudLabel, 'function');
+  assert.equal(def.specialHudLabel(sell, run.player), 'Liquidó todo');
+  for (const key of ['psp', 'monitor', 'keyboard', 'chair', 'pc']) run.player.soldItems = { ...run.player.soldItems, [key]: true };
+  assert.equal(def.specialHudLabel(sell, run.player), 'CHANGO VACÍO');
+  const anamencua = def.specials.find(s => s.key === 'anamencua');
+  assert.equal(def.specialHudLabel(anamencua, run.player), '¡ANAMENCUÁ!', 'other specials keep their own name');
 });
 
 test('sale buffs expire: after their ttl the damage and debuffs stop applying', () => {

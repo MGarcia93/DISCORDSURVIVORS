@@ -52,6 +52,12 @@ const papazito = {
   },
   passiveSpeedMult: p => (p.panicTtl > 0 ? 1.3 : 1),
   passiveRateMult: p => (p.panicTtl > 0 ? 0.6 : 1),
+  // HUD relabel hook for the merchant special: an emptied chango is visible.
+  specialHudLabel(special, p) {
+    if (special.key !== 'sell') return special.name;
+    const items = special.items ?? {};
+    return Object.keys(items).some(key => !p.soldItems?.[key]) ? special.name : 'CHANGO VACÍO';
+  },
   // Especial «Liquido todo, me voy de putas» (ficha §4.3): invented inventory,
   // engine-routine sale; the app renders the pause menu from this exact table.
   specials: [{
@@ -62,6 +68,25 @@ const papazito = {
       keyboard: { label: 'Teclado', coins: 25, damageFrac: 0.15, damageTtl: 10, atkSlowFrac: 0.2, atkSlowTtl: 10, quote: 'Vendió el teclado' },
       chair: { label: 'Silla gamer', coins: 30, damageFrac: 0.2, damageTtl: 10, defFrac: 0.15, defTtl: 10, quote: 'Vendió la silla gamer', flavor: 'Con lo que tenía de trono improvisado' },
       pc: { label: 'PC completa', coins: 100, damageFrac: 0.5, damageTtl: 15, moveSlowFrac: 0.3, moveSlowTtl: 15, atkSlowFrac: 0.3, atkSlowTtl: 15, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa' },
+    },
+  }, {
+    // Definitiva «¡ANAMENCUÁ!» (ficha §4.4): a fury brick rain from every
+    // direction. Spawn sources ride a rotating circle around him; each brick
+    // homes on its nearest target. Numbers are ficha-adjustable for balance.
+    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 5, cooldown: 40,
+    spawnRadius: 70 * WORLD_SCALE, tickIn: 0.25, damageMult: 1,
+    onStart(run, p) {
+      run.effects.push({ x: p.x, y: p.y - 84 * WORLD_SCALE, text: '¡ANAMENCUÁ!', ttl: 1.3, kind: 'panic' });
+    },
+    onTick(run, p, dt, ctx) {
+      const door = run.anamencuaIn - dt;
+      run.anamencuaIn = 0;
+      if (door > 0) { run.anamencuaIn = door; return; }
+      run.anamencuaIn = this.tickIn;
+      const angle = (run.elapsed * 2.6 + run.projectiles.length * 1.7) % (Math.PI * 2);
+      const saleBonus = p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1;
+      ctx.fire(run, { x: p.x + Math.cos(angle) * this.spawnRadius, y: p.y + Math.sin(angle) * this.spawnRadius },
+        p.damage * this.damageMult * saleBonus, 'brick');
     },
   }],
 };
