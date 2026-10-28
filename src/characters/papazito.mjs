@@ -12,6 +12,8 @@ const papazito = {
   id: 'papazito',
   name: 'PAPAZITO',
   gameNote: 'EL PARAGUAYO TRUCHO · LADRILLOS, LA SEÑA Y LIQUIDACIÓN DE PERTENENCIAS',
+  // Unlock contract: this flag in local storage means the character is playable.
+  unlock: { flag: 'papazitoUnlocked' },
   // Selection screen metadata: label, profile block and preview pose belong
   // to the ficha; adding a character never touches screens or app again.
   label: 'Papazito',

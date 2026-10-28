@@ -6,6 +6,8 @@ const solago = {
   id: 'solago',
   name: 'SOLAGO',
   gameNote: 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E',
+  // Unlock contract: this flag in local storage means the character is playable.
+  unlock: { flag: 'solagoUnlocked' },
   // Selection screen metadata: label, profile block and preview pose belong
   // to the ficha; the note folds over the unlock chain order.
   label: 'Solago',

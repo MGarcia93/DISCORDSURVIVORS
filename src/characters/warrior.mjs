@@ -10,6 +10,8 @@ const warrior = {
   id: 'warrior',
   name: 'WARRIOR',
   gameNote: 'CHAMÁN DEL NORTE · CONTROL DE MASAS · SE CREE ARGENTINO',
+  // Unlock contract: this flag in local storage means the character is playable.
+  unlock: { flag: 'warriorUnlocked' },
   // Selection screen metadata: label, profile block and preview pose belong
   // to the ficha; adding a character never touches screens or app again.
   label: 'Warrior',

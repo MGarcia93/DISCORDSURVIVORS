@@ -77,7 +77,8 @@ test('fichas own their selection profile block and preview pose', () => {
   assert.match(warrior, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
   assert.match(warrior, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
   assert.match(registry, /export const ROSTER = \[/, 'the registry exports the card order');
-  assert.match(progression, /export const UNLOCK_CHAIN = \[/, 'progression owns the unlock chain ids');
+  assert.match(progression, /export const UNLOCK_CHAIN = ROSTER\.filter\(/, 'the unlock chain is derived from the registry order');
+  assert.doesNotMatch(progression, /'(negro|solago|warrior|papazito)'/, 'progression never names a character');
 });
 
 test('the selection screen and victory overlay are fully data-driven', () => {
