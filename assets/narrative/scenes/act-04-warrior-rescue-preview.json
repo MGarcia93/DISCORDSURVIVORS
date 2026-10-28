@@ -3,38 +3,158 @@
   "repeat": "always",
   "stage": {
     "points": {
-      "entrance": [260, 440], "release": [580, 440], "prisoner": [720, 440],
-      "companion": [440, 510], "papasito": [880, 500], "building": [1000, 270], "focus": [650, 430]
+      "entrance": [
+        260,
+        440
+      ],
+      "release": [
+        580,
+        440
+      ],
+      "prisoner": [
+        720,
+        440
+      ],
+      "companion": [
+        440,
+        510
+      ],
+      "papasito": [
+        880,
+        500
+      ],
+      "building": [
+        1000,
+        270
+      ],
+      "focus": [
+        650,
+        430
+      ]
     },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "entrance" },
-      "solago": { "character": "solago", "at": "companion" },
-      "warrior": { "character": "warrior", "at": "prisoner" },
-      "papasito": { "character": "papasito", "at": "papasito" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "entrance"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "companion"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "prisoner"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      }
     },
     "props": {
-      "chains": { "at": "prisoner", "state": "bound" },
-      "building": { "at": "building", "state": "smoking" }
+      "chains": {
+        "at": "prisoner",
+        "state": "bound"
+      },
+      "building": {
+        "at": "building",
+        "state": "smoking"
+      }
     }
   },
   "steps": [
-    { "type": "parallel", "steps": [
-      { "type": "move", "actor": "negro", "to": "release", "duration": 1.2 },
-      { "type": "camera", "to": "focus", "zoom": 1.1, "duration": 1.2 }
-    ] },
-    { "type": "animate", "actor": "negro", "animation": "point", "duration": 0.6 },
-    { "type": "prop", "prop": "chains", "state": "broken" },
-    { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "text": "Bueno, listo. Sos libre." },
-      { "speaker": "solago", "text": "JAJAJA. ¡Mirá qué lindo! ¡Liberamos un boliviano!" },
-      { "speaker": "warrior", "text": "¡VÁYANSE A LA MIERDA!" },
-      { "speaker": "maxi-negro", "text": "Dale, vení con nosotros, que tenemos que salir de este juego." }
-    ] },
-    { "type": "animate", "actor": "warrior", "animation": "point", "duration": 1 },
-    { "type": "dialogue", "lines": [{ "speaker": "maxi-negro", "text": "¿Qué? ¿Dejaste algo?" }] },
-    { "type": "animate", "actor": "warrior", "animation": "point", "duration": 1.2 },
-    { "type": "dialogue", "lines": [{ "speaker": "solago", "text": "Uh, negro... Me parece que encontró algo." }] },
-    { "type": "splash", "speaker": "warrior", "text": "¡WARRIOR DESBLOQUEADO!\nDisponible para seleccionar en las próximas partidas.", "duration": 3 }
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "release",
+          "duration": 1.2
+        },
+        {
+          "type": "camera",
+          "to": "focus",
+          "zoom": 1.1,
+          "duration": 1.2
+        }
+      ]
+    },
+    {
+      "type": "animate",
+      "actor": "negro",
+      "animation": "point",
+      "duration": 0.6
+    },
+    {
+      "type": "prop",
+      "prop": "chains",
+      "state": "broken"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "text": "Bueno, listo. Sos libre.",
+          "expression": "happy"
+        },
+        {
+          "speaker": "solago",
+          "text": "JAJAJA. ¡Mirá qué lindo! ¡Liberamos un boliviano!"
+        },
+        {
+          "speaker": "warrior",
+          "text": "¡VÁYANSE A LA MIERDA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "text": "Dale, vení con nosotros, que tenemos que salir de este juego.",
+          "expression": "neutral"
+        }
+      ]
+    },
+    {
+      "type": "animate",
+      "actor": "warrior",
+      "animation": "point",
+      "duration": 1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "text": "¿Qué? ¿Dejaste algo?",
+          "expression": "surprised"
+        }
+      ]
+    },
+    {
+      "type": "animate",
+      "actor": "warrior",
+      "animation": "point",
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "text": "Uh, negro... Me parece que encontró algo."
+        }
+      ]
+    },
+    {
+      "type": "splash",
+      "speaker": "warrior",
+      "text": "¡WARRIOR DESBLOQUEADO!\nDisponible para seleccionar en las próximas partidas.",
+      "duration": 3
+    }
   ],
-  "effects": [{ "key": "preview-warrior-rescue", "value": true }]
+  "effects": [
+    {
+      "key": "preview-warrior-rescue",
+      "value": true
+    }
+  ]
 }

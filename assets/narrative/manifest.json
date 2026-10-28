@@ -5,7 +5,7 @@
     { "id": "sample-conversation", "title": "Sample: portrait conversation", "file": "scenes/sample-conversation.json" },
     { "id": "sample-arrival", "title": "Sample: sprite arrival and conversation", "file": "scenes/sample-arrival.json" },
     { "id": "sample-extension", "title": "Sample: scene-local JavaScript action", "file": "scenes/sample-extension.json", "module": "scenes/sample-extension.mjs" },
-    { "id": "act-04-warrior-rescue-preview", "title": "Act 4 preview: Warrior rescue (placeholder art)", "file": "scenes/act-04-warrior-rescue-preview.json" }
+    { "id": "act-04-warrior-rescue-preview", "title": "Act 4 preview: Warrior rescue (El Negro portraits; other art placeholder)", "file": "scenes/act-04-warrior-rescue-preview.json" }
   ],
   "bindings": []
 }
