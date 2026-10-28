@@ -1,6 +1,6 @@
 # Add or preview a narrative scene
 
-Each scene lives in its own JSON file. The narrative module owns playback; combat does not know scene IDs, dialogue, or staging. The `sample-*` scenes are **noncanonical development samples**. Props and other characters' portraits remain placeholders. El Negro, Solago and Warrior use approved detailed pixel-art bases generated from one source portrait each; their expression sets are available for visual review.
+Each scene lives in its own JSON file. The narrative module owns playback; combat does not know scene IDs, dialogue, or staging. The `sample-*` scenes are **noncanonical development samples**. Props and other characters' portraits remain placeholders. El Negro, Solago, Warrior and Papazito use approved detailed pixel-art bases generated from one source portrait each; their expression sets are available for visual review.
 
 The viewer also includes **Act 4 preview: Warrior rescue (placeholder art)**. It uses the approved rescue aftermath dialogue (Act 4 script, lines 232–252), following the guardian fight; the approach movement and camera are proposed staging. The existing arena, labeled props and basic pointing pose stand in for Conan scenery, chain-breaking animation and smoke. The unlock splash is presentation only: it never unlocks Warrior in real progress. This scene has no gameplay binding.
 
@@ -38,7 +38,9 @@ Solago (`solago`) supports `neutral`, `happy`, `annoyed`, `angry`, `surprised`, 
 
 Warrior (`warrior`) supports the same eight expressions: `happy` covers the "Yo soy argentino, boludo" lines, `surprised` the Viaje Astral reaction and `disgusted` reuses the Act 4 grimace.
 
-These images are generated from one source portrait and facial overrides, not independently redrawn characters. See [the El Negro workflow](../art/characters/negro/README.md), [the Solago workflow](../art/characters/solago/README.md), [the Warrior workflow](../art/characters/warrior/README.md) and the [`character-portraits` skill](../.opencode/skills/character-portraits/SKILL.md).
+Papazito (`papasito`) supports the same eight expressions over his construction-vest base: `scared` covers the extortion-notification panic, `angry` the "¡ME RE CAGARON!" state and `disgusted` the Act 4 grimace.
+
+These images are generated from one source portrait and facial overrides, not independently redrawn characters. See [the El Negro workflow](../art/characters/negro/README.md), [the Solago workflow](../art/characters/solago/README.md), [the Warrior workflow](../art/characters/warrior/README.md), [the Papazito workflow](../art/characters/papazito/README.md) and the [`character-portraits` skill](../.opencode/skills/character-portraits/SKILL.md).
 
 ## Sprite sequence
 

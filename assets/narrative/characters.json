@@ -53,6 +53,15 @@
   "papasito": {
     "name": "Papasito",
     "sprite": "papazito",
-    "expressions": { "neutral": "portraits/guest-neutral.svg" }
+    "expressions": {
+      "neutral": "portraits/papazito/neutral.svg",
+      "happy": "portraits/papazito/happy.svg",
+      "annoyed": "portraits/papazito/annoyed.svg",
+      "angry": "portraits/papazito/angry.svg",
+      "surprised": "portraits/papazito/surprised.svg",
+      "scared": "portraits/papazito/scared.svg",
+      "tired": "portraits/papazito/tired.svg",
+      "disgusted": "portraits/papazito/disgusted.svg"
+    }
   }
 }
