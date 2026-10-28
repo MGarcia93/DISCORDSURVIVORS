@@ -155,12 +155,16 @@ test('remote, joystick and phone use visibly distinct pixel-art sprites', () => 
   const remote = drawDevice('remote');
   const joystick = drawDevice('joystick');
   const phone = drawDevice('phone');
+  const brick = drawDevice('brick');
   assert.notDeepEqual(remote, joystick);
   assert.notDeepEqual(joystick, phone);
   assert.notDeepEqual(remote, phone);
+  assert.notDeepEqual(brick, remote, 'Papazito bricks are their own tumbling device');
   assert.ok(joystick.some(rect => rect[4] === '#e9e0d3'), 'Joystick has its distinct D-pad');
   assert.ok(phone.some(rect => rect[4] === '#39585a'), 'Phone has its own screen');
   assert.ok(remote.some(rect => rect[4] === '#c7df8c'), 'Remote has separate channel buttons');
+  assert.ok(brick.some(rect => rect[4] === '#b4543c'), 'the fired red brick');
+  assert.ok(brick.some(rect => rect[4] === '#8f3f2e'), 'the mortar holes of the ladrillo');
 });
 
 test('Solago has visible front teeth and a wristwatch; his Stand is taller and translucent', () => {

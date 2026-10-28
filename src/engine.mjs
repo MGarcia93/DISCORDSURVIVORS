@@ -162,6 +162,7 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
   const target = nearest(run, source, [], maxDistance);
   if (!target) return;
   const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3]
+    : kind === 'brick' ? 'brick'
     : kind === 'shroom' ? 'shroom' : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
     damage, kind, device, hit: [], ttl: 3, angle: 0, attack });

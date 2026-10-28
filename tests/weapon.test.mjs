@@ -51,6 +51,18 @@ test('Warrior ranged shots preserve the shroom device for mushroom rendering', (
   assert.equal(run.projectiles[0]?.device, 'shroom');
 });
 
+test('Papazito ladrillazos carry the brick device for their own projectile art', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  run.spawnIn = 100;
+  run.shotIn = 0.001;
+  run.enemies.push({ id: 1, x: run.player.x + 100, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+
+  step(run, 0.05, {});
+
+  assert.equal(run.projectiles[0]?.device, 'brick');
+  assert.equal(run.projectiles[0]?.damage, 11.5, 'one heavy 115% attack, no multiplier');
+});
+
 test('a Warrior mushroom bomb deals 45 damage before its area splash', () => {
   const run = createRun(() => 0.5, 'warrior');
   run.spawnIn = 100;

@@ -502,6 +502,15 @@ export function drawAstralAura(ctx, x, y, radius, time = 0, intensity = 1) {
 }
 
 export function drawGamerProjectile(ctx, device) {
+  if (device === 'brick') {
+    // Papazito's ladrillo: a red brick with mortar holes, readable mid-tumble.
+    pixel(ctx, -9, -6, 18, 12, '#b4543c');
+    pixel(ctx, -11, -4, 22, 8, '#a3482f');
+    pixel(ctx, -9, -6, 18, 3, '#cd6c4e');
+    pixel(ctx, -7, -2, 4, 3, '#8f3f2e');
+    pixel(ctx, 3, -2, 4, 3, '#8f3f2e');
+    pixel(ctx, -7, 3, 14, 2, '#934029');
+  }
   if (device === 'shroom') {
     // Oversized bomb mushroom: its silhouette stays readable while tumbling.
     pixel(ctx, -6, -2, 12, 15, '#e9dfc8');
