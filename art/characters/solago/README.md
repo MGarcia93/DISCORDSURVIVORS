@@ -1,6 +1,6 @@
 # Solago: one base, consistent buck teeth
 
-The approved identity is the short, thin bust with an oversized head, three-quarter face, short dark hair with a visible side fade, dark crew tee and **two prominent front teeth**. The torso is scaled to 0.64 width and slightly raised so the character reads small and light. `portrait-neutral.svg` is the editable source.
+The approved identity is the short, thin bust with an oversized head, three-quarter face, short dark hair with a visible side fade, dark crew tee and **two prominent front teeth**. The whole drawing sits inside a `frame-shift` group (`translate(0 20)`) so the shorter body still reaches the bottom edge of the 160x200 frame instead of leaving a transparent strip. `portrait-neutral.svg` is the editable source.
 
 Reusable procedure for other characters: [`character-portraits`](../../../.opencode/skills/character-portraits/SKILL.md).
 

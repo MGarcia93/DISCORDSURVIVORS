@@ -101,10 +101,10 @@ test('Solago keeps one buck-toothed mouth and exposes its eight catalog expressi
         assert.ok(svg.match(pattern), `${id} actually exists`);
       }
       assert.match(svg, new RegExp(`data-expression="${name}"`));
-      if (name === 'disgusted') assert.doesNotMatch(svg, /M80 83h11v9/, 'disgusted uses the Excalibur grimace');
+      if (name === 'disgusted') assert.doesNotMatch(svg, /M79 84h14v15/, 'disgusted uses the Excalibur grimace');
       else {
-        assert.match(svg, /M80 83h11v9/, `${name} keeps the left paleta`);
-        assert.match(svg, /M93 83h10v9/, `${name} keeps the right paleta`);
+        assert.match(svg, /M79 84h14v15/, `${name} keeps the left paleta`);
+        assert.match(svg, /M95 84h14v15/, `${name} keeps the right paleta`);
       }
       if (name !== 'neutral') assert.notEqual(svg.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0], neutral.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0]);
     }
