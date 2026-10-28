@@ -196,6 +196,9 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-portraits > div { width: 35%; max-width: 270px; }
 .narrative-portrait { display: block; width: 100%; max-height: 310px; object-fit: contain; image-rendering: pixelated; }
 .narrative-portraits .listening { filter: brightness(.45); }
+/* Portraits face the viewer's left by default, so the left-hand one is
+   mirrored to look inward and the pair faces each other. */
+.narrative-portraits > div:first-child:not(:only-child) .narrative-portrait { transform: scaleX(-1); }
 .narrative-text { border: 3px solid #bfd890; background: #191725f5; padding: 18px; pointer-events: auto; }
 .narrative-text strong, .narrative-banter strong { color: #d7f779; }
 .narrative-text p { min-height: 3em; font: 16px/1.6 monospace; color: #f4e9dc; overflow-wrap: anywhere; max-height: 28vh; overflow-y: auto; }
