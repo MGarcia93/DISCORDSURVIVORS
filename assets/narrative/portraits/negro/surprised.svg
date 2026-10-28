@@ -82,10 +82,10 @@
     <path fill="#805447" d="M73 78h9v-2h7v2h9v1h9v3H96v-1h-9v1H73z" />
     <path fill="#49404a" d="M75 79h6v-1h8v2h8v1h9v2H95v-1h-9v1H75z" />
     <g id="expression-mouth">
-      <path fill="#87544a" d="M85 82h13v12H85z" />
-      <path fill="#342d35" d="M81 83h9v10h-9z" />
-      <path fill="#c47f70" d="M83 91h5v2h-5z" />
-      <path fill="#a26c56" d="M66 85h2v6h8v2h18v-2h7v-6h2v8h-8v3H75v-2h-9z" />
+      <path fill="#a26c56" d="M72 85h2v6h8v2h18v-2h7v-6h2v8h-8v3H81v-2h-9z" />
+      <path fill="#342d35" d="M81 84h16v9H81z" />
+      <path fill="#412b30" d="M83 86h12v6H83z" />
+      <path fill="#d19975" d="M83 92h12v2H83z" />
     </g>
     <path fill="#49404a" d="M85 95h12v3h-3v3h-6v-3h-3z" />
     <path fill="#79594e" d="M70 91h2v2h-2zM75 95h2v2h-2zM79 97h2v2h-2zM102 95h2v2h-2zM107 90h1v3h-1z" />

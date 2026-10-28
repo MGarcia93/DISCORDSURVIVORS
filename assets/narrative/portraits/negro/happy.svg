@@ -81,10 +81,12 @@
     <path fill="#805447" d="M73 78h9v-2h7v2h9v1h9v3H96v-1h-9v1H73z" />
     <path fill="#49404a" d="M75 79h6v-1h8v2h8v1h9v2H95v-1h-9v1H75z" />
     <g id="expression-mouth">
-      <path fill="#342d35" d="M75 84h5v2h18v-2h9v4h-5v4H81v-2h-6z" />
-      <path fill="#efe1c5" d="M74 86h22v3H74z" />
-      <path fill="#c47f70" d="M79 91h13v2H79z" />
-      <path fill="#a26c56" d="M66 85h2v6h8v2h18v-2h7v-6h2v8h-8v3H75v-2h-9z" />
+      <path fill="#a26c56" d="M72 85h2v6h8v2h18v-2h6v-3h1v6h-7v2H81v-2h-9z" />
+      <path fill="#342d35" d="M76 84h16v-1h12v2h-10v4H77z" />
+      <path fill="#efe3cd" d="M80 84h11v4H80zM93 84h6v4h-6z" />
+      <path fill="#c9b89c" d="M91 84h2v4h-2zM80 87h19v1H80z" />
+      <path fill="#d19975" d="M81 90h17v2H81z" />
+      <path fill="#e5ad86" d="M84 89h10v1H84z" />
     </g>
     <path fill="#49404a" d="M85 95h12v3h-3v3h-6v-3h-3z" />
     <path fill="#79594e" d="M70 91h2v2h-2zM75 95h2v2h-2zM79 97h2v2h-2zM102 95h2v2h-2zM107 90h1v3h-1z" />
