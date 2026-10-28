@@ -1,8 +1,8 @@
 # Progression authoring
 
-Status: the shared permanent-stat calculation is available as a standalone
-module. The current game shop and combat have not been migrated yet. XP,
-catalogs and character upgrade paths are tracked in
+Status: shared stats, kill XP and deferred level choices are connected to
+the engine and level-selection UI. The shop UI still uses its legacy upgrade
+list; the four-item shop and remaining character paths are tracked in
 [`../odd/tasks/item-level-progression.md`](../odd/tasks/item-level-progression.md).
 
 ## Stat modifiers
@@ -89,8 +89,9 @@ Gallina has `enabled: false` until its provisional range effect is confirmed.
 Character entries initially cover waifu, Patrona and smoke duration, sale
 value, and the Negro's prerequisite-gated bounce chain. These are only the
 first supported parameters, not all the planned character mechanics. The
-catalog does not execute them yet; engine integration must implement each
-registered effect before exposing it in a live reward selection.
+engine consumes these initial bonuses when activating waifu/Patrona, emitting
+smoke, computing sale proceeds and resolving bounce hits. Sale proceeds are
+rounded down to whole coins. Remaining character paths are not yet implemented.
 
 ## Run reward state
 
@@ -106,8 +107,17 @@ actions without spending resources. Acquisitions retain independent stat and
 effect sources. Shop purchases mark their existing offer sold without drawing
 a replacement. `finishRewards` clears only the resolved boundary's offers;
 it preserves XP, build and savings. Effect bonuses are accumulated as data;
-combat must consume every supported bonus before this module is made live.
-The existing engine/UI have not yet been switched to these APIs.
+combat consumes the initially supported bonuses. `createRun` initializes this
+state automatically; kill settlement awards XP once and normal wave endings
+prepare choices before the shop. The narrative director refuses a before-wave
+scene while choices remain. Final victory discards pending choices without
+opening a shop, while preserving the existing victory event.
+
+The exported legacy `chooseUpgrade` callback API remains compatible during
+shop migration. Its actual stat changes are normalized into independent point
+sources, so later item/level recalculations do not erase them. New catalog
+entries must use modifiers/effect references, not legacy callbacks. The
+existing heal service remains separate and cannot bypass pending choices.
 
 ## Checks
 

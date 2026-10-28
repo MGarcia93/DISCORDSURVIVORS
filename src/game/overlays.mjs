@@ -1,14 +1,19 @@
-import { UPGRADES, HEAL_COST, HEAL_AMOUNT } from '../engine.mjs';
+import { UPGRADES, HEAL_COST, HEAL_AMOUNT, salePrice } from '../engine.mjs';
+import { describeReward } from '../reward-catalog.mjs';
+import { EFFECTS } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { formatTime } from './hud.mjs';
 import { getCharacter } from '../characters/index.mjs';
+
+const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 // Phase dialogs over the arena: pause, merchant sale menu, upgrades shop and
 // end-of-run outcomes. Text and actions only; the canvas never comes here.
 export function overlay() {
   const box = document.querySelector('#game-overlay');
   if (!box || !state.run) return;
-  const phase = state.sellMenuOpen ? 'sellMenu' : state.paused ? 'paused' : state.run.phase;
+  const phase = state.sellMenuOpen ? 'sellMenu' : state.paused ? 'paused'
+    : state.run.phase === 'shop' && state.run.pendingLevels?.length ? 'levelUp' : state.run.phase;
   if (state.lastPhase === phase) return;
   state.lastPhase = phase;
   if (phase === 'playing') { box.innerHTML = ''; return; }
@@ -20,7 +25,7 @@ export function overlay() {
     const stockEntry = state.run.player.characterDef.specials.find(special => special.items);
     const stock = stockEntry?.items ?? {};
     const saleCopy = item => {
-      const boost = [`+${item.coins} fichas`];
+      const boost = [`+${salePrice(state.run, item)} fichas`];
       if (item.damageFrac) boost.push(`+${Math.round(item.damageFrac * 100)}% daño ${item.damageTtl}s`);
       const penalty = [];
       if (item.moveSlowFrac) penalty.push(`−${Math.round(item.moveSlowFrac * 100)}% velocidad ${item.moveSlowTtl}s`);
@@ -32,11 +37,19 @@ export function overlay() {
     const cards = Object.entries(stock).map(([key, item]) => {
       const sold = state.run.player.soldItems?.[key];
       const { boost, penalty } = saleCopy(item);
-      const settlement = state.run.player.characterDef.saleHud?.(state.run, item);
+    const settlement = state.run.player.characterDef.saleHud?.(state.run, { ...item, coins: salePrice(state.run, item) });
       return `<button class="upgrade" data-sale="${key}" ${sold ? 'disabled' : ''}><b>📦 ${item.label}</b><span>${boost}</span><small>${sold ? 'YA LO MALVENDIÓ' : penalty}</small>${!sold && settlement ? `<small>${settlement}</small>` : ''}</button>`;
     }).join('');
     const itemsLeft = Object.keys(stock).some(key => !state.run.player.soldItems?.[key]);
     body = `<div class="eyebrow">Fondo para la cariñosa</div><h2>¿QUÉ SE VENDE HOY?</h2><p>Cada venta paga fichas y daño temporal, con su debuff correspondiente. Todo se vende una vez por partida. <b>«Total, no lo usaba»</b>.</p><p class="shop-hint"><b>${state.run.coins} fichas disponibles</b></p><div class="shop-grid">${cards}</div><div class="shop-footer"><button class="primary" data-action="sell-menu-close">${itemsLeft ? 'VOLVER A TIRAR LADRILLOS' : 'YA NO QUEDA NADA'} →</button></div>`;
+  }
+  if (phase === 'levelUp') {
+    const cards = state.run.levelChoices.map(entry => {
+      const rank = state.run.levelRanks[entry.id] ?? 0;
+      const description = describeReward(entry.ranks[rank], EFFECTS).map(escapeText).join(' · ');
+      return `<button class="upgrade" data-level="${escapeText(entry.id)}"><b>${escapeText(entry.name)}</b><span>${description}</span><small>RANGO ${rank + 1}/${entry.ranks.length}</small></button>`;
+    }).join('');
+    body = `<div class="eyebrow">Nivel ${state.run.pendingLevels[0]} · ${state.run.pendingLevels.length} elecciones pendientes</div><h2>ELEGÍ UNA MEJORA</h2><p>Las mejoras de nivel no cuestan fichas.</p><div class="shop-grid">${cards}</div>${cards ? '' : '<p>No quedan mejoras elegibles.</p><button class="primary" data-action="skip-level">CONTINUAR SIN RECOMPENSA →</button>'}`;
   }
   if (phase === 'shop') {
     const cards = UPGRADES.map(u => {
@@ -56,6 +69,6 @@ export function overlay() {
     const victoryFicha = phase === 'won' && state.run.unlocked ? getCharacter(state.run.unlocked) : null;
     body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? victoryFicha?.victoryLine ?? 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   }
-  box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' ? 'shop-dialog' : ''}">${body}</div></div>`;
+  box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'levelUp' ? 'Elegir mejora de nivel' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' || phase === 'levelUp' ? 'shop-dialog' : ''}">${body}</div></div>`;
   box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
 }

@@ -15,7 +15,7 @@ export function game() {
     <section class="game-screen">
     <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
     <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q y E activan tus habilidades."></canvas>
-      <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
+      <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div><small id="level" aria-live="off"></small></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
       <div id="task-panel" class="task-panel" ${def.taskHud ? '' : 'hidden'}><div><b>${def.taskHudTitle ?? 'PERMISO PARA JUGAR'}</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
       <div id="character-status" class="character-status" ${def.statusHud ? '' : 'hidden'} aria-live="off"></div>
       <div id="game-overlay"></div>

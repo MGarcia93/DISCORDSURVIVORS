@@ -19,7 +19,7 @@ const negro = {
       <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
       <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
       <div class="stats"><div><b>+50%</b><small>VIDA MÁXIMA</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b class="penalty">−25%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Cada tiro puede rebotar hasta tres enemigos.</p></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Empieza sin rebote; podés elegirlo al subir de nivel.</p></div></div>
       <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`,
@@ -57,7 +57,7 @@ const negro = {
   passives: [],
   specials: [
     {
-      key: 'anime', name: 'Modo Otaku', hotkey: 'q', duration: 8, cooldown: 18,
+      key: 'anime', name: 'Modo Otaku', hotkey: 'q', duration: 8, cooldown: 18, durationBonus: 'waifuDuration',
       onTick(run, p, dt, ctx) {
         run.animeIn -= dt;
         if (run.animeIn > 0) return;

@@ -10,6 +10,20 @@ const catalog = { characters, sounds: {}, entries: [entry('before'), entry('afte
   { when: 'before_wave', wave: 2, scene: 'before' },
 ] };
 
+test('pending level choices block the before-wave scene as well as combat restart', () => {
+  const run = createRun(() => 0.5), director = new WaveDirector(catalog);
+  director.attach(run);
+  run.phase = 'shop';
+  director.observe();
+  director.advance();
+  run.pendingLevels = [2];
+  const before = JSON.stringify(run);
+  assert.equal(director.nextWave(() => startNextWave(run)), false);
+  assert.equal(director.blocked, false);
+  assert.equal(JSON.stringify(run), before);
+  assert.equal(director.flags.before, undefined);
+});
+
 test('wave boundary order is after-scene, shop, before-scene, next wave', () => {
   const run = createRun(() => 0.5), d = new WaveDirector(catalog);
   d.attach(run);

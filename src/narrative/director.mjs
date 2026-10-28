@@ -96,7 +96,7 @@ export class WaveDirector {
     }
   }
   nextWave(start) {
-    if (!this.run || this.run.phase !== 'shop' || this.blocked) return false;
+    if (!this.run || this.run.phase !== 'shop' || this.run.pendingLevels?.length || this.blocked) return false;
     return this._boundary('before_wave', this.run.wave + 1, start);
   }
   tick(dt) {

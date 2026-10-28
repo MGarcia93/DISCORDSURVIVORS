@@ -134,3 +134,33 @@ export function finishRewards(run) {
   run.shopOffers = null;
   return true;
 }
+
+// Keep the old exported purchase API composable during migration. Normalize
+// its actual stat delta into points before existing percentage modifiers;
+// do not reapply its callback or overwrite the captured character base.
+export function recordLegacyUpgrade(run, before, source) {
+  const after = createStatState(run.player).base;
+  const modifiers = [];
+  for (const stat of Object.keys(before)) {
+    const delta = after[stat] - before[stat];
+    if (!delta) continue;
+    const existing = Object.values(run.statState.sources).flat();
+    const percent = existing
+      .filter(modifier => modifier.stat === stat && modifier.operation === 'percent')
+      .reduce((sum, modifier) => sum + modifier.value, 0);
+    const points = run.statState.base[stat] + existing
+      .filter(modifier => modifier.stat === stat && modifier.operation === 'flat')
+      .reduce((sum, modifier) => sum + modifier.value, 0);
+    const factor = 1 + percent / 100;
+    if (factor !== 0) {
+      modifiers.push({ stat, operation: 'flat', value: after[stat] / factor - points });
+    } else if (points !== 0) {
+      // A zero multiplier cannot be inverted with a point contribution.
+      modifiers.push({ stat, operation: 'percent', value: after[stat] * 100 / points });
+    } else {
+      modifiers.push({ stat, operation: 'flat', value: after[stat] });
+      modifiers.push({ stat, operation: 'percent', value: 100 });
+    }
+  }
+  run.statState = withStatSource(run.statState, source, modifiers);
+}

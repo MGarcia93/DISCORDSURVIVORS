@@ -93,7 +93,7 @@ const solago = {
   },
   specials: [
     {
-      key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26,
+      key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26, durationBonus: 'standDuration',
       immobilize: true,
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;

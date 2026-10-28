@@ -23,8 +23,11 @@ import { getCharacter } from './characters/index.mjs';
 import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies.mjs';
 import { DEFENSE_MITIGATION_CAP } from './stats.mjs';
 import { emit } from './bus.mjs';
+import { createStatState } from './stat-modifiers.mjs';
+import { initializeRewards, awardXP, beginRewards, finishRewards, recordLegacyUpgrade } from './run-rewards.mjs';
+export { chooseLevelReward, skipEmptyChoice, buyItem, nextLevelXP } from './run-rewards.mjs';
 
-export function createRun(random = Math.random, character = 'negro') {
+export function createRun(random = Math.random, character = 'negro', rewards = {}) {
   const characterDef = getCharacter(character);
   const s = characterDef.stats;
   const run = {
@@ -50,6 +53,7 @@ export function createRun(random = Math.random, character = 'negro') {
   }
   characterDef.initPlayer?.(run.player);
   characterDef.onStageStart?.(run, run.player);
+  initializeRewards(run, rewards);
   return run;
 }
 
@@ -58,7 +62,7 @@ export function activateSpecial(run, type) {
   const player = run.player;
   const spec = player.characterDef.specials.find(special => special.key === type);
   if (!spec || player[`${type}Cooldown`] > 0) return false;
-  player[type] = spec.duration;
+  player[type] = spec.duration + (player.rewardBonuses[spec.durationBonus] ?? 0);
   player[`${type}Cooldown`] = spec.cooldown;
   spec.onStart?.(run, player);
   emit('specialActivated', { run, player, special: type });
@@ -67,15 +71,24 @@ export function activateSpecial(run, type) {
 
 export function chooseUpgrade(run, id) {
   const upgrade = UPGRADES.find(item => item.id === id);
-  if (run.phase !== 'shop' || !upgrade) return false;
+  if (run.phase !== 'shop' || run.pendingLevels.length || !upgrade) return false;
   const level = run.upgrades[id] || 0;
   if (level >= upgrade.costs.length) return false;
   const cost = upgrade.costs[level];
   if (run.coins < cost) return false;
+  const p = run.player;
+  const before = createStatState(p).base;
+  const candidate = { ...run, player: { ...p } };
+  try {
+    upgrade.apply(candidate.player, level);
+    recordLegacyUpgrade(candidate, before, `legacy:${id}:${level}`);
+  } catch {
+    return false;
+  }
+  Object.assign(p, candidate.player);
+  run.statState = candidate.statState;
   run.coins -= cost;
   run.upgrades[id] = level + 1;
-  const p = run.player;
-  upgrade.apply(p, level);
   return true;
 }
 
@@ -85,6 +98,10 @@ const SELL_DAMAGE_BUFF_CAP = 0.5;  // +50% daño total por liquidación
 const SELL_MOVE_SLOW_CAP = 0.5;   // hasta -50% de velocidad por ventas apiladas
 const SELL_ATK_SLOW_CAP = 0.6;    // hasta -60% de cadencia
 const SELL_DEF_LOSS_CAP = 0.4;    // hasta -40% de defensa base
+
+export function salePrice(run, item) {
+  return Math.floor(item.coins * (1 + (run.player.rewardBonuses?.saleBonus ?? 0)));
+}
 
 // «Liquido todo, me voy de putas»: the character-agnostic sale routine. The
 // owned belongings and every number live in the sheet (special.items); this
@@ -97,8 +114,9 @@ export function sellBelonging(run, key) {
   if (!item || p.soldItems?.[key]) return false;
   p.soldItems = p.soldItems ?? {};
   p.soldItems[key] = true;
-  run.coins += item.coins;
-  p.characterDef.onSaleIncome?.(run, p, item.coins);
+  const proceeds = salePrice(run, item);
+  run.coins += proceeds;
+  p.characterDef.onSaleIncome?.(run, p, proceeds);
   if (item.damageFrac) {
     p.sellDamageFrac = Math.min(SELL_DAMAGE_BUFF_CAP, (p.sellDamageFrac ?? 0) + item.damageFrac);
     p.sellDamageTtl = Math.max(p.sellDamageTtl ?? 0, item.damageTtl);
@@ -121,7 +139,7 @@ export function sellBelonging(run, key) {
 }
 
 export function buyHeal(run) {
-  if (run.phase !== 'shop' || run.coins < HEAL_COST || run.player.hp >= run.player.maxHp) return false;
+  if (run.phase !== 'shop' || run.pendingLevels.length || run.coins < HEAL_COST || run.player.hp >= run.player.maxHp) return false;
   run.coins -= HEAL_COST;
   run.player.hp = Math.min(run.player.maxHp, run.player.hp + HEAL_AMOUNT);
   return true;
@@ -136,7 +154,7 @@ function enemyFromKind(run, kind, x, y) {
 }
 
 export function startNextWave(run) {
-  if (run.phase !== 'shop') return false;
+  if (run.phase !== 'shop' || !finishRewards(run)) return false;
   run.wave++;
   run.duration = 60;
   run.time = 0;
@@ -392,7 +410,7 @@ export function step(run, seconds, input = {}) {
         shroomBlast(run, shot, target);
       }
       const next = nearest(run, shot, shot.hit);
-      if (shot.kind === 'remote' && shot.hit.length < 3 && next && distance(next, shot) < 300 * WORLD_SCALE) {
+      if (shot.kind === 'remote' && shot.hit.length <= (p.rewardBonuses.bounce ?? 0) && next && distance(next, shot) < 300 * WORLD_SCALE) {
         shot.target = next.id;
         shot.damage *= 0.85;
       } else shot.ttl = 0;
@@ -405,6 +423,7 @@ export function step(run, seconds, input = {}) {
   for (const enemy of killed) {
     run.kills++;
     awardCoins(run, enemyBounty(enemy.kind));
+    awardXP(run, run.rewardBalance.xp.rewards[enemy.kind] ?? 0);
     run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
     if (def.onKill) def.onKill(run, p, enemy, ctx);
     emit('kill', { run, player: p, enemy });
@@ -421,12 +440,15 @@ export function step(run, seconds, input = {}) {
     emit('playerDown', { run, player: p });
   } else if (killed.some(enemy => enemy.kind === 'boss')) {
     run.phase = 'won';
+    run.pendingLevels = [];
+    run.levelChoices = run.shopOffers = null;
     emit('waveCleared', { run });
   } else if (run.wave < 4 && run.time >= run.duration) {
     run.phase = 'shop';
     awardCoins(run, 20);
     run.enemies = [];
     run.projectiles = [];
+    beginRewards(run);
     emit('waveCleared', { run });
   }
 }
