@@ -2,11 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { loadCatalog } from '../src/narrative/catalog.mjs';
+import { loadPreviewCatalog } from '../src/narrative/viewer.mjs';
 
 const localFetch = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 test('each sample is independently loaded and validated from its own JSON file', async () => {
   const catalog = await loadCatalog({ fetcher: localFetch });
-  assert.equal(catalog.entries.length, 3);
+  assert.equal(catalog.entries.length, 4);
   assert.deepEqual(catalog.bindings, [], 'examples never run in normal play without explicit author mappings');
   for (const entry of catalog.entries) {
     assert.equal(entry.error, null, entry.id);
@@ -35,4 +36,17 @@ test('missing catalogs and ambiguous scene IDs fail with actionable messages', a
     return { ok: true, json: async () => data };
   };
   await assert.rejects(loadCatalog({ fetcher }), /Duplicate scene/);
+});
+
+test('uncached preview loads do not mix a new scene with an older cached character catalog', async () => {
+  const fetcher = async (url, options) => {
+    const response = await localFetch(url), data = await response.json();
+    if (String(url).endsWith('characters.json') && options.cache !== 'no-store') {
+      return { ok: true, json: async () => ({ guide: data.guide, guest: data.guest }) };
+    }
+    return { ok: true, json: async () => data };
+  };
+  const catalog = await loadPreviewCatalog({ fetcher });
+  assert.equal(catalog.entries.find(entry => entry.id === 'act-04-warrior-rescue-preview').error, null);
+  assert.equal(catalog.characters['maxi-negro'].name, 'Maxi Negro');
 });

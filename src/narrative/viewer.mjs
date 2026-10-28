@@ -1,10 +1,16 @@
 import { NarrativeHost } from './host.mjs';
+import { loadCatalog } from './catalog.mjs';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+export function loadPreviewCatalog({ fetcher = globalThis.fetch } = {}) {
+  return loadCatalog({ fetcher: (url, options) => fetcher(url, { ...options, cache: 'no-store' }) });
+}
+
 export function openViewer(container) {
   container.innerHTML = `<section class="screen narrative-viewer"><div class="screen-heading"><h1>Narrative development viewer</h1><button class="secondary" data-action="home">Back to game menu</button></div><p>Isolated samples — no story progress is saved. Enter: advance. Escape: skip.</p><label>Scene <select id="narrative-select" aria-label="Scene" disabled></select></label><div class="actions"><button class="primary" data-action="narrative-play" disabled>Play scene</button><button class="secondary" data-action="narrative-restart" disabled>Restart scene</button></div><p id="narrative-status" role="status">Loading catalog…</p><div class="narrative-viewer-stage"><div id="narrative-layer"></div></div></section>`;
-  const host = new NarrativeHost(), select = container.querySelector('#narrative-select');
+  // Development edits must not reuse gameplay's in-memory catalog or old HTTP data.
+  const host = new NarrativeHost({ load: loadPreviewCatalog }), select = container.querySelector('#narrative-select');
   let disposed = false, selected = null;
   host.attach(null, container.querySelector('#narrative-layer'), { preview: true }).then(() => {
     if (disposed) return;
