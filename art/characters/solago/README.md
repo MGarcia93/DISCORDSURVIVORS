@@ -1,6 +1,6 @@
 # Solago: one base, consistent buck teeth
 
-The approved identity is the short, narrow-shouldered bust with an oversized head, cropped spiky dark hair, dark crew tee and **two prominent front teeth**. `portrait-neutral.svg` is the editable source.
+The approved identity is the short, thin bust with an oversized head, three-quarter face, short dark hair with a visible side fade, dark crew tee and **two prominent front teeth**. The torso is scaled to 0.64 width and slightly raised so the character reads small and light. `portrait-neutral.svg` is the editable source.
 
 Reusable procedure for other characters: [`character-portraits`](../../../.opencode/skills/character-portraits/SKILL.md).
 
@@ -26,7 +26,7 @@ Head shape, skin palette, hair, neck, tee and body proportions come from **one b
 | `expression-eyes` | `eyes` | Open, narrowed or closed eyes |
 | `expression-mouth` | `mouth` | Mouth shape |
 
-The base mouth stays in every expression so the buck teeth never change size: only `disgusted` overrides it with the Excalibur-style clenched grimace (brows, eyes and mouth together).
+Every expression repeats the two paletas at the same coordinates, so the buck teeth never change size; only `disgusted` replaces them with the Excalibur-style clenched grimace (brows, eyes and mouth together).
 
 The generated files repeat the complete SVG **as build output**, so the game can load ordinary images. Do not edit those copies: edit the source base or recipe and regenerate.
 

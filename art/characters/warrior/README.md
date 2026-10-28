@@ -1,6 +1,6 @@
 # Warrior: one base, reusable expressions
 
-The approved identity is the gym-bro bust from the 80s reference: a red headband over short dark hair, bloodshot eyes (pinkish whites with red veins), a long nose, full lips, light stubble and a hint of double chin, wearing an open colour-blocked windbreaker (teal, violet, pink) over a white tank top. `portrait-neutral.svg` is the editable source.
+The approved identity is the gym-bro bust from the 80s reference: a red headband over short dark hair, bloodshot eyes (pinkish whites with red veins), a wide rounded face with full cheeks, a soft jaw and a wide double chin, wearing an open colour-blocked windbreaker (teal and pink) over a white tank top. `portrait-neutral.svg` is the editable source.
 
 Reusable procedure for other characters: [`character-portraits`](../../../.opencode/skills/character-portraits/SKILL.md).
 
@@ -38,7 +38,7 @@ The narrative catalog maps `warrior` to the playable `warrior` sprite and eight 
 
 Available expression IDs: `neutral`, `happy`, `annoyed`, `angry`, `surprised`, `scared`, `tired`, `disgusted`. Omitting `expression` uses neutral. This does not change gameplay sprites, abilities or story text.
 
-`happy` covers the "Yo soy argentino, boludo" lines, `surprised` the Viaje Astral reaction and `disgusted` reuses the Act 4 Excalibur-style grimace shared with El Negro's gag.
+`happy` covers the "Yo soy argentino, boludo" lines, `surprised` the Viaje Astral reaction and `disgusted` reuses the Act 4 Excalibur-style grimace shared with El Negro's gag. Warrior never uses Solago's oversized paletas: his mouths show a thin tooth strip at most.
 
 ```sh
 node --test tests/portrait-build.test.mjs

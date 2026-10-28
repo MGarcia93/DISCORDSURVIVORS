@@ -95,14 +95,17 @@ test('Solago keeps one buck-toothed mouth and exposes its eight catalog expressi
     for (const name of names) {
       const svg = await readFile(join(out, `${name}.svg`), 'utf8');
       assert.equal(svg, await readFile(resolve(`assets/narrative/portraits/solago/${name}.svg`), 'utf8'), `${name} output is up to date`);
-      for (const id of ['body-outline', 'neck', 'tee', 'head', 'hair', 'ear']) {
+      for (const id of ['body-outline', 'neck', 'shirt', 'head', 'hair', 'hair-fade', 'ear']) {
         const pattern = new RegExp(`<g id="${id}"[^>]*>[\\s\\S]*?<\\/g>`);
         assert.equal(svg.match(pattern)?.[0], neutral.match(pattern)?.[0], `${name} preserves ${id}`);
         assert.ok(svg.match(pattern), `${id} actually exists`);
       }
       assert.match(svg, new RegExp(`data-expression="${name}"`));
-      if (name === 'disgusted') assert.notEqual(svg.match(/<g id="expression-mouth">[\s\S]*?<\/g>/)?.[0], neutralMouth, 'disgusted uses the Excalibur grimace');
-      else assert.equal(svg.match(/<g id="expression-mouth">[\s\S]*?<\/g>/)?.[0], neutralMouth, `${name} keeps the same buck teeth`);
+      if (name === 'disgusted') assert.doesNotMatch(svg, /M80 83h11v9/, 'disgusted uses the Excalibur grimace');
+      else {
+        assert.match(svg, /M80 83h11v9/, `${name} keeps the left paleta`);
+        assert.match(svg, /M93 83h10v9/, `${name} keeps the right paleta`);
+      }
       if (name !== 'neutral') assert.notEqual(svg.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0], neutral.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0]);
     }
     assert.equal(hash(await readFile(solagoBase)), original, 'generation never modifies the approved source');
@@ -132,7 +135,7 @@ test('Warrior keeps one drawn face and exposes its eight catalog expressions', a
     for (const name of names) {
       const svg = await readFile(join(out, `${name}.svg`), 'utf8');
       assert.equal(svg, await readFile(resolve(`assets/narrative/portraits/warrior/${name}.svg`), 'utf8'), `${name} output is up to date`);
-      for (const id of ['body-outline', 'neck', 'tank', 'windbreaker', 'head', 'ear', 'hair', 'headband']) {
+      for (const id of ['body-outline', 'neck', 'shirt', 'jacket', 'under-chin-fill', 'head', 'chin-fullness', 'jaw-neck-transition', 'hair', 'headband', 'ear']) {
         const pattern = new RegExp(`<g id="${id}"[^>]*>[\\s\\S]*?<\\/g>`);
         assert.equal(svg.match(pattern)?.[0], neutral.match(pattern)?.[0], `${name} preserves ${id}`);
         assert.ok(svg.match(pattern), `${id} actually exists`);
