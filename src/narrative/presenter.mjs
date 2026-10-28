@@ -53,10 +53,23 @@ export function createPresenter(root, catalog, onError) {
         const line = player?.dialogue;
         if (active && !previousFocus) previousFocus = document.activeElement;
         if (line) {
-          // The cast keeps the same slots for the whole scene, in scene order,
-          // so no character is replaced when somebody else starts talking.
-          const speakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))].slice(0, 3);
-          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-portraits">${speakers.map(id => `<div class="${id === line.speaker ? 'speaking' : 'listening'}">${portrait(id, id === line.speaker ? line.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[line.speaker].name)}</strong><p>${escape(line.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
+          // The cast keeps the same slots for the whole scene, ordered by where
+          // each actor stands, and faces the centre of the conversation.
+          const sceneSpeakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))];
+          const stageX = id => {
+            const stage = player.scene.stage;
+            const entry = Object.values(stage?.actors ?? {}).find(actor => actor.character === id);
+            const point = entry ? stage.points?.[entry.at] : null;
+            return Array.isArray(point) ? point[0] : null;
+          };
+          const cast = sceneSpeakers
+            .map((id, index) => ({ id, index, x: stageX(id) }))
+            .sort((a, b) => (a.x ?? Infinity) - (b.x ?? Infinity) || a.index - b.index)
+            .slice(0, 3);
+          const placed = cast.map(entry => entry.x).filter(x => x !== null);
+          const midpoint = placed.length > 1 ? (Math.min(...placed) + Math.max(...placed)) / 2 : null;
+          const facing = entry => (midpoint === null || entry.x === null ? '' : entry.x < midpoint ? ' facing-right' : '');
+          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === line.speaker ? 'speaking' : 'listening'}${facing(entry)}">${portrait(entry.id, entry.id === line.speaker ? line.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[line.speaker].name)}</strong><p>${escape(line.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
         } else if (player?.splash) {
           content.innerHTML = `<div class="narrative-splash">${portrait(player.splash.speaker)}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
         } else if (active) {
