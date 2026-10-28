@@ -73,9 +73,10 @@ of this catalog module. New mechanics still need a reusable implementation.
 `selectLevelOptions(catalog, { character, level, ranks }, random)` draws one
 eligible own upgrade and two common upgrades, or three common upgrades when
 no own upgrade is eligible. It returns fewer when pools are insufficient,
-without duplicate filler. The engine must store the result, apply the chosen
-rank once and explicitly handle empty choices; these integration steps are
-not yet implemented. `describeReward` derives mechanical text from entry data.
+without duplicate filler. The engine stores the drawn options, applies the
+chosen rank once and offers an explicit continuation when the pool is empty;
+`src/run-rewards.mjs` owns those steps and `src/game/overlays.mjs` renders them.
+`describeReward` derives mechanical text from entry data.
 
 ## Initial data and tuning
 
@@ -100,12 +101,14 @@ sale penalties, and Negro's prerequisite-gated bounce chain. Each is consumed
 by the real combat or sale code. Sale proceeds round down to whole coins.
 
 New mechanics that change combat shape rather than tuning an existing value
-are not implemented: bite arcs, second bites, knockback, shielded
-counterattacks, Patrona finisher, extra mushroom projectiles, spore zones,
-smoke trails, confusion propagation, brick piercing/fragments/fan shots,
-next-attack-after-sale, panic extension and the señ a activation burst. They
-need their geometry and semantics defined before they can be authored, because
-the catalog only holds parameters, not executable behavior.
+are not implemented: bite arcs, second bites, knockback, a timed shield after
+standing still, waifu attacks piercing an enemy, shielded counterattacks,
+Patrona finisher, extra mushroom projectiles, spore zones, faster confusion
+stacking, mushrooms hitting harder inside smoke, smoke trails, confusion
+propagation, brick piercing/fragments/fan shots, next-attack-after-sale, panic
+extension and the seña activation burst. They need their geometry and
+semantics defined before they can be authored, because the catalog only holds
+parameters, not executable behavior.
 
 ## Run reward state
 
