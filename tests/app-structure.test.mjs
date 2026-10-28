@@ -39,10 +39,32 @@ test('Papazito contract: merchant menu pauses the run and the sold monitor vigne
   const updateHud = app.slice(app.indexOf('function updateHUD()'), app.indexOf('function rounded('));
   const drawLoop = app.slice(app.indexOf('function draw()'), app.indexOf('function frame('));
   const frame = app.slice(app.indexOf('function frame('), app.indexOf('document.addEventListener(\'click\''));
-  assert.match(app, /sellMenuOpen \? 'sellMenu'/, 'the overlay has its own merchant phase');
+  assert.match(app, /state\.sellMenuOpen \? 'sellMenu'/, 'the overlay has its own merchant phase');
   assert.match(app, /data-sale=/, 'the merchant cards are real buttons');
-  assert.match(frame, /!paused && !sellMenuOpen/, 'the run steps stop while the merchant menu is open');
-  assert.match(updateHud, /sellMenuOpen/, 'ability buttons disable while the merchant menu is open');
+  assert.match(frame, /!state\.paused && !state\.sellMenuOpen/, 'the run steps stop while the merchant menu is open');
+  assert.match(updateHud, /state\.sellMenuOpen/, 'ability buttons disable while the merchant menu is open');
   assert.match(drawLoop, /sellVisionTtl/, 'the sold monitor vignette renders inside the draw loop');
   assert.match(app, /'PAPAZITO'/, 'the selection stage can name Papazito');
+});
+
+// T1 (app split): the shell's shared mutable state must live in one module so
+// screens, HUD, overlays and the loop never own hidden module-scope bindings
+// again. Consumers stay in app.mjs for now; only the storage moved.
+const stateModule = readFileSync(new URL('../src/app/state.mjs', import.meta.url), 'utf8');
+
+test('the shared shell state lives in src/app/state.mjs and app consumes it', () => {
+  assert.match(stateModule, /export const state = \{/, 'state.mjs exports a single shared state object');
+  for (const slot of [
+    'content', 'keys', 'screen', 'storyPage', 'run', 'paused', 'sellMenuOpen',
+    'lastFrame', 'lastPhase', 'hudElapsed', 'facing', 'selectedCharacter',
+    'solagoUnlocked', 'warriorUnlocked', 'papazitoUnlocked', 'debugUnlockAll', 'reducedMotion',
+  ]) {
+    assert.match(stateModule, new RegExp(`\\b${slot}:`), `state.mjs declares the ${slot} slot`);
+  }
+  assert.match(app, /import \{ state \} from '\.\/app\/state\.mjs';/, 'app.mjs imports the shared state');
+  for (const slot of ['screen', 'storyPage', 'run', 'paused', 'sellMenuOpen', 'lastFrame', 'lastPhase', 'hudElapsed', 'facing', 'selectedCharacter', 'solagoUnlocked', 'warriorUnlocked', 'papazitoUnlocked', 'debugUnlockAll', 'reducedMotion']) {
+    assert.doesNotMatch(app, new RegExp(`^(let|const) ${slot}\\b`, 'm'), `app.mjs no longer owns the ${slot} binding`);
+  }
+  const shellUses = [...app.matchAll(/\bstate\.(run|paused|screen|keys|content)\b/g)].length;
+  assert.ok(shellUses >= 20, `app.mjs routes shell access through state.x (found ${shellUses})`);
 });

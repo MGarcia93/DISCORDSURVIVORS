@@ -3,45 +3,29 @@ import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdmini
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
 import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
 import { on } from './bus.mjs';
+import { state } from './app/state.mjs';
 
-const content = document.querySelector('#content');
-const keys = new Set();
-let screen = 'home';
-let storyPage = 0;
-let run = null;
-let paused = false;
-let sellMenuOpen = false;
-let lastFrame = 0;
-let lastPhase = '';
-let hudElapsed = 0;
-let facing = 1;
-let selectedCharacter = 'negro';
-let solagoUnlocked = isCharacterUnlocked('solago');
-let warriorUnlocked = isCharacterUnlocked('warrior');
-let papazitoUnlocked = isCharacterUnlocked('papazito');
-let debugUnlockAll = isDebugUnlockAll();
 // Any map victory passes through the bus: progression records the unlock and
 // app reads it back to refresh the character roster cache.
 on('waveCleared', ({ run: clearedRun }) => {
   if (clearedRun.phase !== 'won') return;
-  solagoUnlocked = isCharacterUnlocked('solago');
-  warriorUnlocked = isCharacterUnlocked('warrior');
-  papazitoUnlocked = isCharacterUnlocked('papazito');
-  clearedRun.unlockedSolago = solagoUnlocked;
-  clearedRun.unlockedWarrior = warriorUnlocked;
-  clearedRun.unlockedPapazito = papazitoUnlocked;
+  state.solagoUnlocked = isCharacterUnlocked('solago');
+  state.warriorUnlocked = isCharacterUnlocked('warrior');
+  state.papazitoUnlocked = isCharacterUnlocked('papazito');
+  clearedRun.unlockedSolago = state.solagoUnlocked;
+  clearedRun.unlockedWarrior = state.warriorUnlocked;
+  clearedRun.unlockedPapazito = state.papazitoUnlocked;
 });
 
-// A sale-menu special (ficha-defined items) pauses the run for its merchant UI.
+// A sale-menu special (ficha-defined items) pauses the state.run for its merchant UI.
 on('specialActivated', ({ run: activatedRun, special }) => {
-  if (activatedRun !== run || special !== 'sell' || activatedRun.phase !== 'playing') return;
+  if (activatedRun !== state.run || special !== 'sell' || activatedRun.phase !== 'playing') return;
   const p = activatedRun.player;
   const stock = p.characterDef.specials.find(spec => spec.key === 'sell')?.items ?? {};
   if (!Object.keys(stock).some(item => !p.soldItems?.[item])) return;
-  sellMenuOpen = true;
-  lastPhase = '';
+  state.sellMenuOpen = true;
+  state.lastPhase = '';
 });
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 
 const stories = [
@@ -57,23 +41,23 @@ const stories = [
 ];
 
 function show(name) {
-  screen = name;
-  content.dataset.screen = name;
-  keys.clear();
-  if (name !== 'game') run = null;
-  paused = false;
-  sellMenuOpen = false;
+  state.screen = name;
+  state.content.dataset.screen = name;
+  state.keys.clear();
+  if (name !== 'game') state.run = null;
+  state.paused = false;
+  state.sellMenuOpen = false;
   document.body.classList.toggle('in-game', name === 'game');
   if (name === 'home') home();
   if (name === 'characters') characters();
   if (name === 'story') story();
   if (name === 'game') game();
-  content.focus({ preventScroll: true });
+  state.content.focus({ preventScroll: true });
   window.scrollTo(0, 0);
 }
 
 function home() {
-  content.innerHTML = `
+  state.content.innerHTML = `
     <section class="home-screen" aria-label="Menú principal">
       <canvas id="menu-scene" class="scene-backdrop" width="480" height="270" role="img" aria-label="Habitación pixel art: El Negro con buzo amarillo en el sillón, frente a su computadora"></canvas>
       <div class="home-content">
@@ -97,19 +81,19 @@ function home() {
 }
 
 function characters() {
-  solagoUnlocked = isCharacterUnlocked('solago');
-  warriorUnlocked = isCharacterUnlocked('warrior');
-  papazitoUnlocked = isCharacterUnlocked('papazito');
-  debugUnlockAll = isDebugUnlockAll();
-  if (!solagoUnlocked && selectedCharacter === 'solago') selectedCharacter = 'negro';
-  if (!warriorUnlocked && selectedCharacter === 'warrior') selectedCharacter = 'negro';
-  if (!papazitoUnlocked && selectedCharacter === 'papazito') selectedCharacter = 'negro';
-  const solago = selectedCharacter === 'solago' && solagoUnlocked;
-  const warrior = selectedCharacter === 'warrior' && warriorUnlocked;
-  const papazito = selectedCharacter === 'papazito' && papazitoUnlocked;
+  state.solagoUnlocked = isCharacterUnlocked('solago');
+  state.warriorUnlocked = isCharacterUnlocked('warrior');
+  state.papazitoUnlocked = isCharacterUnlocked('papazito');
+  state.debugUnlockAll = isDebugUnlockAll();
+  if (!state.solagoUnlocked && state.selectedCharacter === 'solago') state.selectedCharacter = 'negro';
+  if (!state.warriorUnlocked && state.selectedCharacter === 'warrior') state.selectedCharacter = 'negro';
+  if (!state.papazitoUnlocked && state.selectedCharacter === 'papazito') state.selectedCharacter = 'negro';
+  const solago = state.selectedCharacter === 'solago' && state.solagoUnlocked;
+  const warrior = state.selectedCharacter === 'warrior' && state.warriorUnlocked;
+  const papazito = state.selectedCharacter === 'papazito' && state.papazitoUnlocked;
   const rosterButton = (id, name, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${id}" aria-label="${name}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el mapa anterior para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${name}</small></button>`;
-  const roster = `${rosterButton('negro', 'Negro', true, !solago && !warrior && !papazito)}${rosterButton('solago', 'Solago', solagoUnlocked, solago)}${rosterButton('warrior', 'Warrior', warriorUnlocked, warrior)}${rosterButton('papazito', 'Papazito', papazitoUnlocked, papazito)}${['Maxi', 'Jhonny', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
-  const unlockedCount = 1 + (solagoUnlocked ? 1 : 0) + (warriorUnlocked ? 1 : 0) + (papazitoUnlocked ? 1 : 0);
+  const roster = `${rosterButton('negro', 'Negro', true, !solago && !warrior && !papazito)}${rosterButton('solago', 'Solago', state.solagoUnlocked, solago)}${rosterButton('warrior', 'Warrior', state.warriorUnlocked, warrior)}${rosterButton('papazito', 'Papazito', state.papazitoUnlocked, papazito)}${['Maxi', 'Jhonny', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
+  const unlockedCount = 1 + (state.solagoUnlocked ? 1 : 0) + (state.warriorUnlocked ? 1 : 0) + (state.papazitoUnlocked ? 1 : 0);
   const warriorProfile = `
       <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
       <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
@@ -146,13 +130,13 @@ function characters() {
       <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`;
   const selectorLabel = warrior ? 'Warrior' : solago ? 'Solago' : papazito ? 'Papazito' : 'El Negro';
-  content.innerHTML = `
+  state.content.innerHTML = `
     <section class="screen">
     <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / 8 DISPONIBLES</span></header>
     <div class="character-layout"><section aria-label="Personajes">
       <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${warrior ? 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80' : solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : papazito ? 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y la copa en la mano' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${warrior ? 'WARRIOR' : solago ? 'SOLAGO' : papazito ? 'PAPAZITO' : 'EL NEGRO'}</span></div>
       <div class="roster">${roster}</div>
-      <p class="roster-note">${debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : papazitoUnlocked ? 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA' : warriorUnlocked ? 'WARRIOR DESBLOQUEADO · GANÁ EL MAPA CON WARRIOR PARA PAPAZITO' : solagoUnlocked ? 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
+      <p class="roster-note">${state.debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : state.papazitoUnlocked ? 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA' : state.warriorUnlocked ? 'WARRIOR DESBLOQUEADO · GANÁ EL MAPA CON WARRIOR PARA PAPAZITO' : state.solagoUnlocked ? 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
     </section><section class="detail-panel" aria-label="Habilidades de ${selectorLabel}">${profile}</section></div>
     <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
   const negroRoster = document.querySelector('#roster-negro');
@@ -167,25 +151,25 @@ function characters() {
 }
 
 function story() {
-  const page = stories[storyPage];
-  content.innerHTML = `<section class="story-screen">
-    <canvas id="story-scene" class="story-art" width="480" height="270" role="img" aria-label="${storyPage === 0 ? 'El Negro en su habitación' : storyPage === 1 ? 'El Negro rodeado de zombis' : 'El Administrador espera con su martillo'}"></canvas>
+  const page = stories[state.storyPage];
+  state.content.innerHTML = `<section class="story-screen">
+    <canvas id="story-scene" class="story-art" width="480" height="270" role="img" aria-label="${state.storyPage === 0 ? 'El Negro en su habitación' : state.storyPage === 1 ? 'El Negro rodeado de zombis' : 'El Administrador espera con su martillo'}"></canvas>
     <div class="story-chapter">${page.tag}</div>
     <div class="dialogue"><div class="eyebrow">${page.label}</div><h2>${page.title}</h2><p>${page.text}</p><p class="story-quote">“${page.quote}”</p>
-    <div class="story-nav"><button class="secondary" data-action="story-back">← ATRÁS</button><div class="story-dots" aria-label="Página ${storyPage + 1} de 3">${stories.map((_, i) => `<span class="${i === storyPage ? 'current' : ''}">◆</span>`).join('')}</div><div class="actions">${storyPage < 2 ? '<button class="secondary" data-action="play">SALTAR HISTORIA</button>' : ''}<button class="primary" data-action="story-next">${storyPage === 2 ? 'ENTRAR AL CAOS' : 'CONTINUAR'} ▶</button></div></div></div></section>`;
-  drawStory(document.querySelector('#story-scene'), storyPage, 0);
-  content.focus({ preventScroll: true });
+    <div class="story-nav"><button class="secondary" data-action="story-back">← ATRÁS</button><div class="story-dots" aria-label="Página ${state.storyPage + 1} de 3">${stories.map((_, i) => `<span class="${i === state.storyPage ? 'current' : ''}">◆</span>`).join('')}</div><div class="actions">${state.storyPage < 2 ? '<button class="secondary" data-action="play">SALTAR HISTORIA</button>' : ''}<button class="primary" data-action="story-next">${state.storyPage === 2 ? 'ENTRAR AL CAOS' : 'CONTINUAR'} ▶</button></div></div></div></section>`;
+  drawStory(document.querySelector('#story-scene'), state.storyPage, 0);
+  state.content.focus({ preventScroll: true });
 }
 
 function game() {
-  run = createRun(Math.random, selectedCharacter);
-  facing = 1;
-  lastPhase = '';
-  const def = run.player.characterDef;
+  state.run = createRun(Math.random, state.selectedCharacter);
+  state.facing = 1;
+  state.lastPhase = '';
+  const def = state.run.player.characterDef;
   const abilityButtons = def.specials
     .map(special => `<button class="ability" data-special="${special.key}"><kbd>${special.hotkey.toUpperCase()}</kbd> <span>${special.name}</span></button>`)
     .join('');
-  content.innerHTML = `
+  state.content.innerHTML = `
     <section class="game-screen">
     <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
     <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q y E activan tus habilidades."></canvas>
@@ -205,17 +189,17 @@ function game() {
 
 function overlay() {
   const box = document.querySelector('#game-overlay');
-  if (!box || !run) return;
-  const phase = sellMenuOpen ? 'sellMenu' : paused ? 'paused' : run.phase;
-  if (lastPhase === phase) return;
-  lastPhase = phase;
+  if (!box || !state.run) return;
+  const phase = state.sellMenuOpen ? 'sellMenu' : state.paused ? 'paused' : state.run.phase;
+  if (state.lastPhase === phase) return;
+  state.lastPhase = phase;
   if (phase === 'playing') { box.innerHTML = ''; return; }
   let body = '';
   if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
   if (phase === 'sellMenu') {
     // Data-driven merchant: every special that carries an items table owns a
     // pause-sale menu; nothing here knows a character id.
-    const stockEntry = run.player.characterDef.specials.find(special => special.items);
+    const stockEntry = state.run.player.characterDef.specials.find(special => special.items);
     const stock = stockEntry?.items ?? {};
     const saleCopy = item => {
       const boost = [`+${item.coins} fichas`];
@@ -228,38 +212,38 @@ function overlay() {
       return { boost: boost.join(' · '), penalty: penalty.join(' · ') };
     };
     const cards = Object.entries(stock).map(([key, item]) => {
-      const sold = run.player.soldItems?.[key];
+      const sold = state.run.player.soldItems?.[key];
       const { boost, penalty } = saleCopy(item);
       return `<button class="upgrade" data-sale="${key}" ${sold ? 'disabled' : ''}><b>📦 ${item.label}</b><span>${boost}</span><small>${sold ? 'YA LO MALVENDIÓ' : penalty}</small></button>`;
     }).join('');
-    const itemsLeft = Object.keys(stock).some(key => !run.player.soldItems?.[key]);
-    body = `<div class="eyebrow">Fondo para la cariñosa</div><h2>¿QUÉ SE VENDE HOY?</h2><p>Cada venta paga fichas y daño temporal, con su debuff correspondiente. Todo se vende una vez por partida. <b>«Total, no lo usaba»</b>.</p><p class="shop-hint"><b>${run.coins} fichas disponibles</b></p><div class="shop-grid">${cards}</div><div class="shop-footer"><button class="primary" data-action="sell-menu-close">${itemsLeft ? 'VOLVER A TIRAR LADRILLOS' : 'YA NO QUEDA NADA'} →</button></div>`;
+    const itemsLeft = Object.keys(stock).some(key => !state.run.player.soldItems?.[key]);
+    body = `<div class="eyebrow">Fondo para la cariñosa</div><h2>¿QUÉ SE VENDE HOY?</h2><p>Cada venta paga fichas y daño temporal, con su debuff correspondiente. Todo se vende una vez por partida. <b>«Total, no lo usaba»</b>.</p><p class="shop-hint"><b>${state.run.coins} fichas disponibles</b></p><div class="shop-grid">${cards}</div><div class="shop-footer"><button class="primary" data-action="sell-menu-close">${itemsLeft ? 'VOLVER A TIRAR LADRILLOS' : 'YA NO QUEDA NADA'} →</button></div>`;
   }
   if (phase === 'shop') {
     const cards = UPGRADES.map(u => {
-      const level = run.upgrades[u.id] || 0;
+      const level = state.run.upgrades[u.id] || 0;
       const maxed = level >= u.costs.length;
       const cost = maxed ? 0 : u.costs[level];
-      const disabled = maxed || run.coins < cost;
+      const disabled = maxed || state.run.coins < cost;
       return `<button class="upgrade" data-upgrade="${u.id}" ${disabled ? 'disabled' : ''}><b>${u.icon} ${u.name}</b><span>${u.description}</span><small>${maxed ? `NIVEL ${level}/${u.costs.length} · MÁXIMO` : `NIVEL ${level}/${u.costs.length} · ${cost} FICHAS`}</small></button>`;
     }).join('');
-    const full = run.player.hp >= run.player.maxHp;
-    const healDisabled = full || run.coins < HEAL_COST;
-    body = `<div class="eyebrow">Oleada ${run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín. Las mejoras se acumulan y cada nivel cuesta más.<br><b>${run.coins} fichas disponibles</b> · +20 por sobrevivir</p><p class="shop-hint">DESLIZÁ PARA VER TODAS LAS MEJORAS ↓</p><div class="shop-grid">${cards}<button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Te hacés traer ${HEAL_AMOUNT} de vida ahora mismo.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
+    const full = state.run.player.hp >= state.run.player.maxHp;
+    const healDisabled = full || state.run.coins < HEAL_COST;
+    body = `<div class="eyebrow">Oleada ${state.run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín. Las mejoras se acumulan y cada nivel cuesta más.<br><b>${state.run.coins} fichas disponibles</b> · +20 por sobrevivir</p><p class="shop-hint">DESLIZÁ PARA VER TODAS LAS MEJORAS ↓</p><div class="shop-grid">${cards}<button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Te hacés traer ${HEAL_AMOUNT} de vida ahora mismo.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${state.run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
   }
-  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? run.unlockedSolago ? '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.' : run.unlockedWarrior ? '¡Warrior desbloqueado! Ya podés elegirlo en la próxima partida.' : run.unlockedPapazito ? '¡Papazito desbloqueado! Vino por la seña, se queda por los ladrillos.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
+  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? state.run.unlockedSolago ? '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.' : state.run.unlockedWarrior ? '¡Warrior desbloqueado! Ya podés elegirlo en la próxima partida.' : state.run.unlockedPapazito ? '¡Papazito desbloqueado! Vino por la seña, se queda por los ladrillos.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' ? 'shop-dialog' : ''}">${body}</div></div>`;
   box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
 }
 
 function updateHUD() {
-  const p = run.player;
+  const p = state.run.player;
   document.querySelector('#player-name').textContent = p.characterDef.name;
   document.querySelector('#hp-label').textContent = `${Math.ceil(p.hp)}/${p.maxHp}`;
   document.querySelector('#hp-fill').style.width = `${p.hp / p.maxHp * 100}%`;
-  document.querySelector('#coins').textContent = `◈ ${run.coins}`;
-  document.querySelector('#timer').textContent = run.wave === 4 ? `☠ JEFE · ${formatTime(run.time)}` : formatTime(Math.max(0, run.duration - run.time));
-  document.querySelector('#wave-title').innerHTML = `${run.wave === 4 ? 'EL ADMINISTRADOR' : `OLEADA 0${run.wave}`} <span class="muted">/ 04</span>`;
+  document.querySelector('#coins').textContent = `◈ ${state.run.coins}`;
+  document.querySelector('#timer').textContent = state.run.wave === 4 ? `☠ JEFE · ${formatTime(state.run.time)}` : formatTime(Math.max(0, state.run.duration - state.run.time));
+  document.querySelector('#wave-title').innerHTML = `${state.run.wave === 4 ? 'EL ADMINISTRADOR' : `OLEADA 0${state.run.wave}`} <span class="muted">/ 04</span>`;
   const taskPanel = document.querySelector('#task-panel');
   const task = p.characterDef.taskHud?.(p);
   if (taskPanel && task) {
@@ -270,7 +254,7 @@ function updateHUD() {
   for (const special of p.characterDef.specials) {
     const button = document.querySelector(`[data-special="${special.key}"]`);
     const cooldown = p[`${special.key}Cooldown`];
-    button.disabled = cooldown > 0 || paused || sellMenuOpen || run.phase !== 'playing';
+    button.disabled = cooldown > 0 || state.paused || state.sellMenuOpen || state.run.phase !== 'playing';
     button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s`
       : (p.characterDef.specialHudLabel?.(special, p) ?? special.name);
   }
@@ -323,15 +307,15 @@ function drawPreview(time) {
   rounded(ctx, 44, 161, 168, 5, 0, '#392b42');
   rounded(ctx, 42, 151, 172, 2, 0, '#ad8a99');
   const cycle = time % 10;
-  if (selectedCharacter === 'warrior' && warriorUnlocked) {
+  if (state.selectedCharacter === 'warrior' && state.warriorUnlocked) {
     drawWarrior(ctx, 128, 150, { time, moving: cycle < 3.4, scale: 2 });
     return;
   }
-  if (selectedCharacter === 'papazito' && papazitoUnlocked) {
+  if (state.selectedCharacter === 'papazito' && state.papazitoUnlocked) {
     drawPapazito(ctx, 128, 151, { time, moving: cycle < 3.4, scale: 2 });
     return;
   }
-  if (selectedCharacter === 'solago' && solagoUnlocked) {
+  if (state.selectedCharacter === 'solago' && state.solagoUnlocked) {
     drawPatrona(ctx, 145, 151, { time, scale: 1.2 });
     drawSolago(ctx, 124, 150, { time, moving: cycle < 3.4, scale: 2 });
     return;
@@ -354,14 +338,14 @@ const FIGURE_DRAWERS = {
 function draw() {
   const canvas = document.querySelector('.arena-wrap canvas');
   const ctx = canvas?.getContext('2d');
-  if (!ctx || !run) return;
+  if (!ctx || !state.run) return;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.imageSmoothingEnabled = false;
   drawArena(ctx, WIDTH, HEIGHT);
-  const p = run.player;
+  const p = state.run.player;
   const astral = p.characterDef.specials.find(special => special.key === 'astral');
   if (p.astral > 0 && astral) {
-    drawAstralAura(ctx, p.x, p.y, astral.radius, run.elapsed, Math.min(1, p.astral / 0.4));
+    drawAstralAura(ctx, p.x, p.y, astral.radius, state.run.elapsed, Math.min(1, p.astral / 0.4));
   }
   if (p.chair > 0) {
     ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
@@ -376,11 +360,11 @@ function draw() {
     if (figure.kind === 'player' && p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
     if (figure.kind === 'player') {
       p.characterDef.draw(ctx, figure.x, figure.y + 38,
-        { time: run.elapsed, moving: p.still === 0, facing, player: p });
+        { time: state.run.elapsed, moving: p.still === 0, facing: state.facing, player: p });
     } else if (FIGURE_DRAWERS[figure.kind]) {
-      FIGURE_DRAWERS[figure.kind](ctx, figure, run.elapsed);
+      FIGURE_DRAWERS[figure.kind](ctx, figure, state.run.elapsed);
     } else {
-      drawZombie(ctx, figure.x, figure.y + 31, { kind: figure.kind, time: run.elapsed, seed: figure.id, scale: 2 });
+      drawZombie(ctx, figure.x, figure.y + 31, { kind: figure.kind, time: state.run.elapsed, seed: figure.id, scale: 2 });
     }
     ctx.globalAlpha = 1;
     if (figure.kind !== 'player' && (figure.kind === 'boss' || figure.hp < figure.maxHp)) {
@@ -390,7 +374,7 @@ function draw() {
       rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.kind === 'boss' ? '#b499f2' : '#d7f779');
     }
   }
-  if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time: run.elapsed, scale: 1 });
+  if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time: state.run.elapsed, scale: 1 });
   if (p.smile > 0) {
     // Solago's aura hugs his half-width, shorter frame instead of the tank-sized ring.
     pixelRing(ctx, p.x, p.y + 2, 34 * WORLD_SCALE, '#e8dfa1');
@@ -430,7 +414,7 @@ function draw() {
     }
     ctx.restore();
   }
-  for (const shot of run.projectiles) {
+  for (const shot of state.run.projectiles) {
     ctx.save(); ctx.translate(Math.round(shot.x), Math.round(shot.y)); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
     if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone' || shot.device === 'shroom' || shot.device === 'brick') {
       drawGamerProjectile(ctx, shot.device);
@@ -440,10 +424,10 @@ function draw() {
     ctx.restore();
   }
   ctx.textAlign = 'center'; ctx.font = 'bold 14px monospace';
-  for (const effect of run.effects) {
+  for (const effect of state.run.effects) {
     ctx.globalAlpha = Math.min(1, effect.ttl * 2);
     if (effect.kind === 'smoke') {
-      drawSmokeCloud(ctx, effect.x, effect.y, effect.r, run.elapsed, ctx.globalAlpha);
+      drawSmokeCloud(ctx, effect.x, effect.y, effect.r, state.run.elapsed, ctx.globalAlpha);
       continue;
     }
     if (effect.kind === 'shroomBlast') {
@@ -459,24 +443,24 @@ function draw() {
 }
 
 function frame(timestamp) {
-  const dt = lastFrame ? (timestamp - lastFrame) / 1000 : 0;
-  lastFrame = timestamp;
-  if (screen === 'game' && run) {
+  const dt = state.lastFrame ? (timestamp - state.lastFrame) / 1000 : 0;
+  state.lastFrame = timestamp;
+  if (state.screen === 'game' && state.run) {
     const input = {
-      x: (keys.has('d') || keys.has('arrowright') ? 1 : 0) - (keys.has('a') || keys.has('arrowleft') ? 1 : 0),
-      y: (keys.has('s') || keys.has('arrowdown') ? 1 : 0) - (keys.has('w') || keys.has('arrowup') ? 1 : 0),
+      x: (state.keys.has('d') || state.keys.has('arrowright') ? 1 : 0) - (state.keys.has('a') || state.keys.has('arrowleft') ? 1 : 0),
+      y: (state.keys.has('s') || state.keys.has('arrowdown') ? 1 : 0) - (state.keys.has('w') || state.keys.has('arrowup') ? 1 : 0),
     };
-    if (input.x) facing = input.x > 0 ? 1 : -1;
-    if (!paused && !sellMenuOpen) step(run, dt, input);
+    if (input.x) state.facing = input.x > 0 ? 1 : -1;
+    if (!state.paused && !state.sellMenuOpen) step(state.run, dt, input);
     draw();
-    hudElapsed += dt;
-    if (hudElapsed > 0.08 || run.phase !== lastPhase) { updateHUD(); hudElapsed = 0; }
+    state.hudElapsed += dt;
+    if (state.hudElapsed > 0.08 || state.run.phase !== state.lastPhase) { updateHUD(); state.hudElapsed = 0; }
     overlay();
   }
-  const animationTime = reducedMotion.matches ? 4 : timestamp / 1000;
-  if (screen === 'characters') drawPreview(animationTime);
-  if (screen === 'home') drawRoom(document.querySelector('#menu-scene').getContext('2d'), animationTime);
-  if (screen === 'story') drawStory(document.querySelector('#story-scene'), storyPage, animationTime);
+  const animationTime = state.reducedMotion.matches ? 4 : timestamp / 1000;
+  if (state.screen === 'characters') drawPreview(animationTime);
+  if (state.screen === 'home') drawRoom(document.querySelector('#menu-scene').getContext('2d'), animationTime);
+  if (state.screen === 'story') drawStory(document.querySelector('#story-scene'), state.storyPage, animationTime);
   requestAnimationFrame(frame);
 }
 
@@ -485,30 +469,30 @@ document.addEventListener('click', event => {
   if (!button || button.disabled) return;
   const action = button.dataset.action;
   if (button.dataset.character && isCharacterUnlocked(button.dataset.character)) {
-    selectedCharacter = button.dataset.character;
+    state.selectedCharacter = button.dataset.character;
     characters();
   }
   if (action === 'controls') controls();
   if (action === 'close-controls') closeControls();
   if (['home', 'characters'].includes(action)) show(action);
-  if (action === 'story-start') { storyPage = 0; show('story'); }
-  if (action === 'story-back') { if (storyPage > 0) { storyPage--; story(); } else show('characters'); }
-  if (action === 'story-next') { if (storyPage < 2) { storyPage++; story(); } else show('game'); }
+  if (action === 'story-start') { state.storyPage = 0; show('story'); }
+  if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
+  if (action === 'story-next') { if (state.storyPage < 2) { state.storyPage++; story(); } else show('game'); }
   if (action === 'play') show('game');
-  if (action === 'pause' && run?.phase === 'playing') { paused = !paused; keys.clear(); }
-  if (action === 'resume') { paused = false; keys.clear(); }
-  if (action === 'sell-menu-close') { sellMenuOpen = false; lastPhase = ''; keys.clear(); overlay(); updateHUD(); }
-  if (action === 'next-wave') { startNextWave(run); keys.clear(); }
-  if (button.dataset.sale && run) {
-    sellBelonging(run, button.dataset.sale);
-    const stock = run.player.characterDef.specials.find(s => s.key === 'sell')?.items ?? {};
-    if (!Object.keys(stock).some(key => !run.player.soldItems?.[key])) sellMenuOpen = false;
-    lastPhase = '';
+  if (action === 'pause' && state.run?.phase === 'playing') { state.paused = !state.paused; state.keys.clear(); }
+  if (action === 'resume') { state.paused = false; state.keys.clear(); }
+  if (action === 'sell-menu-close') { state.sellMenuOpen = false; state.lastPhase = ''; state.keys.clear(); overlay(); updateHUD(); }
+  if (action === 'next-wave') { startNextWave(state.run); state.keys.clear(); }
+  if (button.dataset.sale && state.run) {
+    sellBelonging(state.run, button.dataset.sale);
+    const stock = state.run.player.characterDef.specials.find(s => s.key === 'sell')?.items ?? {};
+    if (!Object.keys(stock).some(key => !state.run.player.soldItems?.[key])) state.sellMenuOpen = false;
+    state.lastPhase = '';
     overlay(); updateHUD();
   }
-  if (button.dataset.special && run && !paused) activateSpecial(run, button.dataset.special);
-  if (button.dataset.upgrade && run) { chooseUpgrade(run, button.dataset.upgrade); lastPhase = ''; overlay(); updateHUD(); }
-  if (button.dataset.heal && run) { buyHeal(run); lastPhase = ''; overlay(); updateHUD(); }
+  if (button.dataset.special && state.run && !state.paused) activateSpecial(state.run, button.dataset.special);
+  if (button.dataset.upgrade && state.run) { chooseUpgrade(state.run, button.dataset.upgrade); state.lastPhase = ''; overlay(); updateHUD(); }
+  if (button.dataset.heal && state.run) { buyHeal(state.run); state.lastPhase = ''; overlay(); updateHUD(); }
 });
 
 document.addEventListener('keydown', event => {
@@ -519,15 +503,15 @@ document.addEventListener('keydown', event => {
     if (event.shiftKey && document.activeElement === first) { last?.focus(); event.preventDefault(); }
     if (!event.shiftKey && document.activeElement === last) { first?.focus(); event.preventDefault(); }
   }
-  if (screen !== 'game') {
+  if (state.screen !== 'game') {
     if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeControls();
-    if (screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
+    if (state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
       if (unlockAllForTesting()) {
-        debugUnlockAll = true;
-        solagoUnlocked = true;
-        warriorUnlocked = true;
-        papazitoUnlocked = true;
-        selectedCharacter = 'negro';
+        state.debugUnlockAll = true;
+        state.solagoUnlocked = true;
+        state.warriorUnlocked = true;
+        state.papazitoUnlocked = true;
+        state.selectedCharacter = 'negro';
         show('characters');
       }
       event.preventDefault();
@@ -540,36 +524,36 @@ document.addEventListener('keydown', event => {
       buttons[next]?.focus();
       event.preventDefault();
     }
-    if (key === 'enter' && document.activeElement === content) {
-      content.querySelector('button.primary')?.click();
+    if (key === 'enter' && document.activeElement === state.content) {
+      state.content.querySelector('button.primary')?.click();
       event.preventDefault();
     }
     return;
   }
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
-  if (key === 'escape' && !event.repeat && run.phase === 'playing') {
-    if (sellMenuOpen) { sellMenuOpen = false; lastPhase = ''; keys.clear(); overlay(); updateHUD(); }
-    else { paused = !paused; keys.clear(); }
+  if (key === 'escape' && !event.repeat && state.run.phase === 'playing') {
+    if (state.sellMenuOpen) { state.sellMenuOpen = false; state.lastPhase = ''; state.keys.clear(); overlay(); updateHUD(); }
+    else { state.paused = !state.paused; state.keys.clear(); }
   }
-  if (!paused && !sellMenuOpen && !event.repeat && run.phase === 'playing') {
-    for (const special of run.player.characterDef.specials) {
-      if (special.hotkey === key) activateSpecial(run, special.key);
+  if (!state.paused && !state.sellMenuOpen && !event.repeat && state.run.phase === 'playing') {
+    for (const special of state.run.player.characterDef.specials) {
+      if (special.hotkey === key) activateSpecial(state.run, special.key);
     }
   }
-  if (!paused && !sellMenuOpen) keys.add(key);
+  if (!state.paused && !state.sellMenuOpen) state.keys.add(key);
 });
-document.addEventListener('keyup', event => keys.delete(event.key.toLowerCase()));
+document.addEventListener('keyup', event => state.keys.delete(event.key.toLowerCase()));
 const directions = { up: 'w', left: 'a', down: 's', right: 'd' };
 document.addEventListener('pointerdown', event => {
   const button = event.target.closest('[data-direction]');
   if (!button) return;
-  event.preventDefault(); button.setPointerCapture(event.pointerId); keys.add(directions[button.dataset.direction]);
+  event.preventDefault(); button.setPointerCapture(event.pointerId); state.keys.add(directions[button.dataset.direction]);
 });
 for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) document.addEventListener(name, event => {
   const button = event.target.closest('[data-direction]');
-  if (button) keys.delete(directions[button.dataset.direction]);
+  if (button) state.keys.delete(directions[button.dataset.direction]);
 });
-function suspend() { keys.clear(); if (screen === 'game' && run?.phase === 'playing') paused = true; }
+function suspend() { state.keys.clear(); if (state.screen === 'game' && state.run?.phase === 'playing') state.paused = true; }
 window.addEventListener('blur', suspend);
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
 show('home');
