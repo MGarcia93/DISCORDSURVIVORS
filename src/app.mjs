@@ -1,5 +1,5 @@
 import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
-import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile, drawWarrior, drawSmokeCloud, drawShroomBlast, drawAstralAura } from './sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
 import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
 import { on } from './bus.mjs';
@@ -17,6 +17,7 @@ let facing = 1;
 let selectedCharacter = 'negro';
 let solagoUnlocked = isCharacterUnlocked('solago');
 let warriorUnlocked = isCharacterUnlocked('warrior');
+let papazitoUnlocked = isCharacterUnlocked('papazito');
 let debugUnlockAll = isDebugUnlockAll();
 // Any map victory passes through the bus: progression records the unlock and
 // app reads it back to refresh the character roster cache.
@@ -24,8 +25,10 @@ on('waveCleared', ({ run: clearedRun }) => {
   if (clearedRun.phase !== 'won') return;
   solagoUnlocked = isCharacterUnlocked('solago');
   warriorUnlocked = isCharacterUnlocked('warrior');
+  papazitoUnlocked = isCharacterUnlocked('papazito');
   clearedRun.unlockedSolago = solagoUnlocked;
   clearedRun.unlockedWarrior = warriorUnlocked;
+  clearedRun.unlockedPapazito = papazitoUnlocked;
 });
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
@@ -84,14 +87,17 @@ function home() {
 function characters() {
   solagoUnlocked = isCharacterUnlocked('solago');
   warriorUnlocked = isCharacterUnlocked('warrior');
+  papazitoUnlocked = isCharacterUnlocked('papazito');
   debugUnlockAll = isDebugUnlockAll();
   if (!solagoUnlocked && selectedCharacter === 'solago') selectedCharacter = 'negro';
   if (!warriorUnlocked && selectedCharacter === 'warrior') selectedCharacter = 'negro';
+  if (!papazitoUnlocked && selectedCharacter === 'papazito') selectedCharacter = 'negro';
   const solago = selectedCharacter === 'solago' && solagoUnlocked;
   const warrior = selectedCharacter === 'warrior' && warriorUnlocked;
-  const rosterButton = (id, name, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${id}" aria-label="${name}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el primer mapa para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${name}</small></button>`;
-  const roster = `${rosterButton('negro', 'Negro', true, !solago && !warrior)}${rosterButton('solago', 'Solago', solagoUnlocked, solago)}${rosterButton('warrior', 'Warrior', warriorUnlocked, warrior)}${['Maxi', 'Jhonny', 'Papafrita', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
-  const unlockedCount = 1 + (solagoUnlocked ? 1 : 0) + (warriorUnlocked ? 1 : 0);
+  const papazito = selectedCharacter === 'papazito' && papazitoUnlocked;
+  const rosterButton = (id, name, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${id}" aria-label="${name}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el mapa anterior para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${name}</small></button>`;
+  const roster = `${rosterButton('negro', 'Negro', true, !solago && !warrior && !papazito)}${rosterButton('solago', 'Solago', solagoUnlocked, solago)}${rosterButton('warrior', 'Warrior', warriorUnlocked, warrior)}${rosterButton('papazito', 'Papazito', papazitoUnlocked, papazito)}${['Maxi', 'Jhonny', 'Pasasito', 'Tomi'].map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('')}`;
+  const unlockedCount = 1 + (solagoUnlocked ? 1 : 0) + (warriorUnlocked ? 1 : 0) + (papazitoUnlocked ? 1 : 0);
   const warriorProfile = `
       <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
       <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
@@ -101,6 +107,15 @@ function characters() {
       <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>`;
+  const papazitoProfile = `
+      <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
+      <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
+      <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
+      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+15%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>La cariñosa le cobra la extorsión y le recorta monedas: 5 segundos de pánico con +30% de velocidad y +40% de ataque.</p></div></div>
+      <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
+      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Ataque de furia: lluvia de ladrillos en todas las direcciones durante 5 segundos. Recarga: 40 segundos.</p></div></div>`;
   const profile = warrior ? warriorProfile : solago ? `
       <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
@@ -118,14 +133,15 @@ function characters() {
       <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`;
+  const selectorLabel = warrior ? 'Warrior' : solago ? 'Solago' : papazito ? 'Papazito' : 'El Negro';
   content.innerHTML = `
     <section class="screen">
     <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / 8 DISPONIBLES</span></header>
     <div class="character-layout"><section aria-label="Personajes">
-      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${warrior ? 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80' : solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${warrior ? 'WARRIOR' : solago ? 'SOLAGO' : 'EL NEGRO'}</span></div>
+      <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${warrior ? 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80' : solago ? 'Pixel art de Solago: remera oscura, reloj y paletas grandes' : papazito ? 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y la copa en la mano' : 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings'}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${warrior ? 'WARRIOR' : solago ? 'SOLAGO' : papazito ? 'PAPAZITO' : 'EL NEGRO'}</span></div>
       <div class="roster">${roster}</div>
-      <p class="roster-note">${debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : warriorUnlocked ? 'WARRIOR DESBLOQUEADO · CADENA DE MAPAS COMPLETADA' : solagoUnlocked ? 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
-    </section><section class="detail-panel" aria-label="Habilidades de ${warrior ? 'Warrior' : solago ? 'Solago' : 'El Negro'}">${profile}</section></div>
+      <p class="roster-note">${debugUnlockAll ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS' : papazitoUnlocked ? 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA' : warriorUnlocked ? 'WARRIOR DESBLOQUEADO · GANÁ EL MAPA CON WARRIOR PARA PAPAZITO' : solagoUnlocked ? 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR' : 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO'}</p>
+    </section><section class="detail-panel" aria-label="Habilidades de ${selectorLabel}">${profile}</section></div>
     <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
   const negroRoster = document.querySelector('#roster-negro');
   if (negroRoster) drawElNegro(negroRoster.getContext('2d'), 20, 47, { scale: 1 });
@@ -133,6 +149,8 @@ function characters() {
   if (solagoRoster) drawSolago(solagoRoster.getContext('2d'), 26, 47, { scale: 1 });
   const warriorRoster = document.querySelector('#roster-warrior');
   if (warriorRoster) drawWarrior(warriorRoster.getContext('2d'), 28, 46, { scale: 1 });
+  const papazitoRoster = document.querySelector('#roster-papazito');
+  if (papazitoRoster) drawPapazito(papazitoRoster.getContext('2d'), 26, 46, { scale: 1 });
   drawPreview(0);
 }
 
@@ -194,7 +212,7 @@ function overlay() {
     const healDisabled = full || run.coins < HEAL_COST;
     body = `<div class="eyebrow">Oleada ${run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín. Las mejoras se acumulan y cada nivel cuesta más.<br><b>${run.coins} fichas disponibles</b> · +20 por sobrevivir</p><p class="shop-hint">DESLIZÁ PARA VER TODAS LAS MEJORAS ↓</p><div class="shop-grid">${cards}<button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Te hacés traer ${HEAL_AMOUNT} de vida ahora mismo.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
   }
-  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? run.unlockedSolago ? '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.' : run.unlockedWarrior ? '¡Warrior desbloqueado! Ya podés elegirlo en la próxima partida.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
+  if (phase === 'dead' || phase === 'won') body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? run.unlockedSolago ? '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.' : run.unlockedWarrior ? '¡Warrior desbloqueado! Ya podés elegirlo en la próxima partida.' : run.unlockedPapazito ? '¡Papazito desbloqueado! Vino por la seña, se queda por los ladrillos.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${run.kills} enemigos · ${formatTime(run.elapsed)} de supervivencia · Oleada ${run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' ? 'shop-dialog' : ''}">${body}</div></div>`;
   box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
 }
@@ -271,6 +289,10 @@ function drawPreview(time) {
   const cycle = time % 10;
   if (selectedCharacter === 'warrior' && warriorUnlocked) {
     drawWarrior(ctx, 128, 150, { time, moving: cycle < 3.4, scale: 2 });
+    return;
+  }
+  if (selectedCharacter === 'papazito' && papazitoUnlocked) {
+    drawPapazito(ctx, 128, 151, { time, moving: cycle < 3.4, scale: 2 });
     return;
   }
   if (selectedCharacter === 'solago' && solagoUnlocked) {
@@ -434,6 +456,7 @@ document.addEventListener('keydown', event => {
         debugUnlockAll = true;
         solagoUnlocked = true;
         warriorUnlocked = true;
+        papazitoUnlocked = true;
         selectedCharacter = 'negro';
         show('characters');
       }

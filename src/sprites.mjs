@@ -327,6 +327,64 @@ export function drawPatrona(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+// Papazito: the photo build — heavyset frame, plain black tee, light blue
+// jeans with rolled cuffs, white low sneakers, and the goblet he never drops.
+export function drawPapazito(ctx, x, y, options = {}) {
+  const { time = 0, moving = false, facing = 1, scale = 2 } = options;
+  const step = moving ? Math.floor(time * 8) % 2 : 0;
+  pose(ctx, x, y, scale, facing);
+  pixel(ctx, -20, -1, 40, 3, '#11141c');          // ground shadow: the widest base in the roster
+  ctx.translate(-20, -44 + step);
+  // Thick legs in light jeans; cuffs rolled right above clean white sneakers.
+  pixel(ctx, 1, 29, 9, 9, '#8faecc');             // left leg
+  pixel(ctx, 10, 29, 9, 9, '#7d9ab8');            // right leg, slight shade
+  pixel(ctx, -1, 37, 12, 2, '#6f8fb3');           // rolled cuff, left
+  pixel(ctx, 9, 37, 12, 2, '#6f8fb3');            // rolled cuff, right
+  pixel(ctx, -2, 39 - step, 14, 3, '#efe9dc');    // white low sneaker, left
+  pixel(ctx, 9, 39 + step, 14, 3, '#efe9dc');     // white low sneaker, right
+  pixel(ctx, -2, 41 - step, 14, 1, '#cfc9bb');    // worn sole, left
+  pixel(ctx, 9, 41 + step, 14, 1, '#cfc9bb');     // worn sole, right
+  // The heavy black t-shirt: wide shoulders, stepped belly, hem below the gut.
+  pixel(ctx, 2, 19, 32, 3, '#15141d');
+  pixel(ctx, -2, 22, 40, 9, '#15141d');
+  pixel(ctx, -1, 31, 38, 7, '#15141d');
+  pixel(ctx, 2, 37, 32, 3, '#15141d');
+  pixel(ctx, 4, 22, 32, 9, '#1d1c26');            // plain black tee
+  pixel(ctx, 1, 31, 33, 7, '#1d1c26');
+  pixel(ctx, 9, 24, 20, 5, '#29283a');            // gut highlight
+  pixel(ctx, 12, 30, 14, 6, '#29283a');
+  pixel(ctx, 5, 37, 27, 2, '#29283a');
+  // Short sleeves; bare, plump forearms on both sides.
+  pixel(ctx, -2, 22, 5, 14, '#15141d');
+  pixel(ctx, 33, 22, 5, 14, '#15141d');
+  pixel(ctx, -1, 23, 4, 11, '#c88b67');
+  pixel(ctx, 34, 23, 2, 10, '#c88b67');
+  // The raised goblet toast in his right hand: bowl, wine, stem, base.
+  pixel(ctx, -1, 20, 4, 4, '#c88b67');            // hand around the stem
+  pixel(ctx, -4, 12, 10, 5, '#dad8dc');           // goblet bowl
+  pixel(ctx, -3, 13, 8, 2, '#7c3b55');            // the wine bought with the seña
+  pixel(ctx, -2, 17, 3, 4, '#b9b7bd');            // stem
+  pixel(ctx, -5, 21, 8, 1, '#dad8dc');            // base
+  // Round heavy face under short dark hair.
+  pixel(ctx, 7, -6, 22, 20, '#15141d');
+  pixel(ctx, 9, -8, 18, 3, '#221f29');            // hair top
+  pixel(ctx, 7, -6, 4, 7, '#221f29');
+  pixel(ctx, 25, -6, 4, 7, '#221f29');
+  pixel(ctx, 9, -5, 18, 11, '#221f29');           // hair fill
+  pixel(ctx, 8, -4, 20, 15, '#c88b67');           // face
+  pixel(ctx, 10, -6, 16, 3, '#e3aa7e');
+  pixel(ctx, 10, 0, 17, 8, '#e3aa7e');
+  pixel(ctx, 9, -4, 7, 1, '#995e4f');             // brows
+  pixel(ctx, 20, -4, 7, 1, '#995e4f');
+  pixel(ctx, 12, 0, 4, 3, '#15141d');             // eyes
+  pixel(ctx, 21, 0, 4, 3, '#15141d');
+  pixel(ctx, 14, 8, 9, 2, '#995e4f');             // neutral mouth
+  pixel(ctx, 16, 9, 5, 1, '#a76d57');
+  pixel(ctx, 12, 17, 14, 4, '#c88b67');           // double chin
+  pixel(ctx, 14, 20, 10, 2, '#995e4f');
+  ctx.restore();
+}
+
 // Warrior: the gym physique from his photo (red headband, white print tank,
 // open 80s windbreaker, salmon shorts), rolling shaman smoke as idle detail.
 export function drawWarrior(ctx, x, y, options = {}) {

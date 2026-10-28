@@ -13,6 +13,25 @@ test('characters are registered data objects with behavior, and the engine resol
   assert.equal(createRun(Math.random, 'solago').player.characterDef, CHARACTERS.solago);
 });
 
+test('Papazito is a registered heavy ranged bruiser running on the percentage core', () => {
+  assert.ok(CHARACTERS.papazito, 'Papazito must be registered in the roster');
+  assert.equal(CHARACTERS.papazito.id, 'papazito');
+  const p = createRun(Math.random, 'papazito').player;
+  // Stat sheet from context/personajes/papazito_el_paraguayo_trucho.md §3:
+  // life +10% -> 110, ranged damage +15% -> 11.5, attackSpeed -10% -> 90
+  // (interval ~1.11s), defense +10% -> 11 points (0.55 mitigation),
+  // moveSpeed -10% -> 2970 (148.5 scaled px/s). attackDistance is a charged
+  // balancing proposal: 150% (165px), tunable like Warrior's was.
+  assert.equal(p.maxHp, 110);
+  assert.equal(p.defense, 0.55);
+  assert.equal(p.damage, 11.5);
+  assert.equal(p.attackRange, 150 * UNIT_PX);
+  assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-9);
+  assert.equal(p.speed, 148.5 * WORLD_SCALE);
+  assert.equal(CHARACTERS.papazito.attack.type, 'ranged');
+  assert.equal(CHARACTERS.papazito.attack.device, 'brick', 'his basic attack config lives in the sheet');
+});
+
 test('Warrior is a registered controller running on the percentage core', () => {
   assert.ok(CHARACTERS.warrior, 'Warrior must be registered in the roster');
   assert.equal(CHARACTERS.warrior.id, 'warrior');

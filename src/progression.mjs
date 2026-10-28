@@ -36,7 +36,8 @@ export function isCharacterUnlocked(character, storage) {
   if (!progress) return false;
   if (progress.debugUnlockAll === true) return true;
   if (character === 'solago') return progress.solagoUnlocked === true;
-  return character === 'warrior' && progress.warriorUnlocked === true;
+  if (character === 'warrior') return progress.warriorUnlocked === true;
+  return character === 'papazito' && progress.papazitoUnlocked === true;
 }
 
 export function isDebugUnlockAll(storage) {
@@ -58,7 +59,8 @@ export function unlockSolago(storage) {
   }
 }
 
-// Victory unlock chain: negro wins the map -> Solago; Solago wins -> Warrior.
+// Victory unlock chain: negro wins the map -> Solago; Solago wins -> Warrior;
+// Warrior wins -> Papazito.
 export function unlockWarrior(storage) {
   try {
     const target = resolveStorage(storage);
@@ -73,9 +75,24 @@ export function unlockWarrior(storage) {
   }
 }
 
+export function unlockPapazito(storage) {
+  try {
+    const target = resolveStorage(storage);
+    if (!target) return false;
+    const record = readProgressRecord(target);
+    if (!record.valid) return false;
+    record.progress.papazitoUnlocked = true;
+    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(record.progress));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function recordMapVictory(character, storage) {
   if (character === 'negro') return unlockSolago(storage);
   if (character === 'solago') return unlockWarrior(storage);
+  if (character === 'warrior') return unlockPapazito(storage);
   return false;
 }
 

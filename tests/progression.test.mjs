@@ -37,6 +37,14 @@ test('only El Negro winning the first map unlocks Solago', () => {
   assert.equal(isCharacterUnlocked('warrior', storage), false, 'a negro win still only grants Solago');
 });
 
+test('Papazito starts locked and is the reward for winning the map chain as Warrior', () => {
+  const storage = memoryStorage();
+  assert.equal(isCharacterUnlocked('papazito', storage), false);
+  assert.equal(recordMapVictory('warrior', storage), true);
+  assert.equal(isCharacterUnlocked('papazito', storage), true);
+  assert.equal(isCharacterUnlocked('warrior', storage), false, 'a warrior win grants Papazito, not Warrior');
+});
+
 test('one debug storage flag unlocks all registered and future character IDs', () => {
   const storage = memoryStorage();
   assert.equal(unlockAllForTesting(storage), true);

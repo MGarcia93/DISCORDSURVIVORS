@@ -1,6 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
+
+test('drawPapazito draws his photo outfit — black tee, light jeans, white sneakers, goblet — in both facings', () => {
+  for (const facing of [1, -1]) {
+    const rectangles = [];
+    const ctx = { save() {}, restore() {}, scale() {}, getTransform: () => ({ a: 1, d: 1 }),
+      translate() {}, fillRect(...args) { rectangles.push([...args, this.fillStyle]); } };
+    drawPapazito(ctx, 100, 100, { scale: 1, time: 1, moving: true, facing });
+    assert.ok(rectangles.length > 20, 'a full sketch, not an empty frame');
+    assert.ok(rectangles.some(r => r[4] === '#1d1c26'), 'plain black t-shirt from the photo');
+    assert.ok(rectangles.some(r => r[4] === '#8faecc'), 'light blue jeans with rolled cuffs');
+    assert.ok(rectangles.some(r => r[4] === '#efe9dc'), 'white low sneakers');
+    assert.ok(rectangles.some(r => r[4] === '#dad8dc'), 'the goblet he never lets go');
+  }
+});
+
+test('Papazito sprites as a heavier, stockier silhouette than Warrior', () => {
+  const silhouette = draw => {
+    const rectangles = [];
+    const ctx = { save() {}, restore() {}, scale() {}, getTransform: () => ({ a: 1, d: 1, e: 0, f: 0 }),
+      translate() {}, fillRect(x, y, w, h) { rectangles.push([x, y, w, h]); } };
+    draw(ctx, 100, 100, { scale: 1, time: 1, moving: false, facing: 1 });
+    return Math.max(...rectangles.map(r => r[0] + r[2])) - Math.min(...rectangles.map(r => r[0]));
+  };
+  assert.ok(silhouette((...args) => drawPapazito(...args)) > silhouette((...args) => drawWarrior(...args)),
+    'the seña survivor is the bulk frame of the roster');
+});
 
 test('drawWarrior draws his photo outfit in both facings', () => {
   for (const facing of [1, -1]) {
