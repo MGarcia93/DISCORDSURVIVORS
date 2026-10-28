@@ -58,6 +58,7 @@ test('the app ESM graph links and boots home, selection, arena and overlays', as
   const gameScreen = await import('../src/screens/game.mjs');
   const overlays = await import('../src/game/overlays.mjs');
   const hud = await import('../src/game/hud.mjs');
+  const renderer = await import('../src/game/renderer.mjs');
 
   screens.characters();
   assert.equal(state.screen, 'home', 'boot lands on home; characters() only renders its markup');
@@ -74,6 +75,9 @@ test('the app ESM graph links and boots home, selection, arena and overlays', as
   assert.ok(state.run, 'entering the arena creates a run');
   hud.updateHUD();
   overlays.overlay();
+  // A bare `run` reference here shipped a console-error arena: every exported
+  // paint path must execute, not only link.
+  renderer.draw();
   state.paused = false;
   assert.equal(state.run.phase, 'playing', 'the run starts playing');
 });

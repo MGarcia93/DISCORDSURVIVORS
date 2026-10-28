@@ -46,7 +46,7 @@ export function draw() {
     ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
     pixelRing(ctx, p.x, p.y, 145 * 1.1, '#a18aff');
   }
-  const figures = [...run.enemies];
+  const figures = [...state.run.enemies];
   if (p.chair > 0) figures.push({ x: p.x, y: p.y - 0.6, kind: 'chair' });
   if (p.stand > 0) figures.push({ x: p.x + 13 * WORLD_SCALE, y: p.y - 1, kind: 'stand' });
   figures.push({ x: p.x, y: p.y, kind: 'player' });
