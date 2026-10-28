@@ -9,7 +9,7 @@ export function createPresenter(root, catalog, onError) {
   }
   root.innerHTML = '<canvas class="narrative-stage" width="1144" height="748" aria-label="Scripted scene"></canvas><div class="narrative-content"></div><p class="narrative-error" role="status" hidden></p>';
   const canvas = root.querySelector('canvas'), content = root.querySelector('.narrative-content'), errorBox = root.querySelector('.narrative-error');
-  let previous = '', previousFocus = null, disposed = false, revision = 0;
+  let previous = '', previousFocus = null, disposed = false, revision = 0, lastLine = null;
   const portrait = (speaker, expression = 'neutral') => {
     const character = catalog.characters[speaker];
     return `<img class="narrative-portrait" src="${escape(character.expressions[expression])}" alt="${escape(character.name)} — ${escape(expression)}">`;
@@ -51,8 +51,13 @@ export function createPresenter(root, catalog, onError) {
         previous = signature;
         const currentRevision = ++revision;
         const line = player?.dialogue;
+        if (!active) lastLine = null;
         if (active && !previousFocus) previousFocus = document.activeElement;
-        if (line) {
+        if (line) lastLine = line;
+        // The dialog stays mounted while the scene plays a beat between lines,
+        // so the conversation never blinks out and the cast never disappears.
+        const spoken = line ?? (active && !player?.splash ? lastLine : null);
+        if (spoken) {
           // The cast keeps the same slots for the whole scene, ordered by where
           // each actor stands, and faces the centre of the conversation.
           const sceneSpeakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))];
@@ -64,12 +69,14 @@ export function createPresenter(root, catalog, onError) {
           };
           const cast = sceneSpeakers
             .map((id, index) => ({ id, index, x: stageX(id) }))
-            .sort((a, b) => (a.x ?? Infinity) - (b.x ?? Infinity) || a.index - b.index)
-            .slice(0, 3);
+            .sort((a, b) => (a.x ?? Infinity) - (b.x ?? Infinity) || a.index - b.index);
           const placed = cast.map(entry => entry.x).filter(x => x !== null);
           const midpoint = placed.length > 1 ? (Math.min(...placed) + Math.max(...placed)) / 2 : null;
           const facing = entry => (midpoint === null || entry.x === null ? '' : entry.x > midpoint ? ' mirrored' : '');
-          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === line.speaker ? 'speaking' : 'listening'}${facing(entry)}">${portrait(entry.id, entry.id === line.speaker ? line.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[line.speaker].name)}</strong><p>${escape(line.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
+          const actions = line
+            ? '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>'
+            : '';
+          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
         } else if (player?.splash) {
           content.innerHTML = `<div class="narrative-splash">${portrait(player.splash.speaker)}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
         } else if (active) {
@@ -86,6 +93,6 @@ export function createPresenter(root, catalog, onError) {
       root.hidden = !showStage && !banter && !error;
       errorBox.hidden = !error; errorBox.textContent = error ?? '';
     },
-    dispose() { disposed = true; revision++; restoreFocus(); root.innerHTML = ''; root.hidden = true; },
+    dispose() { disposed = true; revision++; lastLine = null; restoreFocus(); root.innerHTML = ''; root.hidden = true; },
   };
 }
