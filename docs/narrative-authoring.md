@@ -1,6 +1,6 @@
 # Add or preview a narrative scene
 
-Each scene lives in its own JSON file. The narrative module owns playback; combat does not know scene IDs, dialogue, or staging. The `sample-*` scenes are **noncanonical development samples**. Props and other characters' portraits remain placeholders. El Negro now uses the approved detailed pixel-art base with clear glasses; his first expression set is available for visual review.
+Each scene lives in its own JSON file. The narrative module owns playback; combat does not know scene IDs, dialogue, or staging. The `sample-*` scenes are **noncanonical development samples**. Props and other characters' portraits remain placeholders. El Negro and Solago use approved detailed pixel-art bases generated from one source portrait each; their expression sets are available for visual review.
 
 The viewer also includes **Act 4 preview: Warrior rescue (placeholder art)**. It uses the approved rescue aftermath dialogue (Act 4 script, lines 232–252), following the guardian fight; the approach movement and camera are proposed staging. The existing arena, labeled props and basic pointing pose stand in for Conan scenery, chain-breaking animation and smoke. The unlock splash is presentation only: it never unlocks Warrior in real progress. This scene has no gameplay binding.
 
@@ -32,7 +32,11 @@ The samples have **no gameplay bindings**, so normal prototype play is unchanged
 
 Names and portraits come from the character catalog. Text is rendered as text, not HTML. Advance is manual. No per-conversation JavaScript is needed.
 
-El Negro (`maxi-negro`, the playable `negro` sprite) supports `neutral`, `happy`, `annoyed`, `surprised`, `tired`, `disgusted` and `disgusted-strong`. The last two support the Act 4 Papafrita gag. These images are generated from one source portrait and facial overrides, not independently redrawn characters. See [the reusable portrait workflow](../art/characters/negro/README.md) and the [`character-portraits` skill](../.opencode/skills/character-portraits/SKILL.md).
+El Negro (`maxi-negro`, the playable `negro` sprite) supports `neutral`, `happy`, `annoyed`, `surprised`, `tired`, `disgusted` and `disgusted-strong`. The last two support the Act 4 Papafrita gag.
+
+Solago (`solago`) supports `neutral`, `happy`, `annoyed`, `angry`, `surprised`, `scared`, `tired` and `disgusted`. Every expression keeps the same buck-toothed mouth so the character stays recognisable; `disgusted` swaps it for the Excalibur-style clenched grimace used in Act 4.
+
+These images are generated from one source portrait and facial overrides, not independently redrawn characters. See [the El Negro workflow](../art/characters/negro/README.md), [the Solago workflow](../art/characters/solago/README.md) and the [`character-portraits` skill](../.opencode/skills/character-portraits/SKILL.md).
 
 ## Sprite sequence
 

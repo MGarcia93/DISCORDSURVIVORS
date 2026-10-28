@@ -79,3 +79,41 @@ test('rejected recipe or unknown option leaves all existing generated portraits 
     assert.match(help.stdout, /--out/);
   } finally { await rm(scratch, { recursive: true, force: true }); }
 });
+
+test('Solago keeps one buck-toothed mouth and exposes its eight catalog expressions', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'solago-build-'));
+  try {
+    const solagoRecipe = resolve('art/characters/solago/expressions.json');
+    const solagoBase = resolve('art/characters/solago/portrait-neutral.svg');
+    const original = hash(await readFile(solagoBase)), out = join(scratch, 'portraits');
+    const result = build(['--recipe', solagoRecipe, '--out', out], scratch);
+    assert.equal(result.status, 0, result.stderr);
+    const names = ['angry', 'annoyed', 'disgusted', 'happy', 'neutral', 'scared', 'surprised', 'tired'];
+    assert.deepEqual((await readdir(out)).sort(), names.map(name => `${name}.svg`).sort());
+    const neutral = await readFile(join(out, 'neutral.svg'), 'utf8');
+    const neutralMouth = neutral.match(/<g id="expression-mouth">[\s\S]*?<\/g>/)?.[0];
+    for (const name of names) {
+      const svg = await readFile(join(out, `${name}.svg`), 'utf8');
+      assert.equal(svg, await readFile(resolve(`assets/narrative/portraits/solago/${name}.svg`), 'utf8'), `${name} output is up to date`);
+      for (const id of ['body-outline', 'neck', 'tee', 'head', 'hair', 'ear']) {
+        const pattern = new RegExp(`<g id="${id}"[^>]*>[\\s\\S]*?<\\/g>`);
+        assert.equal(svg.match(pattern)?.[0], neutral.match(pattern)?.[0], `${name} preserves ${id}`);
+        assert.ok(svg.match(pattern), `${id} actually exists`);
+      }
+      assert.match(svg, new RegExp(`data-expression="${name}"`));
+      if (name === 'disgusted') assert.notEqual(svg.match(/<g id="expression-mouth">[\s\S]*?<\/g>/)?.[0], neutralMouth, 'disgusted uses the Excalibur grimace');
+      else assert.equal(svg.match(/<g id="expression-mouth">[\s\S]*?<\/g>/)?.[0], neutralMouth, `${name} keeps the same buck teeth`);
+      if (name !== 'neutral') assert.notEqual(svg.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0], neutral.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0]);
+    }
+    assert.equal(hash(await readFile(solagoBase)), original, 'generation never modifies the approved source');
+
+    const { loadCatalog } = await import('../src/narrative/catalog.mjs');
+    const catalog = await loadCatalog({ fetcher: async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) }) });
+    const character = catalog.characters.solago;
+    assert.equal(character.sprite, 'solago');
+    assert.deepEqual(Object.keys(character.expressions).sort(), names);
+    for (const [expression, file] of Object.entries(character.expressions)) {
+      assert.match(await readFile(new URL(file), 'utf8'), new RegExp(`data-expression="${expression}"`));
+    }
+  } finally { await rm(scratch, { recursive: true, force: true }); }
+});

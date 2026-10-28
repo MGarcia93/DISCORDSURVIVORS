@@ -25,7 +25,16 @@
   "solago": {
     "name": "Solago",
     "sprite": "solago",
-    "expressions": { "neutral": "portraits/solago-placeholder.svg" }
+    "expressions": {
+      "neutral": "portraits/solago/neutral.svg",
+      "happy": "portraits/solago/happy.svg",
+      "annoyed": "portraits/solago/annoyed.svg",
+      "angry": "portraits/solago/angry.svg",
+      "surprised": "portraits/solago/surprised.svg",
+      "scared": "portraits/solago/scared.svg",
+      "tired": "portraits/solago/tired.svg",
+      "disgusted": "portraits/solago/disgusted.svg"
+    }
   },
   "warrior": {
     "name": "Warrior",
