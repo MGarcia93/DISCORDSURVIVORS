@@ -34,7 +34,7 @@ const papazito = {
     unlocked: 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA',
   },
   victoryLine: '¡Papazito desbloqueado! Vino por la seña, se queda por los ladrillos.',
-  rosterPose: { x: 26, y: 46 },
+  rosterPose: { x: 30, y: 46 },
   drawRoster(ctx) { drawPapazito(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
   preview(ctx, { time, cycle }) { drawPapazito(ctx, 128, 151, { time, moving: cycle < 3.4, scale: 2 }); },
   deathLine: 'VENDIÓ TODO Y NI LA PUSO.',

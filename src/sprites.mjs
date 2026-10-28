@@ -6,6 +6,9 @@ export const PALETTE = Object.freeze({
   pants: '#373445', shoe: '#bdb8c5', purple: '#9670be', green: '#b8d97a',
 });
 
+// Closed 1px contour shared by the sprites drawn on the 46px cast grid.
+const OUTLINE = '#171526';
+
 export function pixel(ctx, x, y, w, h, color) {
   ctx.fillStyle = color;
   ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
@@ -329,112 +332,202 @@ export function drawPatrona(ctx, x, y, options = {}) {
 
 // Papazito: the photo build — heavyset frame, plain black tee, light blue
 // jeans with rolled cuffs, white low sneakers, and an oversized comedy brick.
+// Drawn on the 46px cast grid with a closed ink contour and three tones per
+// material, the same construction as El Negro and Solago.
 export function drawPapazito(ctx, x, y, options = {}) {
   const { time = 0, moving = false, facing = 1, scale = 2 } = options;
   const step = moving ? Math.floor(time * 8) % 2 : 0;
   pose(ctx, x, y, scale, facing);
-  pixel(ctx, -18, -1, 36, 3, '#11141c');
-  ctx.translate(-20, -44 + step);
-  // Full-length jeans under the hem, with a clear gap between the legs.
-  pixel(ctx, 7, 29, 26, 5, '#6f8fb3');
-  pixel(ctx, 7, 32, 12, 10, '#8faecc');
-  pixel(ctx, 22, 32, 11, 10, '#7d9ab8');
-  pixel(ctx, 9, 33, 4, 7, '#b6cddd');
-  pixel(ctx, 24, 33, 4, 7, '#8faecc');
-  pixel(ctx, 7, 40 - step, 12, 2, '#6f8fb3');
-  pixel(ctx, 22, 40 + step, 11, 2, '#6f8fb3');
-  pixel(ctx, 5, 42 - step, 14, 2, '#efe9dc');
-  pixel(ctx, 22, 42 + step, 14, 2, '#efe9dc');
-  pixel(ctx, 5, 44 - step, 14, 1, '#cfc9bb');
-  pixel(ctx, 22, 44 + step, 14, 1, '#cfc9bb');
-  // Broad shoulders and a rounded tee, not a rectangular slab over the legs.
-  pixel(ctx, 8, 16, 24, 3, '#15141d');
-  pixel(ctx, 3, 19, 34, 7, '#15141d');
-  pixel(ctx, 4, 25, 32, 4, '#15141d');
-  pixel(ctx, 7, 29, 26, 3, '#15141d');
-  pixel(ctx, 8, 19, 24, 9, '#1d1c26');
-  pixel(ctx, 7, 24, 26, 5, '#1d1c26');
-  pixel(ctx, 10, 28, 21, 2, '#1d1c26');
-  pixel(ctx, 11, 21, 2, 5, '#29283a');
-  pixel(ctx, 13, 28, 16, 1, '#29283a');
-  // Short sleeves and forearms, one bent to carry the oversized brick.
-  pixel(ctx, 1, 20, 7, 5, '#15141d');
-  pixel(ctx, 32, 20, 7, 5, '#15141d');
-  pixel(ctx, 2, 25, 5, 5, '#c88b67');
-  pixel(ctx, -1, 23, 5, 4, '#e3aa7e');
-  pixel(ctx, 34, 25, 4, 7, '#c88b67');
-  pixel(ctx, 34, 30, 3, 3, '#e3aa7e');
-  // Match his projectile's terracotta palette, with a heavy rim and two holes.
-  pixel(ctx, -10, 16, 16, 9, '#15141d');
-  pixel(ctx, -9, 17, 14, 7, '#b4543c');
-  pixel(ctx, -9, 17, 14, 2, '#cd6c4e');
-  pixel(ctx, -9, 22, 14, 2, '#934029');
-  pixel(ctx, -7, 19, 3, 3, '#8f3f2e');
-  pixel(ctx, -1, 19, 3, 3, '#8f3f2e');
-  pixel(ctx, -3, 24, 6, 2, '#e3aa7e');
-  // The neck joins the jaw to the collar; short hair frames a rounded face.
-  pixel(ctx, 15, 13, 11, 5, '#c88b67');
-  pixel(ctx, 17, 16, 8, 2, '#995e4f');
-  pixel(ctx, 11, 2, 19, 10, '#15141d');
-  pixel(ctx, 13, 0, 14, 3, '#221f29');
-  pixel(ctx, 11, 3, 19, 4, '#221f29');
-  pixel(ctx, 13, 2, 12, 1, '#49404a');
-  pixel(ctx, 12, 7, 17, 6, '#c88b67');
-  pixel(ctx, 14, 6, 13, 7, '#e3aa7e');
-  pixel(ctx, 14, 12, 13, 3, '#c88b67');
-  pixel(ctx, 16, 15, 9, 1, '#995e4f');
-  pixel(ctx, 10, 8, 2, 3, '#c88b67');
-  pixel(ctx, 29, 8, 2, 3, '#c88b67');
-  pixel(ctx, 14, 7, 4, 1, '#221f29');
-  pixel(ctx, 23, 7, 4, 1, '#221f29');
-  pixel(ctx, 15, 8, 2, 2, '#15141d');
-  pixel(ctx, 24, 8, 2, 2, '#15141d');
-  pixel(ctx, 20, 10, 2, 2, '#c88b67');
-  pixel(ctx, 18, 13, 6, 1, '#995e4f');
+  pixel(ctx, -16, 0, 32, 3, '#11141c');
+  ctx.translate(0, -46 + step);
+
+  // White low sneakers and rolled cuffs under the jeans.
+  pixel(ctx, -15, 43, 14, 3, OUTLINE);
+  pixel(ctx, 1, 43, 14, 3, OUTLINE);
+  pixel(ctx, -14, 43, 12, 2, '#efe9dc');
+  pixel(ctx, 2, 43, 12, 2, '#efe9dc');
+  pixel(ctx, -14, 45, 12, 1, '#cfc9bb');
+  pixel(ctx, 2, 45, 12, 1, '#cfc9bb');
+  pixel(ctx, -15, 41, 14, 2, OUTLINE);
+  pixel(ctx, 1, 41, 14, 2, OUTLINE);
+  pixel(ctx, -14, 41, 12, 2, '#f2eee1');
+  pixel(ctx, 2, 41, 12, 2, '#f2eee1');
+  pixel(ctx, -14, 42, 12, 1, '#cfc9bb');
+  pixel(ctx, 2, 42, 12, 1, '#cfc9bb');
+
+  // Light jeans: eight rows behind the hem so both legs stay readable.
+  pixel(ctx, -15, 33, 31, 9, OUTLINE);
+  pixel(ctx, -14, 33, 12, 8, '#7d9ab8');
+  pixel(ctx, 2, 33, 12, 8, '#8faecc');
+  pixel(ctx, -14, 33, 2, 8, '#b6cddd');
+  pixel(ctx, 2, 33, 2, 8, '#b6cddd');
+
+  // Black tee over a stepped heavy frame: shoulders, chest, belly, hem.
+  pixel(ctx, -15, 18, 30, 3, OUTLINE);
+  pixel(ctx, -16, 21, 32, 7, OUTLINE);
+  pixel(ctx, -17, 28, 34, 6, OUTLINE);
+  pixel(ctx, -14, 19, 28, 2, '#1d1c26');
+  pixel(ctx, -15, 21, 30, 7, '#1d1c26');
+  pixel(ctx, -16, 28, 32, 5, '#1d1c26');
+  pixel(ctx, -15, 22, 3, 10, '#2b2938');
+  pixel(ctx, -16, 31, 32, 2, '#15141d');
+  pixel(ctx, -5, 18, 10, 2, '#101019');
+  pixel(ctx, -7, 21, 14, 1, '#2b2938');
+
+  // Short sleeves, bare arms; the left hand carries the oversized brick.
+  pixel(ctx, -19, 19, 4, 7, OUTLINE);
+  pixel(ctx, 15, 19, 4, 7, OUTLINE);
+  pixel(ctx, -18, 20, 2, 5, '#1d1c26');
+  pixel(ctx, 16, 20, 2, 5, '#1d1c26');
+  pixel(ctx, -20, 25, 5, 8, OUTLINE);
+  pixel(ctx, 15, 25, 5, 8, OUTLINE);
+  pixel(ctx, -19, 26, 3, 6, '#c88b67');
+  pixel(ctx, 16, 26, 3, 6, '#c88b67');
+  pixel(ctx, -19, 26, 1, 5, '#e3aa7e');
+  pixel(ctx, 16, 26, 1, 5, '#e3aa7e');
+  // Brick: terracotta, heavy rim, two mortar holes.
+  pixel(ctx, -29, 25, 18, 10, OUTLINE);
+  pixel(ctx, -28, 26, 16, 8, '#b4543c');
+  pixel(ctx, -28, 26, 16, 2, '#cd6c4e');
+  pixel(ctx, -28, 32, 16, 2, '#934029');
+  pixel(ctx, -26, 28, 4, 3, '#8f3f2e');
+  pixel(ctx, -19, 28, 4, 3, '#8f3f2e');
+  pixel(ctx, -22, 33, 8, 4, OUTLINE);
+  pixel(ctx, -21, 34, 6, 2, '#e3aa7e');
+
+  // Round head, short hair, heavy jaw.
+  pixel(ctx, -13, 0, 26, 20, OUTLINE);
+  pixel(ctx, -12, 0, 24, 3, '#221f29');
+  pixel(ctx, -10, 0, 16, 1, '#49404a');
+  pixel(ctx, -12, 3, 3, 5, '#221f29');
+  pixel(ctx, 9, 3, 3, 5, '#221f29');
+  pixel(ctx, -11, 3, 22, 15, '#c88b67');
+  pixel(ctx, -10, 3, 17, 4, '#e3aa7e');
+  pixel(ctx, -11, 16, 22, 2, '#995e4f');
+  pixel(ctx, -13, 7, 2, 4, OUTLINE);
+  pixel(ctx, -12, 7, 1, 4, '#c88b67');
+  pixel(ctx, 11, 7, 2, 4, OUTLINE);
+  pixel(ctx, 11, 7, 1, 4, '#c88b67');
+  pixel(ctx, -8, 6, 5, 1, '#221f29');
+  pixel(ctx, 3, 6, 5, 1, '#221f29');
+  pixel(ctx, -6, 8, 2, 2, '#15141d');
+  pixel(ctx, 4, 8, 2, 2, '#15141d');
+  pixel(ctx, -1, 10, 2, 2, '#c88b67');
+  pixel(ctx, -1, 10, 1, 1, '#e3aa7e');
+  pixel(ctx, -5, 13, 10, 1, '#995e4f');
+  pixel(ctx, -4, 14, 7, 1, '#8a5a4a');
+  pixel(ctx, -11, 16, 22, 1, '#a8705a');
+  pixel(ctx, -4, 18, 8, 2, '#995e4f');
   ctx.restore();
 }
 
 // Warrior: the gym physique from his photo (red headband, white print tank,
 // open 80s windbreaker, salmon shorts), rolling shaman smoke as idle detail.
+// Same cast grid and closed ink contour as El Negro, so he no longer reads as
+// a smaller, flatter sprite next to the rest of the roster.
 export function drawWarrior(ctx, x, y, options = {}) {
   const { time = 0, moving = false, facing = 1, scale = 2 } = options;
   const step = moving ? Math.floor(time * 8) % 2 : 0;
   const puff = Math.floor(time * 3) % 3;
   pose(ctx, x, y, scale, facing);
-  pixel(ctx, -12, 0, 24, 3, '#11141c');
-  pixel(ctx, -15, 9 - puff * 2, 4, 4, '#8d86a866');
-  pixel(ctx, 12, 5 + puff * 2, 4, 4, '#8d86a866');
-  pixel(ctx, -18, 2 + puff, 3, 3, '#8d86a866');
-  ctx.translate(0, -36 + step);
-  // Bare shins and clean white sneakers straight from the gym floor.
-  pixel(ctx, -7, 29, 6, 5, '#b57a4e');
-  pixel(ctx, 1, 29, 6, 5, '#b57a4e');
-  pixel(ctx, -8, 33 - step, 8, 3, '#efe9dc');
-  pixel(ctx, 0, 33 + step, 8, 3, '#efe9dc');
-  // Salmon shorts worn high, gym-bro style.
-  pixel(ctx, -9, 23, 18, 6, '#e2627d');
-  pixel(ctx, -9, 23, 18, 2, '#ef8aa4');
-  // Hard-won tan, bare forearms out of the windbreaker.
-  pixel(ctx, -16, 13, 3, 9, '#d99e6d');
-  pixel(ctx, 13, 13, 3, 9, '#d99e6d');
-  // Open color-blocked windbreaker: pink on the light side, purple behind.
-  pixel(ctx, -13, 11, 5, 12, '#e267ab');
-  pixel(ctx, 8, 11, 5, 12, '#7a57cf');
-  pixel(ctx, -13, 10, 21, 2, '#7a57cf');
-  pixel(ctx, -13, 10, 21, 1, '#46bfc4');
-  // White training tank with the motivational print rows.
-  pixel(ctx, -8, 12, 16, 11, '#f2eee1');
-  pixel(ctx, 4, 12, 4, 11, '#d8d2c0');
-  pixel(ctx, -6, 14, 9, 2, '#3d7f8a');
-  pixel(ctx, -5, 17, 7, 2, '#e267ab');
-  pixel(ctx, -4, 19, 5, 2, '#3d7f8a');
-  // Flat dark hair under the red headband; the eyes are famously red.
-  pixel(ctx, -7, -2, 14, 3, '#232028');
-  pixel(ctx, -8, 1, 16, 2, '#c4404e');
-  pixel(ctx, -7, 3, 14, 9, '#d99e6d');
-  pixel(ctx, -5, 5, 3, 2, '#8a2b33');
-  pixel(ctx, 2, 5, 3, 2, '#8a2b33');
-  pixel(ctx, -4, 10, 6, 1, '#6d4433');
+  pixel(ctx, -13, 0, 26, 3, '#11141c');
+  pixel(ctx, -17, -41 + puff * 2, 3, 3, '#8d86a866');
+  pixel(ctx, 14, -44 + puff * 2, 3, 3, '#8d86a866');
+  pixel(ctx, -19, -35 + puff, 2, 2, '#8d86a866');
+  ctx.translate(0, -46 + step);
+
+  // Shins and white gym sneakers on the shared baseline.
+  pixel(ctx, -9, 41, 8, 5, OUTLINE);
+  pixel(ctx, 1, 41, 8, 5, OUTLINE);
+  pixel(ctx, -8, 42, 6, 3, '#f2eee1');
+  pixel(ctx, 2, 42, 6, 3, '#f2eee1');
+  pixel(ctx, -8, 45, 6, 1, '#cfc9bb');
+  pixel(ctx, 2, 45, 6, 1, '#cfc9bb');
+  pixel(ctx, -7, 36, 5, 6, OUTLINE);
+  pixel(ctx, 2, 36, 5, 6, OUTLINE);
+  pixel(ctx, -6, 37, 4, 5, '#d99e6d');
+  pixel(ctx, 3, 37, 4, 5, '#d99e6d');
+  pixel(ctx, -6, 37, 1, 4, '#e8b483');
+  pixel(ctx, 3, 37, 1, 4, '#e8b483');
+
+  // Salmon shorts worn high, with a visible leg break.
+  pixel(ctx, -11, 31, 22, 6, OUTLINE);
+  pixel(ctx, -10, 31, 20, 5, '#e2627d');
+  pixel(ctx, -10, 31, 20, 1, '#ef8aa4');
+  pixel(ctx, -10, 35, 20, 1, '#a84d61');
+  pixel(ctx, -1, 33, 2, 3, OUTLINE);
+
+  // Open 80s windbreaker: purple side, pink side, white print tank between.
+  pixel(ctx, -13, 19, 26, 2, OUTLINE);
+  pixel(ctx, -13, 21, 26, 11, OUTLINE);
+  pixel(ctx, -11, 19, 10, 2, '#7d60c4');
+  pixel(ctx, 1, 19, 10, 2, '#cd6a8c');
+  pixel(ctx, -13, 21, 6, 10, '#7d60c4');
+  pixel(ctx, -13, 21, 1, 10, '#a48de8');
+  pixel(ctx, -9, 21, 1, 10, '#5b3fa0');
+  pixel(ctx, 7, 21, 6, 10, '#cd6a8c');
+  pixel(ctx, 7, 21, 1, 10, '#e78fab');
+  pixel(ctx, 12, 21, 1, 10, '#a84d61');
+  pixel(ctx, -8, 21, 1, 10, OUTLINE);
+  pixel(ctx, 7, 21, 1, 10, OUTLINE);
+  pixel(ctx, -7, 21, 14, 10, '#f2eee1');
+  pixel(ctx, -7, 21, 2, 10, '#fbf8ee');
+  pixel(ctx, 5, 21, 2, 10, '#d8d2c0');
+  pixel(ctx, -6, 23, 6, 2, '#4b93a0');
+  pixel(ctx, 0, 26, 5, 2, '#cd6a8c');
+  pixel(ctx, -6, 29, 4, 2, '#4b93a0');
+  pixel(ctx, -9, 29, 1, 2, '#dad8dc');
+  pixel(ctx, -13, 30, 6, 1, '#5b3fa0');
+  pixel(ctx, 7, 30, 6, 1, '#a84d61');
+
+  // Jacket sleeves, bare tan forearms, hands.
+  pixel(ctx, -16, 20, 5, 8, OUTLINE);
+  pixel(ctx, 11, 20, 5, 8, OUTLINE);
+  pixel(ctx, -15, 21, 3, 6, '#7d60c4');
+  pixel(ctx, 12, 21, 3, 6, '#cd6a8c');
+  pixel(ctx, -15, 21, 1, 6, '#a48de8');
+  pixel(ctx, 12, 21, 1, 6, '#e78fab');
+  pixel(ctx, -17, 27, 5, 8, OUTLINE);
+  pixel(ctx, 12, 27, 5, 8, OUTLINE);
+  pixel(ctx, -16, 28, 3, 6, '#d99e6d');
+  pixel(ctx, 13, 28, 3, 6, '#d99e6d');
+  pixel(ctx, -16, 28, 1, 5, '#e8b483');
+  pixel(ctx, 13, 28, 1, 5, '#e8b483');
+  pixel(ctx, -18, 34, 5, 4, OUTLINE);
+  pixel(ctx, 13, 34, 5, 4, OUTLINE);
+  pixel(ctx, -17, 34, 3, 3, '#e8b483');
+  pixel(ctx, 14, 34, 3, 3, '#e8b483');
+
+  // Head: dark hair, red headband over the brow, red eyes.
+  pixel(ctx, -11, 0, 22, 20, OUTLINE);
+  pixel(ctx, -10, 1, 20, 2, '#232028');
+  pixel(ctx, -8, 1, 12, 1, '#3b3542');
+  pixel(ctx, -10, 2, 2, 4, '#232028');
+  pixel(ctx, 8, 2, 2, 4, '#232028');
+  pixel(ctx, -11, 3, 22, 3, '#c4404e');
+  pixel(ctx, -10, 3, 20, 1, '#e0656f');
+  pixel(ctx, -10, 5, 20, 1, '#8a2b33');
+  pixel(ctx, -14, 4, 3, 7, OUTLINE);
+  pixel(ctx, -13, 5, 2, 5, '#c4404e');
+  pixel(ctx, -10, 6, 2, 2, '#232028');
+  pixel(ctx, 9, 6, 2, 2, '#232028');
+  pixel(ctx, -8, 6, 16, 12, '#d99e6d');
+  pixel(ctx, -7, 6, 13, 3, '#e8b483');
+  pixel(ctx, -8, 16, 16, 2, '#a96c48');
+  pixel(ctx, -11, 10, 2, 3, OUTLINE);
+  pixel(ctx, -10, 10, 1, 3, '#a96c48');
+  pixel(ctx, 10, 10, 2, 3, OUTLINE);
+  pixel(ctx, 10, 10, 1, 3, '#a96c48');
+  pixel(ctx, -7, 8, 4, 1, '#232028');
+  pixel(ctx, 3, 8, 4, 1, '#232028');
+  pixel(ctx, -6, 9, 3, 2, '#b3384a');
+  pixel(ctx, 3, 9, 3, 2, '#b3384a');
+  pixel(ctx, -5, 9, 1, 1, '#e07a86');
+  pixel(ctx, 4, 9, 1, 1, '#e07a86');
+  pixel(ctx, -1, 11, 2, 2, '#a96c48');
+  pixel(ctx, -3, 14, 7, 1, '#7d4a35');
+  pixel(ctx, -3, 15, 2, 1, '#5f3427');
+  pixel(ctx, -4, 18, 8, 2, '#a96c48');
   ctx.restore();
 }
 
