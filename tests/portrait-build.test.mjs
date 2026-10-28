@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 
 const recipe = resolve('art/characters/negro/expressions.json');
-const base = resolve('art/characters/negro/portrait-neutral-v2.svg');
+const base = resolve('art/characters/negro/portrait-neutral.svg');
 const hash = value => createHash('sha256').update(value).digest('hex');
 const build = (args, scratch) => spawnSync('python3', ['tools/build_portraits.py', ...args], {
   encoding: 'utf8', env: { ...process.env, HOME: scratch, TMPDIR: scratch, PYTHONDONTWRITEBYTECODE: '1' },

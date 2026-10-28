@@ -1,6 +1,6 @@
 # El Negro: one base, reusable expressions
 
-The approved identity is the sprite-aligned bust with a yellow hoodie, tied dark hair and **ordinary clear-lens glasses**. `portrait-neutral-v2.svg` is the editable source; the first proposal is retained separately. The neutral base is approved and so is the current expression set.
+The approved identity is the sprite-aligned bust with a yellow hoodie, tied dark hair and **ordinary clear-lens glasses**. `portrait-neutral.svg` is the editable source. The neutral base is approved and so is the current expression set.
 
 Reusable procedure for other characters: [`character-portraits`](../../../.opencode/skills/character-portraits/SKILL.md).
 
