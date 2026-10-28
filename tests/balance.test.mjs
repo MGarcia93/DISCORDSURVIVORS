@@ -73,11 +73,11 @@ test('delivery heals 60 HP, cannot overheal and costs twelve coins', () => {
   assert.equal(buyHeal(run), false);
 });
 
-test('the shop always gives a twenty-ficha survival bonus when a wave ends', () => {
+test('the shop pays the configured survival bonus when a wave ends', () => {
   const run = createRun(() => 0.5);
   run.time = 59.99;
   run.coins = 0;
   step(run, 0.02, {});
-  assert.equal(run.coins, 20);
+  assert.equal(run.coins, run.rewardBalance.gold.survival);
   assert.equal(run.phase, 'shop');
 });

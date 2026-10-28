@@ -422,9 +422,10 @@ export function step(run, seconds, input = {}) {
   const killed = run.enemies.filter(enemy => enemy.hp <= 0);
   for (const enemy of killed) {
     run.kills++;
-    awardCoins(run, enemyBounty(enemy.kind));
+    const bounty = run.rewardBalance.gold?.rewards?.[enemy.kind] ?? enemyBounty(enemy.kind);
+    awardCoins(run, bounty);
     awardXP(run, run.rewardBalance.xp.rewards[enemy.kind] ?? 0);
-    run.effects.push({ x: enemy.x, y: enemy.y, text: '+2', ttl: 0.9, loot: true });
+    run.effects.push({ x: enemy.x, y: enemy.y, text: `+${bounty}`, ttl: 0.9, loot: true });
     if (def.onKill) def.onKill(run, p, enemy, ctx);
     emit('kill', { run, player: p, enemy });
   }
@@ -445,7 +446,7 @@ export function step(run, seconds, input = {}) {
     emit('waveCleared', { run });
   } else if (run.wave < 4 && run.time >= run.duration) {
     run.phase = 'shop';
-    awardCoins(run, 20);
+    awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
     run.enemies = [];
     run.projectiles = [];
     beginRewards(run);

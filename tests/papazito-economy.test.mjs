@@ -163,7 +163,7 @@ test('ordinary bounties stay spendable without automatically settling sale-only 
   run.enemies.push({ id: ++run.serial, kind: 'zombie', x: run.player.x + 100, y: run.player.y,
     hp: 0, maxHp: 10, radius: 10, speed: 0 });
   step(run, 0.05);
-  assert.equal(run.coins, 2);
+  assert.equal(run.coins, run.rewardBalance.gold.rewards.zombie);
   assert.equal(run.kills, 1);
   assert.equal(run.player.senaDebt, 21);
 });

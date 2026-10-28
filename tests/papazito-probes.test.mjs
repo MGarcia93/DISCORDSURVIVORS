@@ -39,12 +39,12 @@ test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
 
 test('S3 probe: La seña leaves early bounties alone until the timed charge', () => {
   const run = createRun(() => 0.5, 'papazito');
-  assert.deepEqual(killZombie(run, 100), { from: 100, to: 102 });
+  assert.deepEqual(killZombie(run, 100), { from: 100, to: 100 + run.rewardBalance.gold.rewards.zombie });
   const p = run.player;
   assert.equal(p.panicTtl, 0);
   assert.ok(p.senaCooldown > 9 && p.senaCooldown < 10);
   killZombie(run);
-  assert.equal(run.coins, 104, 'second award inside the cooldown keeps every coin');
+  assert.equal(run.coins, 100 + 2 * run.rewardBalance.gold.rewards.zombie, 'second award inside the cooldown keeps every coin');
   assert.equal(p.panicTtl, 0, 'earning coins does not activate panic');
 });
 

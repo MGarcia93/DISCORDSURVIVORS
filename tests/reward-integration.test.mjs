@@ -4,6 +4,7 @@ import {
   createRun, step, startNextWave, activateSpecial, chooseLevelReward,
   skipEmptyChoice, buyItem, chooseUpgrade, buyHeal, sellBelonging,
 } from '../src/engine.mjs';
+import { BALANCE } from '../src/reward-data.mjs';
 
 function kills(run, count) {
   run.spawnIn = 100;
@@ -16,6 +17,35 @@ function clearWave(run) {
   run.time = run.duration - 0.001;
   step(run, 0.01, { x: 1 });
 }
+
+test('configured gold rewards control all enemy payouts and survival income independently of XP', () => {
+  const balance = structuredClone(BALANCE);
+  balance.gold = { rewards: { zombie: 7, runner: 9, boss: 13 }, survival: 11 };
+  const run = createRun(() => 0.5, 'negro', { balance });
+  run.spawnIn = 100;
+  run.enemies = ['zombie', 'runner'].map((kind, id) => ({ id, kind, hp: 0, x: 0, y: 0 }));
+  step(run, 0, {});
+  assert.equal(run.coins, 16);
+  assert.equal(run.xp, 2);
+  clearWave(run);
+  assert.equal(run.coins, 27);
+  assert.equal(run.xp, 2);
+  const bossRun = createRun(() => 0.5, 'negro', { balance });
+  bossRun.wave = 4;
+  bossRun.enemies = [{ id: 1, kind: 'boss', hp: 0, x: 0, y: 0 }];
+  step(bossRun, 0, {});
+  assert.equal(bossRun.coins, 13);
+  assert.equal(bossRun.phase, 'won');
+});
+
+test('configured zero gold rewards remain zero instead of falling back to legacy amounts', () => {
+  const balance = structuredClone(BALANCE);
+  balance.gold = { rewards: { zombie: 0, runner: 0, boss: 0 }, survival: 0 };
+  const run = createRun(() => 0.5, 'negro', { balance });
+  kills(run, 1); clearWave(run);
+  assert.equal(run.coins, 0);
+  assert.equal(run.xp, 1);
+});
 
 test('real kill settlement awards XP once, not survival income or later frames', () => {
   const run = createRun(() => 0.5);

@@ -67,6 +67,6 @@ test('radial brick kills use the normal bounty and kill bookkeeping', () => {
   activateSpecial(run, 'anamencua');
   for (let i = 0; i < 12; i++) step(run, 0.05);
   assert.equal(run.kills, 1);
-  assert.equal(run.coins, 2);
+  assert.equal(run.coins, run.rewardBalance.gold.rewards.zombie);
   assert.equal(run.enemies.length, 0);
 });

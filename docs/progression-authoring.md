@@ -83,7 +83,13 @@ Edit `src/reward-data.mjs` to add entries to `ITEMS` or `LEVEL_UPGRADES`.
 `BALANCE` holds XP and gold rewards, survival income and shop size. Initial
 XP uses the approved `10 * currentLevel ** 2` curve and one XP per ordinary
 kill. Gold, prices, item caps and upgrade magnitudes are provisional tuning,
-not measured final balance. The first catalog includes all eight lore items;
+not measured final balance. The first catalog includes all eight lore items.
+
+The engine now pays gold from the run's configured enemy rewards and survival
+bonus, independently of XP. Initial tuning is one coin per ordinary kill and
+five per survived wave; explicit zero rewards remain zero. The legacy enemy
+bounty and survival amounts are compatibility fallbacks only when omitted
+from an explicitly supplied balance object.
 Gallina has `enabled: false` until its provisional range effect is confirmed.
 
 Character entries initially cover waifu, Patrona and smoke duration, sale

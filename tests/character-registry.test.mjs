@@ -69,7 +69,7 @@ test('La seña does not charge early when Papazito earns coins', () => {
 
   for (let i = 0; i < 6; i++) step(run, 0.05, {});
 
-  assert.equal(run.coins, 102, 'the bounty stays intact before the timed bill');
+  assert.equal(run.coins, 100 + run.rewardBalance.gold.rewards.zombie, 'the configured bounty stays intact before the timed bill');
   assert.equal(run.player.panicTtl, 0);
   assert.ok(run.player.senaCooldown > 9.6 && run.player.senaCooldown < 10);
 });

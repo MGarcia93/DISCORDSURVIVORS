@@ -29,7 +29,7 @@ test('automatic remotes kill nearby enemies and award currency', () => {
   run.spawnIn = 100;
   for (let i = 0; i < 30; i++) step(run, 0.05, {});
   assert.equal(run.enemies.length, 0);
-  assert.equal(run.coins, 2);
+  assert.equal(run.coins, run.rewardBalance.gold.rewards.zombie);
   assert.equal(run.kills, 1);
 });
 
