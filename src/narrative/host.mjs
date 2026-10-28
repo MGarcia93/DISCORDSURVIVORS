@@ -42,6 +42,7 @@ export class NarrativeHost {
     this.generation++; this.director?.detach(); this.director = null;
     this.view?.dispose(); this.view = null; this.audio.stop();
     this.loading = false; this.error = null; this.catalog = null;
+    this.suspended = false;
   }
   preview(id) {
     if (!this.previewMode || !this.director) return false;
@@ -51,6 +52,7 @@ export class NarrativeHost {
     this.render(); return started;
   }
   tick(dt) {
+    if (this.suspended) return;
     const wasBlocking = this.blocked;
     this.director?.tick(Math.min(0.1, dt));
     if (wasBlocking && !this.blocked) this.audio.stop();
@@ -68,6 +70,8 @@ export class NarrativeHost {
   skip() { this.audio.stop(); this.director?.skip(); this.render(); }
   fail(message) { this.error = message; this.audio.stop(); this.director?.fail(message); this.render(); }
   enqueueBanter(line) { return this.director?.enqueueBanter(line) ?? false; }
+  suspend() { this.suspended = true; this.audio.stop(); }
+  resume() { this.suspended = false; }
   key(key, repeat = false) {
     if (!this.blocked) return false;
     if (!repeat && (key === 'enter' || key === ' ')) this.advance();

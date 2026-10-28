@@ -179,8 +179,15 @@ for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) documen
   const button = event.target.closest('[data-direction]');
   if (button) state.keys.delete(directions[button.dataset.direction]);
 });
-function suspend() { state.keys.clear(); if (state.screen === 'game' && state.run?.phase === 'playing') state.paused = true; }
+function suspend() {
+  state.keys.clear();
+  const host = activeNarrativeHost();
+  if (host.blocked) host.suspend();
+  else if (state.screen === 'game' && state.run?.phase === 'playing') state.paused = true;
+}
+function resumeNarrative() { if (!document.hidden) activeNarrativeHost().resume(); }
 window.addEventListener('blur', suspend);
-document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
+window.addEventListener('focus', resumeNarrative);
+document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); else resumeNarrative(); });
 show(isNarrativeDevelopment() ? 'narrative' : 'home');
 requestAnimationFrame(frame);

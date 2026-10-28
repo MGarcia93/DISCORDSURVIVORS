@@ -20,7 +20,10 @@ function browser() {
     body: { classList: { toggle() {} } },
     addEventListener(name, callback) { const list = handlers.get(name) ?? []; list.push(callback); handlers.set(name, list); },
   };
-  globalThis.window = { matchMedia: () => ({ matches: false }), addEventListener() {}, scrollTo() {} };
+  globalThis.window = {
+    matchMedia: () => ({ matches: false }), scrollTo() {},
+    addEventListener(name, callback) { handlers.set(`window:${name}`, [callback]); },
+  };
   globalThis.localStorage = { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value) };
   let frame;
   globalThis.requestAnimationFrame = callback => { frame = callback; };
@@ -29,6 +32,8 @@ function browser() {
     click(action, dataset = {}) { dispatch('click', { target: { closest: () => ({ disabled: false, dataset: { action, ...dataset } }) } }); },
     key(key) { dispatch('keydown', { key }); },
     touch() { dispatch('pointerdown', { target: { closest: () => ({ dataset: { direction: 'right' }, setPointerCapture() {} }) }, pointerId: 1 }); },
+    blur() { dispatch('window:blur', {}); },
+    focus() { dispatch('window:focus', {}); },
     frame(timestamp) { frame(timestamp); }, storage,
   };
 }
@@ -75,4 +80,27 @@ test('real app input and wave transitions honor narrative ownership without chan
   assert.equal(state.run, null);
   assert.equal(narrative.blocked, false);
   assert.equal(dom.storage.size, 0, 'sample scenes did not persist unlocks');
+
+  // A pre-wave scene owns suspension independently of the gameplay pause menu.
+  const opening = { id: 'opening', actions: {}, scene: { id: 'opening', steps: [
+    { type: 'wait', duration: 0.2 }, { type: 'dialogue', lines: [{ speaker: 'guide', text: 'Resumed' }] },
+  ] } };
+  narrative.load = async () => ({ ...catalog, entries: [opening], bindings: [{ when: 'before_wave', wave: 1, scene: 'opening' }] });
+  dom.click('play');
+  await Promise.resolve(); await Promise.resolve();
+  dom.blur(); document.hidden = true;
+  assert.equal(state.paused, false, 'scene blur must not set an inaccessible gameplay pause');
+  dom.frame(1300);
+  assert.equal(narrative.director.player.time, 0, 'scene clock suspends while the window is inactive');
+  document.hidden = false; dom.focus();
+  dom.frame(1400); dom.frame(1500);
+  assert.equal(narrative.director.player.dialogue.text, 'Resumed', 'scene resumes on focus without skipping');
+  assert.equal(state.run.elapsed, 0, 'combat time remains frozen throughout the scene');
+  dom.key('Enter');
+  assert.equal(narrative.blocked, false);
+  dom.blur(); dom.focus();
+  assert.equal(state.paused, true, 'ordinary gameplay blur still pauses until the player resumes');
+  dom.key('Escape');
+  assert.equal(state.paused, false);
+  dom.click('home');
 });
