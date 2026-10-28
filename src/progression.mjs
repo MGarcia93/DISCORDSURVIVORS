@@ -1,5 +1,9 @@
 export const PROGRESS_STORAGE_KEY = 'discord-survivors.progress.v1';
 
+// Victory unlock chain: negro is always playable; winning a map with the
+// previous character unlocks the next one in this order.
+export const UNLOCK_CHAIN = ['solago', 'warrior', 'papazito'];
+
 function resolveStorage(storage) {
   if (storage !== undefined) return storage;
   try { return globalThis.localStorage; } catch { return null; }

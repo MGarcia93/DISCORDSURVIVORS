@@ -10,6 +10,29 @@ const warrior = {
   id: 'warrior',
   name: 'WARRIOR',
   gameNote: 'CHAMÁN DEL NORTE · CONTROL DE MASAS · SE CREE ARGENTINO',
+  // Selection screen metadata: label, profile block and preview pose belong
+  // to the ficha; adding a character never touches screens or app again.
+  label: 'Warrior',
+  detailLabel: 'Warrior',
+  previewAria: 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80',
+  profile: `
+      <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
+      <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
+      <p class="character-quote">«Yo soy argentino, boludo».</p>
+      <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b>+350%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,6</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
+      <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>`,
+  // Locked text never renders: an unlocked Solago's note always precedes it.
+  unlockNote: {
+    locked: '',
+    unlocked: 'WARRIOR DESBLOQUEADO · GANÁ EL MAPA CON WARRIOR PARA PAPAZITO',
+  },
+  victoryLine: '¡Warrior desbloqueado! Ya podés elegirlo en la próxima partida.',
+  rosterPose: { x: 28, y: 46 },
+  drawRoster(ctx) { drawWarrior(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
+  preview(ctx, { time, cycle }) { drawWarrior(ctx, 128, 150, { time, moving: cycle < 3.4, scale: 2 }); },
   deathLine: 'WARRIOR SE DESCONECTÓ DE LA REALIDAD.',
   draw(ctx, x, y, context) {
     drawWarrior(ctx, x, y, {

@@ -1,11 +1,36 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
-import { drawSolago } from '../sprites.mjs';
+import { drawSolago, drawPatrona } from '../sprites.mjs';
 
 const solago = {
   id: 'solago',
   name: 'SOLAGO',
   gameNote: 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E',
+  // Selection screen metadata: label, profile block and preview pose belong
+  // to the ficha; the note folds over the unlock chain order.
+  label: 'Solago',
+  detailLabel: 'Solago',
+  previewAria: 'Pixel art de Solago: remera oscura, reloj y paletas grandes',
+  profile: `
+      <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
+      <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
+      <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
+      <div class="stats solago-stats"><div><b>100</b><small>VIDA NORMAL</small></div><div><b>+35%</b><small>DAÑO MELEE</small></div><div><b>−5%</b><small>ALCANCE</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: +25% de defensa durante 2,5 segundos.</p></div></div>
+      <div class="skill"><kbd>8×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 8 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
+  unlockNote: {
+    locked: 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO',
+    unlocked: 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR',
+  },
+  victoryLine: '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.',
+  rosterPose: { x: 26, y: 47 },
+  drawRoster(ctx) { drawSolago(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
+  preview(ctx, { time, cycle }) {
+    drawPatrona(ctx, 145, 151, { time, scale: 1.2 });
+    drawSolago(ctx, 124, 150, { time, moving: cycle < 3.4, scale: 2 });
+  },
   draw(ctx, x, y, context) {
     drawSolago(ctx, x, y, {
       time: context.time, moving: context.moving, facing: context.facing,

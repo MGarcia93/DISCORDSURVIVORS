@@ -17,6 +17,14 @@ const storyScreen = read('../src/screens/story.mjs');
 const charactersScreen = read('../src/screens/characters.mjs');
 const gameScreen = read('../src/screens/game.mjs');
 const stateModule = read('../src/app/state.mjs');
+const registry = read('../src/characters/index.mjs');
+const progression = read('../src/progression.mjs');
+const FICHAS = [
+  ['negro', read('../src/characters/negro.mjs')],
+  ['solago', read('../src/characters/solago.mjs')],
+  ['warrior', read('../src/characters/warrior.mjs')],
+  ['papazito', read('../src/characters/papazito.mjs')],
+];
 
 const spritesExport = [...sprites.matchAll(/export function (\w+)/g)].map(match => match[1]);
 const DRAWING_MODULES = [
@@ -54,11 +62,32 @@ test('every module that draws imports every sprite renderer it references', () =
   }
 });
 
-test('character profiles live with the selection screen until they move into fichas', () => {
-  assert.match(charactersScreen, /<b>\+350%<\/b><small>DAÑO POR BOMBA/, 'Warrior profile reflects the bomb damage');
-  assert.match(charactersScreen, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
-  assert.match(charactersScreen, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
-  assert.match(charactersScreen, /'PAPAZITO'/, 'the selection stage can name Papazito');
+test('fichas own their selection profile block and preview pose', () => {
+  for (const [id, ficha] of FICHAS) {
+    assert.match(ficha, /  label: '/, `${id} ficha exposes the roster card label`);
+    assert.match(ficha, /  detailLabel: '/, `${id} ficha exposes the detail panel name`);
+    assert.match(ficha, /  previewAria: '/, `${id} ficha describes its own preview canvas`);
+    assert.match(ficha, /  profile: `/, `${id} ficha owns its profile HTML block`);
+    assert.match(ficha, /  rosterPose: \{ x: \d+, y: \d+ \}/, `${id} ficha carries its roster pose`);
+    assert.match(ficha, /  drawRoster\(ctx\)/, `${id} ficha draws its roster portrait`);
+    assert.match(ficha, /  preview\(ctx, \{ time, cycle \}\)/, `${id} ficha animates its own preview`);
+  }
+  const warrior = FICHAS.find(([id]) => id === 'warrior')[1];
+  assert.match(warrior, /<b>\+350%<\/b><small>DAÑO POR BOMBA/, 'Warrior profile reflects the bomb damage');
+  assert.match(warrior, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
+  assert.match(warrior, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
+  assert.match(registry, /export const ROSTER = \[/, 'the registry exports the card order');
+  assert.match(progression, /export const UNLOCK_CHAIN = \[/, 'progression owns the unlock chain ids');
+});
+
+test('the selection screen and victory overlay are fully data-driven', () => {
+  for (const id of ['negro', 'solago', 'warrior', 'papazito']) {
+    assert.doesNotMatch(charactersScreen, new RegExp(`\\b${id}\\b`), `characters.mjs must not hardcode ${id}`);
+    assert.doesNotMatch(overlays, new RegExp(`unlocked${id[0].toUpperCase()}${id.slice(1)}`), `overlays must not hardcode the ${id} unlock flag`);
+  }
+  assert.doesNotMatch(charactersScreen, /Warrior|Solago|Papazito/, 'characters.mjs renders from the fichas, never from per-character ternaries');
+  assert.match(charactersScreen, /getCharacter\(state\.selectedCharacter\)/, 'the selected ficha drives the panel');
+  assert.match(overlays, /victoryLine/, 'the won screen reads the ficha victory line');
 });
 
 test('Papazito contract: merchant menu pauses the run and the sold monitor vignette lives in the draw loop', () => {
@@ -111,6 +140,11 @@ test('screens live in src/screens/* and the composer only wires them', () => {
 // T1 (app split): the shell's shared mutable state must live in one module so
 // screens, HUD, overlays and the loop never own hidden module-scope bindings
 // again. Consumers stay in app.mjs for now; only the storage moved.
+test('the composer references DOM shell access only through state', () => {
+  assert.doesNotMatch(app, /\.\.\.content\b/, 'the bare content binding died with the T1 move; shell access must go through state.content');
+  assert.doesNotMatch(app, /(?<![\w.$])content\./, 'no bare content binding may survive the T1 move');
+});
+
 test('the shared shell state lives in src/app/state.mjs and app consumes it', () => {
   assert.match(stateModule, /export const state = \{/, 'state.mjs exports a single shared state object');
   for (const slot of [

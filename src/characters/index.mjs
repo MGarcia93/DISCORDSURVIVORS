@@ -5,6 +5,9 @@ import papazito from './papazito.mjs';
 
 export const CHARACTERS = { negro, solago, warrior, papazito };
 
+// Card order for the selection roster.
+export const ROSTER = [negro, solago, warrior, papazito];
+
 export function getCharacter(id) {
   return CHARACTERS[id] ?? CHARACTERS.negro;
 }

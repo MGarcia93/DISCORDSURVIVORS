@@ -1,6 +1,6 @@
-import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
+import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
 import { drawRoom, drawStory } from './scenes.mjs';
-import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
+import { isCharacterUnlocked, unlockAllForTesting, UNLOCK_CHAIN } from './progression.mjs';
 import { on } from './bus.mjs';
 import { state } from './app/state.mjs';
 import { updateHUD } from './game/hud.mjs';
@@ -12,18 +12,15 @@ import { characters, drawPreview } from './screens/characters.mjs';
 import { game } from './screens/game.mjs';
 
 // Any map victory passes through the bus: progression records the unlock and
-// app reads it back to refresh the character roster cache.
+// app reads it back through the chain to refresh the roster cache and mark
+// which ficha's victory line the outcome overlay should speak.
 on('waveCleared', ({ run: clearedRun }) => {
   if (clearedRun.phase !== 'won') return;
-  state.solagoUnlocked = isCharacterUnlocked('solago');
-  state.warriorUnlocked = isCharacterUnlocked('warrior');
-  state.papazitoUnlocked = isCharacterUnlocked('papazito');
-  clearedRun.unlockedSolago = state.solagoUnlocked;
-  clearedRun.unlockedWarrior = state.warriorUnlocked;
-  clearedRun.unlockedPapazito = state.papazitoUnlocked;
+  for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = isCharacterUnlocked(id);
+  clearedRun.unlocked = UNLOCK_CHAIN.find(id => isCharacterUnlocked(id)) ?? null;
 });
 
-// A sale-menu special (ficha-defined items) pauses the state.run for its merchant UI.
+// A sale-menu special (ficha-defined items) pauses the run for its merchant UI.
 on('specialActivated', ({ run: activatedRun, special }) => {
   if (activatedRun !== state.run || special !== 'sell' || activatedRun.phase !== 'playing') return;
   const p = activatedRun.player;
@@ -114,9 +111,7 @@ document.addEventListener('keydown', event => {
     if (state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
       if (unlockAllForTesting()) {
         state.debugUnlockAll = true;
-        state.solagoUnlocked = true;
-        state.warriorUnlocked = true;
-        state.papazitoUnlocked = true;
+        for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = true;
         state.selectedCharacter = 'negro';
         show('characters');
       }
@@ -124,7 +119,7 @@ document.addEventListener('keydown', event => {
       return;
     }
     if (['arrowup', 'arrowdown'].includes(key) && !document.querySelector('.overlay')) {
-      const buttons = [...content.querySelectorAll('button:not(:disabled)')];
+      const buttons = [...state.content.querySelectorAll('button:not(:disabled)')];
       const current = buttons.indexOf(document.activeElement);
       const next = current < 0 ? 0 : (current + (key === 'arrowdown' ? 1 : -1) + buttons.length) % buttons.length;
       buttons[next]?.focus();

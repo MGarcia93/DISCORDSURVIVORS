@@ -12,6 +12,29 @@ const papazito = {
   id: 'papazito',
   name: 'PAPAZITO',
   gameNote: 'EL PARAGUAYO TRUCHO · LADRILLOS, LA SEÑA Y LIQUIDACIÓN DE PERTENENCIAS',
+  // Selection screen metadata: label, profile block and preview pose belong
+  // to the ficha; adding a character never touches screens or app again.
+  label: 'Papazito',
+  detailLabel: 'Papazito',
+  previewAria: 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y la copa en la mano',
+  profile: `
+      <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
+      <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
+      <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
+      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+15%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>La cariñosa le cobra la extorsión y le recorta monedas: 5 segundos de pánico con +30% de velocidad y +40% de ataque.</p></div></div>
+      <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
+      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Ataque de furia: lluvia de ladrillos en todas las direcciones durante 5 segundos. Recarga: 40 segundos.</p></div></div>`,
+  // Locked text never renders: an unlocked Warrior's note always precedes it.
+  unlockNote: {
+    locked: '',
+    unlocked: 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA',
+  },
+  victoryLine: '¡Papazito desbloqueado! Vino por la seña, se queda por los ladrillos.',
+  rosterPose: { x: 26, y: 46 },
+  drawRoster(ctx) { drawPapazito(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
+  preview(ctx, { time, cycle }) { drawPapazito(ctx, 128, 151, { time, moving: cycle < 3.4, scale: 2 }); },
   deathLine: 'VENDIÓ TODO Y NI LA PUSO.',
   draw(ctx, x, y, context) {
     drawPapazito(ctx, x, y, {

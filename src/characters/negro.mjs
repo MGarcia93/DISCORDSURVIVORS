@@ -1,11 +1,35 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
-import { drawElNegro } from '../sprites.mjs';
+import { drawElNegro, drawChair } from '../sprites.mjs';
 
 const negro = {
   id: 'negro',
   name: 'EL NEGRO',
   gameNote: '4 OLEADAS DE 60 SEGUNDOS · MEJORAS ACUMULABLES · SOLAGO SE DESBLOQUEA AL GANAR',
+  // Selection screen metadata: label, profile block and preview pose belong
+  // to the ficha. Adding a character never touches app.mjs or screens again.
+  label: 'Negro',
+  detailLabel: 'El Negro',
+  previewAria: 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings',
+  profile: `
+      <div class="eyebrow">Tanque sedentario · Dificultad fácil</div><h2>EL NEGRO</h2>
+      <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
+      <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
+      <div class="stats"><div><b>+50%</b><small>VIDA MÁXIMA</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b class="penalty">−25%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Cada tiro puede rebotar hasta tres enemigos.</p></div></div>
+      <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
+      <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`,
+  // Roster card pose and the animated selection preview live here too.
+  rosterPose: { x: 20, y: 47 },
+  drawRoster(ctx) { drawElNegro(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
+  preview(ctx, { time, cycle }) {
+    const isSitting = cycle > 6.6;
+    const moving = cycle < 3.4;
+    const previewFacing = isSitting ? 1 : cycle < 5 ? 1 : -1;
+    if (isSitting) drawChair(ctx, 128, 150, { scale: 2 });
+    drawElNegro(ctx, 128, 150, { time, moving, facing: previewFacing, sitting: isSitting, scale: 2 });
+  },
   regenHud(p) { return { ringY: p.y + 31, radius: 37, textX: p.x - 31, textY: p.y - 77 }; },
   draw(ctx, x, y, context) {
     drawElNegro(ctx, x, y, {
