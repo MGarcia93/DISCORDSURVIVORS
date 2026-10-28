@@ -32,9 +32,11 @@ The samples have **no gameplay bindings**, so normal prototype play is unchanged
 
 Names and portraits come from the character catalog. Text is rendered as text, not HTML. Advance is manual. No per-conversation JavaScript is needed.
 
-El Negro (`maxi-negro`, the playable `negro` sprite) supports `neutral`, `happy`, `annoyed`, `surprised`, `tired`, `disgusted` and `disgusted-strong`. The last two support the Act 4 Papafrita gag.
+Every character now exposes the same eight expressions: `neutral`, `happy`, `annoyed`, `angry`, `surprised`, `scared`, `tired`, `disgusted`.
 
-Solago (`solago`) supports `neutral`, `happy`, `annoyed`, `angry`, `surprised`, `scared`, `tired` and `disgusted`. Every expression keeps the same buck-toothed mouth so the character stays recognisable; `disgusted` swaps it for the Excalibur-style clenched grimace used in Act 4.
+El Negro (`maxi-negro`, the playable `negro` sprite) uses `disgusted` for the Act 4 Papafrita gag.
+
+Solago (`solago`) keeps the same buck-toothed mouth in every expression so the character stays recognisable; `disgusted` swaps it for the Excalibur-style clenched grimace used in Act 4.
 
 Warrior (`warrior`) supports the same eight expressions: `happy` covers the "Yo soy argentino, boludo" lines, `surprised` the Viaje Astral reaction and `disgusted` reuses the Act 4 grimace.
 

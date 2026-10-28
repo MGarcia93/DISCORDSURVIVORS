@@ -14,13 +14,13 @@ const build = (args, scratch) => spawnSync('python3', ['tools/build_portraits.py
 });
 const snapshot = async out => Object.fromEntries(await Promise.all((await readdir(out)).sort().map(async file => [file, hash(await readFile(join(out, file)))])));
 
-test('portrait command reuses approved identity for seven facial expressions, deterministically', async () => {
+test('portrait command reuses approved identity for eight facial expressions, deterministically', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'portrait-build-'));
   try {
     const original = hash(await readFile(base)), out = join(scratch, 'portraits');
     const result = build(['--recipe', recipe, '--out', out], scratch);
     assert.equal(result.status, 0, result.stderr);
-    const names = ['annoyed', 'disgusted', 'disgusted-strong', 'happy', 'neutral', 'surprised', 'tired'];
+    const names = ['angry', 'annoyed', 'disgusted', 'happy', 'neutral', 'scared', 'surprised', 'tired'];
     assert.deepEqual((await readdir(out)).sort(), names.map(name => `${name}.svg`).sort());
     const neutral = await readFile(join(out, 'neutral.svg'), 'utf8');
     for (const name of names) {
@@ -35,7 +35,6 @@ test('portrait command reuses approved identity for seven facial expressions, de
       if (name !== 'neutral') assert.notEqual(svg.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0], neutral.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0]);
     }
     assert.equal(hash(await readFile(base)), original, 'generation never modifies the approved source');
-    assert.notEqual(await readFile(join(out, 'disgusted.svg'), 'utf8'), await readFile(join(out, 'disgusted-strong.svg'), 'utf8'), 'the repeated gag has a stronger facial variant');
     const before = await snapshot(out);
     assert.equal(build(['--recipe', recipe, '--out', out], scratch).status, 0);
     assert.deepEqual(await snapshot(out), before, 'rebuilding produces identical bytes');
@@ -47,7 +46,7 @@ test('the narrative catalog exposes the same character with all generated expres
   const catalog = await loadCatalog({ fetcher: async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) }) });
   const character = catalog.characters['maxi-negro'];
   assert.equal(character.sprite, 'negro');
-  assert.deepEqual(Object.keys(character.expressions).sort(), ['annoyed', 'disgusted', 'disgusted-strong', 'happy', 'neutral', 'surprised', 'tired']);
+  assert.deepEqual(Object.keys(character.expressions).sort(), ['angry', 'annoyed', 'disgusted', 'happy', 'neutral', 'scared', 'surprised', 'tired']);
   for (const [expression, file] of Object.entries(character.expressions)) {
     assert.match(await readFile(new URL(file), 'utf8'), new RegExp(`data-expression="${expression}"`));
   }

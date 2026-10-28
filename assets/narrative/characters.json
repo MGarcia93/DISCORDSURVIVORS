@@ -16,10 +16,11 @@
       "neutral": "portraits/negro/neutral.svg",
       "happy": "portraits/negro/happy.svg",
       "annoyed": "portraits/negro/annoyed.svg",
+      "angry": "portraits/negro/angry.svg",
       "surprised": "portraits/negro/surprised.svg",
+      "scared": "portraits/negro/scared.svg",
       "tired": "portraits/negro/tired.svg",
-      "disgusted": "portraits/negro/disgusted.svg",
-      "disgusted-strong": "portraits/negro/disgusted-strong.svg"
+      "disgusted": "portraits/negro/disgusted.svg"
     }
   },
   "solago": {

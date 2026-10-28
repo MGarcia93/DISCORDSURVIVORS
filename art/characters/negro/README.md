@@ -40,9 +40,9 @@ The existing narrative catalog maps `maxi-negro` to the playable `negro` sprite 
 { "speaker": "maxi-negro", "expression": "annoyed", "text": "Example dialogue." }
 ```
 
-Available expression IDs: `neutral`, `happy`, `annoyed`, `surprised`, `tired`, `disgusted`, `disgusted-strong`. Omitting `expression` uses neutral. This does not change gameplay sprites, abilities or story text.
+Available expression IDs: `neutral`, `happy`, `annoyed`, `angry`, `surprised`, `scared`, `tired`, `disgusted`. Omitting `expression` uses neutral. This does not change gameplay sprites, abilities or story text.
 
-The disgust variants follow the user-supplied Soul Eater frame: heavy lowered eyelids, pinched brows, small nose creases and a wide grimace of clenched teeth, with the whole mouth pulled slightly toward the character's right (screen left). The stronger version opens the mouth wider and exaggerates the brow pinch. They support Act 4's initial collective reaction and its stronger repetition. These are El Negro's portrait assets only; the four-character synchronized scene and the Administrator's later reaction are not implemented by this asset recipe.
+The disgust expression follows the user-supplied Soul Eater frame: heavy lowered eyelids, pinched brows, small nose creases and a wide grimace of clenched teeth, with the whole mouth pulled slightly toward the character's right (screen left). It supports Act 4's collective reaction. These are El Negro's portrait assets only; the four-character synchronized scene and the Administrator's later reaction are not implemented by this asset recipe.
 
 ```sh
 node --test tests/portrait-build.test.mjs
