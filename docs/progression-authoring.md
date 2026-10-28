@@ -56,10 +56,32 @@ positive; other finite stats must remain nonnegative. Existing unlimited
 reach is preserved without modifiers, but modifying it is explicitly rejected
 until its gameplay rule is defined. Conversion rounding is not added here.
 
+## Catalog entries
+
+`createCatalog({ items, upgrades }, { characters, effects })` in
+`src/reward-catalog.mjs` validates and freezes data-only entries. An item has
+`id`, `name`, `lore`, `price`, `maxCopies`, and `modifiers` or supported `effects`.
+An upgrade has `id`, `name`, `characters` (`all` or one registered character ID),
+`minLevel`, `requires` and a nonempty `ranks` array. Each rank has its own
+modifiers or effects. Prerequisites are `{ id, rank }` references; missing
+entries, impossible ranks and cycles are rejected.
+
+An effect references `{ type, value }`; its trusted registry entry provides
+`validate(value)` and `describe(value)`. Actual effect execution is not part
+of this catalog module. New mechanics still need a reusable implementation.
+
+`selectLevelOptions(catalog, { character, level, ranks }, random)` draws one
+eligible own upgrade and two common upgrades, or three common upgrades when
+no own upgrade is eligible. It returns fewer when pools are insufficient,
+without duplicate filler. The engine must store the result, apply the chosen
+rank once and explicitly handle empty choices; these integration steps are
+not yet implemented. `describeReward` derives mechanical text from entry data.
+
 ## Checks
 
 ```sh
 node --test tests/stat-modifiers.test.mjs
+node --test tests/reward-catalog.test.mjs
 node --test tests/*.test.mjs
 node --check src/stat-modifiers.mjs
 ```

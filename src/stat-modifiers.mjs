@@ -36,6 +36,8 @@ function copyModifiers(source, modifiers) {
   }));
 }
 
+export { copyModifiers as validateStatModifiers };
+
 // Replacing a source replaces its contribution, rather than stacking it again.
 // null removes a source. Validation happens before returning a new snapshot.
 export function withStatSource(state, source, modifiers) {
