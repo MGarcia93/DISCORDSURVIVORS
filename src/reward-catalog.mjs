@@ -75,7 +75,7 @@ export function createCatalog(input, { characters = [], effects = {} } = {}) {
   return freezeData(data);
 }
 
-function pick(entries, count, random) {
+export function sampleEntries(entries, count, random) {
   const remaining = [...entries], result = [];
   while (result.length < count && remaining.length) {
     const roll = random();
@@ -87,13 +87,14 @@ function pick(entries, count, random) {
 
 // The caller stores these choices. Rendering must never call this generator.
 export function selectLevelOptions(catalog, { character, level, ranks }, random) {
+  const rankOf = id => Object.hasOwn(ranks, id) ? ranks[id] : 0;
   const eligible = catalog.upgrades.filter(entry =>
     (entry.characters === 'all' || entry.characters === character)
-    && level >= entry.minLevel && (ranks[entry.id] ?? 0) < entry.ranks.length
-    && entry.requires.every(requirement => (ranks[requirement.id] ?? 0) >= requirement.rank));
+    && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length
+    && entry.requires.every(requirement => rankOf(requirement.id) >= requirement.rank));
   const own = eligible.filter(entry => entry.characters === character);
   const common = eligible.filter(entry => entry.characters === 'all');
-  return [...pick(own, 1, random), ...pick(common, own.length ? 2 : 3, random)];
+  return [...sampleEntries(own, 1, random), ...sampleEntries(common, own.length ? 2 : 3, random)];
 }
 
 export function describeReward(reward, effects = {}) {

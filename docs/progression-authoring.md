@@ -92,12 +92,30 @@ first supported parameters, not all the planned character mechanics. The
 catalog does not execute them yet; engine integration must implement each
 registered effect before exposing it in a live reward selection.
 
+## Run reward state
+
+`src/run-rewards.mjs` provides the standalone acquisition state machine.
+`initializeRewards(run, { catalog, balance })` captures base stats and initializes
+XP, queued levels, owned items and ranks. Pass a catalog validated with the
+supported effect registry. `awardXP` queues levels without stopping combat;
+`beginRewards` resolves choices before generating shop offers. Choices use
+each queued level's eligibility, not the highest level earned that wave.
+
+`chooseLevelReward`, `skipEmptyChoice` and `buyItem` reject invalid or premature
+actions without spending resources. Acquisitions retain independent stat and
+effect sources. Shop purchases mark their existing offer sold without drawing
+a replacement. `finishRewards` clears only the resolved boundary's offers;
+it preserves XP, build and savings. Effect bonuses are accumulated as data;
+combat must consume every supported bonus before this module is made live.
+The existing engine/UI have not yet been switched to these APIs.
+
 ## Checks
 
 ```sh
 node --test tests/stat-modifiers.test.mjs
 node --test tests/reward-catalog.test.mjs
 node --test tests/reward-data.test.mjs
+node --test tests/run-rewards.test.mjs
 node --test tests/*.test.mjs
 node --check src/stat-modifiers.mjs
 ```
