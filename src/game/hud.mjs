@@ -12,7 +12,10 @@ export function updateHUD() {
   document.querySelector('#hp-fill').style.width = `${p.hp / p.maxHp * 100}%`;
   document.querySelector('#coins').textContent = `◈ ${state.run.coins}`;
   const level = document.querySelector('#level');
-  if (level) level.textContent = `NIVEL ${state.run.level} · XP ${state.run.xp}/${nextLevelXP(state.run)}${state.run.pendingLevels.length ? ` · ${state.run.pendingLevels.length} ELECCIONES PENDIENTES` : ''}`;
+  const needed = nextLevelXP(state.run);
+  if (level) level.textContent = `NIVEL ${state.run.level} · XP ${state.run.xp}/${needed}${state.run.pendingLevels.length ? ` · ${state.run.pendingLevels.length} PENDIENTES` : ''}`;
+  const xpFill = document.querySelector('#xp-fill');
+  if (xpFill) xpFill.style.width = `${Math.min(100, state.run.xp / needed * 100)}%`;
   document.querySelector('#timer').textContent = state.run.wave === 4 ? `☠ JEFE · ${formatTime(state.run.time)}` : formatTime(Math.max(0, state.run.duration - state.run.time));
   document.querySelector('#wave-title').innerHTML = `${state.run.wave === 4 ? 'EL ADMINISTRADOR' : `OLEADA 0${state.run.wave}`} <span class="muted">/ 04</span>`;
   const taskPanel = document.querySelector('#task-panel');

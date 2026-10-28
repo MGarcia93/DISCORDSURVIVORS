@@ -50,9 +50,18 @@ export function overlay() {
       const rank = countOf(state.run.levelRanks, entry.id);
       const description = describeReward(entry.ranks[rank], EFFECTS).map(escapeText).join(' · ');
       const preview = rewardPreviewLines(state.run, `level-preview:${entry.id}`, entry.ranks[rank]);
-      return `<button class="upgrade" data-level="${escapeText(entry.id)}" ${preview ? '' : 'disabled'}><b>${escapeText(entry.name)}</b><span>${description}</span><small>${preview?.map(escapeText).join(' · ') ?? 'No compatible con las estadísticas actuales'}</small><small>RANGO ${rank + 1}/${entry.ranks.length}</small></button>`;
+      const pips = Array.from({ length: entry.ranks.length },
+        (_, index) => `<i class="${index < rank ? 'on' : ''}"></i>`).join('');
+      const own = entry.characters !== 'all';
+      return `<button class="reward-card level-card ${own ? 'own' : 'common'}" data-level="${escapeText(entry.id)}" ${preview ? '' : 'disabled'}>
+        <span class="reward-top"><span class="reward-tag">${own ? 'PROPIA' : 'ESTADÍSTICA'}</span><span class="reward-rank">RANGO ${rank + 1}/${entry.ranks.length}</span></span>
+        <b class="reward-name">${escapeText(entry.name)}</b>
+        <span class="reward-effect">${description}</span>
+        <span class="reward-preview">${preview ? preview.map(escapeText).join('<br>') : 'No compatible con las estadísticas actuales'}</span>
+        <span class="reward-pips" aria-hidden="true">${pips}</span>
+      </button>`;
     }).join('');
-    body = `<div class="eyebrow">Nivel ${state.run.pendingLevels[0]} · ${state.run.pendingLevels.length} elecciones pendientes</div><h2>ELEGÍ UNA MEJORA</h2><p>Las mejoras de nivel no cuestan fichas.</p><div class="shop-grid">${cards}</div>${cards ? '' : '<p>No quedan mejoras elegibles.</p><button class="primary" data-action="skip-level">CONTINUAR SIN RECOMPENSA →</button>'}`;
+    body = `<div class="eyebrow">Subida de nivel</div><h2>ELEGÍ UNA MEJORA</h2><p class="reward-sub">Nivel ${state.run.pendingLevels[0]} · ${state.run.pendingLevels.length} ${state.run.pendingLevels.length === 1 ? 'elección pendiente' : 'elecciones pendientes'} · no cuestan fichas</p><div class="reward-grid">${cards}</div>${cards ? '<div class="reward-footnote">Elegí una sola opción. Las demás quedan para próximos niveles.</div>' : '<p>No quedan mejoras elegibles.</p><button class="primary" data-action="skip-level">CONTINUAR SIN RECOMPENSA →</button>'}`;
   }
   if (phase === 'shop') {
     const cards = (state.run.shopOffers ?? []).map(offer => {
@@ -61,11 +70,18 @@ export function overlay() {
       const preview = offer.bought ? [] : rewardPreviewLines(state.run, `item-preview:${item.id}`, item);
       const disabled = offer.bought || count >= item.maxCopies || state.run.coins < item.price || !preview;
       const description = describeReward(item, EFFECTS).map(escapeText).join(' · ');
-      return `<button class="upgrade" data-item="${escapeText(item.id)}" ${disabled ? 'disabled' : ''}><b>${escapeText(item.name)}</b><span>${description}</span><small>${preview?.map(escapeText).join(' · ') ?? 'No compatible con las estadísticas actuales'}</small><span>${escapeText(item.lore)}</span><small>${offer.bought ? 'COMPRADO' : `${item.price} FICHAS`} · ${count}/${item.maxCopies}</small></button>`;
+      return `<button class="reward-card item-card ${offer.bought ? 'bought' : ''}" data-item="${escapeText(item.id)}" ${disabled ? 'disabled' : ''}>
+        <span class="reward-top"><span class="reward-icon" aria-hidden="true">${escapeText(item.icon ?? '◈')}</span><span class="reward-price">${item.price} ◈</span></span>
+        <b class="reward-name">${escapeText(item.name)}</b>
+        <span class="reward-effect">${description}</span>
+        <span class="reward-preview">${preview ? preview.map(escapeText).join('<br>') : 'No compatible con las estadísticas actuales'}</span>
+        <span class="reward-lore">${escapeText(item.lore)}</span>
+        <span class="reward-foot"><span class="reward-owned">${count}/${item.maxCopies}</span><span class="reward-state">${offer.bought ? 'COMPRADO' : 'TOCÁ PARA COMPRAR'}</span></span>
+      </button>`;
     }).join('');
     const full = state.run.player.hp >= state.run.player.maxHp;
     const healDisabled = full || state.run.coins < HEAL_COST;
-    body = `<div class="eyebrow">Oleada ${state.run.wave} completada</div><h2>ELEGÍ QUÉ COMPRAR</h2><p>Comprá objetos o guardá las fichas para otra oleada.<br><b>${state.run.coins} fichas disponibles</b> · +${state.run.rewardBalance.gold?.survival ?? 20} por sobrevivir</p><div class="shop-grid">${cards || '<p>No quedan objetos elegibles.</p>'}</div><section aria-label="Servicio de curación"><button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Servicio de curación: recuperás ${HEAL_AMOUNT} de vida.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></section><div class="shop-footer"><button class="primary" data-action="next-wave">${state.run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
+    body = `<div class="eyebrow">Oleada ${state.run.wave} completada</div><h2>EL BOTÍN ES TUYO</h2><p class="reward-sub"><b class="wallet">${state.run.coins} ◈</b> disponibles · +${state.run.rewardBalance.gold?.survival ?? 20} por sobrevivir</p><div class="reward-grid">${cards || '<p>No quedan objetos elegibles.</p>'}</div><div class="reward-extras"><button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Servicio de curación: recuperás ${HEAL_AMOUNT} de vida.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} ◈`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${state.run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
   }
   if (phase === 'dead' || phase === 'won') {
     // The run remembers which ficha's chain step lit up on victory; the ficha

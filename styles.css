@@ -95,6 +95,10 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .hud-label { font-size: 10px; display: flex; justify-content: space-between; color: #ddd5bc; }
 .hp-track { height: 7px; background: #41333b; margin-top: 7px; }
 .hp-fill { height: 100%; background: repeating-linear-gradient(90deg, #b9d689 0px 7px, #829f63 7px 8px); }
+.level-line { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.level-line small { font-size: 8px; letter-spacing: 0.5px; color: #c8b6a0; white-space: nowrap; }
+.xp-track { flex: 1; height: 4px; min-width: 24px; background: #41333b; overflow: hidden; }
+.xp-fill { display: block; height: 100%; width: 0; background: #d9b979; transition: width 120ms linear; }
 .task-panel { position: absolute; z-index: 2; top: 84px; left: 14px; width: 230px; padding: 8px 10px; background: #191a25e8; border: 2px solid #746086; color: #e1d1e7; font-size: 9px; }
 .task-panel[hidden] { display: none; }
 .character-status { position: absolute; z-index: 2; top: 140px; left: 14px; max-width: min(360px, calc(100% - 28px)); padding: 8px 10px; background: #191a25e8; border: 2px solid #746086; color: #e1d1e7; font-size: 9px; line-height: 1.7; white-space: pre-line; pointer-events: none; }
@@ -119,8 +123,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .overlay h2 { font-size: 25px; line-height: 1.4; color: var(--gold); margin: 12px 0; }
 .overlay p { font-size: 12px; color: #c2aec6; line-height: 1.8; margin: 14px 0; }
 .overlay .actions { justify-content: center; margin-top: 20px; }
-.shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
-.shop-dialog { display: flex; flex-direction: column; text-align: center; height: 100%; }
+.shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }.shop-dialog { display: flex; flex-direction: column; text-align: center; height: 100%; }
 .shop-dialog .shop-grid { grid-template-columns: repeat(3, 1fr); flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 12px 0; padding-right: 4px; }
 .shop-footer { flex-shrink: 0; padding-top: 4px; }
 .shop-footer .primary { width: 100%; }
@@ -133,6 +136,39 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .upgrade small { display: block; color: var(--green); font-size: 10px; margin-top: 10px; }
 .shop-heal { grid-column: 1 / -1; text-align: center; background: #3a2b35; border-color: #8b6572; }
 .shop-heal b { color: #e7c4bd; }
+
+/* Reward screens: the four-offer shop and the level-up choice. */
+.overlay > div.shop-dialog { width: min(100%, 920px); text-align: left; }
+.shop-dialog > .eyebrow { color: var(--gold); letter-spacing: 2px; font-size: 10px; }
+.shop-dialog h2 { margin: 6px 0 4px; }
+.reward-sub { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 0 0 16px; font-size: 11px; color: #c2aec6; }
+.reward-sub .wallet { color: var(--gold); font-size: 18px; letter-spacing: 1px; }
+.reward-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0 0 16px; }
+.reward-card { position: relative; display: flex; flex-direction: column; gap: 7px; text-align: left; padding: 15px 16px 13px; border: 3px solid #6c5578; background: linear-gradient(#3a2c48, #2a2035); box-shadow: inset 0 0 0 2px #4b3a5b, 3px 3px #100e19; transition: transform 100ms, border-color 100ms, background 100ms; }
+.reward-card:not(:disabled):hover { border-color: var(--green); background: linear-gradient(#443348, #322840); transform: translateY(-2px); }
+.reward-card:active:not(:disabled) { transform: translate(1px, 2px); }
+.reward-card:disabled { opacity: 0.5; }
+.reward-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 30px; }
+.reward-icon { font-size: 24px; line-height: 1; }
+.reward-price { padding: 3px 9px; border: 2px solid #8a6b4a; background: #1d1622; color: var(--gold); font-size: 12px; letter-spacing: 1px; }
+.reward-name { font-size: 14px; letter-spacing: 0.5px; color: var(--paper); }
+.reward-effect { font-size: 11px; color: #f0dcae; line-height: 1.5; }
+.reward-preview { font-size: 11px; color: var(--green); line-height: 1.6; }
+.reward-lore { font-size: 10px; font-style: italic; color: #a996ae; line-height: 1.6; }
+.reward-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 8px; border-top: 1px dashed #6c5578; font-size: 9px; letter-spacing: 1px; }
+.reward-owned { color: #b8a3bd; }
+.reward-state { color: var(--green); }
+.reward-card.bought { opacity: 0.55; }
+.reward-card.bought .reward-state { color: var(--gold); }
+.reward-tag { padding: 3px 7px; border: 2px solid #71607f; font-size: 9px; letter-spacing: 1px; color: #cbb8d1; }
+.reward-card.own .reward-tag { border-color: var(--gold); color: var(--gold); }
+.reward-card.common .reward-tag { border-color: #6f8f6a; color: #a9c6a2; }
+.reward-rank { font-size: 9px; letter-spacing: 1px; color: #b8a3bd; }
+.reward-pips { display: flex; gap: 5px; }
+.reward-pips i { width: 9px; height: 9px; border: 2px solid #7a6386; }
+.reward-pips i.on { background: var(--gold); border-color: var(--gold); }
+.reward-footnote { font-size: 10px; color: #a996ae; }
+.reward-extras { display: grid; gap: 10px; margin-bottom: 14px; }
 .touch-pad { display: none; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(2, 36px); gap: 5px; touch-action: none; }
 .touch-pad button { border: 2px solid #75607f; background: #33263f; color: #d8c9df; touch-action: none; user-select: none; }
 .touch-pad [data-direction="up"] { grid-column: 2; }
@@ -178,6 +214,12 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .shop-dialog .shop-grid { grid-template-columns: repeat(2, 1fr); }
   .shop-hint { display: block; color: #b9a3bd; font-size: 8px; letter-spacing: 1px; margin: 0 0 6px; }
   .upgrade { padding: 8px; } .upgrade b { font-size: 9px; } .upgrade span { font-size: 8px; } .upgrade small { margin-top: 6px; font-size: 8px; }
+  .reward-grid { grid-template-columns: 1fr; gap: 9px; }
+  .reward-card { padding: 11px 12px 10px; gap: 5px; }
+  .reward-name { font-size: 12px; } .reward-icon { font-size: 19px; }
+  .reward-price { font-size: 10px; padding: 2px 6px; }
+  .reward-effect, .reward-preview { font-size: 9px; } .reward-lore { font-size: 8px; }
+  .reward-sub .wallet { font-size: 15px; } .reward-foot { font-size: 8px; }
 }
 @media (max-height: 600px) and (min-width: 651px) {
   .home-content { padding-top: 28px; padding-bottom: 85px; } .chapter-label { margin-bottom: 12px; }

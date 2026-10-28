@@ -58,7 +58,7 @@ test('rendered level controls advance consecutive choices and then show the shop
   assert.deepEqual(ids('item'), []);
   run.random = () => 0;
   assert.equal(activate(run, { level: ids('level')[0] }), true);
-  assert.match(box.innerHTML, /Nivel 3 · 1 elecciones pendientes/);
+  assert.match(box.innerHTML, /Nivel 3 · 1 elección pendiente/);
   assert.match(box.innerHTML, /RANGO 2\/2/);
   assert.equal(activate(run, { level: ids('level')[0] }), true);
   assert.equal(ids('level').length, 0);
