@@ -1,0 +1,10 @@
+{
+  "characters": "characters.json",
+  "sounds": { "chime": { "frequency": 660, "duration": 0.15 } },
+  "scenes": [
+    { "id": "sample-conversation", "title": "Sample: portrait conversation", "file": "scenes/sample-conversation.json" },
+    { "id": "sample-arrival", "title": "Sample: sprite arrival and conversation", "file": "scenes/sample-arrival.json" },
+    { "id": "sample-extension", "title": "Sample: scene-local JavaScript action", "file": "scenes/sample-extension.json", "module": "scenes/sample-extension.mjs" }
+  ],
+  "bindings": []
+}

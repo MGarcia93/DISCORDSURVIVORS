@@ -1,0 +1,24 @@
+{
+  "id": "sample-arrival",
+  "repeat": "once",
+  "stage": {
+    "points": { "entrance": [180, 390], "meeting": [650, 420], "guide": [820, 420] },
+    "actors": { "visitor": { "character": "guest", "at": "entrance" }, "host": { "character": "guide", "at": "guide" } },
+    "props": { "gate": { "at": "meeting", "state": "closed" } }
+  },
+  "steps": [
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "visitor", "to": "meeting", "duration": 2 },
+      { "type": "camera", "to": "meeting", "zoom": 1.35, "duration": 2 }
+    ] },
+    { "type": "animate", "actor": "visitor", "animation": "point", "duration": 0.8 },
+    { "type": "prop", "prop": "gate", "state": "open" },
+    { "type": "sound", "sound": "chime" },
+    { "type": "dialogue", "lines": [
+      { "speaker": "guest", "text": "The gate is open. This sample combines sprite movement and portrait dialogue." },
+      { "speaker": "guide", "expression": "surprised", "text": "Combat time stays frozen, but the scene has its own clock." }
+    ] },
+    { "type": "splash", "speaker": "guest", "text": "SAMPLE ARRIVAL", "duration": 1.5 }
+  ],
+  "effects": [{ "key": "sample-arrival-completed", "value": true }]
+}

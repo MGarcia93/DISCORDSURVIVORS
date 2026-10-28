@@ -1,0 +1,12 @@
+{
+  "guide": {
+    "name": "Sample guide",
+    "sprite": "negro",
+    "expressions": { "neutral": "portraits/guide-neutral.svg", "surprised": "portraits/guide-surprised.svg" }
+  },
+  "guest": {
+    "name": "Sample visitor",
+    "sprite": "warrior",
+    "expressions": { "neutral": "portraits/guest-neutral.svg" }
+  }
+}

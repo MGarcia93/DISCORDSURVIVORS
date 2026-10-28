@@ -1,0 +1,11 @@
+{
+  "id": "sample-extension",
+  "stage": {
+    "points": { "center": [572, 374] },
+    "props": { "marker": { "at": "center", "state": "waiting" } }
+  },
+  "steps": [
+    { "type": "highlight", "prop": "marker", "state": "highlighted", "duration": 1 },
+    { "type": "dialogue", "lines": [{ "speaker": "guide", "text": "This example adds an action in a JavaScript file beside the scene. The shared engine is unchanged." }] }
+  ]
+}
