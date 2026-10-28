@@ -77,11 +77,27 @@ without duplicate filler. The engine must store the result, apply the chosen
 rank once and explicitly handle empty choices; these integration steps are
 not yet implemented. `describeReward` derives mechanical text from entry data.
 
+## Initial data and tuning
+
+Edit `src/reward-data.mjs` to add entries to `ITEMS` or `LEVEL_UPGRADES`.
+`BALANCE` holds XP and gold rewards, survival income and shop size. Initial
+XP uses the approved `10 * currentLevel ** 2` curve and one XP per ordinary
+kill. Gold, prices, item caps and upgrade magnitudes are provisional tuning,
+not measured final balance. The first catalog includes all eight lore items;
+Gallina has `enabled: false` until its provisional range effect is confirmed.
+
+Character entries initially cover waifu, Patrona and smoke duration, sale
+value, and the Negro's prerequisite-gated bounce chain. These are only the
+first supported parameters, not all the planned character mechanics. The
+catalog does not execute them yet; engine integration must implement each
+registered effect before exposing it in a live reward selection.
+
 ## Checks
 
 ```sh
 node --test tests/stat-modifiers.test.mjs
 node --test tests/reward-catalog.test.mjs
+node --test tests/reward-data.test.mjs
 node --test tests/*.test.mjs
 node --check src/stat-modifiers.mjs
 ```
