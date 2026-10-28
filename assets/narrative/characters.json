@@ -8,5 +8,33 @@
     "name": "Sample visitor",
     "sprite": "warrior",
     "expressions": { "neutral": "portraits/guest-neutral.svg" }
+  },
+  "maxi-negro": {
+    "name": "Maxi Negro",
+    "sprite": "negro",
+    "expressions": {
+      "neutral": "portraits/negro/neutral.svg",
+      "happy": "portraits/negro/happy.svg",
+      "annoyed": "portraits/negro/annoyed.svg",
+      "surprised": "portraits/negro/surprised.svg",
+      "tired": "portraits/negro/tired.svg",
+      "disgusted": "portraits/negro/disgusted.svg",
+      "disgusted-strong": "portraits/negro/disgusted-strong.svg"
+    }
+  },
+  "solago": {
+    "name": "Solago",
+    "sprite": "solago",
+    "expressions": { "neutral": "portraits/solago-placeholder.svg" }
+  },
+  "warrior": {
+    "name": "Warrior",
+    "sprite": "warrior",
+    "expressions": { "neutral": "portraits/guest-neutral.svg" }
+  },
+  "papasito": {
+    "name": "Papasito",
+    "sprite": "papazito",
+    "expressions": { "neutral": "portraits/guest-neutral.svg" }
   }
 }
