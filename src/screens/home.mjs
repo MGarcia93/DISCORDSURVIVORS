@@ -1,4 +1,5 @@
-import { drawTitle, drawRoom } from '../scenes.mjs';
+import { drawTitle } from '../scenes.mjs';
+import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
 
 // Home screen: title room, main menu and the controls dialog overlays.
@@ -23,7 +24,8 @@ export function home() {
       <div id="menu-overlay"></div>
     </section>`;
   drawTitle(document.querySelector('#title-art'));
-  drawRoom(document.querySelector('#menu-scene').getContext('2d'));
+  const scene = document.querySelector('#menu-scene');
+  drawBackground(scene.getContext('2d'), 'room', { width: scene.width, height: scene.height });
 }
 
 export function controls() {

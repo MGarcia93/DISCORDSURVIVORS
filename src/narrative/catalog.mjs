@@ -1,6 +1,8 @@
 import { validateScene } from './runtime.mjs';
+import { worldIds } from '../backgrounds/index.mjs';
 
 export const manifestURL = new URL('../../assets/narrative/manifest.json', import.meta.url);
+const BACKGROUNDS = Object.freeze(Object.fromEntries(worldIds.map(id => [id, true])));
 
 export async function loadCatalog({ url = manifestURL, fetcher = globalThis.fetch, importer = url => import(url) } = {}) {
   const signal = AbortSignal.timeout(8000);
@@ -31,7 +33,7 @@ export async function loadCatalog({ url = manifestURL, fetcher = globalThis.fetc
       entry.scene = await read(new URL(item.file, url));
       if (entry.scene.id !== item.id) throw Error('Scene id does not match manifest');
       if (item.module) entry.actions = (await importer(new URL(item.module, url).href)).actions;
-      validateScene(entry.scene, { characters, sounds: manifest.sounds ?? {}, actions: entry.actions });
+      validateScene(entry.scene, { characters, sounds: manifest.sounds ?? {}, actions: entry.actions, backgrounds: BACKGROUNDS });
     } catch (error) { entry.error = `${item.id}: ${error.message}`; }
     entries.push(entry);
   }
@@ -41,5 +43,5 @@ export async function loadCatalog({ url = manifestURL, fetcher = globalThis.fetc
       throw Error(`Invalid wave binding: ${JSON.stringify(binding)}`);
     }
   }
-  return { characters, sounds: manifest.sounds ?? {}, entries, bindings };
+  return { characters, sounds: manifest.sounds ?? {}, entries, bindings, backgrounds: BACKGROUNDS };
 }

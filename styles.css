@@ -219,6 +219,15 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-viewer .screen-heading { flex-wrap: wrap; gap: 12px; }
 .narrative-viewer h1 { font-size: clamp(16px, 3vw, 26px); }
 #narrative-status { overflow-wrap: anywhere; }
+.world-viewer { max-width: 1250px; margin: auto; }
+.world-viewer-intro { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
+.world-viewer .actions { margin: 12px 0; flex-wrap: wrap; }
+.world-viewer select { max-width: 100%; padding: 10px; background: #242335; color: #fff; border: 2px solid #786b95; }
+.world-cast-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 1px; color: var(--paper); cursor: pointer; }
+.world-cast-toggle input { width: 16px; height: 16px; accent-color: #bfd890; cursor: pointer; }
+.world-stage-wrap { border: 2px solid #786b95; background: #151320; box-shadow: 0 0 0 3px #13111d; line-height: 0; }
+.world-stage { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+#world-status { margin-top: 10px; color: var(--muted); font-size: 11px; }
 @media (max-width: 650px) {
   .narrative-text { padding: 8px; }
   .narrative-text p { font-size: 12px; line-height: 1.4; margin: 6px 0; min-height: 0; max-height: 22vh; }

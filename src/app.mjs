@@ -1,5 +1,7 @@
 import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
-import { drawRoom, drawStory } from './scenes.mjs';
+import { drawStory } from './scenes.mjs';
+import { drawBackground } from './backgrounds/index.mjs';
+import { storyPages } from './screens/story-pages.mjs';
 import { isCharacterUnlocked, unlockAllForTesting, UNLOCK_CHAIN } from './progression.mjs';
 import { on } from './bus.mjs';
 import { state } from './app/state.mjs';
@@ -9,6 +11,7 @@ import { draw } from './game/renderer.mjs';
 import { home, controls, closeControls } from './screens/home.mjs';
 import { story } from './screens/story.mjs';
 import { characters, drawPreview } from './screens/characters.mjs';
+import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
 import { game } from './screens/game.mjs';
 import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment } from './narrative/integration.mjs';
 
@@ -41,6 +44,7 @@ function show(name) {
   document.body.classList.toggle('in-game', name === 'game');
   if (name === 'home') home();
   if (name === 'characters') characters();
+  if (name === 'worlds') worldsScreen();
   if (name === 'story') story();
   if (name === 'game') { game(); narrative.attach(state.run, document.querySelector('#narrative-layer')); }
   if (name === 'narrative') showNarrativeViewer(state.content);
@@ -77,8 +81,12 @@ function frame(timestamp) {
   if (state.screen === 'narrative' && !document.hidden) tickNarrativeViewer(dt);
   const animationTime = state.reducedMotion.matches ? 4 : timestamp / 1000;
   if (state.screen === 'characters') drawPreview(animationTime);
-  if (state.screen === 'home') drawRoom(document.querySelector('#menu-scene').getContext('2d'), animationTime);
-  if (state.screen === 'story') drawStory(document.querySelector('#story-scene'), state.storyPage, animationTime);
+  if (state.screen === 'home') {
+    const canvas = document.querySelector('#menu-scene');
+    drawBackground(canvas.getContext('2d'), 'room', { width: canvas.width, height: canvas.height, time: animationTime });
+  }
+  if (state.screen === 'story') drawStory(document.querySelector('#story-scene'), storyPages[state.storyPage] ?? storyPages[0], animationTime);
+  if (state.screen === 'worlds') drawWorldPreview(dt, animationTime);
   requestAnimationFrame(frame);
 }
 
@@ -94,10 +102,10 @@ document.addEventListener('click', event => {
   }
   if (action === 'controls') controls();
   if (action === 'close-controls') closeControls();
-  if (['home', 'characters'].includes(action)) show(action);
+  if (['home', 'characters', 'worlds'].includes(action)) show(action);
   if (action === 'story-start') { state.storyPage = 0; show('story'); }
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
-  if (action === 'story-next') { if (state.storyPage < 2) { state.storyPage++; story(); } else show('game'); }
+  if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else show('game'); }
   if (action === 'play') show('game');
   if (action === 'pause' && state.run?.phase === 'playing') { state.paused = !state.paused; state.keys.clear(); }
   if (action === 'resume') { state.paused = false; state.keys.clear(); }
@@ -131,6 +139,15 @@ document.addEventListener('keydown', event => {
     if (!event.shiftKey && document.activeElement === last) { first?.focus(); event.preventDefault(); }
   }
   if (state.screen !== 'game') {
+    // Native form controls keep their own keyboard behaviour (the dev viewers
+    // use selects, which need their arrow keys).
+    if (event.target?.tagName === 'SELECT') return;
+    // The worlds viewer walks the selected ficha around the backdrop.
+    if (state.screen === 'worlds' && isWorldKey(key)) {
+      state.keys.add(key);
+      event.preventDefault();
+      return;
+    }
     if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeControls();
     if (state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
       if (unlockAllForTesting()) {
@@ -189,5 +206,5 @@ function resumeNarrative() { if (!document.hidden) activeNarrativeHost().resume(
 window.addEventListener('blur', suspend);
 window.addEventListener('focus', resumeNarrative);
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); else resumeNarrative(); });
-show(isNarrativeDevelopment() ? 'narrative' : 'home');
+show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds' : 'home');
 requestAnimationFrame(frame);

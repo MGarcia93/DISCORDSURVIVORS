@@ -1,5 +1,6 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
 const animations = new Set(['idle', 'walk', 'point', 'celebrate']);
+const stageFields = new Set(['points', 'actors', 'props', 'background']);
 const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
 const requireValue = (condition, message) => { if (!condition) throw new Error(message); };
@@ -12,10 +13,16 @@ export function validateLine(line, characters) {
   requireValue(text(line.text), 'Dialogue text is required');
 }
 
-export function validateScene(scene, { characters = {}, sounds = {}, actions = {} } = {}) {
+export function validateScene(scene, { characters = {}, sounds = {}, actions = {}, backgrounds = {} } = {}) {
   requireValue(scene && text(scene.id), 'Scene id is required');
   requireValue(['always', 'once'].includes(scene.repeat ?? 'always'), 'Invalid repeat policy');
-  const stage = scene.stage ?? {}, points = stage.points ?? {}, actors = stage.actors ?? {}, props = stage.props ?? {};
+  const stage = scene.stage ?? {};
+  requireValue(typeof stage === 'object' && !Array.isArray(stage), 'Stage must be an object');
+  // A misspelled field used to be ignored, so `backgroundd` silently painted
+  // the default world. Known fields only, and a world that really exists.
+  for (const key of Object.keys(stage)) requireValue(stageFields.has(key), `Unknown stage field: ${key}`);
+  if (stage.background !== undefined) requireValue(own(backgrounds, stage.background), `Unknown background: ${stage.background}`);
+  const points = stage.points ?? {}, actors = stage.actors ?? {}, props = stage.props ?? {};
   for (const [id, point] of Object.entries(points)) {
     requireValue(Array.isArray(point) && point.length === 2 && point.every(finite), `Invalid point: ${id}`);
   }

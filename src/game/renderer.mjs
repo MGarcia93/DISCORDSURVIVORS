@@ -1,6 +1,7 @@
 import { WIDTH, HEIGHT, WORLD_SCALE } from '../engine.mjs';
 import { drawChair, drawPatrona, drawAdministrator, drawZombie, drawAnime, drawGamerProjectile, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
-import { drawArena, pixelText } from '../scenes.mjs';
+import { pixelText } from '../scenes.mjs';
+import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
 
 export function rounded(ctx, x, y, width, height, radius, fill) {
@@ -36,7 +37,7 @@ export function draw() {
   if (!ctx || !state.run) return;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.imageSmoothingEnabled = false;
-  drawArena(ctx, WIDTH, HEIGHT);
+  drawBackground(ctx, 'arena', { width: WIDTH, height: HEIGHT });
   const p = state.run.player;
   const astral = p.characterDef.specials.find(special => special.key === 'astral');
   if (p.astral > 0 && astral) {

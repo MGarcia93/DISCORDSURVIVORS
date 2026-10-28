@@ -46,7 +46,7 @@ These images are generated from one source portrait and facial overrides, not in
 
 ## Sprite sequence
 
-Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `stage.actors` as named `{ character, at }` entries, and optional `stage.props` as `{ at, state }` entries. Actor/prop IDs are local to that scene; these are presentation entities, not combat enemies. The initial scene state is also its preview setup.
+Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `stage.actors` as named `{ character, at }` entries, and optional `stage.props` as `{ at, state }` entries. `stage.background` names the world the scene happens in (see [World backgrounds](#world-backgrounds)) and defaults to `arena`. Actor/prop IDs are local to that scene; these are presentation entities, not combat enemies. The initial scene state is also its preview setup.
 
 | Step | Fields | Meaning |
 | --- | --- | --- |
@@ -62,7 +62,42 @@ Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `sta
 
 Durations are nonnegative seconds. Parallel actions cannot write the same actor, camera or prop, and cannot contain dialogue, splash or custom actions. Sequential actions appear in the top-level `steps` array. The sample arrival shows movement and camera in parallel, followed by conversation and splash.
 
-The initial renderer uses the existing arena and character sprite drawers plus labeled placeholder props. New maps, detailed prop art and new sprite animation capabilities are separate art/presentation work, not automatically supplied by a scene JSON. Existing named animations are simple staging poses.
+The initial renderer uses the existing arena and character sprite drawers plus labeled placeholder props. New maps are separate worlds (see [World backgrounds](#world-backgrounds)); detailed prop art and new sprite animation capabilities remain separate art/presentation work, not automatically supplied by a scene JSON. Existing named animations are simple staging poses.
+
+## World backgrounds
+
+A world is one module in `src/backgrounds/` that paints the scenery of a place. Scenes pick one with `stage.background`, the story pages name theirs in `src/screens/story-pages.mjs`, and the combat renderer uses the same registry. Open **`?dev=worlds`** to see every world at full stage size, animating, with the playable cast on it: pick a character and walk it with **WASD** or the arrow keys to try staging and contrast.
+
+| World | Used by |
+| --- | --- |
+| `arena` (default) | the combat arena; scenes that do not name a world |
+| `room` | home screen; story page 1 (El Negro's room) |
+| `zomboid` | Act 1 — Knox County; story page 2 |
+| `rift` | Act 2 — Summoner's Rift |
+| `inferno` | Act 3 — the dungeon |
+| `exiles` | Act 4 — the Exiled Lands; the shipped Act 4 preview |
+| `discord` | Act 5 — the corrupted server |
+
+Each world exports `{ id, title, draw, animate? }`:
+
+- `draw(ctx, { width, height })` paints the static scenery. It runs **once** per world and canvas size, into an offscreen canvas; every later frame blits that canvas with a single `drawImage`. Per-tile detail is therefore free at runtime.
+- `animate(ctx, { width, height, time })` is optional and runs every frame, after the bake. Put only what actually moves there (a flickering brazier, a lava glow, a glitch tear, drifting fog).
+- Sizes: a world must paint whatever `width`/`height` it is given; use fractions of `width`/`height`, never a fixed pixel layout.
+
+**Perspective — act worlds are top-down maps.** The game camera looks down at the arena, so the whole canvas is ground: streets, sand, flagstones, a lane, a floor plan. Buildings are roofs, pillars are bases with a shadow cast to the bottom-right, trees are crowns. A lateral/side-view backdrop (sky on top, facades in elevation) breaks the projection: a character walking up ends up standing inside a wall. The only exception is `room`, which is a front-view menu illustration and is never used as a scene stage.
+
+The cast walks anywhere on that ground: the dev viewer clamps to 3–97% of the canvas, with no horizon line to stop against.
+
+Add a world:
+
+1. Copy `src/backgrounds/arena.mjs` to `src/backgrounds/<world>.mjs` and change `id`, `title` and the painting.
+2. Import and register it in the `WORLDS` object in `src/backgrounds/index.mjs`.
+3. Reference it from a scene (`"stage": { "background": "<world>" }`) or from a story page.
+4. Run `node --test tests/backgrounds.test.mjs` and open `?dev=worlds` to look at it.
+
+Every world must paint a full-canvas base (`pixel(ctx, 0, 0, width, height, color)`) before its details: the baked canvas is opaque, so any transparent pixel would show the stage behind the background. That invariant is tested for every registered world at the narrative and story sizes.
+
+Unknown world ids fail validation (`Unknown background: <id>`), and `stage` only accepts `points`, `actors`, `props` and `background`, so a misspelled field is reported instead of silently painting the default arena.
 
 ## Results, repetition and boundaries
 

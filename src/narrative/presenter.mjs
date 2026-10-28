@@ -1,5 +1,5 @@
 import { CHARACTERS } from '../characters/index.mjs';
-import { drawArena } from '../scenes.mjs';
+import { drawBackground } from '../backgrounds/index.mjs';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -28,7 +28,7 @@ export function createPresenter(root, catalog, onError) {
         ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
         ctx.fillStyle = '#151320'; ctx.fillRect(0, 0, 1144, 748);
         ctx.translate(572, 374); ctx.scale(camera.zoom, camera.zoom); ctx.translate(-camera.x, -camera.y);
-        drawArena(ctx, 1144, 748);
+        drawBackground(ctx, player.scene.stage?.background ?? 'arena', { width: 1144, height: 748, time: player.time });
         for (const [id, prop] of Object.entries(player.props)) {
           const [x, y] = player.scene.stage.points[prop.at];
           ctx.fillStyle = prop.state === 'open' ? '#bfd890' : '#786b95';

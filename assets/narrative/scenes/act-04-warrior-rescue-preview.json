@@ -2,6 +2,7 @@
   "id": "act-04-warrior-rescue-preview",
   "repeat": "always",
   "stage": {
+    "background": "exiles",
     "points": {
       "entrance": [
         260,

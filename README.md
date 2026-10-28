@@ -18,6 +18,8 @@ Open **http://localhost:5173/?dev=narrative** to select, play, restart and skip 
 
 Scenes live individually in `assets/narrative/scenes/`, with speaker/expression resources in `assets/narrative/characters.json`. Both portrait conversations and sprite/camera sequences use the separate `src/narrative/` module. See [scene authoring and extension instructions](docs/narrative-authoring.md) for JSON actions, optional scene-local JavaScript, wave-boundary bindings, banter and verification.
 
+Each world's scenery lives in `src/backgrounds/` and is selected per scene with `stage.background`; the story pages and the combat arena use the same registry. A world is painted once into an offscreen canvas and then blitted, so adding one costs nothing per frame. Open **http://localhost:5173/?dev=worlds** to see every world animating at full stage size, with the cast on it — pick a character and walk it with WASD or the arrow keys. See [World backgrounds](docs/narrative-authoring.md#world-backgrounds).
+
 ## Controls
 
 | Action | Control |
