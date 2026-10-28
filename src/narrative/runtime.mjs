@@ -210,10 +210,12 @@ export class ScenePlayer {
 
   cancel() {
     if (!this.active) return;
-    try { this.task?.cancel?.(); } finally { this.task = null; this._finish('cancelled'); }
+    try { this.task?.cancel?.(); } catch (error) { this.error = error.message; }
+    finally { this.task = null; this._finish('cancelled'); }
   }
 
   fail(message) {
+    if (!this.active) return;
     // Cleanup is best-effort: an extension must not retain ownership on failure.
     try { this.task?.cancel?.(); } catch { /* Preserve the original error. */ }
     this.task = null;

@@ -19,6 +19,7 @@ export function game() {
       <div id="task-panel" class="task-panel" ${def.taskHud ? '' : 'hidden'}><div><b>${def.taskHudTitle ?? 'PERMISO PARA JUGAR'}</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>
       <div id="character-status" class="character-status" ${def.statusHud ? '' : 'hidden'} aria-live="off"></div>
       <div id="game-overlay"></div>
+      <div id="narrative-layer" hidden></div>
     </div>
     <div class="game-controls"><div class="key-help"><kbd>W A S D</kbd> / <kbd>↑ ← ↓ →</kbd> Mover <span>·</span> Ataque automático <span>·</span><kbd>ESC</kbd> Pausa</div>
       <div class="touch-pad" aria-label="Movimiento táctil"><button data-direction="up" aria-label="Arriba">↑</button><button data-direction="left" aria-label="Izquierda">←</button><button data-direction="down" aria-label="Abajo">↓</button><button data-direction="right" aria-label="Derecha">→</button></div>

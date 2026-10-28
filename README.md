@@ -12,6 +12,12 @@ python3 -m http.server 5173 --bind 127.0.0.1
 
 Open **http://localhost:5173** in a current browser. No build, package install, account, or backend is required. Serve the directory over HTTP rather than opening `index.html` directly; the game uses JavaScript modules.
 
+### Narrative development viewer
+
+Open **http://localhost:5173/?dev=narrative** to select, play, restart and skip standalone scene samples without playing any waves. **Enter/Space** advances dialogue and **Escape** skips a scene. Preview state is isolated and never writes character unlocks. The samples are not canonical story or final portrait art; normal gameplay has no sample scenes bound by default.
+
+Scenes live individually in `assets/narrative/scenes/`, with speaker/expression resources in `assets/narrative/characters.json`. Both portrait conversations and sprite/camera sequences use the separate `src/narrative/` module. See [scene authoring and extension instructions](docs/narrative-authoring.md) for JSON actions, optional scene-local JavaScript, wave-boundary bindings, banter and verification.
+
 ## Controls
 
 | Action | Control |

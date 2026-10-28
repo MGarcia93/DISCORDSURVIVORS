@@ -63,11 +63,11 @@ The initial renderer uses the existing arena and character sprite drawers plus l
 
 For a genuinely special action, add a sibling `.mjs` and reference it through that scene's manifest `module`. It exports `actions`, whose entries expose `validate(step, scene)` and `start(step, presentation)`. `start` returns `tick(dt)` (true when complete), `skip()` (apply final presentation state), and optional `cancel()` (release resources). See `sample-extension.mjs`.
 
-Extensions receive only scene presentation state. They are **trusted application code, not sandboxed scripts**; keep them synchronous, bounded and free of storage, network, combat or irreversible side effects. External waits/promises are not supported. A shared new feature belongs in the narrative module only if multiple scenes genuinely need it.
+Extensions receive the scene runtime, including its presentation fields, lifecycle methods and callbacks—not the live combat run. Use only the presentation fields (`actors`, `props`, `camera`); do not invoke lifecycle methods or completion callbacks from an action. They are **trusted application code, not sandboxed scripts**; keep them synchronous, bounded and free of storage, network, combat or irreversible side effects. External waits/promises are not supported. A shared new feature belongs in the narrative module only if multiple scenes genuinely need it.
 
 ## Banter during a wave
 
-The bridge exposes `enqueueBanter({ speaker, expression?, text, priority?, duration?, ttl? })`. Only one line is visible; queued lines sort by descending priority, then insertion order. Expired lines are discarded. Duration defaults to readable text length. Combat is never paused; ending the wave clears the current line and queue. Banter uses a compact panel, not the blocking dialogue UI.
+The host exposes `enqueueBanter({ speaker, expression?, text, sound?, priority?, duration?, ttl? })`. Only one line is visible; queued lines sort by descending priority, then insertion order. Expired lines are discarded. Duration defaults to readable text length. A catalog sound starts when its line becomes visible, not when queued. Combat is never paused; ending the wave clears the current line and queue. Banter uses a compact panel, not the blocking dialogue UI.
 
 ## Checks
 
@@ -75,5 +75,13 @@ The bridge exposes `enqueueBanter({ speaker, expression?, text, priority?, durat
 node --test tests/narrative-*.test.mjs
 node --test tests/*.test.mjs
 ```
+
+With an existing Chromium installation and the local server running, a dependency-free browser check is also available:
+
+```sh
+CHROMIUM_PATH=/path/to/chrome node tests/narrative-browser.mjs
+```
+
+`GAME_URL` overrides the local URL. The check prints its external scratch directory (including screenshots); remove that directory after inspecting the results. It never installs a browser. `tests/narrative-compatibility.mjs` emits deterministic existing-game snapshots against a supplied `GAME_URL`, so separate served checkouts can be compared without putting history-dependent assertions in tests.
 
 Use the development viewer after changing visual staging or assets. Validation catches unknown speakers, expressions, actors, points, actions, invalid durations and conflicting parallel actions. Runtime/asset errors appear in the viewer and release scene ownership rather than trapping the game.

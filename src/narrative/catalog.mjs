@@ -3,8 +3,9 @@ import { validateScene } from './runtime.mjs';
 export const manifestURL = new URL('../../assets/narrative/manifest.json', import.meta.url);
 
 export async function loadCatalog({ url = manifestURL, fetcher = globalThis.fetch, importer = url => import(url) } = {}) {
+  const signal = AbortSignal.timeout(8000);
   const read = async target => {
-    const response = await fetcher(target);
+    const response = await fetcher(target, { signal });
     if (!response.ok) throw Error(`Cannot load ${target}: HTTP ${response.status}`);
     return response.json();
   };
@@ -15,6 +16,10 @@ export async function loadCatalog({ url = manifestURL, fetcher = globalThis.fetc
     for (const [expression, path] of Object.entries(character.expressions)) {
       character.expressions[expression] = new URL(path, url).href;
     }
+  }
+  for (const sound of Object.values(manifest.sounds ?? {})) {
+    if (sound.src) sound.src = new URL(sound.src, url).href;
+    else if (!Number.isFinite(sound.frequency) || sound.frequency <= 0 || !Number.isFinite(sound.duration) || sound.duration <= 0) throw Error('Invalid sound definition');
   }
   const ids = new Set();
   const entries = [];
