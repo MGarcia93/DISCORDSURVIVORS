@@ -1,8 +1,8 @@
 # Progression authoring
 
-Status: shared stats, kill XP and deferred level choices are connected to
-the engine and level-selection UI. The shop UI still uses its legacy upgrade
-list; the four-item shop and remaining character paths are tracked in
+Status: shared stats, kill XP, deferred level choices, the four-offer item
+shop and initial character parameters are connected to the game. Remaining
+character upgrade paths are tracked in
 [`../odd/tasks/item-level-progression.md`](../odd/tasks/item-level-progression.md).
 
 ## Stat modifiers
@@ -119,11 +119,20 @@ prepare choices before the shop. The narrative director refuses a before-wave
 scene while choices remain. Final victory discards pending choices without
 opening a shop, while preserving the existing victory event.
 
-The exported legacy `chooseUpgrade` callback API remains compatible during
-shop migration. Its actual stat changes are normalized into independent point
-sources, so later item/level recalculations do not erase them. New catalog
-entries must use modifiers/effect references, not legacy callbacks. The
-existing heal service remains separate and cannot bypass pending choices.
+The four-offer shop replaces the legacy upgrade list in the interface: each
+offer shows its lore, mechanical effect, real capped stat preview, price and
+owned/maximum count. A bought offer stays visible and disabled; rendering never
+draws a replacement or rerolls. When nothing is eligible the shop shows that
+message and the next-wave button stays available. The healing service remains a
+separate, labelled purchase and cannot bypass pending choices.
+
+The exported legacy `chooseUpgrade` callback API remains compatible for
+callers and tests but is no longer reachable from the interface. Its actual
+stat changes are normalized into independent point sources, so later
+item/level recalculations do not erase them. New catalog entries must use
+modifiers/effect references, not legacy callbacks. Catalog IDs are author data:
+counts and ranks use `Object.hasOwn`, so IDs such as `constructor` or
+`toString` never resolve to inherited properties.
 
 ## Checks
 
@@ -132,6 +141,7 @@ node --test tests/stat-modifiers.test.mjs
 node --test tests/reward-catalog.test.mjs
 node --test tests/reward-data.test.mjs
 node --test tests/run-rewards.test.mjs
+node --test tests/reward-ui.test.mjs
 node --test tests/*.test.mjs
 node --check src/stat-modifiers.mjs
 ```

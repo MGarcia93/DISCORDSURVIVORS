@@ -1,4 +1,5 @@
-import { step, chooseUpgrade, chooseLevelReward, skipEmptyChoice, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
+import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
+import { handleRewardAction } from './game/reward-actions.mjs';
 import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
@@ -120,8 +121,7 @@ document.addEventListener('click', event => {
   }
   if (button.dataset.special && state.run && !state.paused) activateSpecial(state.run, button.dataset.special);
   if (button.dataset.upgrade && state.run) { chooseUpgrade(state.run, button.dataset.upgrade); state.lastPhase = ''; overlay(); updateHUD(); }
-  if (button.dataset.level && state.run) { chooseLevelReward(state.run, button.dataset.level); state.lastPhase = ''; overlay(); updateHUD(); }
-  if (action === 'skip-level' && state.run) { skipEmptyChoice(state.run); state.lastPhase = ''; overlay(); updateHUD(); }
+  handleRewardAction(state.run, button.dataset, () => { state.lastPhase = ''; overlay(); updateHUD(); });
   if (button.dataset.heal && state.run) { buyHeal(state.run); state.lastPhase = ''; overlay(); updateHUD(); }
 });
 

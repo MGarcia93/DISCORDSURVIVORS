@@ -1,6 +1,6 @@
 import { validateStatModifiers } from './stat-modifiers.mjs';
 
-const LABELS = {
+export const STAT_LABELS = {
   life: 'Vida', defense: 'Defensa', attack: 'Ataque',
   attackDistance: 'Distancia de ataque', attackSpeed: 'Velocidad de ataque', moveSpeed: 'Velocidad de movimiento',
 };
@@ -99,7 +99,7 @@ export function selectLevelOptions(catalog, { character, level, ranks }, random)
 
 export function describeReward(reward, effects = {}) {
   const descriptions = (reward.modifiers ?? []).map(modifier =>
-    `${LABELS[modifier.stat]} ${modifier.value >= 0 ? '+' : ''}${modifier.value}${modifier.operation === 'percent' ? '%' : ''}`);
+    `${STAT_LABELS[modifier.stat]} ${modifier.value >= 0 ? '+' : ''}${modifier.value}${modifier.operation === 'percent' ? '%' : ''}`);
   for (const effect of reward.effects ?? []) descriptions.push(effects[effect.type].describe(effect.value));
   return descriptions;
 }

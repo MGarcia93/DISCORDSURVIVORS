@@ -2,7 +2,9 @@ import { BALANCE, DEFAULT_CATALOG, EFFECTS } from './reward-data.mjs';
 import { selectLevelOptions, sampleEntries } from './reward-catalog.mjs';
 import { createStatState, withStatSource, applyStatState } from './stat-modifiers.mjs';
 
-const countOf = (entries, id) => Object.hasOwn(entries, id) ? entries[id] : 0;
+// Catalog IDs are author data: "constructor" or "toString" must not resolve to
+// inherited object properties when counting owned copies or ranks.
+export const countOf = (entries, id) => Object.hasOwn(entries, id) ? entries[id] : 0;
 
 export function initializeRewards(run, { catalog = DEFAULT_CATALOG, balance = BALANCE } = {}) {
   const config = structuredClone(balance);
@@ -48,22 +50,28 @@ function canApply(run, source, reward) {
   }
 }
 
-function applyReward(run, source, reward) {
-  if (!canApply(run, source, reward)) return false;
+export function previewReward(run, source, reward) {
+  if (!canApply(run, source, reward)) return null;
   const state = withStatSource(run.statState, source, reward.modifiers ?? []);
   const sources = { ...run.effectSources, [source]: reward.effects ?? [] };
   const bonuses = {};
   for (const effects of Object.values(sources)) {
     for (const effect of effects) {
       const definition = EFFECTS[effect.type];
-      if (!definition) return false;
+      if (!definition) return null;
       bonuses[effect.type] = Math.min(definition.max, (bonuses[effect.type] ?? 0) + effect.value);
     }
   }
-  applyStatState(run.player, state);
-  run.statState = state;
-  run.effectSources = sources;
-  run.player.rewardBonuses = bonuses;
+  return { statState: state, effectSources: sources, bonuses };
+}
+
+function applyReward(run, source, reward) {
+  const preview = previewReward(run, source, reward);
+  if (!preview) return false;
+  applyStatState(run.player, preview.statState);
+  run.statState = preview.statState;
+  run.effectSources = preview.effectSources;
+  run.player.rewardBonuses = preview.bonuses;
   return true;
 }
 

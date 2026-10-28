@@ -1,9 +1,11 @@
-import { UPGRADES, HEAL_COST, HEAL_AMOUNT, salePrice } from '../engine.mjs';
+import { HEAL_COST, HEAL_AMOUNT, salePrice } from '../engine.mjs';
 import { describeReward } from '../reward-catalog.mjs';
 import { EFFECTS } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { formatTime } from './hud.mjs';
 import { getCharacter } from '../characters/index.mjs';
+import { rewardPreviewLines } from './reward-view.mjs';
+import { countOf } from '../run-rewards.mjs';
 
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -37,7 +39,7 @@ export function overlay() {
     const cards = Object.entries(stock).map(([key, item]) => {
       const sold = state.run.player.soldItems?.[key];
       const { boost, penalty } = saleCopy(item);
-    const settlement = state.run.player.characterDef.saleHud?.(state.run, { ...item, coins: salePrice(state.run, item) });
+      const settlement = state.run.player.characterDef.saleHud?.(state.run, { ...item, coins: salePrice(state.run, item) });
       return `<button class="upgrade" data-sale="${key}" ${sold ? 'disabled' : ''}><b>📦 ${item.label}</b><span>${boost}</span><small>${sold ? 'YA LO MALVENDIÓ' : penalty}</small>${!sold && settlement ? `<small>${settlement}</small>` : ''}</button>`;
     }).join('');
     const itemsLeft = Object.keys(stock).some(key => !state.run.player.soldItems?.[key]);
@@ -45,23 +47,25 @@ export function overlay() {
   }
   if (phase === 'levelUp') {
     const cards = state.run.levelChoices.map(entry => {
-      const rank = state.run.levelRanks[entry.id] ?? 0;
+      const rank = countOf(state.run.levelRanks, entry.id);
       const description = describeReward(entry.ranks[rank], EFFECTS).map(escapeText).join(' · ');
-      return `<button class="upgrade" data-level="${escapeText(entry.id)}"><b>${escapeText(entry.name)}</b><span>${description}</span><small>RANGO ${rank + 1}/${entry.ranks.length}</small></button>`;
+      const preview = rewardPreviewLines(state.run, `level-preview:${entry.id}`, entry.ranks[rank]);
+      return `<button class="upgrade" data-level="${escapeText(entry.id)}" ${preview ? '' : 'disabled'}><b>${escapeText(entry.name)}</b><span>${description}</span><small>${preview?.map(escapeText).join(' · ') ?? 'No compatible con las estadísticas actuales'}</small><small>RANGO ${rank + 1}/${entry.ranks.length}</small></button>`;
     }).join('');
     body = `<div class="eyebrow">Nivel ${state.run.pendingLevels[0]} · ${state.run.pendingLevels.length} elecciones pendientes</div><h2>ELEGÍ UNA MEJORA</h2><p>Las mejoras de nivel no cuestan fichas.</p><div class="shop-grid">${cards}</div>${cards ? '' : '<p>No quedan mejoras elegibles.</p><button class="primary" data-action="skip-level">CONTINUAR SIN RECOMPENSA →</button>'}`;
   }
   if (phase === 'shop') {
-    const cards = UPGRADES.map(u => {
-      const level = state.run.upgrades[u.id] || 0;
-      const maxed = level >= u.costs.length;
-      const cost = maxed ? 0 : u.costs[level];
-      const disabled = maxed || state.run.coins < cost;
-      return `<button class="upgrade" data-upgrade="${u.id}" ${disabled ? 'disabled' : ''}><b>${u.icon} ${u.name}</b><span>${u.description}</span><small>${maxed ? `NIVEL ${level}/${u.costs.length} · MÁXIMO` : `NIVEL ${level}/${u.costs.length} · ${cost} FICHAS`}</small></button>`;
+    const cards = (state.run.shopOffers ?? []).map(offer => {
+      const item = state.run.rewardCatalog.items.find(entry => entry.id === offer.id);
+      const count = countOf(state.run.items, item.id);
+      const preview = offer.bought ? [] : rewardPreviewLines(state.run, `item-preview:${item.id}`, item);
+      const disabled = offer.bought || count >= item.maxCopies || state.run.coins < item.price || !preview;
+      const description = describeReward(item, EFFECTS).map(escapeText).join(' · ');
+      return `<button class="upgrade" data-item="${escapeText(item.id)}" ${disabled ? 'disabled' : ''}><b>${escapeText(item.name)}</b><span>${description}</span><small>${preview?.map(escapeText).join(' · ') ?? 'No compatible con las estadísticas actuales'}</small><span>${escapeText(item.lore)}</span><small>${offer.bought ? 'COMPRADO' : `${item.price} FICHAS`} · ${count}/${item.maxCopies}</small></button>`;
     }).join('');
     const full = state.run.player.hp >= state.run.player.maxHp;
     const healDisabled = full || state.run.coins < HEAL_COST;
-    body = `<div class="eyebrow">Oleada ${state.run.wave} completada</div><h2>SEGUÍS VIVO. INCREÍBLE.</h2><p>Gastá el botín. Las mejoras se acumulan y cada nivel cuesta más.<br><b>${state.run.coins} fichas disponibles</b> · +${state.run.rewardBalance.gold?.survival ?? 20} por sobrevivir</p><p class="shop-hint">DESLIZÁ PARA VER TODAS LAS MEJORAS ↓</p><div class="shop-grid">${cards}<button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Te hacés traer ${HEAL_AMOUNT} de vida ahora mismo.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${state.run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
+    body = `<div class="eyebrow">Oleada ${state.run.wave} completada</div><h2>ELEGÍ QUÉ COMPRAR</h2><p>Comprá objetos o guardá las fichas para otra oleada.<br><b>${state.run.coins} fichas disponibles</b> · +${state.run.rewardBalance.gold?.survival ?? 20} por sobrevivir</p><div class="shop-grid">${cards || '<p>No quedan objetos elegibles.</p>'}</div><section aria-label="Servicio de curación"><button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Servicio de curación: recuperás ${HEAL_AMOUNT} de vida.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} FICHAS`}</small></button></section><div class="shop-footer"><button class="primary" data-action="next-wave">${state.run.wave === 3 ? 'ENFRENTAR AL ADMINISTRADOR' : 'SIGUIENTE OLEADA'} →</button></div>`;
   }
   if (phase === 'dead' || phase === 'won') {
     // The run remembers which ficha's chain step lit up on victory; the ficha
