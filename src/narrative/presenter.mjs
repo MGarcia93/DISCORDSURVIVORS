@@ -53,10 +53,9 @@ export function createPresenter(root, catalog, onError) {
         const line = player?.dialogue;
         if (active && !previousFocus) previousFocus = document.activeElement;
         if (line) {
-          // Sides are fixed by the scene's speaker order so characters never
-          // swap places between lines; a late speaker takes the second slot.
-          const speakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))].slice(0, 2);
-          if (line.speaker && !speakers.includes(line.speaker)) speakers[speakers.length - 1] = line.speaker;
+          // The cast keeps the same slots for the whole scene, in scene order,
+          // so no character is replaced when somebody else starts talking.
+          const speakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))].slice(0, 3);
           content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-portraits">${speakers.map(id => `<div class="${id === line.speaker ? 'speaking' : 'listening'}">${portrait(id, id === line.speaker ? line.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[line.speaker].name)}</strong><p>${escape(line.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
         } else if (player?.splash) {
           content.innerHTML = `<div class="narrative-splash">${portrait(player.splash.speaker)}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;

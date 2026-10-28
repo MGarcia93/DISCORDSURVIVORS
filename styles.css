@@ -193,12 +193,11 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-content { position: absolute; inset: 0; }
 .narrative-dialog { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; background: #15132055; }
 .narrative-portraits { display: flex; justify-content: space-around; align-items: flex-end; min-height: 0; overflow: hidden; }
-.narrative-portraits > div { width: 35%; max-width: 270px; }
+.narrative-portraits > div { flex: 1 1 0; min-width: 0; max-width: 270px; }
 .narrative-portrait { display: block; width: 100%; max-height: 310px; object-fit: contain; image-rendering: pixelated; }
-.narrative-portraits .listening { filter: brightness(.45); }
-/* Portraits face the viewer's left by default, so the left-hand one is
-   mirrored to look inward and the pair faces each other. */
-.narrative-portraits > div:first-child:not(:only-child) .narrative-portrait { transform: scaleX(-1); }
+/* Both speakers stay fully visible for the whole conversation; the speaker
+   is identified by the name in the text box, not by hiding the other one. */
+.narrative-portraits .listening { filter: none; }
 .narrative-text { border: 3px solid #bfd890; background: #191725f5; padding: 18px; pointer-events: auto; }
 .narrative-text strong, .narrative-banter strong { color: #d7f779; }
 .narrative-text p { min-height: 3em; font: 16px/1.6 monospace; color: #f4e9dc; overflow-wrap: anywhere; max-height: 28vh; overflow-y: auto; }
@@ -223,7 +222,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .narrative-text p { font-size: 12px; line-height: 1.4; margin: 6px 0; min-height: 0; max-height: 22vh; }
   .narrative-text .actions { gap: 6px; }
   .narrative-text button, .narrative-skip { padding: 8px; font-size: 9px; }
-  .narrative-portraits > div { width: 25%; }
+  .narrative-portraits > div { flex: 1 1 0; }
   .narrative-portrait { max-height: 100px; }
   .narrative-banter { padding: 6px; gap: 6px; font-size: 10px; width: 70%; }
   .narrative-banter img { width: 32px; height: 40px; }
