@@ -374,6 +374,27 @@ export function drawPapazito(ctx, x, y, options = {}) {
   pixel(ctx, -5, 18, 10, 2, '#101019');
   pixel(ctx, -7, 21, 14, 1, '#2b2938');
 
+  // Orange hi-vis vest from his portrait: sleeveless, open at the front so the
+  // black tee still shows, with one reflective strip down each panel.
+  pixel(ctx, -14, 19, 10, 2, '#e8942f');
+  pixel(ctx, 4, 19, 10, 2, '#e8942f');
+  pixel(ctx, -15, 21, 11, 7, '#e8942f');
+  pixel(ctx, -16, 28, 12, 5, '#e8942f');
+  pixel(ctx, 4, 21, 11, 7, '#e8942f');
+  pixel(ctx, 4, 28, 12, 5, '#e8942f');
+  pixel(ctx, -15, 21, 1, 7, '#ffb854');
+  pixel(ctx, 15, 21, 1, 7, '#ffb854');
+  pixel(ctx, -12, 22, 3, 9, '#eef2dc');
+  pixel(ctx, 9, 22, 3, 9, '#eef2dc');
+  pixel(ctx, -12, 22, 3, 1, '#f7fae8');
+  pixel(ctx, 9, 22, 3, 1, '#f7fae8');
+  pixel(ctx, -12, 30, 3, 1, '#b9bda8');
+  pixel(ctx, 9, 30, 3, 1, '#b9bda8');
+  pixel(ctx, -5, 21, 1, 12, '#8a4a1a');
+  pixel(ctx, 4, 21, 1, 12, '#8a4a1a');
+  pixel(ctx, -16, 32, 12, 1, '#b8691c');
+  pixel(ctx, 4, 32, 12, 1, '#b8691c');
+
   // Short sleeves, bare arms; the left hand carries the oversized brick.
   pixel(ctx, -19, 19, 4, 7, OUTLINE);
   pixel(ctx, 15, 19, 4, 7, OUTLINE);

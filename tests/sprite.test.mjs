@@ -18,6 +18,19 @@ test('drawPapazito draws his photo outfit with a brick instead of a goblet in bo
   }
 });
 
+test('Papazito wears the orange hi-vis vest from his portrait over the black tee', () => {
+  for (const facing of [1, -1]) {
+    const rectangles = [];
+    const ctx = { save() {}, restore() {}, scale() {}, getTransform: () => ({ a: 1, d: 1 }),
+      translate() {}, fillRect(...args) { rectangles.push([...args, this.fillStyle]); } };
+    drawPapazito(ctx, 100, 100, { scale: 1, time: 1, moving: false, facing });
+    const has = color => rectangles.some(rect => rect[4] === color);
+    assert.ok(has('#e8942f'), 'the construction vest is the portrait orange');
+    assert.ok(has('#eef2dc'), 'each vest panel carries a reflective strip');
+    assert.ok(has('#1d1c26'), 'the vest is open at the front: the black tee still shows');
+  }
+});
+
 test('Papazito keeps a connected silhouette and visible jeans in idle and walking poses', () => {
   for (const facing of [1, -1]) for (const moving of [false, true]) for (const time of [0, 0.125]) {
     const pixels = new Map();

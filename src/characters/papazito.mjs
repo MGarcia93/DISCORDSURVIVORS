@@ -18,7 +18,7 @@ const papazito = {
   // to the ficha; adding a character never touches screens or app again.
   label: 'Papazito',
   detailLabel: 'Papazito',
-  previewAria: 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y un ladrillo enorme en la mano',
+  previewAria: 'Pixel art de Papazito: chaleco reflectivo naranja sobre remera negra, jean claro con ruedo, zapatillas blancas y un ladrillo enorme en la mano',
   profile: `
       <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
       <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
