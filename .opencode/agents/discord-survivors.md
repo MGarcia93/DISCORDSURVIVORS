@@ -39,6 +39,21 @@ Playable pixel-art browser prototype: title menu, survivor select, three story s
 - Do not push, open pull requests or merge unless the user explicitly asks.
 - Gameplay changes keep existing behaviour covered by a test; run the full suite before reporting done.
 
+## How to use the narrative system
+
+Run it, never describe it:
+
+```sh
+python3 -m http.server 5173 --bind 127.0.0.1   # then open http://localhost:5173
+```
+
+- `/?dev=narrative` opens the isolated viewer: pick a scene, play, restart, skip. Enter/Space advances, Escape skips. Preview state never writes unlocks.
+- Normal gameplay has `bindings: []`. A scene only runs in the game when the author maps it: `{ "when": "after_wave", "wave": 1, "scene": "<id>" }`, where `when` is `after_wave` or `before_wave`.
+- Boundary order is fixed: wave end, optional after scene, shop, optional before scene, next wave. Wave time stays frozen while a scene owns the boundary.
+- Adding a scene: new file in `assets/narrative/scenes/`, register it in `manifest.json`, keep dialogue as data (`speaker`, `expression`, `text`). Use scene-local JS only for a genuinely new action.
+- Adding a portrait: load the `character-portraits` skill, edit the base SVG plus `expressions.json`, then rebuild with `tools/build_portraits.py`; register the expression paths in `characters.json`.
+- Check the change with `node --test tests/*.test.mjs` and `node tests/narrative-browser.mjs` with `GAME_URL` pointing at the running server.
+
 ## Where to look
 
 | Area | Path |
