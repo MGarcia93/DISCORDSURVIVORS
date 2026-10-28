@@ -31,7 +31,7 @@ const papazito = {
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   attack: { type: 'ranged', device: 'brick' },
-  decays: ['panicTtl'],
+  decays: ['panicTtl', 'sellDamageTtl', 'sellMoveSlowTtl', 'sellAtkSlowTtl', 'sellDefLossTtl', 'sellVisionTtl'],
   // Pasiva «La seña» (ficha §4.2). Coins only stream through the kill bounty
   // and the survival bonus, so the tax hooks def.onCoinsGained. Ficha rules:
   // a 25s cooldown, keep a small cut (10% of current coins, capped at 15),
@@ -52,7 +52,18 @@ const papazito = {
   },
   passiveSpeedMult: p => (p.panicTtl > 0 ? 1.3 : 1),
   passiveRateMult: p => (p.panicTtl > 0 ? 0.6 : 1),
-  specials: [],
+  // Especial «Liquido todo, me voy de putas» (ficha §4.3): invented inventory,
+  // engine-routine sale; the app renders the pause menu from this exact table.
+  specials: [{
+    key: 'sell', name: 'Liquidó todo', hotkey: 'q', duration: 0, cooldown: 0,
+    items: {
+      psp: { label: 'PSP', coins: 20, damageFrac: 0.1, damageTtl: 10, moveSlowFrac: 0.15, moveSlowTtl: 10, quote: 'Vendió la PSP' },
+      monitor: { label: 'Monitor', coins: 35, damageFrac: 0.15, damageTtl: 10, visionTtl: 10, quote: 'Vendió el monitor' },
+      keyboard: { label: 'Teclado', coins: 25, damageFrac: 0.15, damageTtl: 10, atkSlowFrac: 0.2, atkSlowTtl: 10, quote: 'Vendió el teclado' },
+      chair: { label: 'Silla gamer', coins: 30, damageFrac: 0.2, damageTtl: 10, defFrac: 0.15, defTtl: 10, quote: 'Vendió la silla gamer', flavor: 'Con lo que tenía de trono improvisado' },
+      pc: { label: 'PC completa', coins: 100, damageFrac: 0.5, damageTtl: 15, moveSlowFrac: 0.3, moveSlowTtl: 15, atkSlowFrac: 0.3, atkSlowTtl: 15, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa' },
+    },
+  }],
 };
 
 export default papazito;

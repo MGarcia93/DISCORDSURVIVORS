@@ -34,3 +34,15 @@ test('app.mjs imports every sprite renderer it references', () => {
   assert.match(app, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
   assert.match(app, /<b>0,6<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
 });
+
+test('Papazito contract: merchant menu pauses the run and the sold monitor vignette lives in the draw loop', () => {
+  const updateHud = app.slice(app.indexOf('function updateHUD()'), app.indexOf('function rounded('));
+  const drawLoop = app.slice(app.indexOf('function draw()'), app.indexOf('function frame('));
+  const frame = app.slice(app.indexOf('function frame('), app.indexOf('document.addEventListener(\'click\''));
+  assert.match(app, /sellMenuOpen \? 'sellMenu'/, 'the overlay has its own merchant phase');
+  assert.match(app, /data-sale=/, 'the merchant cards are real buttons');
+  assert.match(frame, /!paused && !sellMenuOpen/, 'the run steps stop while the merchant menu is open');
+  assert.match(updateHud, /sellMenuOpen/, 'ability buttons disable while the merchant menu is open');
+  assert.match(drawLoop, /sellVisionTtl/, 'the sold monitor vignette renders inside the draw loop');
+  assert.match(app, /'PAPAZITO'/, 'the selection stage can name Papazito');
+});

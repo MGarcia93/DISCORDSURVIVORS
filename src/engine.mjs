@@ -78,6 +78,46 @@ export function chooseUpgrade(run, id) {
   return true;
 }
 
+// Cap lines for the stacked sale economy (ficha §4.3: the balance asks for
+// sensibleness; the engine holds the generically safe maximums).
+const SELL_DAMAGE_BUFF_CAP = 0.5;  // +50% daño total por liquidación
+const SELL_MOVE_SLOW_CAP = 0.5;   // hasta -50% de velocidad por ventas apiladas
+const SELL_ATK_SLOW_CAP = 0.6;    // hasta -60% de cadencia
+const SELL_DEF_LOSS_CAP = 0.4;    // hasta -40% de defensa base
+
+// «Liquido todo, me voy de putas»: the character-agnostic sale routine. The
+// owned belongings and every number live in the sheet (special.items); this
+// engine routine applies a sale's shape: coins now, a temp damage buff and
+// the item's temp debuff, each sold exactly once per run.
+export function sellBelonging(run, key) {
+  if (run.phase !== 'playing') return false;
+  const p = run.player;
+  const item = p.characterDef.specials?.find(s => s.key === 'sell')?.items?.[key];
+  if (!item || p.soldItems?.[key]) return false;
+  p.soldItems = p.soldItems ?? {};
+  p.soldItems[key] = true;
+  run.coins += item.coins;
+  if (item.damageFrac) {
+    p.sellDamageFrac = Math.min(SELL_DAMAGE_BUFF_CAP, (p.sellDamageFrac ?? 0) + item.damageFrac);
+    p.sellDamageTtl = Math.max(p.sellDamageTtl ?? 0, item.damageTtl);
+  }
+  if (item.moveSlowFrac) {
+    p.sellMoveSlowFrac = Math.min(SELL_MOVE_SLOW_CAP, (p.sellMoveSlowFrac ?? 0) + item.moveSlowFrac);
+    p.sellMoveSlowTtl = Math.max(p.sellMoveSlowTtl ?? 0, item.moveSlowTtl);
+  }
+  if (item.atkSlowFrac) {
+    p.sellAtkSlowFrac = Math.min(SELL_ATK_SLOW_CAP, (p.sellAtkSlowFrac ?? 0) + item.atkSlowFrac);
+    p.sellAtkSlowTtl = Math.max(p.sellAtkSlowTtl ?? 0, item.atkSlowTtl);
+  }
+  if (item.defFrac) {
+    p.sellDefLossFrac = Math.min(SELL_DEF_LOSS_CAP, (p.sellDefLossFrac ?? 0) + item.defFrac);
+    p.sellDefLossTtl = Math.max(p.sellDefLossTtl ?? 0, item.defTtl);
+  }
+  if (item.visionTtl) p.sellVisionTtl = Math.max(p.sellVisionTtl ?? 0, item.visionTtl);
+  run.effects.push({ x: p.x, y: p.y - 66 * WORLD_SCALE, text: item.quote, ttl: 1.5, kind: 'sale' });
+  return true;
+}
+
 export function buyHeal(run) {
   if (run.phase !== 'shop' || run.coins < HEAL_COST || run.player.hp >= run.player.maxHp) return false;
   run.coins -= HEAL_COST;
@@ -228,7 +268,8 @@ export function step(run, seconds, input = {}) {
   if (magnitude) {
     p.lastMoveX = mx / magnitude;
     p.lastMoveY = my / magnitude;
-    const speed = p.speed * speedFactor * (def.passiveSpeedMult?.(p) ?? 1);
+    const speed = p.speed * speedFactor * (def.passiveSpeedMult?.(p) ?? 1)
+      * (p.sellMoveSlowTtl > 0 ? 1 - (p.sellMoveSlowFrac ?? 0) : 1);
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
     p.still = 0;
@@ -248,10 +289,13 @@ export function step(run, seconds, input = {}) {
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
     if (def.attack.type === 'melee') attackMelee(run);
-    else fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1), def.attack.device, p.attackRange, def.attack);
+    else fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
+      * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1),
+      def.attack.device, p.attackRange, def.attack);
     const combat = def.combat || {};
     run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1)
-      * (def.passiveRateMult?.(p) ?? 1);
+      * (def.passiveRateMult?.(p) ?? 1)
+      * (p.sellAtkSlowTtl > 0 ? 1 + (p.sellAtkSlowFrac ?? 0) : 1);
   }
   for (const special of def.specials) {
     if (p[special.key] > 0) special.onTick?.(run, p, dt, ctx);
@@ -289,7 +333,9 @@ export function step(run, seconds, input = {}) {
       }
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
       const contactDamage = enemyContactDamage(enemy.kind);
-      p.hp = Math.max(0, p.hp - contactDamage * (1 - Math.min(0.75, p.defense + defenseBonus)) * contactFactor);
+      p.hp = Math.max(0, p.hp - contactDamage
+        * (1 - Math.min(0.75, p.defense * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
+        * contactFactor);
       p.immune = 0.65;
       if ((enemy.confusionStacks ?? 0) >= 2) enemy.attackCd = 0.8; // slowed mind, slower swings
     }

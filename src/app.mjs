@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, startNextWave, activateSpecial } from './engine.mjs';
+import { WIDTH, HEIGHT, WORLD_SCALE, UPGRADES, HEAL_COST, HEAL_AMOUNT, createRun, step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
 import { drawElNegro, drawSolago, drawPatrona, drawChair, drawZombie, drawAdministrator, drawAnime, drawGamerProjectile, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura } from './sprites.mjs';
 import { drawRoom, drawTitle, drawArena, drawStory, pixelText } from './scenes.mjs';
 import { isCharacterUnlocked, isDebugUnlockAll, unlockAllForTesting } from './progression.mjs';
@@ -10,6 +10,7 @@ let screen = 'home';
 let storyPage = 0;
 let run = null;
 let paused = false;
+let sellMenuOpen = false;
 let lastFrame = 0;
 let lastPhase = '';
 let hudElapsed = 0;
@@ -29,6 +30,16 @@ on('waveCleared', ({ run: clearedRun }) => {
   clearedRun.unlockedSolago = solagoUnlocked;
   clearedRun.unlockedWarrior = warriorUnlocked;
   clearedRun.unlockedPapazito = papazitoUnlocked;
+});
+
+// A sale-menu special (ficha-defined items) pauses the run for its merchant UI.
+on('specialActivated', ({ run: activatedRun, special }) => {
+  if (activatedRun !== run || special !== 'sell' || activatedRun.phase !== 'playing') return;
+  const p = activatedRun.player;
+  const stock = p.characterDef.specials.find(spec => spec.key === 'sell')?.items ?? {};
+  if (!Object.keys(stock).some(item => !p.soldItems?.[item])) return;
+  sellMenuOpen = true;
+  lastPhase = '';
 });
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
@@ -51,6 +62,7 @@ function show(name) {
   keys.clear();
   if (name !== 'game') run = null;
   paused = false;
+  sellMenuOpen = false;
   document.body.classList.toggle('in-game', name === 'game');
   if (name === 'home') home();
   if (name === 'characters') characters();
@@ -194,12 +206,35 @@ function game() {
 function overlay() {
   const box = document.querySelector('#game-overlay');
   if (!box || !run) return;
-  const phase = paused ? 'paused' : run.phase;
+  const phase = sellMenuOpen ? 'sellMenu' : paused ? 'paused' : run.phase;
   if (lastPhase === phase) return;
   lastPhase = phase;
   if (phase === 'playing') { box.innerHTML = ''; return; }
   let body = '';
   if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
+  if (phase === 'sellMenu') {
+    // Data-driven merchant: every special that carries an items table owns a
+    // pause-sale menu; nothing here knows a character id.
+    const stockEntry = run.player.characterDef.specials.find(special => special.items);
+    const stock = stockEntry?.items ?? {};
+    const saleCopy = item => {
+      const boost = [`+${item.coins} fichas`];
+      if (item.damageFrac) boost.push(`+${Math.round(item.damageFrac * 100)}% daño ${item.damageTtl}s`);
+      const penalty = [];
+      if (item.moveSlowFrac) penalty.push(`−${Math.round(item.moveSlowFrac * 100)}% velocidad ${item.moveSlowTtl}s`);
+      if (item.atkSlowFrac) penalty.push(`−${Math.round(item.atkSlowFrac * 100)}% cadencia ${item.atkSlowTtl}s`);
+      if (item.defFrac) penalty.push(`−${Math.round(item.defFrac * 100)}% defensa ${item.defTtl}s`);
+      if (item.visionTtl) penalty.push(`visión borrosa ${item.visionTtl}s`);
+      return { boost: boost.join(' · '), penalty: penalty.join(' · ') };
+    };
+    const cards = Object.entries(stock).map(([key, item]) => {
+      const sold = run.player.soldItems?.[key];
+      const { boost, penalty } = saleCopy(item);
+      return `<button class="upgrade" data-sale="${key}" ${sold ? 'disabled' : ''}><b>📦 ${item.label}</b><span>${boost}</span><small>${sold ? 'YA LO MALVENDIÓ' : penalty}</small></button>`;
+    }).join('');
+    const itemsLeft = Object.keys(stock).some(key => !run.player.soldItems?.[key]);
+    body = `<div class="eyebrow">Fondo para la cariñosa</div><h2>¿QUÉ SE VENDE HOY?</h2><p>Cada venta paga fichas y daño temporal, con su debuff correspondiente. Todo se vende una vez por partida.</p><p class="shop-hint"><b>${run.coins} fichas disponibles</b></p><div class="shop-grid">${cards}</div><div class="shop-footer"><button class="primary" data-action="sell-menu-close">${itemsLeft ? 'VOLVER A TIRAR LADRILLOS' : 'YA NO QUEDA NADA'} →</button></div>`;
+  }
   if (phase === 'shop') {
     const cards = UPGRADES.map(u => {
       const level = run.upgrades[u.id] || 0;
@@ -235,7 +270,7 @@ function updateHUD() {
   for (const special of p.characterDef.specials) {
     const button = document.querySelector(`[data-special="${special.key}"]`);
     const cooldown = p[`${special.key}Cooldown`];
-    button.disabled = cooldown > 0 || paused || run.phase !== 'playing';
+    button.disabled = cooldown > 0 || paused || sellMenuOpen || run.phase !== 'playing';
     button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : special.name;
   }
 }
@@ -368,6 +403,32 @@ function draw() {
       pixelText(ctx, 'REGEN', regen.textX, regen.textY, 2, '#bfd890');
     }
   }
+  if (p.sellVisionTtl > 0) {
+    // The sold monitor: a forgiving pixel vignette hugging the arena edges.
+    // It darkens scenery only; HUD and ability bars are DOM, never covered.
+    ctx.save();
+    const blur = Math.min(1, p.sellVisionTtl);
+    const edge = 96 * WORLD_SCALE;
+    const bands = [
+      [0, 0, WIDTH, edge], [0, HEIGHT - edge, WIDTH, edge],
+      [0, 0, edge * 0.6, HEIGHT], [WIDTH - edge * 0.6, 0, edge * 0.6, HEIGHT],
+    ];
+    for (const [x, y, w, h] of bands) {
+      ctx.globalAlpha = 0.34 * blur;
+      ctx.fillStyle = '#0b0912';
+      ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+    }
+    for (let i = 1; i <= 3; i++) {
+      const inset = edge * (0.25 + i * 0.22);
+      ctx.globalAlpha = 0.13 * blur;
+      ctx.fillStyle = '#0b0912';
+      ctx.fillRect(inset, inset, WIDTH - inset * 2, 26);
+      ctx.fillRect(inset, HEIGHT - inset - 26, WIDTH - inset * 2, 26);
+      ctx.fillRect(inset, inset, 26, HEIGHT - inset * 2);
+      ctx.fillRect(WIDTH - inset - 26, inset, 26, HEIGHT - inset * 2);
+    }
+    ctx.restore();
+  }
   for (const shot of run.projectiles) {
     ctx.save(); ctx.translate(Math.round(shot.x), Math.round(shot.y)); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
     if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone' || shot.device === 'shroom' || shot.device === 'brick') {
@@ -405,7 +466,7 @@ function frame(timestamp) {
       y: (keys.has('s') || keys.has('arrowdown') ? 1 : 0) - (keys.has('w') || keys.has('arrowup') ? 1 : 0),
     };
     if (input.x) facing = input.x > 0 ? 1 : -1;
-    if (!paused) step(run, dt, input);
+    if (!paused && !sellMenuOpen) step(run, dt, input);
     draw();
     hudElapsed += dt;
     if (hudElapsed > 0.08 || run.phase !== lastPhase) { updateHUD(); hudElapsed = 0; }
@@ -435,7 +496,15 @@ document.addEventListener('click', event => {
   if (action === 'play') show('game');
   if (action === 'pause' && run?.phase === 'playing') { paused = !paused; keys.clear(); }
   if (action === 'resume') { paused = false; keys.clear(); }
+  if (action === 'sell-menu-close') { sellMenuOpen = false; lastPhase = ''; keys.clear(); overlay(); updateHUD(); }
   if (action === 'next-wave') { startNextWave(run); keys.clear(); }
+  if (button.dataset.sale && run) {
+    sellBelonging(run, button.dataset.sale);
+    const stock = run.player.characterDef.specials.find(s => s.key === 'sell')?.items ?? {};
+    if (!Object.keys(stock).some(key => !run.player.soldItems?.[key])) sellMenuOpen = false;
+    lastPhase = '';
+    overlay(); updateHUD();
+  }
   if (button.dataset.special && run && !paused) activateSpecial(run, button.dataset.special);
   if (button.dataset.upgrade && run) { chooseUpgrade(run, button.dataset.upgrade); lastPhase = ''; overlay(); updateHUD(); }
   if (button.dataset.heal && run) { buyHeal(run); lastPhase = ''; overlay(); updateHUD(); }
@@ -477,13 +546,16 @@ document.addEventListener('keydown', event => {
     return;
   }
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
-  if (key === 'escape' && !event.repeat && run.phase === 'playing') { paused = !paused; keys.clear(); }
-  if (!paused && !event.repeat && run.phase === 'playing') {
+  if (key === 'escape' && !event.repeat && run.phase === 'playing') {
+    if (sellMenuOpen) { sellMenuOpen = false; lastPhase = ''; keys.clear(); overlay(); updateHUD(); }
+    else { paused = !paused; keys.clear(); }
+  }
+  if (!paused && !sellMenuOpen && !event.repeat && run.phase === 'playing') {
     for (const special of run.player.characterDef.specials) {
       if (special.hotkey === key) activateSpecial(run, special.key);
     }
   }
-  if (!paused) keys.add(key);
+  if (!paused && !sellMenuOpen) keys.add(key);
 });
 document.addEventListener('keyup', event => keys.delete(event.key.toLowerCase()));
 const directions = { up: 'w', left: 'a', down: 's', right: 'd' };
