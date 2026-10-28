@@ -34,7 +34,7 @@ The generated files repeat the complete SVG **as build output**, so the game can
 
 ## Use in dialogue
 
-The existing narrative catalog maps `maxi-negro` to the playable `negro` sprite and the five portrait expressions. A conversation still needs only data:
+The existing narrative catalog maps `maxi-negro` to the playable `negro` sprite and the eight portrait expressions. A conversation still needs only data:
 
 ```json
 { "speaker": "maxi-negro", "expression": "annoyed", "text": "Example dialogue." }
