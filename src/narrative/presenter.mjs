@@ -33,8 +33,6 @@ export function createPresenter(root, catalog, onError) {
           const [x, y] = player.scene.stage.points[prop.at];
           ctx.fillStyle = prop.state === 'open' ? '#bfd890' : '#786b95';
           ctx.fillRect(x - 25, y - 65, 50, 60);
-          ctx.font = '14px monospace'; ctx.textAlign = 'center'; ctx.fillStyle = '#fff';
-          ctx.fillText(`${id}: ${prop.state}`, x, y - 76);
         }
         for (const actor of Object.values(player.actors).sort((a, b) => a.y - b.y)) {
           const def = CHARACTERS[catalog.characters[actor.character].sprite];
