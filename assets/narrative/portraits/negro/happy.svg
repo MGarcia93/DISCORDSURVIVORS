@@ -89,11 +89,8 @@
       <path fill="#e5ad86" d="M84 89h10v1H84z" />
     </g>
     <path fill="#49404a" d="M85 95h12v3h-3v3h-6v-3h-3z" />
-    <path fill="#79594e" d="M70 91h2v2h-2zM75 95h2v2h-2zM79 97h2v2h-2zM102 95h2v2h-2zM107 90h1v3h-1z" />
-    <path fill="#d7a07b" d="M75 92h2v2h-2zM81 96h2v2h-2zM102 92h2v2h-2z" />
     <path fill="#8c8588" d="M91 74h2v3h5v-3h2v4h-2v2h-5v-2h-2z" />
-    <path fill="#dad8dc" d="M92 75h1v2h-1zM94 78h4v1h-4zM99 74h1v3h-1zM102 89h2v3h-2z" />
-    <path fill="#77686a" d="M104 90h1v2h-1z" />
+    <path fill="#dad8dc" d="M92 75h1v2h-1zM94 78h4v1h-4zM99 74h1v3h-1zM103 89h2v3h-2z" />
   </g>
   <g id="glasses">
     <path fill="#24202b" d="M53 55h7v4h-7zM85 57h10v4H85zM122 55h5v4h-5z" />
