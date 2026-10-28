@@ -39,7 +39,16 @@
   "warrior": {
     "name": "Warrior",
     "sprite": "warrior",
-    "expressions": { "neutral": "portraits/guest-neutral.svg" }
+    "expressions": {
+      "neutral": "portraits/warrior/neutral.svg",
+      "happy": "portraits/warrior/happy.svg",
+      "annoyed": "portraits/warrior/annoyed.svg",
+      "angry": "portraits/warrior/angry.svg",
+      "surprised": "portraits/warrior/surprised.svg",
+      "scared": "portraits/warrior/scared.svg",
+      "tired": "portraits/warrior/tired.svg",
+      "disgusted": "portraits/warrior/disgusted.svg"
+    }
   },
   "papasito": {
     "name": "Papasito",
