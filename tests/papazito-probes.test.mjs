@@ -31,21 +31,21 @@ test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
   const p = createRun(Math.random, 'papazito').player;
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.55);
-  assert.equal(p.damage, 11.5);
-  assert.equal(p.attackRange, 150 * WS);
+  assert.equal(p.damage, 30);
+  assert.equal(p.attackRange, 280 * WS);
   assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-12);
   assert.equal(p.speed, 148.5 * WS);
 });
 
-test('S3 probe: La seña taxes the bounty once per cooldown and never re-arms panic', () => {
-  const run = createRun(Math.random, 'papazito');
-  assert.deepEqual(killZombie(run, 100), { from: 100, to: 92 });
+test('S3 probe: La seña leaves early bounties alone until the timed charge', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  assert.deepEqual(killZombie(run, 100), { from: 100, to: 102 });
   const p = run.player;
-  assert.ok(p.panicTtl > 4.8 && p.panicTtl <= 5);
-  assert.ok(p.senaCooldown > 24.8 && p.senaCooldown <= 25);
+  assert.equal(p.panicTtl, 0);
+  assert.ok(p.senaCooldown > 9 && p.senaCooldown < 10);
   killZombie(run);
-  assert.equal(run.coins, 94, 'second award inside the cooldown keeps every coin');
-  assert.ok(p.panicTtl < 5, 'panic is not re-armed by a taxed-out award');
+  assert.equal(run.coins, 104, 'second award inside the cooldown keeps every coin');
+  assert.equal(p.panicTtl, 0, 'earning coins does not activate panic');
 });
 
 test('S4 probe: the sale table, the once-per-run stock and the +50% damage ceiling', () => {
@@ -69,17 +69,18 @@ test('S4 probe: the sale table, the once-per-run stock and the +50% damage ceili
   for (const key of Object.keys(table)) assert.ok(sellBelonging(next, key), 'inventory resets per run');
 });
 
-test('S5 probe: ANAMENCUÁ numbers and rain volume', () => {
+test('S5 probe: ANAMENCUÁ cooldown and three-ring activation', () => {
   const run = createRun(Math.random, 'papazito');
   assert.equal(activateSpecial(run, 'anamencua'), true);
-  assert.equal(run.player.anamencua, 5);
+  assert.equal(run.player.anamencua, 1.2);
   assert.equal(run.player.anamencuaCooldown, 40);
-  const enemy = { id: ++run.serial, kind: 'zombie', x: 300, y: 300, hp: 500, maxHp: 500,
+  run.spawnIn = run.shotIn = 100;
+  const enemy = { id: ++run.serial, kind: 'zombie', x: run.player.x + 100 * WS, y: run.player.y, hp: 500, maxHp: 500,
     defense: 0, radius: 10 * WS, speed: 0 };
   run.enemies.push(enemy);
   let t = 0;
   while (t < 1.25) { step(run, 0.01); t += 0.01; }
-  assert.ok(enemy.hp <= 500 - 23, 'the rain must land at least two bricks in 1.25s');
+  assert.ok(enemy.hp <= 500 - 23, 'both rings must land a brick in 1.25s');
 });
 
 test('S6 probe: warrior victory unlocks papazito without disturbing the old chain', () => {

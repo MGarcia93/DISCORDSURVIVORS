@@ -4,9 +4,9 @@ import { drawPapazito } from '../sprites.mjs';
 
 // Papazito — El Paraguayo Trucho. Stat sheet: percentual values over
 // BASE_STATS (src/stats.mjs) per context/personajes/papazito_el_paraguayo_trucho.md §3
-// and the playtesting balance so far: life 110, ranged damage 11.5 (+15%),
-// attack speed 90 (0.9 bricks/s, interval ~1.11s), attackDistance 150 (165px,
-// charged proposal: the sheet has no reach value), defense 110 (11 points,
+// and the playtesting balance so far: life 110, ranged damage 30 (like El Negro),
+// attack speed 90 (0.9 bricks/s, interval ~1.11s), attackDistance 280 (308px,
+// slightly longer than El Negro's 286px), defense 110 (11 points,
 // 55% mitigation), moveSpeed 2970 (148.5 scaled px/s, -10%).
 const papazito = {
   id: 'papazito',
@@ -16,16 +16,16 @@ const papazito = {
   // to the ficha; adding a character never touches screens or app again.
   label: 'Papazito',
   detailLabel: 'Papazito',
-  previewAria: 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y la copa en la mano',
+  previewAria: 'Pixel art de Papazito: remera negra, jean claro con ruedo, zapatillas blancas y un ladrillo enorme en la mano',
   profile: `
       <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
       <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
       <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
-      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+15%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
+      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+200%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>La cariñosa le cobra la extorsión y le recorta monedas: 5 segundos de pánico con +30% de velocidad y +40% de ataque.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 8–12 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente al menos 4 fichas y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
-      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Ataque de furia: lluvia de ladrillos en todas las direcciones durante 5 segundos. Recarga: 40 segundos.</p></div></div>`,
+      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 40 segundos.</p></div></div>`,
   // Locked text never renders: an unlocked Warrior's note always precedes it.
   unlockNote: {
     locked: '',
@@ -45,9 +45,9 @@ const papazito = {
     ...resolveEntityStats({
       life: 110,             // +10% vida
       defense: 110,          // 11 points -> 55% mitigation
-      attack: 115,           // 11.5 damage per brick (+15% daño a distancia)
+      attack: 300,           // 30 damage per brick, matching El Negro
       attackSpeed: 90,       // 0.9 bricks/s: the slow heavy cadence of §4.1
-      attackDistance: 150,   // 165px reach proposal: ladrillos a media cancha
+      attackDistance: 280,   // 308px reach, slightly longer than El Negro
       moveSpeed: 2970,       // -10% mobility
     }),
   },
@@ -55,23 +55,68 @@ const papazito = {
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   attack: { type: 'ranged', device: 'brick' },
   decays: ['panicTtl', 'sellDamageTtl', 'sellMoveSlowTtl', 'sellAtkSlowTtl', 'sellDefLossTtl', 'sellVisionTtl'],
-  // Pasiva «La seña» (ficha §4.2). Coins only stream through the kill bounty
-  // and the survival bonus, so the tax hooks def.onCoinsGained. Ficha rules:
-  // a 25s cooldown, keep a small cut (10% of current coins, capped at 15),
-  // only when there is something to lose; the 5s panic adds +30% movement and
-  // +40% attack speed, NEVER direct damage.
-  passives: [{ key: 'sena', kind: 'sena' }],
-  senaCooldownSeconds: 25,
-  onCoinsGained(run, p, _amount) {
-    const cut = Math.min(15, Math.round(run.coins * 0.1));
-    const cooldown = p.senaCooldown ?? 0;
-    if (cooldown > 0 || cut < 1) return;
-    run.coins -= cut;
-    p.senaCooldown = this.senaCooldownSeconds;
-    p.panicTtl = 5; // ¡ME RE CAGARON!
-    run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE, text: '📱 ¡ME ESCRIBIÓ!', ttl: 1.4, kind: 'panic' });
-    run.effects.push({ x: p.x, y: p.y - 78 * WORLD_SCALE, text: '¡ME RE CAGARON!', ttl: 1.6, kind: 'panic' });
-    run.effects.push({ x: p.x, y: p.y - 96 * WORLD_SCALE, text: '¡LA CONCHA DE TU MADRE, ME ESTAFARON!', ttl: 1.8, kind: 'panic' });
+  // Schedule each bill once so the HUD reveals its exact cost and deadline.
+  passives: [{
+    key: 'sena', kind: 'sena',
+    tick(run, p) {
+      if (p.senaCooldown > 1e-9) return;
+      const cost = p.senaNextCost;
+      const paid = Math.min(run.coins, cost);
+      run.coins -= paid;
+      p.senaDebt += cost - paid;
+      p.senaLastCost = cost;
+      p.senaLastPaid = paid;
+      p.senaCharges++;
+      p.panicTtl = 5;
+      run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE,
+        text: `LA SEÑA: −${paid} ◈${cost > paid ? ` · DEUDA +${cost - paid} ◈` : ''}`, ttl: 2, kind: 'panic' });
+      p.characterDef.scheduleSena(run, p);
+    },
+  }],
+  scheduleSena(run, p) {
+    const randomCost = 8 + Math.floor(run.random() * 5) + p.senaCharges * 4;
+    const randomInterval = 8 + Math.floor(run.random() * 5) - p.senaCharges;
+    p.senaNextCost = p.senaCharges > 0 ? Math.max(p.senaLastCost + 4, randomCost) : randomCost;
+    p.senaInterval = Math.max(4, p.senaCharges > 0 ? Math.min(p.senaInterval - 1, randomInterval) : randomInterval);
+    p.senaCooldown = p.senaInterval;
+  },
+  onStageStart(run, p) {
+    p.senaCharges = p.senaDebt = p.senaLastCost = p.senaLastPaid = p.panicTtl = 0;
+    this.scheduleSena(run, p);
+  },
+  onSaleIncome(run, p, amount) {
+    const paid = Math.min(amount, p.senaDebt);
+    run.coins -= paid;
+    p.senaDebt -= paid;
+    if (paid > 0) run.effects.push({ x: p.x, y: p.y - 84 * WORLD_SCALE,
+      text: `VENTA: −${paid} ◈ DE DEUDA`, ttl: 2, kind: 'sale' });
+  },
+  saleHud(run, item) {
+    const paid = Math.min(item.coins, run.player.senaDebt);
+    return `${paid} fichas a deuda · ${item.coins - paid} fichas disponibles`;
+  },
+  taskHudTitle: 'LA SEÑA',
+  taskHud(p) {
+    const cooldown = Math.max(0, p.senaCooldown ?? 0);
+    const active = p.panicTtl > 0;
+    return {
+      percentage: Math.max(0, Math.min(100, (1 - cooldown / p.senaInterval) * 100)),
+      label: `${p.senaNextCost} ◈ · ${Math.ceil(cooldown)}s`,
+      active,
+    };
+  },
+  statusHud(p) {
+    const lines = [`DEUDA: ${p.senaDebt} ◈`];
+    if (p.senaLastCost > 0) lines.push(`ÚLTIMO COBRO: ${p.senaLastCost} ◈ · PAGÓ ${p.senaLastPaid} ◈`);
+    if (p.panicTtl > 0) lines.push(`PÁNICO · ${Math.ceil(p.panicTtl)}s · +30% MOVIMIENTO · −40% INTERVALO`);
+    const penalties = [
+      ['sellMoveSlowTtl', `−${Math.round((p.sellMoveSlowFrac ?? 0) * 100)}% VELOCIDAD`],
+      ['sellAtkSlowTtl', `+${Math.round((p.sellAtkSlowFrac ?? 0) * 100)}% INTERVALO DE TIRO`],
+      ['sellDefLossTtl', `−${Math.round((p.sellDefLossFrac ?? 0) * 100)}% DEFENSA`],
+      ['sellVisionTtl', 'VISIÓN REDUCIDA'],
+    ];
+    for (const [key, label] of penalties) if (p[key] > 0) lines.push(`${label} · ${Math.ceil(p[key])}s`);
+    return lines.join('\n');
   },
   passiveSpeedMult: p => (p.panicTtl > 0 ? 1.3 : 1),
   passiveRateMult: p => (p.panicTtl > 0 ? 0.6 : 1),
@@ -93,23 +138,24 @@ const papazito = {
       pc: { label: 'PC completa', coins: 100, damageFrac: 0.5, damageTtl: 15, moveSlowFrac: 0.3, moveSlowTtl: 15, atkSlowFrac: 0.3, atkSlowTtl: 15, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa' },
     },
   }, {
-    // Definitiva «¡ANAMENCUÁ!» (ficha §4.4): a fury brick rain from every
-    // direction. Spawn sources ride a rotating circle around him; each brick
-    // homes on its nearest target. Numbers are ficha-adjustable for balance.
-    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 5, cooldown: 40,
-    spawnRadius: 70 * WORLD_SCALE, tickIn: 0.25, damageMult: 1,
+    // Three dense expanding rings, not a continuous homing rain.
+    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 1.2, cooldown: 40,
+    burstCount: 3, bricksPerBurst: 48, burstInterval: 0.45,
+    spawnRadius: 18 * WORLD_SCALE, speed: 280 * WORLD_SCALE, damageMult: 1,
     onStart(run, p) {
+      run.anamencuaBursts = 0;
+      run.anamencuaIn = 0;
       run.effects.push({ x: p.x, y: p.y - 84 * WORLD_SCALE, text: '¡ANAMENCUÁ!', ttl: 1.3, kind: 'panic' });
     },
     onTick(run, p, dt, ctx) {
-      const door = run.anamencuaIn - dt;
-      run.anamencuaIn = 0;
-      if (door > 0) { run.anamencuaIn = door; return; }
-      run.anamencuaIn = this.tickIn;
-      const angle = (run.elapsed * 2.6 + run.projectiles.length * 1.7) % (Math.PI * 2);
+      if (run.anamencuaBursts >= this.burstCount) return;
+      run.anamencuaIn -= dt;
+      if (run.anamencuaIn > 0) return;
       const saleBonus = p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1;
-      ctx.fire(run, { x: p.x + Math.cos(angle) * this.spawnRadius, y: p.y + Math.sin(angle) * this.spawnRadius },
-        p.damage * this.damageMult * saleBonus, 'brick');
+      ctx.fireRadial(run, p, p.damage * this.damageMult * saleBonus,
+        { count: this.bricksPerBurst, speed: this.speed, radius: this.spawnRadius });
+      run.anamencuaBursts++;
+      run.anamencuaIn += this.burstInterval;
     },
   }],
 };

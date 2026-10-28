@@ -328,60 +328,69 @@ export function drawPatrona(ctx, x, y, options = {}) {
 }
 
 // Papazito: the photo build — heavyset frame, plain black tee, light blue
-// jeans with rolled cuffs, white low sneakers, and the goblet he never drops.
+// jeans with rolled cuffs, white low sneakers, and an oversized comedy brick.
 export function drawPapazito(ctx, x, y, options = {}) {
   const { time = 0, moving = false, facing = 1, scale = 2 } = options;
   const step = moving ? Math.floor(time * 8) % 2 : 0;
   pose(ctx, x, y, scale, facing);
-  pixel(ctx, -20, -1, 40, 3, '#11141c');          // ground shadow: the widest base in the roster
+  pixel(ctx, -18, -1, 36, 3, '#11141c');
   ctx.translate(-20, -44 + step);
-  // Thick legs in light jeans; cuffs rolled right above clean white sneakers.
-  pixel(ctx, 1, 29, 9, 9, '#8faecc');             // left leg
-  pixel(ctx, 10, 29, 9, 9, '#7d9ab8');            // right leg, slight shade
-  pixel(ctx, -1, 37, 12, 2, '#6f8fb3');           // rolled cuff, left
-  pixel(ctx, 9, 37, 12, 2, '#6f8fb3');            // rolled cuff, right
-  pixel(ctx, -2, 39 - step, 14, 3, '#efe9dc');    // white low sneaker, left
-  pixel(ctx, 9, 39 + step, 14, 3, '#efe9dc');     // white low sneaker, right
-  pixel(ctx, -2, 41 - step, 14, 1, '#cfc9bb');    // worn sole, left
-  pixel(ctx, 9, 41 + step, 14, 1, '#cfc9bb');     // worn sole, right
-  // The heavy black t-shirt: wide shoulders, stepped belly, hem below the gut.
-  pixel(ctx, 2, 19, 32, 3, '#15141d');
-  pixel(ctx, -2, 22, 40, 9, '#15141d');
-  pixel(ctx, -1, 31, 38, 7, '#15141d');
-  pixel(ctx, 2, 37, 32, 3, '#15141d');
-  pixel(ctx, 4, 22, 32, 9, '#1d1c26');            // plain black tee
-  pixel(ctx, 1, 31, 33, 7, '#1d1c26');
-  pixel(ctx, 9, 24, 20, 5, '#29283a');            // gut highlight
-  pixel(ctx, 12, 30, 14, 6, '#29283a');
-  pixel(ctx, 5, 37, 27, 2, '#29283a');
-  // Short sleeves; bare, plump forearms on both sides.
-  pixel(ctx, -2, 22, 5, 14, '#15141d');
-  pixel(ctx, 33, 22, 5, 14, '#15141d');
-  pixel(ctx, -1, 23, 4, 11, '#c88b67');
-  pixel(ctx, 34, 23, 2, 10, '#c88b67');
-  // The raised goblet toast in his right hand: bowl, wine, stem, base.
-  pixel(ctx, -1, 20, 4, 4, '#c88b67');            // hand around the stem
-  pixel(ctx, -4, 12, 10, 5, '#dad8dc');           // goblet bowl
-  pixel(ctx, -3, 13, 8, 2, '#7c3b55');            // the wine bought with the seña
-  pixel(ctx, -2, 17, 3, 4, '#b9b7bd');            // stem
-  pixel(ctx, -5, 21, 8, 1, '#dad8dc');            // base
-  // Round heavy face under short dark hair.
-  pixel(ctx, 7, -6, 22, 20, '#15141d');
-  pixel(ctx, 9, -8, 18, 3, '#221f29');            // hair top
-  pixel(ctx, 7, -6, 4, 7, '#221f29');
-  pixel(ctx, 25, -6, 4, 7, '#221f29');
-  pixel(ctx, 9, -5, 18, 11, '#221f29');           // hair fill
-  pixel(ctx, 8, -4, 20, 15, '#c88b67');           // face
-  pixel(ctx, 10, -6, 16, 3, '#e3aa7e');
-  pixel(ctx, 10, 0, 17, 8, '#e3aa7e');
-  pixel(ctx, 9, -4, 7, 1, '#995e4f');             // brows
-  pixel(ctx, 20, -4, 7, 1, '#995e4f');
-  pixel(ctx, 12, 0, 4, 3, '#15141d');             // eyes
-  pixel(ctx, 21, 0, 4, 3, '#15141d');
-  pixel(ctx, 14, 8, 9, 2, '#995e4f');             // neutral mouth
-  pixel(ctx, 16, 9, 5, 1, '#a76d57');
-  pixel(ctx, 12, 17, 14, 4, '#c88b67');           // double chin
-  pixel(ctx, 14, 20, 10, 2, '#995e4f');
+  // Full-length jeans under the hem, with a clear gap between the legs.
+  pixel(ctx, 7, 29, 26, 5, '#6f8fb3');
+  pixel(ctx, 7, 32, 12, 10, '#8faecc');
+  pixel(ctx, 22, 32, 11, 10, '#7d9ab8');
+  pixel(ctx, 9, 33, 4, 7, '#b6cddd');
+  pixel(ctx, 24, 33, 4, 7, '#8faecc');
+  pixel(ctx, 7, 40 - step, 12, 2, '#6f8fb3');
+  pixel(ctx, 22, 40 + step, 11, 2, '#6f8fb3');
+  pixel(ctx, 5, 42 - step, 14, 2, '#efe9dc');
+  pixel(ctx, 22, 42 + step, 14, 2, '#efe9dc');
+  pixel(ctx, 5, 44 - step, 14, 1, '#cfc9bb');
+  pixel(ctx, 22, 44 + step, 14, 1, '#cfc9bb');
+  // Broad shoulders and a rounded tee, not a rectangular slab over the legs.
+  pixel(ctx, 8, 16, 24, 3, '#15141d');
+  pixel(ctx, 3, 19, 34, 7, '#15141d');
+  pixel(ctx, 4, 25, 32, 4, '#15141d');
+  pixel(ctx, 7, 29, 26, 3, '#15141d');
+  pixel(ctx, 8, 19, 24, 9, '#1d1c26');
+  pixel(ctx, 7, 24, 26, 5, '#1d1c26');
+  pixel(ctx, 10, 28, 21, 2, '#1d1c26');
+  pixel(ctx, 11, 21, 2, 5, '#29283a');
+  pixel(ctx, 13, 28, 16, 1, '#29283a');
+  // Short sleeves and forearms, one bent to carry the oversized brick.
+  pixel(ctx, 1, 20, 7, 5, '#15141d');
+  pixel(ctx, 32, 20, 7, 5, '#15141d');
+  pixel(ctx, 2, 25, 5, 5, '#c88b67');
+  pixel(ctx, -1, 23, 5, 4, '#e3aa7e');
+  pixel(ctx, 34, 25, 4, 7, '#c88b67');
+  pixel(ctx, 34, 30, 3, 3, '#e3aa7e');
+  // Match his projectile's terracotta palette, with a heavy rim and two holes.
+  pixel(ctx, -10, 16, 16, 9, '#15141d');
+  pixel(ctx, -9, 17, 14, 7, '#b4543c');
+  pixel(ctx, -9, 17, 14, 2, '#cd6c4e');
+  pixel(ctx, -9, 22, 14, 2, '#934029');
+  pixel(ctx, -7, 19, 3, 3, '#8f3f2e');
+  pixel(ctx, -1, 19, 3, 3, '#8f3f2e');
+  pixel(ctx, -3, 24, 6, 2, '#e3aa7e');
+  // The neck joins the jaw to the collar; short hair frames a rounded face.
+  pixel(ctx, 15, 13, 11, 5, '#c88b67');
+  pixel(ctx, 17, 16, 8, 2, '#995e4f');
+  pixel(ctx, 11, 2, 19, 10, '#15141d');
+  pixel(ctx, 13, 0, 14, 3, '#221f29');
+  pixel(ctx, 11, 3, 19, 4, '#221f29');
+  pixel(ctx, 13, 2, 12, 1, '#49404a');
+  pixel(ctx, 12, 7, 17, 6, '#c88b67');
+  pixel(ctx, 14, 6, 13, 7, '#e3aa7e');
+  pixel(ctx, 14, 12, 13, 3, '#c88b67');
+  pixel(ctx, 16, 15, 9, 1, '#995e4f');
+  pixel(ctx, 10, 8, 2, 3, '#c88b67');
+  pixel(ctx, 29, 8, 2, 3, '#c88b67');
+  pixel(ctx, 14, 7, 4, 1, '#221f29');
+  pixel(ctx, 23, 7, 4, 1, '#221f29');
+  pixel(ctx, 15, 8, 2, 2, '#15141d');
+  pixel(ctx, 24, 8, 2, 2, '#15141d');
+  pixel(ctx, 20, 10, 2, 2, '#c88b67');
+  pixel(ctx, 18, 13, 6, 1, '#995e4f');
   ctx.restore();
 }
 

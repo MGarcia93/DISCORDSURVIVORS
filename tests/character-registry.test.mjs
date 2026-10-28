@@ -18,14 +18,16 @@ test('Papazito is a registered heavy ranged bruiser running on the percentage co
   assert.equal(CHARACTERS.papazito.id, 'papazito');
   const p = createRun(Math.random, 'papazito').player;
   // Stat sheet from context/personajes/papazito_el_paraguayo_trucho.md §3:
-  // life +10% -> 110, ranged damage +15% -> 11.5, attackSpeed -10% -> 90
+  // life +10% -> 110, damage matches El Negro (30), attackSpeed -10% -> 90
   // (interval ~1.11s), defense +10% -> 11 points (0.55 mitigation),
-  // moveSpeed -10% -> 2970 (148.5 scaled px/s). attackDistance is a charged
-  // balancing proposal: 150% (165px), tunable like Warrior's was.
+  // moveSpeed -10% -> 2970 (148.5 scaled px/s). Attack distance is
+  // 280% (308px), slightly longer than El Negro's 260% (286px).
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.55);
-  assert.equal(p.damage, 11.5);
-  assert.equal(p.attackRange, 150 * UNIT_PX);
+  assert.equal(p.damage, createRun(Math.random, 'negro').player.damage);
+  assert.equal(p.damage, 30);
+  assert.equal(p.attackRange, 280 * UNIT_PX);
+  assert.ok(p.attackRange > createRun(Math.random, 'negro').player.attackRange);
   assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-9);
   assert.equal(p.speed, 148.5 * WORLD_SCALE);
   assert.equal(CHARACTERS.papazito.attack.type, 'ranged');
@@ -58,8 +60,8 @@ test('specials come from the character definition with unchanged durations and c
     [['anime', 8, 18], ['chair', 6, 22]]);
 });
 
-test('La seña taxes Papazito coin awards and drops him into a 5s panic', () => {
-  const run = createRun(Math.random, 'papazito');
+test('La seña does not charge early when Papazito earns coins', () => {
+  const run = createRun(() => 0.5, 'papazito');
   run.spawnIn = 100;
   run.coins = 100;
   run.shotIn = 0.001;
@@ -67,11 +69,9 @@ test('La seña taxes Papazito coin awards and drops him into a 5s panic', () => 
 
   for (let i = 0; i < 6; i++) step(run, 0.05, {});
 
-  // bounty 2 lands first (100 + 2 = 102); the seña takes min(15, round(10%)) = 10
-  assert.equal(run.coins, 102 - 10, 'the cariñosa cuts 10% capped at 15, never more');
-  assert.ok(run.player.panicTtl > 4.8 && run.player.panicTtl <= 5, 'the panic window is exactly 5 seconds (decayed by the walk loop)');
-  assert.ok(run.player.senaCooldown > 24.8 && run.player.senaCooldown <= 25, 'the seña frequency cooldown is 25s (decayed by the walk loop)');
-  assert.ok(run.effects.some(e => e.kind === 'panic' && e.text === '¡ME RE CAGARON!'));
+  assert.equal(run.coins, 102, 'the bounty stays intact before the timed bill');
+  assert.equal(run.player.panicTtl, 0);
+  assert.ok(run.player.senaCooldown > 9.6 && run.player.senaCooldown < 10);
 });
 
 test('the seña cooldown blocks a second tax in the same window', () => {
@@ -80,9 +80,10 @@ test('the seña cooldown blocks a second tax in the same window', () => {
   p.panicTtl = 3; // re-armable check starts from the def hook directly
   p.senaCooldown = 10;
   run.coins = 100;
-  p.characterDef.onCoinsGained?.(run, p, 10);
+  run.spawnIn = run.shotIn = 100;
+  step(run, 0.05);
   assert.equal(run.coins, 100, 'no coins are cut while the seña is cooling down');
-  assert.equal(p.panicTtl, 3, 'no panic refresh while the seña is cooling down');
+  assert.equal(p.panicTtl, 2.95, 'no panic refresh while the seña is cooling down');
 });
 
 test('panic from La seña gallops him exactly +30% movement and -40% shot interval, never damage', () => {
@@ -96,36 +97,37 @@ test('panic from La seña gallops him exactly +30% movement and -40% shot interv
   run.shotIn = 0;
   step(run, 0.05, {});
   assert.ok(Math.abs(run.shotIn - (100 / 90) * 0.6) < 1e-9, '+40% attack speed only');
-  assert.equal(p.damage, 11.5, 'no extra damage from the panic');
+  assert.equal(p.damage, 30, 'no extra damage from the panic');
 });
 
-test('penniless Papazito does not trigger the seña tax twice in a row for nothing', () => {
-  const run = createRun(Math.random, 'papazito');
+test('penniless Papazito receives the panic buff with an unpaid bill', () => {
+  const run = createRun(() => 0.5, 'papazito');
   const p = run.player;
   p.panicTtl = 0;
   p.senaCooldown = 0;
-  run.coins = 4; // round(10%) = 0: nothing to extort yet
-  p.characterDef.onCoinsGained?.(run, p, 4);
-  assert.equal(run.coins, 4);
-  assert.equal(p.panicTtl, 0, 'no panic when there is nothing to lose');
+  run.spawnIn = run.shotIn = 100;
+  step(run, 0.05);
+  assert.equal(run.coins, 0);
+  assert.equal(p.senaDebt, 10);
+  assert.equal(p.panicTtl, 5);
 });
 
-test('ANAMENCUÁ is a 40s-cooldown r key unleashing a 5s radial brick rain', () => {
+test('ANAMENCUÁ is a 40s-cooldown r key unleashing three radial brick bursts', () => {
   assert.deepEqual(CHARACTERS.papazito.specials.map(s => [s.key, s.name, s.hotkey]),
     [['sell', 'Liquidó todo', 'q'], ['anamencua', '¡ANAMENCUÁ!', 'r']]);
 
   const run = createRun(Math.random, 'papazito');
   run.spawnIn = 100;
   assert.equal(activateSpecial(run, 'anamencua'), true);
-  assert.equal(run.player.anamencua, 5);
+  assert.equal(run.player.anamencua, 1.2);
   assert.equal(run.player.anamencuaCooldown, 40);
   assert.equal(activateSpecial(run, 'anamencua'), false, 'the cooldown blocks a second activation');
 
-  // Mute the basic attack to isolate the rain, then step 1.25s of furia.
+  // Mute the basic attack to isolate the three expanding rings.
   run.shotIn = 100;
   run.enemies.push({ id: 1, x: run.player.x + 260, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
   for (let i = 0; i < 25; i++) step(run, 0.05, {});
-  assert.ok(500 - run.enemies[0].hp >= 2 * 11.5, 'bricks land repeatedly, not just once');
+  assert.ok(500 - run.enemies[0].hp >= 2 * 30, 'both circular bursts reach the enemy');
   assert.ok(run.effects.some(e => e.text === '¡ANAMENCUÁ!'), 'the fury shout is on screen');
 });
 
@@ -198,9 +200,9 @@ test('sale buffs expire: after their ttl the damage and debuffs stop applying', 
   run.enemies.push({ id: 1, x: p.x + p.speed, y: p.y, hp: 100, maxHp: 100, speed: 0, radius: 10, kind: 'zombie' });
   run.shotIn = 0.001;
   step(run, 0.05, {});
-  assert.equal(run.projectiles[0]?.damage, 11.5, 'the expired buff no longer strengthens the brick');
+  assert.equal(run.projectiles[0]?.damage, 30, 'the expired buff no longer strengthens the brick');
   assert.equal(p.soldItems.psp, true, 'sold stays sold; only the buff expired');
-  assert.equal(p.damage, 11.5, 'sheet damage never mutated');
+  assert.equal(p.damage, 30, 'sheet damage never mutated');
 });
 
 test('activateSpecial drives timers from the definition', () => {

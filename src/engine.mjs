@@ -49,6 +49,7 @@ export function createRun(random = Math.random, character = 'negro') {
     run.player[`${special.key}Cooldown`] = 0;
   }
   characterDef.initPlayer?.(run.player);
+  characterDef.onStageStart?.(run, run.player);
   return run;
 }
 
@@ -97,6 +98,7 @@ export function sellBelonging(run, key) {
   p.soldItems = p.soldItems ?? {};
   p.soldItems[key] = true;
   run.coins += item.coins;
+  p.characterDef.onSaleIncome?.(run, p, item.coins);
   if (item.damageFrac) {
     p.sellDamageFrac = Math.min(SELL_DAMAGE_BUFF_CAP, (p.sellDamageFrac ?? 0) + item.damageFrac);
     p.sellDamageTtl = Math.max(p.sellDamageTtl ?? 0, item.damageTtl);
@@ -142,6 +144,7 @@ export function startNextWave(run) {
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
+  run.player.characterDef.onStageStart?.(run, run.player);
   if (run.wave === 4) {
     run.enemies.push(enemyFromKind(run, 'boss', WIDTH / 2, 80 * WORLD_SCALE));
   }
@@ -208,6 +211,17 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
 }
 
+// Untargeted rings keep their launch direction, even in an empty arena.
+function fireRadial(run, source, damage, { count, speed, radius }) {
+  for (let i = 0; i < count; i++) {
+    const direction = i * Math.PI * 2 / count;
+    const dx = Math.cos(direction), dy = Math.sin(direction);
+    run.projectiles.push({ x: source.x + dx * radius, y: source.y + dy * radius,
+      vx: dx * speed, vy: dy * speed, damage, kind: 'brick', device: 'brick',
+      hit: [], ttl: 2.4, angle: direction, radius: 3 * WORLD_SCALE });
+  }
+}
+
 function hit(run, enemy, damage, kind = 'damage') {
   const elemental = (enemy.confusionStacks ?? 0) >= 3 ? 1.5 : 1;
   enemy.hp -= damage * elemental * (1 - Math.min(DEFENSE_MITIGATION_CAP, enemy.defense ?? 0));
@@ -237,7 +251,7 @@ export function step(run, seconds, input = {}) {
   const dt = Math.min(0.05, Math.max(0, seconds));
   const p = run.player;
   const def = p.characterDef;
-   const ctx = { hit, distance, nearest, fire, confuse: applyConfusion, movement: input };
+   const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input };
   run.time += dt;
   run.elapsed += dt;
   const decayKeys = [
@@ -343,6 +357,24 @@ export function step(run, seconds, input = {}) {
   for (const shot of run.projectiles) {
     shot.ttl -= dt;
     shot.angle += dt * 12;
+    if (shot.vx !== undefined && shot.vy !== undefined) {
+      const dx = shot.vx * dt, dy = shot.vy * dt;
+      const lengthSquared = dx * dx + dy * dy;
+      // Swept collision avoids tunneling through an enemy between frames.
+      const collisions = run.enemies.filter(enemy => enemy.hp > 0).map(enemy => {
+        const t = lengthSquared ? Math.max(0, Math.min(1,
+          ((enemy.x - shot.x) * dx + (enemy.y - shot.y) * dy) / lengthSquared)) : 0;
+        return { enemy, t, distance: Math.hypot(enemy.x - shot.x - dx * t, enemy.y - shot.y - dy * t) };
+      }).filter(collision => collision.distance <= collision.enemy.radius + shot.radius)
+        .sort((a, b) => a.t - b.t);
+      if (collisions.length) {
+        hit(run, collisions[0].enemy, shot.damage);
+        shot.ttl = 0;
+      }
+      shot.x += dx;
+      shot.y += dy;
+      continue;
+    }
     let target = run.enemies.find(e => e.id === shot.target && e.hp > 0);
     if (!target) {
       shot.ttl = 0;

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
 
-test('drawPapazito draws his photo outfit — black tee, light jeans, white sneakers, goblet — in both facings', () => {
+test('drawPapazito draws his photo outfit with a brick instead of a goblet in both facings', () => {
   for (const facing of [1, -1]) {
     const rectangles = [];
     const ctx = { save() {}, restore() {}, scale() {}, getTransform: () => ({ a: 1, d: 1 }),
@@ -12,7 +12,34 @@ test('drawPapazito draws his photo outfit — black tee, light jeans, white snea
     assert.ok(rectangles.some(r => r[4] === '#1d1c26'), 'plain black t-shirt from the photo');
     assert.ok(rectangles.some(r => r[4] === '#8faecc'), 'light blue jeans with rolled cuffs');
     assert.ok(rectangles.some(r => r[4] === '#efe9dc'), 'white low sneakers');
-    assert.ok(rectangles.some(r => r[4] === '#dad8dc'), 'the goblet he never lets go');
+    assert.ok(rectangles.some(r => r[4] === '#b4543c'), 'an oversized red brick replaces the goblet');
+    assert.ok(rectangles.some(r => r[4] === '#8f3f2e'), 'dark holes make the brick readable');
+    assert.ok(!rectangles.some(r => r[4] === '#dad8dc' || r[4] === '#7c3b55'), 'no goblet or wine remains');
+  }
+});
+
+test('Papazito keeps a connected silhouette and visible jeans in idle and walking poses', () => {
+  for (const facing of [1, -1]) for (const moving of [false, true]) for (const time of [0, 0.125]) {
+    const pixels = new Map();
+    let tx = 0, ty = 0, sx = 1, sy = 1;
+    const ctx = {
+      save() {}, restore() {}, getTransform: () => ({ a: sx, d: sy }),
+      translate(x, y) { tx += x * sx; ty += y * sy; },
+      scale(x, y) { sx *= x; sy *= y; },
+      fillRect(x, y, w, h) {
+        for (let row = 0; row < h; row++) for (let col = 0; col < w; col++) {
+          pixels.set(`${Math.floor(tx + (x + col + 0.5) * sx)},${Math.floor(ty + (y + row + 0.5) * sy)}`, this.fillStyle);
+        }
+      },
+    };
+    drawPapazito(ctx, 64, 64, { scale: 1, facing, moving, time });
+    const denim = new Set(['#8faecc', '#7d9ab8', '#6f8fb3', '#b6cddd']);
+    assert.ok([...pixels.values()].filter(color => denim.has(color)).length >= 160,
+      'both jeans legs must remain visible after the shirt is painted');
+    for (let y = 24; y < 59; y++) {
+      assert.ok(Array.from({ length: 10 }, (_, i) => pixels.has(`${59 + i},${y}`)).some(Boolean),
+        `head, neck, shirt and hips must connect at row ${y}`);
+    }
   }
 });
 

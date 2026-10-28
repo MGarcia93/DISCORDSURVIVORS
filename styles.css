@@ -97,6 +97,8 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .hp-fill { height: 100%; background: repeating-linear-gradient(90deg, #b9d689 0px 7px, #829f63 7px 8px); }
 .task-panel { position: absolute; z-index: 2; top: 84px; left: 14px; width: 230px; padding: 8px 10px; background: #191a25e8; border: 2px solid #746086; color: #e1d1e7; font-size: 9px; }
 .task-panel[hidden] { display: none; }
+.character-status { position: absolute; z-index: 2; top: 140px; left: 14px; max-width: min(360px, calc(100% - 28px)); padding: 8px 10px; background: #191a25e8; border: 2px solid #746086; color: #e1d1e7; font-size: 9px; line-height: 1.7; white-space: pre-line; pointer-events: none; }
+.character-status[hidden] { display: none; }
 .task-panel > div:first-child { display: flex; justify-content: space-between; gap: 5px; }
 .task-panel b { color: #d4b9e7; letter-spacing: 1px; }
 .task-panel span { white-space: nowrap; }
@@ -168,6 +170,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .arena-wrap { width: 100%; } .arena-wrap > canvas { aspect-ratio: 1144 / 748; object-fit: contain; }
   .hud { top: 7px; left: 7px; right: 7px; } .health-box { width: 125px; padding: 6px; } .hud-label { font-size: 8px; }
   .task-panel { top: 58px; left: 7px; width: 170px; font-size: 7px; padding: 5px 6px; }
+  .character-status { top: 108px; left: 7px; max-width: calc(100% - 14px); font-size: 7px; padding: 5px 6px; }
   .hud-numbers { gap: 5px; } .hud-numbers span { font-size: 8px; padding: 7px; } .game-controls { padding: 0 4px; }
   .ability-buttons { gap: 6px; } .ability { padding: 7px; font-size: 8px; } .ability kbd { min-width: 20px; height: 24px; font-size: 10px; }
   .key-help { flex-wrap: wrap; font-size: 8px; } .overlay { padding: 8px; } .overlay > div { padding: 15px 10px; }

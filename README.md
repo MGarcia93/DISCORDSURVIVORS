@@ -35,6 +35,12 @@ Solago's chore meter fills every eight kills. When full, it grants +30% damage a
 
 Solago plays as a short-range fighter: an animated palette-bite attack, a slightly extended melee reach and narrower hitbox, timed Smile Armor defense, and the E-key Patrona Stand ultimate with a scissors slash. Every eight kills fill the chore-task meter; the temporary buff starts automatically. While the Stand is active Solago crouches and cannot move; when it expires he takes a scissors hit but remains where the player left him.
 
+## Papazito's economy
+
+La Seña runs on a combat timer, not coin pickups. Each stage starts with a random bill of 8–12 coins due in 8–12 seconds. Each bill adds at least 4 coins to the next randomized charge and shortens the next interval by at least 1 second, down to a 4-second minimum. Random variation never makes a later bill cheaper or its interval longer. The HUD reveals the next exact bill and countdown, the last payment, and outstanding debt. An empty wallet does not cancel the bill: unpaid amounts accumulate as debt. Sales repay that debt before adding any remaining proceeds to the wallet, while still granting their temporary damage bonus and penalties. Debt, escalation and panic reset at the next stage; sold belongings remain sold for the run.
+
+Every bill grants the existing five-second panic buff (+30% movement and a 40% shorter firing interval). Active sale penalties and their remaining time appear under the passive bar. **Q** opens the sale menu; **R** fires three rings of 48 bricks with a 40-second cooldown.
+
 ## Visual direction
 
 The interface is a game screen, not a promotional website: a pixel-art room with El Negro in his chair, a local bitmap title, a sprite roster, illustrated story scenes, pixel-framed dialogs, and an arena HUD. There is no website navigation rail, promotional card grid, or footer. The combat camera is zoomed out 10% to show a slightly wider playfield, with proportionally adjusted movement and collision distances and crisp, modestly smaller sprites.

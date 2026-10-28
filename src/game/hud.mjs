@@ -19,6 +19,8 @@ export function updateHUD() {
     document.querySelector('#task-label').textContent = task.label;
     taskPanel.classList.toggle('boost-active', task.active);
   }
+  const statusPanel = document.querySelector('#character-status');
+  if (statusPanel) statusPanel.textContent = p.characterDef.statusHud?.(p) ?? '';
   for (const special of p.characterDef.specials) {
     const button = document.querySelector(`[data-special="${special.key}"]`);
     const cooldown = p[`${special.key}Cooldown`];
