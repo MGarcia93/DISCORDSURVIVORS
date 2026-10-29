@@ -63,3 +63,23 @@ test('Yorick kneels in his defeat instead of walking out', async () => {
   const kneel = scene.steps.find(step => step.type === 'animate' && step.actor === 'yorick');
   assert.equal(kneel?.animation, 'kneel');
 });
+
+test('no two actors finish a scene on the same spot', async () => {
+  const catalog = await catalogFor();
+  const walk = (steps, at) => {
+    for (const step of steps) {
+      if (step.type === 'move' && step.to) at[step.actor] = step.to;
+      if (step.type === 'parallel') walk(step.steps, at);
+    }
+    return at;
+  };
+  for (const entry of catalog.entries.filter(item => item.id.startsWith('act-02-'))) {
+    const { actors } = entry.scene.stage;
+    const at = walk(entry.scene.steps, Object.fromEntries(Object.entries(actors).map(([id, actor]) => [id, actor.at])));
+    const seen = new Map();
+    for (const [id, point] of Object.entries(at)) {
+      assert.ok(!seen.has(point), `${entry.id}: ${id} ends on the same spot as ${seen.get(point)} (${point})`);
+      seen.set(point, id);
+    }
+  }
+});

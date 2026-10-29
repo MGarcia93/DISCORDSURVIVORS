@@ -4,92 +4,264 @@
   "stage": {
     "background": "rift",
     "points": {
-      "ground": [400, 480],
-      "solago": [560, 500],
-      "yorick": [820, 460],
-      "walker-a": [660, 610],
-      "walker-b": [760, 620],
-      "walker-c": [900, 600],
-      "escape": [250, 500]
+      "ground": [
+        400,
+        480
+      ],
+      "solago": [
+        560,
+        500
+      ],
+      "yorick": [
+        820,
+        460
+      ],
+      "walker-a": [
+        660,
+        610
+      ],
+      "walker-b": [
+        760,
+        620
+      ],
+      "walker-c": [
+        900,
+        600
+      ],
+      "escape": [
+        250,
+        500
+      ],
+      "near-solago": [
+        470,
+        492
+      ],
+      "near-walker-a": [
+        585,
+        600
+      ],
+      "near-walker-b": [
+        690,
+        610
+      ]
     },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "ground" },
-      "solago": { "character": "solago", "at": "solago" },
-      "yorick": { "character": "yorick", "at": "yorick" },
-      "walker-a": { "enemy": "mistWalker", "at": "walker-a" },
-      "walker-b": { "enemy": "mistWalker", "at": "walker-b" },
-      "walker-c": { "enemy": "mistWalker", "at": "walker-c" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "yorick": {
+        "character": "yorick",
+        "at": "yorick"
+      },
+      "walker-a": {
+        "enemy": "mistWalker",
+        "at": "walker-a"
+      },
+      "walker-b": {
+        "enemy": "mistWalker",
+        "at": "walker-b"
+      },
+      "walker-c": {
+        "enemy": "mistWalker",
+        "at": "walker-c"
+      }
     }
   },
   "steps": [
     {
       "type": "parallel",
       "steps": [
-        { "type": "move", "actor": "negro", "to": "solago", "duration": 1.6 },
-        { "type": "camera", "to": "solago", "zoom": 1.2, "duration": 1.6 }
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "near-solago",
+          "duration": 1.6
+        },
+        {
+          "type": "camera",
+          "to": "solago",
+          "zoom": 1.2,
+          "duration": 1.6
+        }
       ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "surprised", "text": "Pará... ¿Solago?" },
-        { "speaker": "solago", "expression": "angry", "text": "¡NEGRO! ¡SACAME DE ACÁ, LA CONCHA DE TU MADRE!" },
-        { "speaker": "maxi-negro", "expression": "happy", "text": "JAJAJA. ¡¿QUÉ MIERDA HACÉS CON YORICK?!" },
-        { "speaker": "solago", "expression": "angry", "text": "¡ESTE PELOTUDO PIENSA QUE SOY UNO DE SUS BICHOS!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Pará... ¿Solago?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NEGRO! ¡SACAME DE ACÁ, LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA. ¡¿QUÉ MIERDA HACÉS CON YORICK?!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡ESTE PELOTUDO PIENSA QUE SOY UNO DE SUS BICHOS!"
+        }
       ]
     },
     {
       "type": "parallel",
       "steps": [
-        { "type": "camera", "to": "yorick", "zoom": 1.3, "duration": 1.4 },
-        { "type": "animate", "actor": "yorick", "animation": "point", "duration": 1.2 }
+        {
+          "type": "camera",
+          "to": "yorick",
+          "zoom": 1.3,
+          "duration": 1.4
+        },
+        {
+          "type": "animate",
+          "actor": "yorick",
+          "animation": "point",
+          "duration": 1.2
+        }
       ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "yorick", "expression": "angry", "text": "¿Quién perturba a mis caminantes?" },
-        { "speaker": "maxi-negro", "expression": "neutral", "text": "Amigo, ese no es un caminante. Es Solago." },
-        { "speaker": "yorick", "expression": "surprised", "text": "¿Solago? Curioso nombre para una criatura tan pequeña." },
-        { "speaker": "solago", "expression": "angry", "text": "¡NO SOY UNA CRIATURA, HIJO DE PUTA!" },
-        { "speaker": "yorick", "expression": "tired", "text": "Mi pequeño caminante siempre ha sido bastante temperamental." },
-        { "speaker": "maxi-negro", "expression": "happy", "text": "JAJAJA. Y bueno, Solago, si sos igual a los otros." },
-        { "speaker": "solago", "expression": "angry", "text": "¡NEGRO, DEJÁ DE CAGARTE DE RISA Y AYUDAME!" }
+        {
+          "speaker": "yorick",
+          "expression": "angry",
+          "text": "¿Quién perturba a mis caminantes?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Amigo, ese no es un caminante. Es Solago."
+        },
+        {
+          "speaker": "yorick",
+          "expression": "surprised",
+          "text": "¿Solago? Curioso nombre para una criatura tan pequeña."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NO SOY UNA CRIATURA, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "yorick",
+          "expression": "tired",
+          "text": "Mi pequeño caminante siempre ha sido bastante temperamental."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA. Y bueno, Solago, si sos igual a los otros."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NEGRO, DEJÁ DE CAGARTE DE RISA Y AYUDAME!"
+        }
       ]
     },
     {
       "type": "parallel",
       "steps": [
-        { "type": "camera", "to": "solago", "zoom": 1.15, "duration": 1.6 },
-        { "type": "move", "actor": "negro", "to": "walker-a", "duration": 1.4 }
+        {
+          "type": "camera",
+          "to": "solago",
+          "zoom": 1.15,
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "near-walker-a",
+          "duration": 1.4
+        }
       ]
     },
-    { "type": "flash", "at": "walker-a", "duration": 0.2 },
-    { "type": "down", "actor": "walker-a" },
-    { "type": "wait", "duration": 0.4 },
+    {
+      "type": "flash",
+      "at": "walker-a",
+      "duration": 0.2
+    },
+    {
+      "type": "down",
+      "actor": "walker-a"
+    },
+    {
+      "type": "wait",
+      "duration": 0.4
+    },
     {
       "type": "parallel",
       "steps": [
-        { "type": "move", "actor": "negro", "to": "walker-b", "duration": 1.2 },
-        { "type": "move", "actor": "solago", "to": "escape", "duration": 1.4 }
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "near-walker-b",
+          "duration": 1.2
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "escape",
+          "duration": 1.4
+        }
       ]
     },
-    { "type": "flash", "at": "walker-b", "duration": 0.2 },
-    { "type": "down", "actor": "walker-b" },
+    {
+      "type": "flash",
+      "at": "walker-b",
+      "duration": 0.2
+    },
+    {
+      "type": "down",
+      "actor": "walker-b"
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "yorick", "expression": "angry", "text": "¡Devuélveme a mi criatura!" },
-        { "speaker": "maxi-negro", "expression": "neutral", "text": "Llevátelo, si querés. Pero después no me lo devuelvas." },
-        { "speaker": "solago", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE, NEGRO!" }
+        {
+          "speaker": "yorick",
+          "expression": "angry",
+          "text": "¡Devuélveme a mi criatura!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Llevátelo, si querés. Pero después no me lo devuelvas."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE, NEGRO!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "DISCORD SURVIVORS",
       "duration": 4,
-      "lines": ["¡SOLAGO DESBLOQUEADO!", "Disponible para seleccionar en las próximas partidas."]
+      "lines": [
+        "¡SOLAGO DESBLOQUEADO!",
+        "Disponible para seleccionar en las próximas partidas."
+      ]
     }
   ],
-  "effects": [{ "key": "act-02-met-solago", "value": true }]
+  "effects": [
+    {
+      "key": "act-02-met-solago",
+      "value": true
+    }
+  ]
 }
