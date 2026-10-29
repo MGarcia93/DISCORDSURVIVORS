@@ -22,27 +22,29 @@ function pixelRing(ctx, x, y, radius, color, opacity = 0.65) {
   ctx.restore();
 }
 
-// Everything that paints the run canvas: arena, figures, projectiles, effects
-// and the sold-monitor vignette. HUD and overlays are DOM and live elsewhere.
-// The figure drawers themselves live in figures.mjs, shared with the dev screens.
-
-export function draw() {
-  const canvas = document.querySelector('.arena-wrap canvas');
-  const ctx = canvas?.getContext('2d');
-  if (!ctx || !state.run) return;
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.imageSmoothingEnabled = false;
-  drawBackground(ctx, state.run.act.world, { width: WIDTH, height: HEIGHT });
-  const p = state.run.player;
+// The run as a picture: background, figures, health bars, shockwaves, auras,
+// projectiles and floating effects. The game canvas and the enemy sandbox both
+// paint through here, so the sandbox cannot show less than the game does. HUD
+// and overlays are DOM and live elsewhere. The figure drawers live in
+// figures.mjs, shared with the dev screens.
+export function drawRunScene(ctx, run, {
+  world, time = run?.elapsed ?? 0, facing = 1, moving = true, underlay,
+} = {}) {
+  if (!run) return;
+  const p = run.player;
+  drawBackground(ctx, world ?? run.act?.world ?? 'arena', { width: WIDTH, height: HEIGHT, time });
+  // Dev-only decoration (the sandbox's reach ring) sits under the actors, the
+  // same place the game draws its ground marks.
+  underlay?.(ctx, run);
   const astral = p.characterDef.specials.find(special => special.key === 'astral');
   if (p.astral > 0 && astral) {
-    drawAstralAura(ctx, p.x, p.y, astral.radius, state.run.elapsed, Math.min(1, p.astral / 0.4));
+    drawAstralAura(ctx, p.x, p.y, astral.radius, time, Math.min(1, p.astral / 0.4));
   }
   if (p.chair > 0) {
     ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
     pixelRing(ctx, p.x, p.y, 145 * 1.1, '#a18aff');
   }
-  const figures = [...state.run.enemies];
+  const figures = [...run.enemies];
   if (p.chair > 0) figures.push({ x: p.x, y: p.y - 0.6, kind: 'chair' });
   if (p.stand > 0) figures.push({ x: p.x + 13 * WORLD_SCALE, y: p.y - 1, kind: 'stand' });
   figures.push({ x: p.x, y: p.y, kind: 'player' });
@@ -51,9 +53,9 @@ export function draw() {
     if (figure.kind === 'player' && p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
     if (figure.kind === 'player') {
       p.characterDef.draw(ctx, figure.x, figure.y + 38,
-        { time: state.run.elapsed, moving: p.still === 0, facing: state.facing, player: p });
+        { time, moving, facing, player: p });
     } else {
-      drawEnemyFigure(ctx, figure, state.run.elapsed);
+      drawEnemyFigure(ctx, figure, time);
     }
     ctx.globalAlpha = 1;
     if (figure.kind !== 'player' && (figure.boss || figure.hp < figure.maxHp)) {
@@ -63,10 +65,10 @@ export function draw() {
       rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.boss ? '#b499f2' : '#d7f779');
     }
   }
-  for (const wave of state.run.shockwaves ?? []) {
+  for (const wave of run.shockwaves ?? []) {
     pixelRing(ctx, wave.x, wave.y, wave.radius, '#ffb3c4', 1 - wave.radius / wave.maxRadius);
   }
-  if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time: state.run.elapsed, scale: 1 });
+  if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time, scale: 1 });
   if (p.smile > 0) {
     // Solago's aura hugs his half-width, shorter frame instead of the tank-sized ring.
     pixelRing(ctx, p.x, p.y + 2, 34 * WORLD_SCALE, '#e8dfa1');
@@ -106,12 +108,12 @@ export function draw() {
     }
     ctx.restore();
   }
-  drawProjectiles(ctx, state.run.projectiles);
+  drawProjectiles(ctx, run.projectiles);
   ctx.textAlign = 'center'; ctx.font = 'bold 14px monospace';
-  for (const effect of state.run.effects) {
+  for (const effect of run.effects) {
     ctx.globalAlpha = Math.min(1, effect.ttl * 2);
     if (effect.kind === 'smoke') {
-      drawSmokeCloud(ctx, effect.x, effect.y, effect.r, state.run.elapsed, ctx.globalAlpha);
+      drawSmokeCloud(ctx, effect.x, effect.y, effect.r, time, ctx.globalAlpha);
       continue;
     }
     if (effect.kind === 'shroomBlast') {
@@ -124,4 +126,18 @@ export function draw() {
     ctx.fillText(effect.text, effect.x, effect.y);
   }
   ctx.globalAlpha = 1;
+}
+
+// The game canvas only owns the viewport: inside it is the shared run scene.
+export function draw() {
+  const canvas = document.querySelector('.arena-wrap canvas');
+  const ctx = canvas?.getContext('2d');
+  if (!ctx || !state.run) return;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  drawRunScene(ctx, state.run, {
+    time: state.run.elapsed,
+    facing: state.facing,
+    moving: state.run.player.still === 0,
+  });
 }

@@ -638,11 +638,15 @@ export function drawSiegeMinion(ctx, x, y, options = {}) {
 // changes with the shooter, exactly like remote/joystick/phone/shroom/brick.
 export function drawEnemyShot(ctx, device = 'bolt') {
   if (device === 'shell') {
-    // Siege shell: an iron ball with a lit rim and a dark bore.
-    roundedMass(ctx, -4, -4, 8, 8, '#2a2320');
-    roundedMass(ctx, -3, -3, 6, 6, '#4a4658');
-    pixel(ctx, -3, -3, 2, 2, '#8a8496');
-    pixel(ctx, -1, -1, 2, 2, '#2a2320');
+    // Siege shell: a heavy iron ball with a lit rim, a dark bore and the smoke
+    // it drags behind. It has to read as artillery from across the lane.
+    pixel(ctx, -12, -2, 6, 4, '#2a2320');
+    pixel(ctx, -15, -1, 4, 2, '#4a4658');
+    roundedMass(ctx, -6, -7, 14, 14, '#2a2320');
+    roundedMass(ctx, -5, -6, 12, 12, '#4a4658');
+    pixel(ctx, -5, -6, 5, 5, '#8a8496');
+    pixel(ctx, 1, -3, 5, 5, '#2a2320');
+    pixel(ctx, 2, 2, 3, 2, '#6a748c');
     return;
   }
   if (device === 'shot') {
@@ -657,51 +661,6 @@ export function drawEnemyShot(ctx, device = 'bolt') {
   pixel(ctx, -4, -2, 8, 4, '#a98bf0');
   pixel(ctx, -2, -1, 5, 2, '#e6d9ff');
   pixel(ctx, 4, -1, 2, 2, '#f7f2ff');
-}
-
-// Act 2 — League of Legends, wave 4. The turret: a stone obelisk bolted to the
-// ground with a crystal eye and runes. It never walks; it turns and fires from
-// beyond the lane, so the player has to close the gap and break it.
-export function drawTurret(ctx, x, y, options = {}) {
-  const { time = 0, scale = 2 } = options;
-  const pulse = Math.floor(time * 3) % 2;
-  const stone = { light: '#6d7488', base: '#565d70', mid: '#474d5e', dark: '#383e4d' };
-  const gem = pulse
-    ? { light: '#e2fbff', base: '#5fd0e8', dark: '#2f8ba6' }
-    : { light: '#bff4ff', base: '#4bbcd6', dark: '#287a92' };
-  pose(ctx, x, y, scale);
-  pixel(ctx, -14, 0, 29, 2, '#131a20');
-  // Two stepped base tiers: a structure, not a body.
-  roundedMass(ctx, -15, -6, 31, 8, '#151a24');
-  roundedMass(ctx, -14, -5, 29, 6, stone.base);
-  pixel(ctx, -14, -5, 29, 2, stone.light);
-  pixel(ctx, -14, -1, 29, 1, stone.dark);
-  roundedMass(ctx, -11, -12, 23, 8, '#151a24');
-  roundedMass(ctx, -10, -11, 21, 6, stone.mid);
-  pixel(ctx, -10, -11, 21, 2, stone.base);
-  // Shaft with a lit left flank and carved runes.
-  pixel(ctx, -8, -26, 17, 15, '#151a24');
-  torsoBands(ctx, -7, -25, 15, 13, stone);
-  pixel(ctx, -7, -25, 15, 2, stone.light);
-  pixel(ctx, -4, -22, 2, 2, gem.base);
-  pixel(ctx, 1, -22, 2, 2, gem.base);
-  pixel(ctx, -2, -19, 2, 3, gem.base);
-  // Collar that holds the eye, with a prong on each side.
-  roundedMass(ctx, -9, -29, 19, 5, '#151a24');
-  roundedMass(ctx, -8, -28, 17, 3, stone.mid);
-  pixel(ctx, -9, -36, 4, 4, '#151a24');
-  pixel(ctx, -8, -35, 2, 2, stone.light);
-  pixel(ctx, 5, -36, 4, 4, '#151a24');
-  pixel(ctx, 6, -35, 2, 2, stone.light);
-  // Crystal eye: socket, lit facets, white core, and a glyph resting on it.
-  pixel(ctx, -5, -38, 11, 10, '#151a24');
-  pixel(ctx, -4, -37, 9, 8, gem.dark);
-  pixel(ctx, -3, -36, 7, 6, gem.base);
-  pixel(ctx, -2, -35, 5, 4, gem.light);
-  pixel(ctx, -1, -34, 3, 2, '#ffffff');
-  pixel(ctx, -1, -41, 3, 3, '#151a24');
-  pixel(ctx, 0, -41, 1, 3, gem.light);
-  ctx.restore();
 }
 
 export function drawAdministrator(ctx, x, y, options = {}) {

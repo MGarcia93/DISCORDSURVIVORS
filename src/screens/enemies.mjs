@@ -3,9 +3,8 @@ import {
   ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty,
   enemyContactDamage, enemyDefense, enemyHp, enemySpeed, getEnemyKind,
 } from '../enemies/index.mjs';
-import { drawBackground, worldIds, worlds } from '../backgrounds/index.mjs';
-import { drawEnemyFigure } from '../game/figures.mjs';
-import { drawProjectiles } from '../game/projectiles.mjs';
+import { worldIds, worlds } from '../backgrounds/index.mjs';
+import { drawRunScene } from '../game/renderer.mjs';
 import { state } from '../app/state.mjs';
 
 // Development-only sandbox. It runs a real throwaway run: the selected kind
@@ -105,26 +104,18 @@ export function drawEnemyPreview(dt) {
   }
   step(run, tick, {});
 
+  // The sandbox is the game's own picture: same painter, same effects, same
+  // projectiles. The only additions are its dev overlays, drawn underneath.
+  drawRunScene(ctx, run, {
+    world: state.enemyPreviewWorld,
+    time: run.elapsed,
+    facing: 1,
+    moving: false,
+    underlay: (target, scene) => {
+      if (state.enemyPreviewReach) for (const enemy of scene.enemies) reachRing(target, enemy, scene.player);
+    },
+  });
   const p = run.player;
-  drawBackground(ctx, state.enemyPreviewWorld, { width: canvas.width, height: canvas.height, time: run.elapsed });
-
-  if (state.enemyPreviewReach) for (const enemy of run.enemies) reachRing(ctx, enemy, p);
-
-  const figures = [...run.enemies, { x: p.x, y: p.y, kind: 'player' }].sort((a, b) => a.y - b.y);
-  for (const figure of figures) {
-    if (figure.kind === 'player') {
-      if (p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
-      p.characterDef.draw(ctx, figure.x, figure.y + 38,
-        { time: run.elapsed, moving: false, facing: 1, player: p });
-    } else {
-      drawEnemyFigure(ctx, figure, run.elapsed);
-    }
-    ctx.globalAlpha = 1;
-  }
-  drawProjectiles(ctx, run.projectiles);
-  for (const enemy of run.enemies) {
-    if (enemy.hp < enemy.maxHp) bar(ctx, enemy.x, enemy.y - 62, 30, enemy.hp / enemy.maxHp, '#d7f779');
-  }
   bar(ctx, p.x, p.y - 72, 46, p.immune > 0 ? 0.75 : 1, p.immune > 0 ? '#e85c79' : '#bfd890');
 }
 
