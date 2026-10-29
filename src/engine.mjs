@@ -274,6 +274,9 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     : kind === 'shroom' ? 'shroom' : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
     damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
+  // One shot, one sound: the event fires where the projectile exists, so an
+  // empty range stays silent instead of clicking at nothing.
+  emit('shot', { run, kind });
   const extra = kind === 'shroom' ? (run.player.rewardBonuses.extraShroom ?? 0)
     : kind === 'brick' ? (run.player.rewardBonuses.brickFan ?? 0) : 0;
   const used = [target.id];

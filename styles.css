@@ -123,6 +123,10 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .overlay h2 { font-size: 25px; line-height: 1.4; color: var(--gold); margin: 12px 0; }
 .overlay p { font-size: 12px; color: #c2aec6; line-height: 1.8; margin: 14px 0; }
 .overlay .actions { justify-content: center; margin-top: 20px; }
+.mix-row { display: grid; grid-template-columns: 70px 1fr 48px; align-items: center; gap: 10px; margin: 10px 0; font-size: 12px; color: #c2aec6; }
+.mix-row label { text-align: right; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; }
+.mix-row input[type="range"] { width: 100%; accent-color: var(--gold); }
+.mix-row span { font-variant-numeric: tabular-nums; color: var(--gold); }
 .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }.shop-dialog { display: flex; flex-direction: column; text-align: center; height: 100%; }
 .shop-dialog .shop-grid { grid-template-columns: repeat(3, 1fr); flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 12px 0; padding-right: 4px; }
 .shop-footer { flex-shrink: 0; padding-top: 4px; }
