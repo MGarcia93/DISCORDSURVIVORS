@@ -33,6 +33,7 @@ node --check <every file you touched>
 | `docs/campaign.md` | how to add a world: act shape, contract, wave length |
 | `context/historia/` | approved story scripts — read the act before writing a scene |
 | `.opencode/skills/enemy-authoring/` | how to add an enemy end to end: ficha, wave, rewards, sprite, visual approval, tests |
+| `.opencode/skills/act-authoring/` | how to build a whole act: enemies first, then waves, boss and cinematics |
 
 ## World backgrounds
 
