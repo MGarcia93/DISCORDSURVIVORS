@@ -101,3 +101,26 @@ test('the next wave loads its own budget from the table', () => {
   assert.equal(startNextWave(run), true);
   assert.equal(run.spawnBudget, Math.round(waveConfig(2).perMinute * run.duration / 60));
 });
+
+test('the shipped balance plays full-minute waves and leaves the boss untimed', () => {
+  const run = createRun(() => 0.5);
+  run.player.hp = run.player.maxHp = 1e9;
+  assert.equal(run.duration, 60, 'real-time waves last one minute');
+  assert.equal(run.spawnBudget, 48, 'the wave keeps its per-minute density');
+  const bossWave = run.rewardBalance.waves.bossWave;
+  while (run.wave < bossWave) {
+    run.time = run.duration;
+    step(run, 0, {});
+    assert.equal(run.phase, 'shop');
+    assert.equal(startNextWave(run), true);
+  }
+  assert.equal(run.wave, bossWave);
+  const boss = run.enemies.find(enemy => enemy.boss);
+  assert.ok(boss, 'the boss wave fields its boss');
+  boss.hp = boss.maxHp = 1e9;
+  boss.speed = 0;
+  run.time = run.duration + 1;
+  step(run, 0.05, {});
+  assert.equal(run.phase, 'playing', 'the boss wave does not end on the wave clock');
+  assert.ok(run.time > run.duration);
+});
