@@ -211,6 +211,15 @@ test('no two enemies end up drawn on top of each other', async () => {
   }
 });
 
+test('the alarm scene keeps the siren going, not one beep', async () => {
+  const catalog = await catalogFor();
+  const steps = catalog.entries.find(entry => entry.id === 'act-01-wave-4-alarm').scene.steps;
+  const rings = steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]))
+    .filter(step => step.type === 'sound' && step.sound === 'alarm');
+  const total = rings.reduce((sum, ring) => sum + (ring.repeat ?? 1), 0);
+  assert.ok(total >= 10, `the siren rings ${total} times, not once`);
+});
+
 test('a sound can pulse, so an alarm keeps ringing', () => {
   const played = [];
   const player = new ScenePlayer({ id: 'probe', steps: [{ type: 'sound', sound: 'alarm', repeat: 4, interval: 0.5 }] },

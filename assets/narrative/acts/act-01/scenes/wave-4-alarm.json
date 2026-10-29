@@ -46,29 +46,31 @@
   },
   "steps": [
     {
-      "type": "sound",
-      "sound": "alarm"
-    },
-    {
       "type": "parallel",
       "steps": [
+        {
+          "type": "sound",
+          "sound": "alarm",
+          "repeat": 9,
+          "interval": 0.4
+        },
         {
           "type": "move",
           "actor": "second",
           "to": "second-stop",
-          "duration": 2
+          "duration": 3.2
         },
         {
           "type": "move",
           "actor": "third",
           "to": "third-stop",
-          "duration": 2
+          "duration": 3.2
         },
         {
           "type": "camera",
           "to": "close",
           "zoom": 1.15,
-          "duration": 2
+          "duration": 3.2
         }
       ]
     },
@@ -99,6 +101,12 @@
           "text": "Cerrá el orto, bot de mierda."
         }
       ]
+    },
+    {
+      "type": "sound",
+      "sound": "alarm",
+      "repeat": 5,
+      "interval": 0.5
     }
   ]
 }
