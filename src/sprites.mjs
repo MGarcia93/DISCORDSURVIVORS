@@ -663,6 +663,63 @@ export function drawEnemyShot(ctx, device = 'bolt') {
   pixel(ctx, 4, -1, 2, 2, '#f7f2ff');
 }
 
+const MIST = { light: '#cfd8e8', base: '#a7b4c9', mid: '#8b98ad', dark: '#6d788c' };
+
+// Act 2 — League of Legends, waves 3 and 4. Yorick's mist walker: a hooded
+// shroud of fog and bone that chases in packs. It has no legs (the cloth ravels
+// into the ground), one arm hangs with fingers and the other is raised, so the
+// silhouette never mirrors; the only bright note is the two cold eyes.
+export function drawMistWalker(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const drift = Math.floor(time * 6 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -8, 0, 17, 2, '#131a20');
+  // Ragged hem: uneven strips are what keep the robe from reading as a barrel.
+  pixel(ctx, -8, -6, 17, 6, '#151a24');
+  torsoBands(ctx, -7, -5, 15, 4, MIST);
+  pixel(ctx, -7, -1, 2, 2, MIST.dark);
+  pixel(ctx, -4, 0, 3, 2, MIST.mid);
+  pixel(ctx, 0, -1 + drift, 3, 3, MIST.dark);
+  pixel(ctx, 4, 0, 2, 2, MIST.base);
+  pixel(ctx, 7, -1, 2, 2, MIST.mid);
+  // Lower shroud and chest: one tapering mass.
+  pixel(ctx, -8, -13, 17, 8, '#151a24');
+  torsoBands(ctx, -7, -12, 15, 6, MIST);
+  pixel(ctx, -7, -22, 15, 10, '#151a24');
+  torsoBands(ctx, -6, -21, 13, 8, MIST);
+  pixel(ctx, -4, -18, 7, 1, '#3d4657');
+  pixel(ctx, -2, -16, 5, 1, '#3d4657');
+  // Shoulders: wide, then a step inward, so the mass slopes.
+  pixel(ctx, -8, -23, 17, 2, '#151a24');
+  pixel(ctx, -6, -25, 13, 2, '#151a24');
+  pixel(ctx, -5, -25, 11, 1, MIST.mid);
+  // Left arm hangs to the ground with two fingers.
+  pixel(ctx, -10, -22, 4, 12, '#151a24');
+  pixel(ctx, -9, -21, 3, 10, MIST.base);
+  pixel(ctx, -12, -11, 5, 2, '#151a24');
+  pixel(ctx, -12, -11, 1, 2, MIST.light);
+  pixel(ctx, -10, -11, 1, 2, MIST.light);
+  // Right arm is raised out of the cloak, three steps of a bent limb.
+  pixel(ctx, 7, -23, 4, 4, '#151a24');
+  pixel(ctx, 8, -22, 3, 3, MIST.mid);
+  pixel(ctx, 10, -26, 5, 4, '#151a24');
+  pixel(ctx, 11, -25, 3, 3, MIST.base);
+  pixel(ctx, 13, -27, 2, 3, '#151a24');
+  pixel(ctx, 13, -26, 1, 2, MIST.light);
+  // Hood: a cone that sits on the chest, with the eyes deep in its opening.
+  pixel(ctx, -4, -31, 9, 8, '#19232b');
+  pixel(ctx, -3, -30, 7, 6, MIST.dark);
+  pixel(ctx, -3, -28, 7, 4, '#202a38');
+  pixel(ctx, -2, -27, 2, 2, '#9ff0ff');
+  pixel(ctx, 2, -27, 2, 2, '#9ff0ff');
+  pixel(ctx, -3, -33, 7, 2, '#19232b');
+  pixel(ctx, -2, -35, 5, 2, '#19232b');
+  pixel(ctx, -1, -37, 3, 2, '#19232b');
+  pixel(ctx, -2, -34, 3, 1, MIST.mid);
+  pixel(ctx, -1, -36, 1, 1, MIST.mid);
+  ctx.restore();
+}
+
 export function drawAdministrator(ctx, x, y, options = {}) {
   pose(ctx, x, y, options.scale || 4);
   const hover = Math.floor(Math.sin((options.time || 0) * 2) * 2);
