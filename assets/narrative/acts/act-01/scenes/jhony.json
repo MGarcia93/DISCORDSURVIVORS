@@ -85,12 +85,12 @@
         300
       ],
       "late-b": [
-        1100,
-        830
+        1080,
+        760
       ],
       "late-b-near": [
-        900,
-        560
+        960,
+        610
       ]
     },
     "actors": {
@@ -344,13 +344,7 @@
           "type": "move",
           "actor": "late-a",
           "to": "late-a-near",
-          "duration": 3.5
-        },
-        {
-          "type": "move",
-          "actor": "late-b",
-          "to": "late-b-near",
-          "duration": 2.6
+          "duration": 2.5
         }
       ]
     },
@@ -376,10 +370,21 @@
       "duration": 1.5
     },
     {
-      "type": "camera",
-      "to": "late-b-near",
-      "zoom": 1.3,
-      "duration": 1.8
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "camera",
+          "to": "late-b-near",
+          "zoom": 1.3,
+          "duration": 2.4
+        },
+        {
+          "type": "move",
+          "actor": "late-b",
+          "to": "late-b-near",
+          "duration": 2.4
+        }
+      ]
     },
     {
       "type": "flash",

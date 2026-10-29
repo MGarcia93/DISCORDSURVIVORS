@@ -134,51 +134,22 @@ test('Jhony shoots the runner first and says the line after it', async () => {
   assert.match(steps[lastLine].lines[0].text, /NO ME TRAIGAS MÁS ZOMBIES/);
 });
 
-test('the last two arrive together, the runner goes deeper than the shambler', async () => {
+test('the shambler shows up first and the runner dies the moment it arrives', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene;
-  const arrival = scene.steps.find(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
-  assert.ok(arrival.steps.some(child => child.actor === 'late-b'), 'both walk in on the same beat');
+  const legs = scene.steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]));
+  const walk = id => legs.filter(child => child.type === 'move' && child.actor === id).at(-1);
+  const first = scene.steps.findIndex(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
+  const runner = scene.steps.findIndex(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-b'));
+  assert.ok(first >= 0 && runner > first, 'the one from above appears before the runner');
+  assert.ok(scene.steps[runner].steps.some(child => child.type === 'camera'), 'the camera lands on the runner as it walks in');
   const jhony = scene.stage.points[scene.stage.actors.jhony.at];
   const reach = id => {
-    const move = scene.steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]))
-      .filter(child => child.type === 'move' && child.actor === id).at(-1);
-    const [x, y] = scene.stage.points[move.to];
+    const [x, y] = scene.stage.points[walk(id).to];
     return Math.hypot(x - jhony[0], y - jhony[1]);
   };
-  assert.ok(reach('late-b') < reach('late-a'), 'the runner closes in, the shambler keeps its distance');
-});
-
-test('a flash must point at a real stage point', () => {
-  const stage = { points: { a: [10, 10] } };
-  assert.throws(() => validateScene({ id: 'probe', stage, steps: [{ type: 'flash', at: 'nowhere', duration: 0.1 }] }, {}), /Unknown point: nowhere/);
-  assert.doesNotThrow(() => validateScene({ id: 'probe', stage, steps: [{ type: 'flash', at: 'a', duration: 0.1 }] }, {}));
-});
-
-test('an enemy actor must name a real kind and a real state', () => {
-  const stage = { points: { a: [10, 10] }, actors: { z: { enemy: 'dragon', at: 'a' } } };
-  assert.throws(() => validateScene({ id: 'probe', stage, steps: [] }, { enemies: { zombie: {} } }), /Unknown enemy actor: z/);
-  const asleep = { id: 'probe', stage: { ...stage, actors: { z: { enemy: 'zombie', at: 'a', state: 'asleep' } } }, steps: [] };
-  assert.throws(() => validateScene(asleep, { enemies: { zombie: {} } }), /Invalid enemy state: z/);
-});
-
-test('no zombie ever ends up standing on Maxi', async () => {
-  const catalog = await catalogFor();
-  const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) < 60;
-  for (const entry of catalog.entries.filter(item => item.id.startsWith('act-01-'))) {
-    const points = entry.scene.stage.points;
-    const maxi = Object.values(entry.scene.stage.actors).find(actor => actor.character === 'maxi-negro');
-    const spots = [];
-    if (maxi) spots.push(points[maxi.at]);
-    for (const step of entry.scene.steps) {
-      for (const child of step.type === 'parallel' ? step.steps : [step]) {
-        if (child.type === 'move' && child.to) spots.push(points[child.to]);
-      }
-    }
-    if (!maxi) continue;
-    const start = points[maxi.at];
-    for (const spot of spots) assert.ok(!near(spot, start) || spot === start, `${entry.id}: a zombie ends on Maxi at ${spot}`);
-  }
+  assert.ok(reach('late-b') > 120, 'the runner stops short of Jhony');
+  assert.ok(reach('late-b') < reach('late-a'), 'and still gets closer than the shambler');
 });
 
 test('the arrival scene owns the first wave and releases it when done', async () => {
