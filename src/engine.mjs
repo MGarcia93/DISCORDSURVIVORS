@@ -257,7 +257,10 @@ function fireRadial(run, source, damage, { count, speed, radius }) {
 
 function hit(run, enemy, damage, kind = 'damage') {
   const elemental = (enemy.confusionStacks ?? 0) >= 3 ? 1.5 : 1;
-  enemy.hp -= damage * elemental * (1 - Math.min(DEFENSE_MITIGATION_CAP, enemy.defense ?? 0));
+  // Warrior's smoke bonus: mushrooms bite harder on enemies breathing his cloud.
+  const smoked = kind === 'spore' && (enemy.smokeIn ?? 0) > 0
+    ? 1 + (run.player.rewardBonuses.smokeBonus ?? 0) : 1;
+  enemy.hp -= damage * elemental * smoked * (1 - Math.min(DEFENSE_MITIGATION_CAP, enemy.defense ?? 0));
   run.effects.push({ x: enemy.x, y: enemy.y - enemy.radius, text: `${Math.round(damage)}`, ttl: 0.65, kind });
 }
 
@@ -270,13 +273,17 @@ function awardCoins(run, amount) {
 
 function attackMelee(run) {
   const p = run.player;
-  const target = nearest(run, p);
-  if (!target || distance(target, p) > p.attackRange) return;
+  const inReach = run.enemies
+    .filter(enemy => enemy.hp > 0 && distance(enemy, p) <= p.attackRange)
+    .sort((a, b) => distance(a, p) - distance(b, p));
+  if (!inReach.length) return;
   const combat = p.characterDef.combat || {};
   const damage = p.damage * (p.permissionActive > 0 ? (combat.permissionDamageMult ?? 1) : 1);
-  hit(run, target, damage, 'bite');
+  const extra = Math.min(inReach.length - 1, p.rewardBonuses.biteTargets ?? 0);
+  hit(run, inReach[0], damage, 'bite');
+  for (let index = 1; index <= extra; index++) hit(run, inReach[index], damage * 0.7, 'bite');
   p.attackFlash = 0.22;
-  run.effects.push({ x: target.x, y: target.y - target.radius - 12, text: '✦', ttl: 0.35, kind: 'bite' });
+  run.effects.push({ x: inReach[0].x, y: inReach[0].y - inReach[0].radius - 12, text: '✦', ttl: 0.35, kind: 'bite' });
 }
 
 export function step(run, seconds, input = {}) {
@@ -324,6 +331,8 @@ export function step(run, seconds, input = {}) {
     p.still += dt;
     if (p.still >= Math.max(0.5, 2 - (p.rewardBonuses.stillThreshold ?? 0))) {
       p.hp = Math.min(p.maxHp, p.hp + p.regen * dt);
+      const shieldMax = p.rewardBonuses.stillShield ?? 0;
+      if (shieldMax > 0) p.shield = Math.min(shieldMax, (p.shield ?? 0) + shieldMax * dt / 2);
       def.onStill?.(run, p);
     }
   }
@@ -392,9 +401,16 @@ export function step(run, seconds, input = {}) {
       }
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
       const contactDamage = enemyContactDamage(enemy.kind, run.wave);
-      p.hp = Math.max(0, p.hp - contactDamage
+      let incoming = contactDamage
         * (1 - Math.min(0.75, p.defense * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
-        * contactFactor);
+        * contactFactor;
+      if ((p.shield ?? 0) > 0 && incoming > 0) {
+        const absorbed = Math.min(p.shield, incoming);
+        p.shield -= absorbed;
+        incoming -= absorbed;
+        run.effects.push({ x: p.x, y: p.y - 70 * WORLD_SCALE, text: 'BLOQUEO', ttl: 0.6, kind: 'shield' });
+      }
+      p.hp = Math.max(0, p.hp - incoming);
       p.immune = 0.65;
       // A confused mind swings slower; otherwise the sheet owns the cadence.
       enemy.attackCd = (enemy.confusionStacks ?? 0) >= 2 ? 0.8 : (enemy.attackInterval ?? 0.65);
@@ -434,11 +450,22 @@ export function step(run, seconds, input = {}) {
       hit(run, target, shot.damage);
       shot.hit.push(target.id);
       if (shot.attack?.blast) {
-        applyConfusion(target, shot.attack.blast.stacks ?? 1, shot.attack.blast.ttl ?? 5.4);
+        applyConfusion(target, (shot.attack.blast.stacks ?? 1) + (p.rewardBonuses.confusionStacks ?? 0),
+          shot.attack.blast.ttl ?? 5.4);
         shroomBlast(run, shot, target);
       }
+      if (shot.kind === 'brick') {
+        const fragments = p.rewardBonuses.brickFragments ?? 0;
+        if (fragments > 0) {
+          fireRadial(run, target, shot.damage * 0.35, { count: fragments, speed: 260 * WORLD_SCALE, radius: 6 });
+          run.effects.push({ x: target.x, y: target.y - target.radius, text: 'FRAGMENTOS', ttl: 0.7, kind: 'shard' });
+        }
+      }
       const next = nearest(run, shot, shot.hit);
-      if (shot.kind === 'remote' && shot.hit.length <= (p.rewardBonuses.bounce ?? 0) && next && distance(next, shot) < 300 * WORLD_SCALE) {
+      const pierce = shot.kind === 'remote' ? (p.rewardBonuses.bounce ?? 0)
+        : shot.kind === 'magic' ? (p.rewardBonuses.waifuPierce ?? 0)
+        : shot.kind === 'brick' ? (p.rewardBonuses.brickPierce ?? 0) : 0;
+      if (shot.hit.length <= pierce && next && distance(next, shot) < 300 * WORLD_SCALE) {
         shot.target = next.id;
         shot.damage *= 0.85;
       } else shot.ttl = 0;
