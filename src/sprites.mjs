@@ -666,9 +666,10 @@ export function drawEnemyShot(ctx, device = 'bolt') {
 const MIST = { light: '#cfd8e8', base: '#a7b4c9', mid: '#8b98ad', dark: '#6d788c' };
 
 // Act 2 — League of Legends, waves 3 and 4. Yorick's mist walker, drawn from
-// the Rift's own ghoul: a hunched teal brute with no eyes and a maw of fangs,
-// wrapped forearms and shins, long arms and short bent legs. The head is the
-// biggest mass on the body, which is what separates it from a person in a robe.
+// the Rift's own ghoul: teal, hunched, wrapped forearms and shins, clawed hands.
+// It is small on purpose. The act's joke is that Yorick mistakes Solago for one
+// of these, so the walker has to be short and buck-toothed like him: that is
+// what makes "este pelotudo piensa que soy uno de sus bichos" land.
 const GHOUL_SKIN = { light: '#8fd0e0', base: '#5fa8bd', mid: '#4b8da3', dark: '#3a6f83' };
 const GHOUL_WRAP = { light: '#dfcfb6', base: '#bda98c', dark: '#8e7c63' };
 const GHOUL_TEETH = '#f1edda';
@@ -676,77 +677,59 @@ const GHOUL_MAW = '#3a1a24';
 
 export function drawMistWalker(ctx, x, y, options = {}) {
   const { time = 0, seed = 0, scale = 2 } = options;
-  const stride = Math.floor(time * 5 + seed) % 2;
+  const stride = Math.floor(time * 6 + seed) % 2;
   pose(ctx, x, y, scale);
-  pixel(ctx, -12, 0, 25, 2, '#131a20');
-  // Short bent legs: thigh, wrapped shin, wide clawed foot.
-  pixel(ctx, -9, -14, 7, 8 - stride, GHOUL_SKIN.dark);
-  pixel(ctx, -8, -14, 5, 7 - stride, GHOUL_SKIN.mid);
-  pixel(ctx, 2, -14, 7, 7 + stride, GHOUL_SKIN.dark);
-  pixel(ctx, 3, -14, 5, 6 + stride, GHOUL_SKIN.base);
-  pixel(ctx, -9, -7, 7, 8, '#151a24');
-  pixel(ctx, -8, -6, 5, 6, GHOUL_WRAP.base);
-  pixel(ctx, -8, -5, 5, 1, GHOUL_WRAP.light);
-  pixel(ctx, -8, -3, 5, 1, GHOUL_WRAP.dark);
-  pixel(ctx, 2, -7, 7, 8, '#151a24');
-  pixel(ctx, 3, -6, 5, 6, GHOUL_WRAP.base);
-  pixel(ctx, 3, -5, 5, 1, GHOUL_WRAP.light);
-  pixel(ctx, 3, -3, 5, 1, GHOUL_WRAP.dark);
-  pixel(ctx, -11, -2, 10, 3, '#151a24');
-  pixel(ctx, -10, -2, 8, 2, GHOUL_SKIN.mid);
-  pixel(ctx, 1, -2, 10, 3, '#151a24');
-  pixel(ctx, 2, -2, 8, 2, GHOUL_SKIN.dark);
-  pixel(ctx, -10, 0, 2, 2, GHOUL_TEETH);
-  pixel(ctx, -7, 0, 2, 2, GHOUL_TEETH);
-  pixel(ctx, 3, 0, 2, 2, GHOUL_TEETH);
-  pixel(ctx, 6, 0, 2, 2, GHOUL_TEETH);
-  // Body: a hunched mass, belly under the chest, shoulders behind the head.
-  pixel(ctx, -9, -24, 19, 11, '#151a24');
-  torsoBands(ctx, -8, -23, 17, 9, GHOUL_SKIN);
-  pixel(ctx, -11, -30, 23, 7, '#151a24');
-  torsoBands(ctx, -10, -29, 21, 5, GHOUL_SKIN);
-  pixel(ctx, -8, -35, 17, 5, '#151a24');
-  pixel(ctx, -7, -34, 15, 4, GHOUL_SKIN.base);
-  pixel(ctx, -7, -34, 15, 1, GHOUL_SKIN.light);
-  // Long arms: bare shoulder, wrapped forearm, clawed hand at the knees.
-  pixel(ctx, -16, -30, 6, 10, '#151a24');
-  pixel(ctx, -15, -29, 4, 8, GHOUL_SKIN.base);
-  pixel(ctx, -17, -21, 7, 11, '#151a24');
-  pixel(ctx, -16, -20, 5, 9, GHOUL_WRAP.base);
-  pixel(ctx, -16, -19, 5, 1, GHOUL_WRAP.light);
-  pixel(ctx, -16, -16, 5, 1, GHOUL_WRAP.dark);
-  pixel(ctx, -16, -11, 5, 2, GHOUL_SKIN.mid);
-  pixel(ctx, -17, -10, 2, 3, GHOUL_TEETH);
-  pixel(ctx, -14, -10, 2, 3, GHOUL_TEETH);
-  pixel(ctx, 10, -30, 6, 10, '#151a24');
-  pixel(ctx, 11, -29, 4, 8, GHOUL_SKIN.mid);
-  pixel(ctx, 10, -21, 7, 11, '#151a24');
-  pixel(ctx, 11, -20, 5, 9, GHOUL_WRAP.base);
-  pixel(ctx, 11, -19, 5, 1, GHOUL_WRAP.light);
-  pixel(ctx, 11, -16, 5, 1, GHOUL_WRAP.dark);
-  pixel(ctx, 11, -11, 5, 2, GHOUL_SKIN.mid);
-  pixel(ctx, 11, -10, 2, 3, GHOUL_TEETH);
-  pixel(ctx, 14, -10, 2, 3, GHOUL_TEETH);
-  // The head is a maw: a heavy skull over an opening ringed with fangs.
-  roundedMass(ctx, -10, -45, 21, 10, '#151a24');
-  roundedMass(ctx, -9, -44, 19, 8, GHOUL_SKIN.base);
-  pixel(ctx, -9, -44, 7, 2, GHOUL_SKIN.light);
-  pixel(ctx, -9, -39, 19, 1, GHOUL_SKIN.mid);
-  pixel(ctx, -9, -38, 19, 9, '#151a24');
-  pixel(ctx, -8, -37, 17, 7, GHOUL_MAW);
-  pixel(ctx, -8, -37, 17, 2, '#241019');
-  pixel(ctx, -6, -34, 13, 4, '#7d3147');
-  pixel(ctx, -6, -34, 13, 1, '#a3495f');
-  // Fangs are few and uneven: a row of equal teeth reads as a grin, not a maw.
-  pixel(ctx, -8, -38, 2, 3, GHOUL_TEETH);
-  pixel(ctx, -3, -38, 2, 4, GHOUL_TEETH);
-  pixel(ctx, 1, -38, 1, 3, GHOUL_TEETH);
-  pixel(ctx, 5, -38, 2, 4, GHOUL_TEETH);
-  pixel(ctx, -7, -33, 1, 3, GHOUL_TEETH);
-  pixel(ctx, -1, -33, 2, 2, GHOUL_TEETH);
-  pixel(ctx, 4, -33, 1, 3, GHOUL_TEETH);
-  pixel(ctx, -8, -30, 17, 3, '#151a24');
-  pixel(ctx, -7, -30, 15, 2, GHOUL_SKIN.mid);
+  pixel(ctx, -8, 0, 17, 2, '#131a20');
+  // Stubby bent legs, wrapped shins, clawed feet.
+  pixel(ctx, -6, -8, 5, 7 - stride, GHOUL_SKIN.dark);
+  pixel(ctx, 1, -8, 5, 6 + stride, GHOUL_SKIN.mid);
+  pixel(ctx, -6, -5, 5, 4, GHOUL_WRAP.base);
+  pixel(ctx, -6, -4, 5, 1, GHOUL_WRAP.light);
+  pixel(ctx, 1, -5, 5, 4, GHOUL_WRAP.base);
+  pixel(ctx, 1, -4, 5, 1, GHOUL_WRAP.light);
+  pixel(ctx, -7, -1, 6, 2, '#151a24');
+  pixel(ctx, -6, -1, 4, 1, GHOUL_SKIN.mid);
+  pixel(ctx, 1, -1, 6, 2, '#151a24');
+  pixel(ctx, 2, -1, 4, 1, GHOUL_SKIN.dark);
+  pixel(ctx, -6, 0, 1, 1, GHOUL_TEETH);
+  pixel(ctx, -4, 0, 1, 1, GHOUL_TEETH);
+  pixel(ctx, 3, 0, 1, 1, GHOUL_TEETH);
+  pixel(ctx, 5, 0, 1, 1, GHOUL_TEETH);
+  // Round little belly, no neck to speak of.
+  pixel(ctx, -6, -18, 13, 11, '#151a24');
+  torsoBands(ctx, -5, -17, 11, 9, GHOUL_SKIN);
+  pixel(ctx, -5, -12, 11, 1, GHOUL_SKIN.dark);
+  // Short arms: bare shoulder, wrapped forearm, two claws.
+  pixel(ctx, -9, -17, 3, 7, '#151a24');
+  pixel(ctx, -8, -16, 2, 5, GHOUL_SKIN.base);
+  pixel(ctx, -9, -12, 4, 5, '#151a24');
+  pixel(ctx, -8, -11, 3, 3, GHOUL_WRAP.base);
+  pixel(ctx, -8, -10, 3, 1, GHOUL_WRAP.light);
+  pixel(ctx, -8, -8, 3, 2, GHOUL_SKIN.mid);
+  pixel(ctx, -9, -7, 2, 3, GHOUL_TEETH);
+  pixel(ctx, -6, -7, 2, 3, GHOUL_TEETH);
+  pixel(ctx, 6, -17, 3, 7, '#151a24');
+  pixel(ctx, 7, -16, 2, 5, GHOUL_SKIN.mid);
+  pixel(ctx, 6, -12, 4, 5, '#151a24');
+  pixel(ctx, 7, -11, 3, 3, GHOUL_WRAP.base);
+  pixel(ctx, 7, -10, 3, 1, GHOUL_WRAP.light);
+  pixel(ctx, 7, -8, 3, 2, GHOUL_SKIN.mid);
+  pixel(ctx, 6, -7, 2, 3, GHOUL_TEETH);
+  pixel(ctx, 9, -7, 2, 3, GHOUL_TEETH);
+  // The head is almost half the body: a maw with two big front teeth.
+  roundedMass(ctx, -8, -30, 17, 13, '#151a24');
+  roundedMass(ctx, -7, -29, 15, 11, GHOUL_SKIN.base);
+  pixel(ctx, -7, -29, 6, 2, GHOUL_SKIN.light);
+  pixel(ctx, -7, -20, 15, 1, GHOUL_SKIN.dark);
+  pixel(ctx, -7, -26, 15, 7, '#151a24');
+  pixel(ctx, -6, -25, 13, 5, GHOUL_MAW);
+  pixel(ctx, -6, -25, 13, 2, '#241019');
+  pixel(ctx, -4, -22, 9, 2, '#7d3147');
+  // The two front teeth are the joke: wide, long and together, like Solago's.
+  pixel(ctx, -3, -26, 3, 5, GHOUL_TEETH);
+  pixel(ctx, 1, -26, 3, 5, GHOUL_TEETH);
+  pixel(ctx, -6, -26, 2, 2, GHOUL_TEETH);
+  pixel(ctx, 5, -26, 2, 2, GHOUL_TEETH);
   ctx.restore();
 }
 
