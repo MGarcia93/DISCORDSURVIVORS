@@ -79,6 +79,11 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
         case 'prop':
           requireValue(own(props, step.prop) && text(step.state), `Unknown prop/state: ${step.prop}`);
           resources.push(`prop:${step.prop}`); break;
+        // An enemy drops where it stands: visible death during a scene.
+        case 'down':
+          requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
+          requireValue(Boolean(actors[step.actor].enemy), `Only an enemy actor can go down: ${step.actor}`);
+          resources.push(`actor:${step.actor}`); break;
         case 'sound': requireValue(own(sounds, step.sound), `Unknown sound: ${step.sound}`); break;
         case 'splash':
           requireValue(!parallel, 'Splash is not allowed inside parallel actions');
@@ -197,6 +202,11 @@ export class ScenePlayer {
     if (step.type === 'wait') return this._timed(step.duration, () => {});
     if (step.type === 'prop') {
       this.props[step.prop].state = step.state;
+      return { tick: () => true, skip() {} };
+    }
+    if (step.type === 'down') {
+      this.actors[step.actor].dead = true;
+      this.actors[step.actor].animation = 'idle';
       return { tick: () => true, skip() {} };
     }
     if (step.type === 'sound') {

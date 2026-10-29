@@ -52,7 +52,14 @@
       { "speaker": "maxi-negro", "expression": "annoyed", "text": "Pero escuchame un segundo, boludo..." },
       { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!" }
     ] },
-    { "type": "move", "actor": "walker-b", "to": "walker-near", "duration": 1.6 },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "walker-b", "to": "walker-near", "duration": 1.6 },
+      { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.6 },
+      { "type": "camera", "to": "walker-near", "zoom": 1.35, "duration": 1.6 }
+    ] },
+    { "type": "sound", "sound": "gunshot" },
+    { "type": "down", "actor": "walker-a" },
+    { "type": "wait", "duration": 0.6 },
     { "type": "camera", "to": "corpse-c", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "neutral", "text": "Igual, Jhony, ¿no te parece que ya jugaste bastante a esta mierda?" },

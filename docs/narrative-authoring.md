@@ -117,6 +117,7 @@ An actor is either a member of the cast or an enemy:
 | `animate` | `actor`, `animation`, `duration` | `idle`, `walk`, `point` or `celebrate` |
 | `camera` | `to`, optional `zoom`, `duration` | Pan/zoom; zoom range 1–4. The stage is exactly the canvas, so the camera is clamped and never shows black outside the map |
 | `prop` | `prop`, `state` | Change a scene-local prop state |
+| `down` | `actor` | Drop an enemy where it stands; a dead enemy never animates |
 | `sound` | `sound` | Play a catalog sound without waiting |
 | `splash` | `speaker`, `text`, `duration` | Timed presentation using a catalog portrait |
 | `notice` | `title`, `lines`, `duration` | System message: the world's own UI, no portrait |

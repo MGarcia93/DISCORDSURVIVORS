@@ -82,6 +82,24 @@ test('the act stages enemies instead of describing them', async () => {
   assert.equal(actorsOf('act-01-boss-defeat').find(actor => actor.enemy === 'alarmZombie').state, 'dead');
 });
 
+test('Jhony actually shoots one down in front of the player', async () => {
+  const catalog = await catalogFor();
+  const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
+  const shot = steps.findIndex(step => step.type === 'sound' && step.sound === 'gunshot');
+  assert.ok(shot > 0, 'the shot is staged');
+  assert.deepEqual(steps[shot + 1], { type: 'down', actor: 'walker-a' }, 'and the zombie drops right after it');
+});
+
+test('a down step kills an enemy and refuses a cast member', () => {
+  const characters = { guide: { expressions: { neutral: 'x.svg' } } };
+  const enemies = { zombie: {} };
+  const stage = { points: { a: [10, 10] }, actors: { z: { enemy: 'zombie', at: 'a' }, guide: { character: 'guide', at: 'a' } } };
+  const player = new ScenePlayer({ id: 'probe', stage, steps: [{ type: 'down', actor: 'z' }] }, { characters, enemies });
+  assert.equal(player.actors.z.dead, true);
+  assert.throws(() => validateScene({ id: 'probe', stage, steps: [{ type: 'down', actor: 'guide' }] }, { characters, enemies }),
+    /Only an enemy actor can go down: guide/);
+});
+
 test('an enemy actor must name a real kind and a real state', () => {
   const stage = { points: { a: [10, 10] }, actors: { z: { enemy: 'dragon', at: 'a' } } };
   assert.throws(() => validateScene({ id: 'probe', stage, steps: [] }, { enemies: { zombie: {} } }), /Unknown enemy actor: z/);
