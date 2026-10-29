@@ -34,7 +34,6 @@
         { "speaker": "maxi-negro", "expression": "annoyed", "text": "Y... Papasito, seguro." }
       ]
     },
-    { "type": "flash", "at": "ground", "duration": 0.4 },
     { "type": "notice", "title": "PAPASITO", "duration": 4, "lines": ["Dale, hijo de puta... Tirame el legendario de una vez."] }
   ],
   "effects": [{ "key": "act-02-finished", "value": true }]
