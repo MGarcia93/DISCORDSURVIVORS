@@ -6,7 +6,7 @@ import { state } from '../app/state.mjs';
 export function home() {
   state.content.innerHTML = `
     <section class="home-screen" aria-label="Menú principal">
-      <canvas id="menu-scene" class="scene-backdrop" width="480" height="270" role="img" aria-label="Habitación pixel art: El Negro con buzo amarillo en el sillón, frente a su computadora"></canvas>
+      <canvas id="menu-scene" class="scene-backdrop" width="480" height="270" role="img" aria-label="Habitación pixel art: Maxi Negro con buzo amarillo en el sillón, frente a su computadora"></canvas>
       <div class="home-content">
         <p class="chapter-label">UNA NOCHE MÁS EN EL SERVIDOR</p>
         <h1 class="sr-only">Discord Survivors — La última partida</h1>

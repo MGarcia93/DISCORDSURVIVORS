@@ -8,11 +8,11 @@ export const storyPages = [
     label: '01 / EL ÚLTIMO MENSAJE',
     symbol: '⌁',
     tag: 'CANAL DE VOZ · 23:47',
-    text: 'Una noche cualquiera. Uno quiere jugar al LoL, otro al Diablo, otro al Zomboid. El Negro no quiere instalar nada. Después de horas sin decidir, alguien propone Monopoly.',
+    text: 'Una noche cualquiera. Uno quiere jugar al LoL, otro al Diablo, otro al Zomboid. Maxi Negro no quiere instalar nada. Después de horas sin decidir, alguien propone Monopoly.',
     quote: 'El servidor no soportó una discusión más. Literalmente.',
     background: 'room',
     overlay: null,
-    art: 'El Negro en su habitación',
+    art: 'Maxi Negro en su habitación',
   },
   {
     title: 'Bienvenidos al apocalipsis de los boludos.',
@@ -23,7 +23,7 @@ export const storyPages = [
     quote: 'Los zombis te persiguen. Los corredores llegan antes. Ninguno respeta el AFK.',
     background: 'zomboid',
     overlay: 'zombies',
-    art: 'El Negro rodeado de zombis',
+    art: 'Maxi Negro rodeado de zombies',
   },
   {
     title: 'Sobreviví. Después discutimos.',

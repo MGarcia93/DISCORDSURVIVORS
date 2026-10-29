@@ -37,7 +37,7 @@ export const ITEMS = [
     lore: 'Dicen que cura cualquier enfermedad. El primero que lo comprobó no sobrevivió para confirmarlo.',
     modifiers: [flat('life', 15)] },
   { id: 'slipper', name: 'Zapatilla', price: 40, maxCopies: 3,
-    lore: 'Cuenta la leyenda que esta zapatilla fue utilizada para aplastar una cabeza. Por alguna razón, al Negro le trae malos recuerdos.',
+    lore: 'Cuenta la leyenda que esta zapatilla fue utilizada para aplastar una cabeza. Por alguna razón, a Maxi Negro le trae malos recuerdos.',
     modifiers: [percent('attack', 10)] },
   { id: 'antidepressants', name: 'Antidepresivos', price: 60, maxCopies: 3,
     lore: 'No solucionan tus problemas, pero al menos evitás explotar antes de terminar la partida.',
@@ -54,7 +54,7 @@ export const ITEMS = [
   // Range assignment remains provisional in the approved design: keep the
   // entry available for authoring but exclude it from offers until confirmed.
   { id: 'chicken', name: 'Gallina', enabled: false, price: 40, maxCopies: 3,
-    lore: 'Cuenta la leyenda que alguien pasó horas cuidando de esta gallina, hasta que otro llegó y le pegó un saque. Por alguna razón, al Negro todavía le cuesta hablar del tema.',
+    lore: 'Cuenta la leyenda que alguien pasó horas cuidando de esta gallina, hasta que otro llegó y le pegó un saque. Por alguna razón, a Maxi Negro todavía le cuesta hablar del tema.',
     modifiers: [percent('attackDistance', 10)] },
 ];
 
