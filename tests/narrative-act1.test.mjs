@@ -22,6 +22,19 @@ test('the act registers its six cinematics and every scene validates', async () 
   assert.ok(catalog.sounds.alarm && catalog.sounds.gunshot, 'the act brings its own alarm and shots');
 });
 
+test('every portrait the act resolves points at a file that exists', async () => {
+  const catalog = await catalogFor();
+  assert.ok(catalog.characters['maxi-negro'].expressions.tired.endsWith('/assets/narrative/portraits/negro/tired.svg'),
+    'expressions resolve from characters.json, not from the act manifest folder');
+  for (const [id, character] of Object.entries(catalog.characters)) {
+    for (const [expression, href] of Object.entries(character.expressions)) {
+      const url = new URL(href);
+      if (url.protocol !== 'file:') continue;
+      await assert.doesNotReject(readFile(url), `${id}.${expression} → ${href}`);
+    }
+  }
+});
+
 test('the development viewer loads every campaign manifest, so a new act appears on its own', async () => {
   const urls = campaignCatalogURLs();
   const listed = urls.map(String);

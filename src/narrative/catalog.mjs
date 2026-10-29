@@ -31,10 +31,13 @@ export async function loadCatalog({ url = manifestURL, urls, fetcher = globalThi
   const characters = {}, sounds = {}, descriptors = [], bindings = [], banter = [];
   for (const target of urls ?? [url]) {
     const manifest = await read(target);
-    for (const [id, character] of Object.entries(await read(new URL(manifest.characters, target)))) {
+    // Portrait paths resolve from characters.json, not from the manifest that
+    // names it: an act manifest lives one folder deeper than the shared files.
+    const charactersURL = new URL(manifest.characters, target);
+    for (const [id, character] of Object.entries(await read(charactersURL))) {
       if (!character.name || !character.sprite || !character.expressions?.neutral) throw Error(`Invalid character: ${id}`);
       for (const [expression, path] of Object.entries(character.expressions)) {
-        character.expressions[expression] = new URL(path, target).href;
+        character.expressions[expression] = new URL(path, charactersURL).href;
       }
       characters[id] = character;
     }
