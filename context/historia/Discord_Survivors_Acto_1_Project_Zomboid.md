@@ -228,7 +228,7 @@ Mientras Maxi Negro se aleja, vuelve a aparecer la interfaz del Administrador.
 
 **Maxi Negro:** ¡¿Y ESO POR QUÉ, PORQUE NO TOMASTE?!
 
-**Jhony:** ¡TOMO LO QUE QUIERO, PELOTUDO! ¡AL LOL NO JUEGO NI SOBRIO!
+**Jhony:** ¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO NI SOBRIO!
 
 La pantalla se vuelve negra.
 
