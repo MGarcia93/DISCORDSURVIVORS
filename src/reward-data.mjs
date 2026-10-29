@@ -8,7 +8,15 @@ export const BALANCE = {
   // object only carries economy plus the local short-wave override below.
   // Playtest XP: 10 per ordinary kill so every character can reach the new
   // level-3 upgrades quickly. Lower it to 1 for real balance.
-  xp: { factor: 10, exponent: 2, rewards: { zombie: 10, runner: 10, brute: 20, boss: 0 } },
+  xp: {
+    factor: 10, exponent: 2,
+    // The Rift kinds keep the same 10-per-kill playtest rate as the walkers;
+    // the mini-boss pays like a milestone, and the act boss closes the run.
+    rewards: {
+      zombie: 10, runner: 10, brute: 20, boss: 0,
+      meleeMinion: 5, mageMinion: 8, siegeMinion: 12, mistWalker: 8, maiden: 60,
+    },
+  },
   gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },
   shopSize: 4,
 };

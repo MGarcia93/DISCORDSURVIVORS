@@ -36,6 +36,22 @@ export function drawRunScene(ctx, run, {
   // Dev-only decoration (the sandbox's reach ring) sits under the actors, the
   // same place the game draws its ground marks.
   underlay?.(ctx, run);
+  // Yorick's earth wall: pillars of raised ground around the player, drawn on
+  // the ground layer so the actors stay readable inside it.
+  if (run.prison) {
+    const { x, y, radius, ttl } = run.prison;
+    ctx.save();
+    ctx.globalAlpha *= Math.min(1, ttl);
+    for (let i = 0; i < 24; i++) {
+      const angle = i / 24 * Math.PI * 2;
+      const px = Math.round((x + Math.cos(angle) * radius) / 4) * 4;
+      const py = Math.round((y + Math.sin(angle) * radius) / 4) * 4;
+      rounded(ctx, px - 3, py - 10, 7, 12, 2, '#2a1d12');
+      rounded(ctx, px - 2, py - 9, 5, 9, 2, '#4a3420');
+      rounded(ctx, px - 2, py - 9, 5, 2, 2, '#6b4c2d');
+    }
+    ctx.restore();
+  }
   const astral = p.characterDef.specials.find(special => special.key === 'astral');
   if (p.astral > 0 && astral) {
     drawAstralAura(ctx, p.x, p.y, astral.radius, time, Math.min(1, p.astral / 0.4));

@@ -844,6 +844,106 @@ export function drawMaiden(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+const YORICK_ROBE = { light: '#5c5a3e', base: '#43422c', mid: '#33321f', dark: '#232214' };
+const YORICK_SKIN = { light: '#b9c79a', base: '#96a67c', mid: '#7a8a63', dark: '#5d6b4b' };
+const YORICK_BONE = '#d8d2b4';
+const YORICK_GLOW = '#b6f57a';
+const YORICK_WOOD = { light: '#6b4a2e', base: '#4e3520', dark: '#33220f' };
+const YORICK_IRON = { light: '#9aa0a8', base: '#767d86', mid: '#565d66', dark: '#383f47' };
+const YORICK_INK = '#0d0f0c';
+
+// Act 2 — League of Legends, wave 6. Yorick, the gravedigger. A hooded boss in a
+// robe that reaches the ground, pale green face with two lit eyes, bone clasps
+// and a shovel taller than he is planted at his side: that shovel is the
+// silhouette, so it never leaves the frame.
+export function drawYorick(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const breathe = Math.floor(time * 2) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -18, 0, 35, 2, '#0d0f0c');
+  // Robe: one flare stepped three pixels at a time, dirt-dark at the hem.
+  for (let band = 0; band < 15; band++) {
+    const yy = -46 + band * 3;
+    const half = 8 + Math.round(band * 0.62);
+    pixel(ctx, -half - 1, yy, half * 2 + 2, 3, YORICK_INK);
+    pixel(ctx, -half, yy, half * 2, 3, YORICK_ROBE.base);
+    pixel(ctx, half - 3, yy, 3, 3, YORICK_ROBE.dark);
+    if (band % 2 === 0) pixel(ctx, -half, yy, 2, 3, YORICK_ROBE.light);
+  }
+  // Hem: torn strips that sit on the ground.
+  pixel(ctx, -17, -2, 3, 3, YORICK_ROBE.mid);
+  pixel(ctx, -13, -1, 4, 4, YORICK_ROBE.base);
+  pixel(ctx, -8, -2, 3, 3, YORICK_ROBE.dark);
+  pixel(ctx, -4, -1, 4, 4, YORICK_ROBE.mid);
+  pixel(ctx, 1, -2, 3, 3, YORICK_ROBE.base);
+  pixel(ctx, 5, -1, 4, 4, YORICK_ROBE.dark);
+  pixel(ctx, 10, -2, 3, 3, YORICK_ROBE.mid);
+  pixel(ctx, 14, -1, 3, 3, YORICK_ROBE.dark);
+  // Belt with bone clasps.
+  pixel(ctx, -9, -34, 19, 3, YORICK_INK);
+  pixel(ctx, -8, -34, 17, 2, YORICK_WOOD.base);
+  pixel(ctx, -3, -35, 3, 3, YORICK_BONE);
+  pixel(ctx, 4, -35, 3, 3, YORICK_BONE);
+  // Chest and shoulders, hunched forward.
+  pixel(ctx, -9, -50, 19, 17, YORICK_INK);
+  torsoBands(ctx, -8, -49, 17, 15, YORICK_ROBE);
+  pixel(ctx, -12, -52, 25, 5, YORICK_INK);
+  torsoBands(ctx, -11, -51, 23, 3, YORICK_ROBE);
+  // Hood: a pointed cowl, wider at the shoulders and stepped into a peak, with
+  // a deep opening the eyes sit inside.
+  pixel(ctx, -4, -71, 9, 3, YORICK_INK);
+  pixel(ctx, -3, -71, 7, 2, YORICK_ROBE.mid);
+  pixel(ctx, -6, -69, 13, 3, YORICK_INK);
+  pixel(ctx, -5, -69, 11, 2, YORICK_ROBE.base);
+  pixel(ctx, -8, -67, 17, 4, YORICK_INK);
+  pixel(ctx, -7, -67, 15, 3, YORICK_ROBE.base);
+  pixel(ctx, -9, -64, 19, 13, YORICK_INK);
+  torsoBands(ctx, -8, -63, 17, 11, YORICK_ROBE);
+  pixel(ctx, -6, -61, 13, 9, '#050604');
+  pixel(ctx, -5, -60, 11, 7, '#101309');
+  pixel(ctx, -4, -60, 3, 2, YORICK_GLOW);
+  pixel(ctx, 2, -60, 3, 2, YORICK_GLOW);
+  pixel(ctx, -2, -56, 5, 2, YORICK_SKIN.dark);
+  pixel(ctx, -1, -55, 3, 1, YORICK_BONE);
+  // Hanging arm on the free side, sleeve and a pale hand.
+  pixel(ctx, 11, -49, 6, 12, YORICK_INK);
+  pixel(ctx, 12, -48, 4, 10, YORICK_ROBE.base);
+  pixel(ctx, 12, -38, 4, 5, YORICK_INK);
+  pixel(ctx, 13, -37, 2, 4, YORICK_SKIN.base);
+  pixel(ctx, 13, -33, 3, 2, YORICK_SKIN.light);
+  // The shovel: handle from above the hood to the blade on the ground.
+  pixel(ctx, -22, -62, 4, 54, YORICK_INK);
+  pixel(ctx, -21, -61, 2, 52, YORICK_WOOD.base);
+  pixel(ctx, -21, -61, 1, 52, YORICK_WOOD.light);
+  pixel(ctx, -23, -64, 6, 4, YORICK_INK);
+  pixel(ctx, -22, -63, 4, 2, YORICK_WOOD.dark);
+  pixel(ctx, -23, -14, 4, 4, YORICK_INK);
+  pixel(ctx, -22, -13, 2, 2, YORICK_IRON.base);
+  // Blade: a spade, wide at the shoulders and stepped to a point, not a box.
+  pixel(ctx, -29, -12, 18, 2, YORICK_INK);
+  pixel(ctx, -28, -10, 16, 6, YORICK_INK);
+  pixel(ctx, -26, -4, 12, 3, YORICK_INK);
+  pixel(ctx, -23, -1, 6, 2, YORICK_INK);
+  pixel(ctx, -28, -11, 16, 2, YORICK_IRON.light);
+  pixel(ctx, -27, -9, 14, 4, YORICK_IRON.base);
+  pixel(ctx, -25, -5, 10, 2, YORICK_IRON.mid);
+  pixel(ctx, -22, -3, 4, 2, YORICK_IRON.mid);
+  pixel(ctx, -22, -1, 4, 1, YORICK_IRON.dark);
+  pixel(ctx, -27, -2, 2, 2, YORICK_IRON.dark);
+  // The hand that grips the handle, drawn over it.
+  pixel(ctx, -24, -46, 6, 6, YORICK_INK);
+  pixel(ctx, -23, -45, 4, 4, YORICK_SKIN.base);
+  pixel(ctx, -23, -45, 4, 1, YORICK_SKIN.light);
+  pixel(ctx, -22, -43, 2, 1, YORICK_SKIN.dark);
+  // A skull hanging from the belt, for the gravedigger's trade.
+  pixel(ctx, -12, -30, 5, 5, YORICK_INK);
+  pixel(ctx, -11, -29, 3, 3, YORICK_BONE);
+  pixel(ctx, -11, -28, 1, 1, '#2a2b22');
+  pixel(ctx, -9, -28, 1, 1, '#2a2b22');
+  pixel(ctx, -11, -26, 3, 1, YORICK_BONE);
+  ctx.restore();
+}
+
 export function drawAdministrator(ctx, x, y, options = {}) {
   pose(ctx, x, y, options.scale || 4);
   const hover = Math.floor(Math.sin((options.time || 0) * 2) * 2);

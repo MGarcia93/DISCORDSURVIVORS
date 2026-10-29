@@ -11,6 +11,7 @@ import mageMinion from './mage-minion.mjs';
 import siegeMinion from './siege-minion.mjs';
 import mistWalker from './mist-walker.mjs';
 import maiden from './maiden.mjs';
+import yorick from './yorick.mjs';
 
 // Enemy registry, built from one module per kind exactly like src/characters/.
 // Each ficha owns its sheet and its drawing; this file only resolves percentages
@@ -20,11 +21,11 @@ import maiden from './maiden.mjs';
 // Every kind authors the same six combat stats (life, defense, attack,
 // attackSpeed, attackDistance, moveSpeed). `radius` and `bounty` are body and
 // economy, so they stay as raw fields outside the sheet.
-export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden };
+export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
 export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,
-  meleeMinion.id, mageMinion.id, siegeMinion.id, mistWalker.id, maiden.id];
+  meleeMinion.id, mageMinion.id, siegeMinion.id, mistWalker.id, maiden.id, yorick.id];
 
 export function getEnemyKind(id) {
   return ENEMY_KINDS[id] ?? ENEMY_KINDS.zombie;

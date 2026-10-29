@@ -250,7 +250,10 @@ function pickAction(run, enemy, { inReach = false, distance: gap = Infinity } = 
   // boss has to do something while it is still walking toward the player.
   const ready = actions.filter(action => (action.chance ?? 1) > 0
     && (enemy.actionCds?.[action.key] ?? 0) <= 0
-    && (action.range === undefined ? inReach : gap <= action.range));
+    && (action.range === undefined ? inReach : gap <= action.range)
+    // A phase-locked ability says when it is available; without this the boss
+    // would spend a turn on an action whose condition is still false.
+    && (!action.when || action.when(run, enemy)));
   if (!ready.length) return null;
   const share = ready.reduce((sum, action) => sum + (action.chance ?? 1), 0);
   let roll = run.random() * share;
@@ -293,6 +296,12 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
 // A ring that grows out of a point and hurts the player once as it passes them.
 // Offered to enemy abilities through ctx, so a boss can ring without new engine
 // branches per enemy.
+// A temporary ring of raised earth. Only the player is held by it: the dead walk
+// through their own grave, so the prison is a trap and not a shelter.
+function prison(run, { x, y, radius, ttl = 4 }) {
+  run.prison = { x, y, radius, ttl };
+}
+
 function shockwave(run, { x, y, damage, speed = 320 * WORLD_SCALE, maxRadius = 340 * WORLD_SCALE }) {
   run.shockwaves = run.shockwaves ?? [];
   run.shockwaves.push({ x, y, damage, speed, maxRadius, radius: 0, hit: false });
@@ -397,7 +406,8 @@ export function step(run, seconds, input = {}) {
   const def = p.characterDef;
    const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input,
      spawnEnemy: (kind, x, y) => { const enemy = createEnemy(run, kind, x, y); run.enemies.push(enemy); return enemy; },
-     shockwave: options => shockwave(run, options) };
+     shockwave: options => shockwave(run, options),
+     prison: options => prison(run, options) };
   run.time += dt;
   run.elapsed += dt;
   const decayKeys = [
@@ -432,6 +442,15 @@ export function step(run, seconds, input = {}) {
       * (p.sellMoveSlowTtl > 0 ? 1 - (p.sellMoveSlowFrac ?? 0) : 1);
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
+    if (run.prison) {
+      const dx = p.x - run.prison.x, dy = p.y - run.prison.y;
+      const gap = Math.hypot(dx, dy);
+      const limit = Math.max(0, run.prison.radius - p.hitRadius);
+      if (gap > limit && gap > 0) {
+        p.x = run.prison.x + dx / gap * limit;
+        p.y = run.prison.y + dy / gap * limit;
+      }
+    }
     p.still = 0;
     const trail = p.rewardBonuses.smokeTrail ?? 0;
     if (trail > 0) {
@@ -550,6 +569,10 @@ export function step(run, seconds, input = {}) {
       p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)));
       p.immune = 0.65;
     }
+  }
+  if (run.prison) {
+    run.prison.ttl -= dt;
+    if (run.prison.ttl <= 0) run.prison = null;
   }
   if (run.shockwaves) run.shockwaves = run.shockwaves.filter(wave => wave.radius <= wave.maxRadius);
   for (const shot of run.projectiles) {
