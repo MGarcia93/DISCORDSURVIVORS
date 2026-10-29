@@ -27,7 +27,7 @@ El sol es insoportable. A su alrededor hay ruinas, animales salvajes y cadávere
 
 **Solago:** ¿Será Jhony?
 
-**Maxi Negro:** Capaz. Aunque ese hijo de puta debe seguir matando zombis.
+**Maxi Negro:** Capaz. Aunque ese hijo de puta debe seguir matando zombies.
 
 **Solago:** ¿Y si está Maxi?
 
@@ -540,7 +540,7 @@ La Rueda del Dolor se detiene.
 
 **Maxi Negro:** Pará, boludo. ¿Y los otros?
 
-**Solago:** Jhony se quedó matando zombis, el hijo de puta.
+**Solago:** Jhony se quedó matando zombies, el hijo de puta.
 
 **Papasito:** ¿Y Maxi?
 

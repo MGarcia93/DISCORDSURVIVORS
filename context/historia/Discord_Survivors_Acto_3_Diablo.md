@@ -502,7 +502,7 @@ Preparando siguiente entorno...
 
 **Maxi Negro:** Capaz Jhony. Lo dejamos en Project, pero por ahí ahora se une el hijo de puta.
 
-**Solago:** ¿Jhony? Ese hijo de puta debe seguir matando zombis.
+**Solago:** ¿Jhony? Ese hijo de puta debe seguir matando zombies.
 
 **Maxi Negro:** Y bueno, capaz está Maxi.
 

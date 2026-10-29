@@ -65,7 +65,7 @@ Comienza la primera oleada.
 
 | Oleada | Nombre | Evento |
 |---|---|---|
-| 1 | Reconectando... | Aparecen zombis de Project Zomboid y minions de League of Legends. |
+| 1 | Reconectando... | Aparecen zombies de Project Zomboid y minions de League of Legends. |
 | 2 | Archivos corruptos | Entran demonios, caminantes de Yorick y enemigos de Conan. |
 | 3 | El servidor recuerda | El Administrador utiliza las experiencias personales de los personajes para provocarlos. |
 | 4 | Hotfix en producción | El escenario cambia constantemente y las reglas del combate se modifican. |
@@ -80,9 +80,9 @@ El suelo comienza a reconstruirse.
 
 Una calle de Project Zomboid aparece junto a una torre de League of Legends.
 
-Desde un portal salen zombis. Desde otro, minions azules y rojos.
+Desde un portal salen zombies. Desde otro, minions azules y rojos.
 
-**Maxi Negro:** ¡NOOO! ¡OTRA VEZ LOS ZOMBIS!
+**Maxi Negro:** ¡NOOO! ¡OTRA VEZ LOS ZOMBIES!
 
 **Solago:** ¡JAJAJA! ¡Y LOS MINIONS!
 
@@ -92,7 +92,7 @@ Desde un portal salen zombis. Desde otro, minions azules y rojos.
 
 **Maxi Negro:** ¡BUENO, RECUPERÁ UNA PUTA SALIDA!
 
-Los zombis comienzan a perseguirlos mientras los minions lanzan proyectiles.
+Los zombies comienzan a perseguirlos mientras los minions lanzan proyectiles.
 
 **Solago:** Che, negro, por lo menos no está Yorick.
 
@@ -258,7 +258,7 @@ Comienza la siguiente oleada.
 
 El escenario empieza a transformarse cada pocos segundos.
 
-Por momentos están en una calle llena de zombis. Después aparecen dentro de una mazmorra de Diablo. Segundos más tarde, están en el desierto de Conan.
+Por momentos están en una calle llena de zombies. Después aparecen dentro de una mazmorra de Diablo. Segundos más tarde, están en el desierto de Conan.
 
 **Maxi Negro:** ¡PARÁ, PELOTUDO! ¡DEJÁ DE CAMBIAR EL MAPA!
 

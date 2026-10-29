@@ -90,11 +90,11 @@ La historia avanza mediante pequeños eventos durante el combate, sin interrumpi
 
 | Oleada | Nombre | Evento |
 |---|---|---|
-| 1 | El despertar | Aparecen los primeros zombis. Maxi Negro descubre sus habilidades. |
+| 1 | El despertar | Aparecen los primeros zombies. Maxi Negro descubre sus habilidades. |
 | 2 | Algo hace ruido | Se multiplican los infectados. Se escuchan disparos lejanos. |
-| 3 | No estamos solos | Aparecen zombis más rápidos y resistentes. |
+| 3 | No estamos solos | Aparecen zombies más rápidos y resistentes. |
 | 4 | La alarma | Se activa la alarma de una casa y comienza una horda masiva. |
-| 5 | La última horda | Los zombis rodean la zona. Los disparos lejanos se vuelven más frecuentes. |
+| 5 | La última horda | Los zombies rodean la zona. Los disparos lejanos se vuelven más frecuentes. |
 | 6 | El Zombi de la Alarma | Aparece el jefe del mundo, acompañado de oleadas de infectados. |
 
 ### Eventos durante el combate
@@ -109,7 +109,7 @@ Intenta comunicarse a través del Discord, pero únicamente escucha interferenci
 
 #### Oleada 4
 
-Una alarma comienza a sonar y cientos de zombis se acercan.
+Una alarma comienza a sonar y cientos de zombies se acercan.
 
 **Maxi Negro:** ¡PERO QUIÉN MIERDA ACTIVÓ LA ALARMA!
 
@@ -121,7 +121,7 @@ El sistema muestra un mensaje:
 
 #### Oleada 5
 
-La cantidad de zombis parece interminable.
+La cantidad de zombies parece interminable.
 
 **Maxi Negro:** Ya fue, me da paja.
 
@@ -133,7 +133,7 @@ También puede utilizar **«Modo Otaku»**, invocando su waifu para atacar autom
 
 ## Escena 2 — Jefe: El Zombi de la Alarma
 
-Cuando termina la quinta oleada, todos los zombis que quedan comienzan a detenerse.
+Cuando termina la quinta oleada, todos los zombies que quedan comienzan a detenerse.
 
 Se escucha una alarma mucho más fuerte que las anteriores.
 
@@ -141,11 +141,11 @@ Desde una calle cercana aparece un infectado enorme, arrastrando una alarma de s
 
 > **JEFE DETECTADO**  
 > **EL ZOMBI DE LA ALARMA**  
-> Un infectado que atrae constantemente nuevas hordas. Cuanto más dura el combate, más zombis aparecen.
+> Un infectado que atrae constantemente nuevas hordas. Cuanto más dura el combate, más zombies aparecen.
 
 **Maxi Negro:** No, bueno. ¿Qué es esta pelotudez?
 
-Durante el combate, el jefe invoca zombis y genera ondas de sonido que obligan al jugador a moverse.
+Durante el combate, el jefe invoca zombies y genera ondas de sonido que obligan al jugador a moverse.
 
 Finalmente, Maxi Negro consigue derrotarlo.
 
@@ -168,7 +168,7 @@ Pero antes de que el sistema pueda transportarlo, escucha nuevos disparos.
 
 Maxi Negro sigue el sonido de los disparos hasta llegar a una calle repleta de cadáveres.
 
-Allí encuentra a un sobreviviente completamente equipado, matando zombis como si nada.
+Allí encuentra a un sobreviviente completamente equipado, matando zombies como si nada.
 
 Es Jhony.
 
@@ -186,7 +186,7 @@ Es Jhony.
 
 **Jhony:** ¡Bueno, salí entonces! ¡No me rompas las pelotas!
 
-*Jhony sigue matando zombis sin siquiera mirarlo.*
+*Jhony sigue matando zombies sin siquiera mirarlo.*
 
 **Maxi Negro:** ¡Jhony, tenés más de dos mil horas en este juego! ¡Ayudame!
 
@@ -194,7 +194,7 @@ Es Jhony.
 
 **Maxi Negro:** Pero escuchame un segundo, boludo...
 
-**Jhony:** ¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIS, LA CONCHA DE TU MADRE!
+**Jhony:** ¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!
 
 *Maxi Negro mira los cientos de cadáveres que rodean a Jhony.*
 
@@ -208,7 +208,7 @@ Es Jhony.
 
 *Maxi Negro comienza a alejarse.*
 
-**Jhony:** ¡Y NO ME TRAIGAS MÁS ZOMBIS!
+**Jhony:** ¡Y NO ME TRAIGAS MÁS ZOMBIES!
 
 ---
 
@@ -246,7 +246,7 @@ Y luego una voz desconocida:
 
 - **Formato narrativo:** tres escenas principales (introducción, aparición del jefe y encuentro con Jhony), con comentarios cortos durante las oleadas.
 - **Rejugabilidad:** la historia completa se muestra la primera vez; las escenas vistas se pueden saltar en siguientes partidas.
-- **Jhony:** es un NPC por ahora, **no** un personaje jugable ni desbloqueable. Se queda matando zombis y se niega a unirse.
+- **Jhony:** es un NPC por ahora, **no** un personaje jugable ni desbloqueable. Se queda matando zombies y se niega a unirse.
 - **Habilidades de Maxi Negro:** «Modo Otaku» (waifu que ataca automáticamente) y «Me da paja» (se sienta en un sillón, obtiene gran defensa y daña en área).
 - **Conexión con el acto 2:** la voz de Yorick anticipa el encuentro con Solago, a quien Yorick confundió con uno de sus caminantes de la niebla.
 

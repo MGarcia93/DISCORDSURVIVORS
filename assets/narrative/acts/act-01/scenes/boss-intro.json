@@ -13,7 +13,7 @@
     { "type": "notice", "title": "JEFE DETECTADO", "duration": 4, "lines": [
       "EL ZOMBI DE LA ALARMA",
       "Un infectado que atrae constantemente nuevas hordas.",
-      "Cuanto más dura el combate, más zombis aparecen."
+      "Cuanto más dura el combate, más zombies aparecen."
     ] },
     { "type": "camera", "to": "ground", "zoom": 1, "duration": 1 },
     { "type": "dialogue", "lines": [

@@ -28,7 +28,7 @@
       { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡Jhony, tenés más de dos mil horas en este juego! ¡Ayudame!" },
       { "speaker": "jhony", "expression": "angry", "text": "¡¿Y QUÉ TIENE QUE VER?! ¡ANDATE, PELOTUDO!" },
       { "speaker": "maxi-negro", "expression": "annoyed", "text": "Pero escuchame un segundo, boludo..." },
-      { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIS, LA CONCHA DE TU MADRE!" }
+      { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!" }
     ] },
     { "type": "camera", "to": "corpses", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [
@@ -42,7 +42,7 @@
     ] },
     { "type": "move", "actor": "negro", "to": "entrance", "duration": 1.5 },
     { "type": "dialogue", "lines": [
-      { "speaker": "jhony", "expression": "angry", "text": "¡Y NO ME TRAIGAS MÁS ZOMBIS!" }
+      { "speaker": "jhony", "expression": "angry", "text": "¡Y NO ME TRAIGAS MÁS ZOMBIES!" }
     ] }
   ],
   "effects": [{ "key": "act-01-met-jhony", "value": true }]
