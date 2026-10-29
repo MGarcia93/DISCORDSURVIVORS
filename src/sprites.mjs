@@ -733,6 +733,117 @@ export function drawMistWalker(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+const MAIDEN_GOWN = { light: '#3a3158', base: '#241f3f', mid: '#1a1630', dark: '#100d20' };
+const MAIDEN_HAIR = { light: '#2f2a52', base: '#1c1838', mid: '#141128', dark: '#0b0918' };
+const MAIDEN_GLOW = { light: '#c6feff', base: '#67f4f7', mid: '#2fd4e2', dark: '#178e9f' };
+const MAIDEN_ARM = { light: '#b8f0e9', base: '#7fd9d6', mid: '#4fa8ae', dark: '#2b6b74' };
+const MAIDEN_CLAW = '#120e1e';
+const MAIDEN_INK = '#08060f';
+
+// Act 2 — League of Legends, wave 5. The Maiden of the Mist, Yorick's own
+// summon: a tall, nearly black figure crowned with spiky hair, a cyan fire
+// burning behind the head and through the chest, pale glowing arms with long
+// dark claws, and a torn gown that ravels into mist instead of reaching feet.
+export function drawMaiden(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const pulse = 0.5 + 0.5 * Math.sin(time * 3);
+  pose(ctx, x, y, scale);
+  // A pointed crown needs diagonals, and a diagonal in pixel art is a staircase
+  // of one-pixel columns. Drawn as a triangle per spike, never as a row of blocks.
+  const spike = (bx, by, w, h, color) => {
+    const half = Math.ceil(w / 2);
+    for (let i = 0; i < w; i++) {
+      const column = Math.min(i, w - 1 - i);
+      const height = Math.max(1, Math.round(h * (column + 1) / half));
+      pixel(ctx, bx + i, by - height, 1, height, color);
+    }
+  };
+  pixel(ctx, -14, 0, 29, 2, '#131a20');
+  // Gown: one continuous flare stepped a pixel at a time, never a stack of
+  // tiers. The lit edge and the shadow run down it, so it reads as cloth.
+  for (let row = 0; row < 27; row++) {
+    const yy = -27 + row;
+    const half = 5 + Math.round(row * 0.42);
+    pixel(ctx, -half - 1, yy, half * 2 + 2, 1, MAIDEN_INK);
+    pixel(ctx, -half, yy, half * 2, 1, MAIDEN_GOWN.base);
+    pixel(ctx, half - 2, yy, 2, 1, MAIDEN_GOWN.dark);
+    if (row > 1 && row % 4 === 0) pixel(ctx, -half, yy, 2, 1, MAIDEN_GOWN.light);
+  }
+  // Torn hem: columns of different lengths with gaps below the flare.
+  pixel(ctx, -13, -1, 2, 3, MAIDEN_GOWN.mid);
+  pixel(ctx, -9, 0, 3, 3, MAIDEN_GOWN.base);
+  pixel(ctx, -4, -1, 2, 4, MAIDEN_GOWN.dark);
+  pixel(ctx, 0, 0, 3, 3, MAIDEN_GOWN.mid);
+  pixel(ctx, 5, -1, 2, 3, MAIDEN_GOWN.base);
+  pixel(ctx, 9, 0, 3, 3, MAIDEN_GOWN.dark);
+  // Chest above the flare, narrow, with sloped shoulders.
+  pixel(ctx, -6, -38, 13, 12, MAIDEN_INK);
+  torsoBands(ctx, -5, -37, 11, 10, MAIDEN_GOWN);
+  pixel(ctx, -12, -38, 25, 3, MAIDEN_INK);
+  torsoBands(ctx, -11, -37, 23, 2, MAIDEN_GOWN);
+  // Chest core: an irregular flame, not a screen.
+  pixel(ctx, -2, -36, 4, 2, MAIDEN_GLOW.dark);
+  pixel(ctx, -3, -34, 6, 4, MAIDEN_GLOW.mid);
+  pixel(ctx, -4, -30, 8, 5, MAIDEN_GLOW.base);
+  pixel(ctx, -2, -29, 4, 3, MAIDEN_GLOW.light);
+  pixel(ctx, -3, -25, 6, 3, MAIDEN_GLOW.mid);
+  pixel(ctx, -2, -22, 4, 2, MAIDEN_GLOW.dark);
+  pixel(ctx, -5, -33, 1, 4, MAIDEN_GLOW.dark);
+  pixel(ctx, 4, -32, 1, 3, MAIDEN_GLOW.dark);
+  // Cyan fire leaking behind the shoulders.
+  pixel(ctx, -12, -44, 3, 9, MAIDEN_GLOW.dark);
+  pixel(ctx, 9, -44, 3, 9, MAIDEN_GLOW.dark);
+  pixel(ctx, -11, -42, 1, 5, MAIDEN_GLOW.mid);
+  pixel(ctx, 10, -42, 1, 5, MAIDEN_GLOW.mid);
+  // Crown: five triangular spikes over the head.
+  spike(-12, -47, 5, 6, MAIDEN_INK);
+  spike(-7, -47, 6, 11, MAIDEN_INK);
+  spike(-1, -47, 7, 14, MAIDEN_INK);
+  spike(6, -47, 6, 10, MAIDEN_INK);
+  spike(11, -47, 4, 5, MAIDEN_INK);
+  spike(-6, -47, 4, 9, MAIDEN_HAIR.mid);
+  spike(0, -47, 5, 12, MAIDEN_HAIR.base);
+  spike(6, -47, 4, 8, MAIDEN_HAIR.mid);
+  // Head under the crown, with two long falls of hair beside the face.
+  pixel(ctx, -6, -48, 13, 12, MAIDEN_INK);
+  torsoBands(ctx, -5, -47, 11, 10, MAIDEN_HAIR);
+  pixel(ctx, -9, -44, 4, 11, MAIDEN_INK);
+  pixel(ctx, -8, -43, 2, 9, MAIDEN_HAIR.mid);
+  pixel(ctx, 5, -44, 4, 11, MAIDEN_INK);
+  pixel(ctx, 6, -43, 2, 9, MAIDEN_HAIR.base);
+  pixel(ctx, -4, -43, 9, 8, '#05030a');
+  pixel(ctx, -3, -42, 7, 6, '#120d20');
+  pixel(ctx, -2, -40, 2, 2, MAIDEN_GLOW.base);
+  pixel(ctx, 2, -40, 2, 2, MAIDEN_GLOW.base);
+  pixel(ctx, -1, -37, 3, 1, MAIDEN_GLOW.dark);
+  // Arms: one continuous stepped limb each, so the pale forearm never breaks
+  // into floating dashes; the hand ends in three dark claws.
+  const arm = (dir) => {
+    for (let i = 0; i < 22; i++) {
+      const yy = -37 + i;
+      const xx = (dir > 0 ? 12 : -14) + dir * Math.floor(i / 6);
+      pixel(ctx, xx, yy, 3, 1, MAIDEN_INK);
+      pixel(ctx, xx + (dir > 0 ? 0 : 1), yy, 2, 1, i < 11 ? MAIDEN_ARM.mid : MAIDEN_ARM.base);
+      if (i % 4 === 0) pixel(ctx, xx + (dir > 0 ? 0 : 1), yy, 1, 1, MAIDEN_ARM.light);
+    }
+    const handX = (dir > 0 ? 12 : -14) + dir * 3;
+    pixel(ctx, handX, -15, 3, 2, MAIDEN_INK);
+    pixel(ctx, handX, -13, 1, 4, MAIDEN_CLAW);
+    pixel(ctx, handX + 2, -13, 1, 3, MAIDEN_CLAW);
+    pixel(ctx, handX - 1, -12, 1, 3, MAIDEN_CLAW);
+  };
+  arm(-1);
+  arm(1);
+  // Mist: a faint scatter of cyan under the hem, never a line across the gown.
+  ctx.save();
+  ctx.globalAlpha *= 0.22 + pulse * 0.18;
+  pixel(ctx, -11, 1, 4, 1, MAIDEN_GLOW.mid);
+  pixel(ctx, -4, 2, 5, 1, MAIDEN_GLOW.mid);
+  pixel(ctx, 4, 1, 5, 1, MAIDEN_GLOW.dark);
+  ctx.restore();
+  ctx.restore();
+}
+
 export function drawAdministrator(ctx, x, y, options = {}) {
   pose(ctx, x, y, options.scale || 4);
   const hover = Math.floor(Math.sin((options.time || 0) * 2) * 2);
