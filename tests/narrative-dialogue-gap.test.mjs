@@ -46,8 +46,7 @@ test('the line the player already read leaves the screen when a beat starts', ()
   view.render(player, null, null);
   assert.doesNotMatch(content.innerHTML, /Primera línea/, 'the read line is gone');
   assert.doesNotMatch(content.innerHTML, /narrative-next/, 'there is nothing to advance');
-  assert.match(content.innerHTML, /narrative-dialog/, 'the frame stays, so the stage does not blink');
-  assert.match(content.innerHTML, /<p><\/p>/, 'the text area is empty');
+  assert.doesNotMatch(content.innerHTML, /narrative-dialog/, 'no card at all during a staging beat');
   assert.match(content.innerHTML, /narrative-skip/, 'the player can still leave the scene');
   view.dispose();
   delete globalThis.document;

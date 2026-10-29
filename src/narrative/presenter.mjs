@@ -56,10 +56,10 @@ export function createPresenter(root, catalog, onError) {
         const currentRevision = ++revision;
         const line = player?.dialogue;
         if (active && !previousFocus) previousFocus = document.activeElement;
-        // No stale line: a beat between two conversations keeps the frame on
-        // screen — the cast never blinks — with an empty text area.
+        // No stale line: a beat between two conversations (a move, a camera
+        // push) shows the stage, not the sentence the player already read.
         const spoken = line ?? null;
-        if (active && !player?.splash && !player?.notice) {
+        if (spoken) {
           // The cast keeps the same slots for the whole scene, ordered by where
           // each actor stands, and faces the centre of the conversation.
           const sceneSpeakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))];
@@ -77,14 +77,8 @@ export function createPresenter(root, catalog, onError) {
           const facing = entry => (midpoint === null || entry.x === null ? '' : entry.x > midpoint ? ' mirrored' : '');
           const actions = line
             ? '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>'
-            : '<button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>';
-          const name = spoken ? escape(catalog.characters[spoken.speaker].name) : '';
-          const frame = cast.map(entry => {
-            const talking = Boolean(spoken) && entry.id === spoken.speaker;
-            const mood = talking ? 'speaking' : spoken ? 'listening' : '';
-            return `<div class="${mood}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, talking ? spoken.expression : 'neutral')}</div>`;
-          }).join('');
-          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${frame}</div><div class="narrative-text"><strong>${name}</strong><p>${spoken ? escape(spoken.text) : ''}</p>${actions}</div></div>`;
+            : '';
+          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
         } else if (player?.notice) {
           content.innerHTML = `<div class="narrative-notice" role="status"><strong>${escape(player.notice.title)}</strong>${player.notice.lines.map(text => `<p>${escape(text)}</p>`).join('')}</div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
         } else if (player?.splash) {
@@ -93,6 +87,8 @@ export function createPresenter(root, catalog, onError) {
           const framed = catalog.characters[speaker].portraitLayout === 'extended'
             ? `<div class="narrative-splash-extended-frame">${image}</div>` : image;
           content.innerHTML = `<div class="narrative-splash">${framed}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
+        } else if (active) {
+          content.innerHTML = '<button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>';
         } else if (banter) {
           content.innerHTML = `<div class="narrative-banter" role="status">${portrait(banter.speaker, banter.expression)}<div><strong>${escape(catalog.characters[banter.speaker].name)}</strong><p>${escape(banter.text)}</p></div></div>`;
         } else content.innerHTML = '';
