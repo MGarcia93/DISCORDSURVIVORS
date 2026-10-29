@@ -134,18 +134,19 @@ test('Jhony shoots the runner first and says the line after it', async () => {
   assert.match(steps[lastLine].lines[0].text, /NO ME TRAIGAS MÁS ZOMBIES/);
 });
 
-test('both late zombies enter on the same pan, the runner half a second later', async () => {
+test('the shambler comes from below and the runner from far above, a second later', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene;
   const arrival = scene.steps.find(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
   const runner = arrival.steps.find(child => child.actor === 'late-b');
-  assert.ok(runner, 'the runner shares the pan with the shambler');
-  assert.equal(runner.delay, 0.5, 'and starts half a second after it');
-  assert.ok(arrival.steps.some(child => child.type === 'camera'), 'the pan is the one that shows them');
+  assert.equal(runner.delay, 1, 'the runner waits a full second');
+  assert.ok(arrival.steps.some(child => child.type === 'camera'), 'one pan shows both');
+  const [, shamblerY] = scene.stage.points[scene.stage.actors['late-a'].at];
+  const [, runnerY] = scene.stage.points[scene.stage.actors['late-b'].at];
+  assert.ok(shamblerY > 748, 'the shambler starts below the frame');
+  assert.ok(runnerY < -100, 'the runner starts well above it');
   const legs = scene.steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]));
   const walk = id => legs.filter(child => child.type === 'move' && child.actor === id).at(-1);
-  const [sx, sy] = scene.stage.points[scene.stage.actors['late-b'].at];
-  assert.ok(sy > 748, 'the runner really starts off the frame');
   const jhony = scene.stage.points[scene.stage.actors.jhony.at];
   const reach = id => { const [x, y] = scene.stage.points[walk(id).to]; return Math.hypot(x - jhony[0], y - jhony[1]); };
   assert.ok(reach('late-b') > 120, 'the runner stops short of Jhony');
