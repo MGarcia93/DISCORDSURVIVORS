@@ -104,15 +104,23 @@ smile duration and cooldown, Patrona radius, Papazito's sale value and softened
 sale penalties, and Negro's prerequisite-gated bounce chain. Each is consumed
 by the real combat or sale code. Sale proceeds round down to whole coins.
 
-New mechanics that change combat shape rather than tuning an existing value
-are not implemented: bite arcs, second bites, knockback, a timed shield after
-standing still, waifu attacks piercing an enemy, shielded counterattacks,
-Patrona finisher, extra mushroom projectiles, spore zones, faster confusion
-stacking, mushrooms hitting harder inside smoke, smoke trails, confusion
-propagation, brick piercing/fragments/fan shots, next-attack-after-sale, panic
-extension and the seña activation burst. They need their geometry and
-semantics defined before they can be authored, because the catalog only holds
-parameters, not executable behavior.
+New mechanics implemented as parameter-driven behavior:
+
+| Effect | What it does | Where |
+|---|---|---|
+| `stillShield` | Standing still charges a shield (up to the effect value) that absorbs contact damage before health. | `src/engine.mjs` |
+| `waifuPierce` | Modo Otaku shots continue to the next enemy after a hit, with the usual 15% falloff. | `src/engine.mjs` |
+| `biteTargets` | Melee hits extra enemies in reach at 70% damage. | `src/engine.mjs` |
+| `patronaFinal` | La Patrona deals a last burst, as a fraction of damage, when she leaves. | `src/characters/solago.mjs` |
+| `confusionStacks` | Each mushroom blast applies one extra stack, still capped at three (bosses at one). | `src/engine.mjs` |
+| `smokeBonus` | Splash (`spore`) damage rises against enemies breathing smoke. | `src/engine.mjs` |
+| `brickPierce` | Bricks continue to the next enemy after a hit. | `src/engine.mjs` |
+| `brickFragments` | A brick impact spawns that many radial fragments at 35% damage. | `src/engine.mjs` |
+
+Still unimplemented, because their geometry or timing is not decided yet:
+second bites, knockback, shielded counterattacks, extra mushroom projectiles,
+spore zones, smoke trails, confusion propagation, fan shots,
+next-attack-after-sale, panic extension and the seña activation burst.
 
 ## Run reward state
 
