@@ -196,6 +196,24 @@ pendientes: son catálogo de patrones, no ficha.
   `run.elapsed`) y `wave` (peso 2, recarga 6 s, 18 de daño).
 
 
+- **`maiden` — La Doncella de la Niebla** (acto 2, minijefe de la oleada 5):
+  `swipe` (peso 3), `summon` (peso 1, recarga 9 s: tres caminantes) y `wail`
+  (peso 2, recarga 6 s: anillo de área de 20). Lleva `boss: true` porque un
+  minijefe es un jefe que no cierra la partida.
+- **`yorick` — el enterrador** (acto 2, jefe de la oleada 6): `swipe`,
+  `summon` (tres caminantes, recarga 10 s), `wall` (recarga 14 s) y `maiden`
+  (una sola vez, cuando está por debajo de la mitad de su vida).
+
+### Primitivas nuevas: muro de tierra y acciones por fase
+
+- **`ctx.prison({ x, y, radius, ttl })`** levanta un anillo de tierra alrededor
+  del jugador. **Sólo frena al jugador**: los enemigos lo cruzan. Es una trampa,
+  no un refugio; el radio se mide desde el centro y el jugador queda sujeto a
+  `radio − su radio de colisión`. El anillo expira con su `ttl`.
+- **`action.when(run, enemy)`** condiciona una acción a un estado. Sin esto, una
+  habilidad bloqueada se elegiría igual y gastaría el turno del jefe. Yorick usa
+  `when` para que la Doncella no se invoque antes de tiempo.
+
 - **`brute`** — el resistente que la oleada 3 del acto 1 pedía. Ficha genérica:
   vida `120 + 12 × ola`, defensa 60%, ataque 300%, una velocidad de ataque de una
   por segundo, distancia de ataque 0 y velocidad `400 + 30 × ola`. Radio 22,
