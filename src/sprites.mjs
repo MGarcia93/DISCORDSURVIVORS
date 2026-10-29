@@ -656,6 +656,16 @@ export function drawEnemyShot(ctx, device = 'bolt') {
     pixel(ctx, 5, -2, 3, 4, '#fff4cf');
     return;
   }
+  if (device === 'hex') {
+    // Act 3 hex bolt: a green curse with a dark rim and a thin tail, so it is
+    // never mistaken for the mage's violet dart in the middle of a wave.
+    pixel(ctx, -9, -1, 6, 2, '#2c6b26');
+    pixel(ctx, -6, -3, 9, 6, '#1c2118');
+    pixel(ctx, -5, -2, 7, 4, '#8ade5a');
+    pixel(ctx, -3, -2, 4, 2, '#d8ffb0');
+    pixel(ctx, 2, -1, 2, 2, '#f2ffe0');
+    return;
+  }
   // Mage bolt: a violet dart with a white-hot core.
   pixel(ctx, -6, -1, 12, 2, '#7a5bb8');
   pixel(ctx, -4, -2, 8, 4, '#a98bf0');
@@ -985,6 +995,302 @@ export function drawYorick(ctx, x, y, options = {}) {
   pixel(ctx, 18, -32, 5, 4, YORICK_SKIN.base);
   pixel(ctx, 18, -32, 5, 1, YORICK_SKIN.light);
   ctx.restore();
+  ctx.restore();
+}
+
+// Act 3 — Diablo. The dungeon's cast keeps the same grid and the same closed
+// ink contour as the rest of the game: bone and fire instead of cloth and skin.
+const BONE = { light: '#ece6d2', base: '#d2cab1', mid: '#aba28a', dark: '#7f7661' };
+const BONE_INK = '#1b1b23';
+const SOUL_FIRE = '#c8443a';
+
+// Wave 1. Skeleton: bone over a closed contour, a rusted blade in one hand and
+// two red pinpoints where the eyes used to be. It is the cheapest body of the
+// act, so the read is the ribcage and the weapon, not the details.
+export function drawSkeleton(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 5 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -8, 0, 17, 2, '#131a20');
+  // Feet, then shins: the knee cap is the only wide bone.
+  pixel(ctx, -6, -3, 6, 3, BONE.mid);
+  pixel(ctx, 1, -3, 6, 3, BONE.dark);
+  pixel(ctx, -5, -14 + stride, 3, 12 - stride, BONE.base);
+  pixel(ctx, 2, -14 - stride, 3, 12 + stride, BONE.mid);
+  pixel(ctx, -5, -14 + stride, 1, 12 - stride, BONE.light);
+  pixel(ctx, -6, -15 + stride, 4, 2, BONE.base);
+  pixel(ctx, 2, -15 - stride, 4, 2, BONE.mid);
+  // Pelvis, spine and a ribcage of three bars over the ink contour.
+  pixel(ctx, -6, -21, 13, 7, BONE_INK);
+  pixel(ctx, -5, -20, 11, 5, BONE.base);
+  pixel(ctx, -5, -20, 11, 1, BONE.light);
+  pixel(ctx, -1, -28, 3, 7, BONE.mid);
+  pixel(ctx, -1, -28, 1, 7, BONE.light);
+  pixel(ctx, -7, -30, 15, 11, BONE_INK);
+  pixel(ctx, -6, -29, 13, 9, BONE.base);
+  for (let row = 0; row < 3; row++) pixel(ctx, -6, -28 + row * 3, 13, 1, BONE_INK);
+  pixel(ctx, -6, -29, 13, 1, BONE.light);
+  pixel(ctx, 3, -28, 4, 8, BONE.dark);
+  // Shoulders and arms; the right one carries the blade.
+  pixel(ctx, -10, -31, 21, 3, BONE_INK);
+  pixel(ctx, -9, -30, 19, 2, BONE.base);
+  pixel(ctx, -12, -29, 3, 12, BONE.mid);
+  pixel(ctx, -12, -18, 4, 3, BONE.light);
+  pixel(ctx, 9, -29, 3, 9, BONE.mid);
+  pixel(ctx, 9, -21, 4, 3, BONE.base);
+  pixel(ctx, 10, -37, 3, 16, '#3a3540');
+  pixel(ctx, 11, -36, 2, 14, '#8d8c96');
+  pixel(ctx, 11, -36, 1, 14, '#b9b8c2');
+  pixel(ctx, 10, -34, 4, 2, '#6a4a2c');
+  pixel(ctx, 12, -22, 2, 2, '#3a3540');
+  // Skull: stepped contour, hollow sockets, a jaw of missing teeth.
+  roundedMass(ctx, -6, -43, 13, 13, BONE_INK);
+  roundedMass(ctx, -5, -42, 11, 11, BONE.base);
+  pixel(ctx, -5, -42, 8, 2, BONE.light);
+  pixel(ctx, -4, -37, 3, 2, SOUL_FIRE);
+  pixel(ctx, 2, -37, 3, 2, SOUL_FIRE);
+  pixel(ctx, -1, -34, 2, 2, BONE_INK);
+  pixel(ctx, -4, -31, 9, 3, BONE.mid);
+  pixel(ctx, -3, -31, 1, 3, BONE_INK);
+  pixel(ctx, 0, -31, 1, 3, BONE_INK);
+  pixel(ctx, 3, -31, 1, 3, BONE_INK);
+  ctx.restore();
+}
+
+const DEMON = { light: '#d4644a', base: '#ad4130', mid: '#8a2f26', dark: '#64201d' };
+const DEMON_HORN = '#2b2430';
+const DEMON_EYE = '#ffdf8a';
+
+// Wave 1. Lesser demon: a hunched imp, all shoulders and claws, with a tail it
+// drags behind it. Shorter and lighter than the brute, so a swarm still reads.
+export function drawLesserDemon(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 5 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -9, 0, 19, 2, '#131a20');
+  // Hooves, shins, and a tail dragging out of the hips.
+  pixel(ctx, -7, -3, 6, 3, DEMON_HORN);
+  pixel(ctx, 2, -3, 6, 3, DEMON_HORN);
+  pixel(ctx, -6, -13 + stride, 5, 10 - stride, DEMON.mid);
+  pixel(ctx, 2, -13 - stride, 5, 10 + stride, DEMON.base);
+  pixel(ctx, -6, -13 + stride, 2, 10 - stride, DEMON.base);
+  pixel(ctx, -8, -10, 3, 3, DEMON.dark);
+  pixel(ctx, -12, -8, 5, 2, DEMON.dark);
+  pixel(ctx, -14, -10, 3, 3, DEMON_HORN);
+  // Hips and torso: wide at the shoulders, narrow at the waist.
+  pixel(ctx, -7, -19, 15, 7, DEMON_HORN);
+  pixel(ctx, -6, -18, 13, 5, DEMON.mid);
+  pixel(ctx, -8, -32, 17, 14, DEMON_HORN);
+  torsoBands(ctx, -7, -31, 15, 12, DEMON);
+  pixel(ctx, -7, -31, 15, 1, DEMON.light);
+  pixel(ctx, -3, -24, 7, 3, DEMON.dark);
+  // Shoulder spikes, then arms with four-fingered claws.
+  pixel(ctx, -11, -34, 4, 4, DEMON_HORN);
+  pixel(ctx, -10, -33, 2, 2, DEMON.light);
+  pixel(ctx, 8, -34, 4, 4, DEMON_HORN);
+  pixel(ctx, 9, -33, 2, 2, DEMON.base);
+  pixel(ctx, -11, -31, 4, 12, DEMON.dark);
+  pixel(ctx, -10, -30, 3, 10, DEMON.base);
+  pixel(ctx, -12, -20, 6, 4, DEMON_HORN);
+  pixel(ctx, -12, -19, 5, 2, DEMON.mid);
+  pixel(ctx, 8, -31, 4, 12, DEMON_HORN);
+  pixel(ctx, 9, -30, 3, 10, DEMON.mid);
+  pixel(ctx, 7, -20, 6, 4, DEMON_HORN);
+  pixel(ctx, 8, -19, 5, 2, DEMON.base);
+  // Head sunk between the shoulders: a wide jaw full of teeth and two horns.
+  roundedMass(ctx, -7, -42, 15, 13, DEMON_HORN);
+  roundedMass(ctx, -6, -41, 13, 11, DEMON.base);
+  pixel(ctx, -6, -41, 9, 2, DEMON.light);
+  pixel(ctx, -6, -35, 5, 3, DEMON_EYE);
+  pixel(ctx, 3, -35, 4, 3, DEMON_EYE);
+  pixel(ctx, -2, -31, 5, 3, DEMON_HORN);
+  pixel(ctx, -4, -32, 10, 1, DEMON.mid);
+  pixel(ctx, -3, -31, 1, 2, '#efe3c0');
+  pixel(ctx, 3, -31, 1, 2, '#efe3c0');
+  pixel(ctx, -8, -45, 4, 4, DEMON_HORN);
+  pixel(ctx, -7, -45, 2, 2, DEMON.mid);
+  pixel(ctx, 5, -45, 4, 4, DEMON_HORN);
+  pixel(ctx, 6, -45, 2, 2, DEMON.base);
+  ctx.restore();
+}
+
+const ROBE = { light: '#4a3f66', base: '#332b4a', mid: '#262038', dark: '#191426' };
+const ROBE_TRIM = '#a06a2c';
+const HEX = { light: '#d8ffb0', base: '#8ade5a', mid: '#4fa838', dark: '#2c6b26' };
+
+// Wave 2. Shaman: robed artillery. It keeps its distance and throws a hex bolt,
+// so the silhouette has to read as a caster at a glance: hood, staff, orb, no
+// weapon in hand.
+export function drawShaman(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const pulse = 0.5 + 0.5 * Math.sin(time * 4);
+  pose(ctx, x, y, scale);
+  pixel(ctx, -9, 0, 19, 2, '#131a20');
+  // Robe: one stepped flare in six bands, lit on the left, shadowed on the
+  // right, gold hem. Bands instead of one rect per row: a common enemy pays
+  // for its silhouette, not for its detail.
+  [4, 5, 6, 7, 8, 9].forEach((half, index) => {
+    const yy = -18 + index * 3;
+    pixel(ctx, -half - 1, yy, half * 2 + 2, 3, ROBE.dark);
+    pixel(ctx, -half, yy, half * 2, 3, ROBE.base);
+    pixel(ctx, -half, yy, 2, 3, ROBE.light);
+    pixel(ctx, half - 2, yy, 2, 3, ROBE.mid);
+  });
+  pixel(ctx, -9, -2, 19, 2, ROBE_TRIM);
+  pixel(ctx, -8, -1, 17, 1, ROBE.light);
+  // Chest and shoulders under the cloak.
+  pixel(ctx, -5, -28, 11, 9, ROBE.dark);
+  pixel(ctx, -4, -27, 9, 7, ROBE.base);
+  pixel(ctx, -4, -27, 9, 1, ROBE.light);
+  // Sleeves: the left one hangs, the right one grips the staff.
+  pixel(ctx, -8, -27, 4, 11, ROBE.mid);
+  pixel(ctx, -8, -17, 4, 3, ROBE.dark);
+  pixel(ctx, 5, -27, 4, 9, ROBE.base);
+  pixel(ctx, 6, -19, 5, 4, ROBE.dark);
+  // Staff: dark shaft, gold collar, a green orb that breathes. A caster needs
+  // the orb to read from across the arena, so it gets its own dark contour.
+  pixel(ctx, 9, -40, 4, 40, ROBE.dark);
+  pixel(ctx, 10, -40, 2, 40, ROBE.mid);
+  pixel(ctx, 8, -28, 6, 2, ROBE_TRIM);
+  roundedMass(ctx, 7, -45, 9, 9, ROBE.dark);
+  roundedMass(ctx, 8, -44, 7, 7, HEX.base);
+  pixel(ctx, 8, -44, 4, 3, HEX.light);
+  pixel(ctx, 12, -42, 2, 4, HEX.mid);
+  if (pulse > 0.5) pixel(ctx, 9, -43, 4, 3, HEX.light);
+  // Hood: a stepped point over a face that is shadow except two eyes.
+  const hood = [11, 13, 15, 15, 15, 15, 13];
+  hood.forEach((width, index) => {
+    const yy = -39 + index;
+    const half = Math.floor(width / 2);
+    pixel(ctx, -half - 1, yy, width + 2, 1, ROBE.dark);
+    pixel(ctx, -half, yy, width, 1, index < 2 ? ROBE.light : ROBE.base);
+  });
+  pixel(ctx, -5, -35, 11, 8, '#0f0b17');
+  pixel(ctx, -5, -35, 11, 2, ROBE.mid);
+  pixel(ctx, -4, -32, 3, 2, HEX.light);
+  pixel(ctx, 2, -32, 3, 2, HEX.light);
+  pixel(ctx, -3, -27, 7, 2, ROBE.base);
+  ctx.restore();
+}
+
+const ELITE = { light: '#e07a3c', base: '#b4482c', mid: '#8a2f22', dark: '#5f1d19' };
+const ELITE_FLAME = { core: '#ffe9a2', hot: '#f5a63e', ember: '#cf5a1e' };
+
+// Wave 4. Burning elite: the lesser demon grown into a wall of shoulder and
+// claw, with fire licking off its back. The flames are attached to the body on
+// purpose: a floating fireball would read as scenery, not as the enemy.
+export function drawBurningElite(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 4 + seed) % 2;
+  const flicker = Math.floor(time * 10 + seed) % 3;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -11, 0, 23, 2, '#131a20');
+  // Heavy hooved legs.
+  pixel(ctx, -9, -4, 8, 4, '#2b2430');
+  pixel(ctx, 2, -4, 8, 4, '#2b2430');
+  pixel(ctx, -8, -15 + stride, 6, 11 - stride, ELITE.mid);
+  pixel(ctx, 3, -15 - stride, 6, 11 + stride, ELITE.base);
+  pixel(ctx, -8, -15 + stride, 2, 11 - stride, ELITE.base);
+  pixel(ctx, -9, -16 + stride, 8, 2, ELITE.dark);
+  pixel(ctx, 3, -16 - stride, 8, 2, ELITE.dark);
+  // Hips, then a torso that widens into the shoulders.
+  pixel(ctx, -8, -22, 17, 8, '#2b2430');
+  pixel(ctx, -7, -21, 15, 6, ELITE.mid);
+  pixel(ctx, -10, -35, 21, 15, '#2b2430');
+  torsoBands(ctx, -9, -34, 19, 13, ELITE);
+  pixel(ctx, -9, -34, 19, 1, ELITE.light);
+  pixel(ctx, -4, -28, 8, 3, ELITE.dark);
+  pixel(ctx, -1, -25, 2, 4, '#f0d27a');
+  // Shoulders: bone spikes plus fire that grows out of the body. Each flame is
+  // a tapering stack of two-pixel steps: a rectangle would read as a torch.
+  pixel(ctx, -13, -37, 4, 4, '#2b2430');
+  pixel(ctx, 9, -37, 4, 4, '#2b2430');
+  const flame = (bx, baseY, height) => {
+    const steps = Math.ceil(height / 2);
+    for (let step = 0; step < steps; step++) {
+      const width = Math.max(1, Math.round(5 * (steps - step) / steps));
+      const tone = step < steps * 0.4 ? ELITE_FLAME.ember
+        : step < steps * 0.75 ? ELITE_FLAME.hot : ELITE_FLAME.core;
+      pixel(ctx, bx - Math.floor(width / 2), baseY - (step + 1) * 2, width, 2, tone);
+    }
+  };
+  const lick = 1 + flicker % 2;
+  flame(-11, -37, 7 + lick);
+  flame(-6, -36, 5 + lick);
+  flame(11, -37, 7 + lick);
+  flame(6, -36, 5 + lick);
+  // Arms with three-fingered claws.
+  pixel(ctx, -14, -34, 5, 14, ELITE.dark);
+  pixel(ctx, -13, -33, 3, 12, ELITE.base);
+  pixel(ctx, -15, -21, 7, 5, '#2b2430');
+  pixel(ctx, -15, -20, 6, 3, ELITE.mid);
+  pixel(ctx, 10, -34, 5, 14, ELITE.dark);
+  pixel(ctx, 11, -33, 3, 12, ELITE.mid);
+  pixel(ctx, 9, -21, 7, 5, '#2b2430');
+  pixel(ctx, 10, -20, 6, 3, ELITE.base);
+  // Head: broad, horned, jaw full of teeth.
+  roundedMass(ctx, -7, -43, 15, 13, '#2b2430');
+  roundedMass(ctx, -6, -42, 13, 11, ELITE.base);
+  pixel(ctx, -6, -42, 9, 2, ELITE.light);
+  pixel(ctx, -6, -37, 5, 2, ELITE_FLAME.core);
+  pixel(ctx, 2, -37, 4, 2, ELITE_FLAME.core);
+  pixel(ctx, -5, -33, 11, 3, '#2b2430');
+  pixel(ctx, -4, -33, 2, 2, ELITE_FLAME.core);
+  pixel(ctx, 0, -33, 2, 2, ELITE_FLAME.core);
+  pixel(ctx, 3, -33, 2, 2, ELITE_FLAME.core);
+  pixel(ctx, -9, -44, 3, 4, '#2b2430');
+  pixel(ctx, 6, -44, 3, 4, '#2b2430');
+  ctx.restore();
+}
+
+const GOBLIN = { light: '#a8cc63', base: '#7da641', mid: '#63863a', dark: '#4a652c' };
+const GOBLIN_INK = '#1c2118';
+const GOBLIN_SACK = { light: '#c9a86a', base: '#a5864d', dark: '#7a6136' };
+
+// The Goblin de las Señas' fodder. Small, fast, greedy: a sack over one shoulder
+// and a knife in the other hand, so a summoned pack reads as looters.
+export function drawLootGoblin(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 7 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -7, 0, 15, 2, '#131a20');
+  pixel(ctx, -5, -2, 5, 2, GOBLIN_INK);
+  pixel(ctx, 1, -2, 5, 2, GOBLIN_INK);
+  pixel(ctx, -5, -10 + stride, 4, 8 - stride, GOBLIN.mid);
+  pixel(ctx, 1, -10 - stride, 4, 8 + stride, GOBLIN.base);
+  pixel(ctx, -6, -18, 13, 9, GOBLIN_INK);
+  pixel(ctx, -5, -17, 11, 7, GOBLIN.base);
+  pixel(ctx, -5, -17, 11, 1, GOBLIN.light);
+  pixel(ctx, 3, -16, 3, 6, GOBLIN.mid);
+  // Sack on the back, tied at the shoulder, with coins showing at the mouth.
+  pixel(ctx, -11, -22, 6, 12, GOBLIN_INK);
+  pixel(ctx, -10, -21, 4, 10, GOBLIN_SACK.base);
+  pixel(ctx, -10, -21, 4, 2, GOBLIN_SACK.light);
+  pixel(ctx, -10, -13, 4, 2, GOBLIN_SACK.dark);
+  pixel(ctx, -9, -24, 3, 3, GOBLIN_INK);
+  pixel(ctx, -9, -23, 2, 2, '#e6c35a');
+  pixel(ctx, -6, -19, 2, 2, GOBLIN_SACK.dark);
+  // Arms: one holding the sack rope, one with the knife.
+  pixel(ctx, 5, -17, 3, 8, GOBLIN.dark);
+  pixel(ctx, 6, -10, 4, 3, GOBLIN.base);
+  pixel(ctx, 8, -15, 2, 7, '#8d8c96');
+  pixel(ctx, 7, -16, 4, 2, '#6a4a2c');
+  // Head: pointed ears, a long nose, two gold eyes and a grin of teeth.
+  roundedMass(ctx, -6, -28, 13, 11, GOBLIN_INK);
+  roundedMass(ctx, -5, -27, 11, 9, GOBLIN.base);
+  pixel(ctx, -5, -27, 8, 2, GOBLIN.light);
+  pixel(ctx, -10, -26, 5, 3, GOBLIN_INK);
+  pixel(ctx, -9, -26, 4, 2, GOBLIN.base);
+  pixel(ctx, -10, -25, 2, 2, GOBLIN.light);
+  pixel(ctx, 6, -26, 5, 3, GOBLIN_INK);
+  pixel(ctx, 6, -26, 3, 2, GOBLIN.mid);
+  pixel(ctx, 8, -25, 2, 2, GOBLIN.light);
+  pixel(ctx, -5, -23, 3, 2, '#ffe08a');
+  pixel(ctx, 2, -23, 3, 2, '#ffe08a');
+  pixel(ctx, -1, -21, 3, 2, GOBLIN.dark);
+  pixel(ctx, -4, -19, 9, 2, GOBLIN_INK);
+  pixel(ctx, -2, -19, 2, 1, '#efe9d2');
+  pixel(ctx, 2, -19, 2, 1, '#efe9d2');
   ctx.restore();
 }
 

@@ -15,6 +15,10 @@ export const BALANCE = {
     rewards: {
       zombie: 10, runner: 10, brute: 20, boss: 0,
       meleeMinion: 5, mageMinion: 8, siegeMinion: 12, mistWalker: 8, maiden: 60,
+      // Act 3 keeps the same playtest rate: the fodder pays little, the elite
+      // pays like a milestone and the mini-boss like Act 2's Maiden.
+      skeleton: 8, lesserDemon: 12, shaman: 10, burningElite: 25, lootGoblin: 4,
+      goblinSigns: 60,
     },
   },
   gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },
