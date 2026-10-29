@@ -74,6 +74,21 @@ export const EFFECTS = {
   smileDuration: duration('Duración de Sonrisa blindada'),
   smileCooldown: points('Espera de Sonrisa blindada', 6, ' s menos'),
   patronaRadius: points('Radio de La Patrona', 85, ''),
+  stillShield: points('Escudo quieto máximo', 45, ''),
+  confusionStacks: { max: 1, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Confusión +${value} acumulación por hongo` },
+  waifuPierce: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Modo Otaku atraviesa +${value} enemigo` },
+  biteTargets: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Mordida alcanza +${value} enemigo` },
+  patronaFinal: { max: 1.2, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Remate de La Patrona: ${Math.round(value * 100)}% del daño` },
+  smokeBonus: { max: 0.3, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Hongos +${Math.round(value * 100)}% contra enemigos en el humo` },
+  brickPierce: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Ladrillos atraviesan +${value} enemigo` },
+  brickFragments: { max: 4, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Fragmentos por impacto: ${value}` },
 };
 
 export const LEVEL_UPGRADES = [
@@ -93,6 +108,19 @@ export const LEVEL_UPGRADES = [
   ].map(([id, name, characters, type]) => ({
     id, name, characters, minLevel: 2, requires: [],
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value: type === 'saleBonus' ? 0.1 : 1 }] })),
+  })),
+  ...[
+    ['standing-shield', 'Guardián del sillón', 'negro', 'stillShield', 20],
+    ['otaku-pierce', 'La waifu no se detiene', 'negro', 'waifuPierce', 1],
+    ['bite-arc', 'Mordida abierta', 'solago', 'biteTargets', 1],
+    ['patrona-final', 'Último tijeretazo', 'solago', 'patronaFinal', 0.6],
+    ['deeper-confusion', 'Humo con más hongos', 'warrior', 'confusionStacks', 1],
+    ['smoked-mushrooms', 'Le pegan más fuerte', 'warrior', 'smokeBonus', 0.1],
+    ['brick-pierce', 'Ladrillo agujereado', 'papazito', 'brickPierce', 1],
+    ['brick-shards', 'Ladrillo de demolición', 'papazito', 'brickFragments', 2],
+  ].map(([id, name, characters, type, value]) => ({
+    id, name, characters, minLevel: 3, requires: [],
+    ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   ...[
     ['rest-less', 'Menos paciencia para pararse', 'negro', 'stillThreshold', 0.25],

@@ -163,6 +163,7 @@ node --test tests/reward-data.test.mjs
 node --test tests/run-rewards.test.mjs
 node --test tests/reward-ui.test.mjs
 node --test tests/character-upgrades.test.mjs
+node --test tests/character-mechanics.test.mjs
 node --test tests/*.test.mjs
 node --check src/stat-modifiers.mjs
 ```

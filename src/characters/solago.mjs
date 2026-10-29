@@ -105,6 +105,15 @@ const solago = {
         run.standIn = 0.4;
       },
       onExpire(run, p, ctx) {
+        // Finisher: the scissors get one last wide cut before she leaves.
+        const burst = p.rewardBonuses?.patronaFinal ?? 0;
+        if (burst > 0) {
+          const radius = (170 + (p.rewardBonuses?.patronaRadius ?? 0)) * WORLD_SCALE;
+          for (const enemy of run.enemies) {
+            if (enemy.hp > 0 && ctx.distance(enemy, p) < radius) ctx.hit(run, enemy, p.damage * burst, 'stand');
+          }
+          run.effects.push({ x: p.x, y: p.y - 72 * WORLD_SCALE, text: '¡TIJERETAZO FINAL!', ttl: 1, kind: 'stand' });
+        }
         p.hp = Math.max(0, p.hp - 15);
         run.effects.push({ x: p.x, y: p.y - 55 * WORLD_SCALE, text: '¡YA VOY!', ttl: 1, kind: 'panic' });
       },
