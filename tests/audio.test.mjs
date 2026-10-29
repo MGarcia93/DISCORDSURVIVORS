@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  musicCue, waveCutoff, trackFor, TRACKS, SFX, SFX_MIN_GAP,
+  musicCue, waveCutoff, trackFor, TRACKS, SFX, SFX_MIN_GAP, UI,
   MUSIC_BED_GAIN, DUCK, PAUSE, LEVEL_CEILING,
   CUTOFF_DISTANT, CUTOFF_NEAR, CUTOFF_OPEN, CUTOFF_PAUSED, CUTOFF_HUB,
 } from '../src/audio/mix.mjs';
@@ -229,6 +229,33 @@ test('a scene rides the music level, not the SFX one', () => {
   }
 });
 
+test('every UI sound is a definition the engine can voice', () => {
+  for (const [name, definition] of Object.entries(UI)) {
+    assert.ok(definition.duration > 0, `${name} has a duration`);
+    assert.ok(definition.gain > 0 && definition.gain < 0.1, `${name} stays under the gameplay hits`);
+    assert.ok(definition.noise || definition.frequency > 0, `${name} is either noise or a tone`);
+    assert.equal(definition.jitter, undefined, `${name} must sound identical every time`);
+    if (definition.frequency) assert.ok(definition.release, `${name} is a tone and needs a release or it clicks`);
+  }
+});
+
+test('a tonal UI sound decays instead of clicking off', () => {
+  const previousContext = globalThis.AudioContext;
+  const context = fakeAudioContext();
+  globalThis.AudioContext = function Fake() { return context; };
+  try {
+    const engine = new AudioEngine({ storage: fakeStorage() });
+    engine.setCue(null);
+    engine.unlock();
+    const voice = engine.playSound(UI.select, 'ui');
+    assert.ok(voice, 'the tone is voiced');
+    assert.equal(voice.gain.gain.calls.filter(call => call[0] === 'exp').length, 1,
+      'the gain decays to silence instead of stopping at full level');
+  } finally {
+    globalThis.AudioContext = previousContext;
+  }
+});
+
 test('a volume row carries the contract the shell listens for', () => {
   // The same row is rendered by the home dialog and the pause overlay, so the
   // contract with app.mjs's `input` listener has to be one shape.
@@ -259,6 +286,7 @@ function fakeAudioContext() {
     calls: [],
     setValueAtTime(v, t) { this.calls.push(['set', v, t]); this.value = v; return this; },
     linearRampToValueAtTime(v, t) { this.calls.push(['ramp', v, t]); this.value = v; return this; },
+    exponentialRampToValueAtTime(v, t) { this.calls.push(['exp', v, t]); this.value = v; return this; },
     setValueCurveAtTime(curve, t, duration) {
       this.calls.push(['curve', Array.from(curve), t, duration]); return this;
     },
