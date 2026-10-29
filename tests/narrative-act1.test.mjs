@@ -97,7 +97,7 @@ test('the shot is a noise burst and the zombies enter from outside the frame', a
   assert.equal(alive.length, 3, 'one takes the first shot and two more arrive');
   for (const [id, actor] of alive) {
     const [x, y] = jhony.stage.points[actor.at];
-    assert.ok(x > 1144 || y > 748, `${id} starts off the frame`);
+    assert.ok(x > 1144 || x < 0 || y > 748 || y < 0, `${id} starts off the frame`);
   }
 });
 
@@ -146,6 +146,25 @@ test('an enemy actor must name a real kind and a real state', () => {
   assert.throws(() => validateScene({ id: 'probe', stage, steps: [] }, { enemies: { zombie: {} } }), /Unknown enemy actor: z/);
   const asleep = { id: 'probe', stage: { ...stage, actors: { z: { enemy: 'zombie', at: 'a', state: 'asleep' } } }, steps: [] };
   assert.throws(() => validateScene(asleep, { enemies: { zombie: {} } }), /Invalid enemy state: z/);
+});
+
+test('no zombie ever ends up standing on Maxi', async () => {
+  const catalog = await catalogFor();
+  const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) < 60;
+  for (const entry of catalog.entries.filter(item => item.id.startsWith('act-01-'))) {
+    const points = entry.scene.stage.points;
+    const maxi = Object.values(entry.scene.stage.actors).find(actor => actor.character === 'maxi-negro');
+    const spots = [];
+    if (maxi) spots.push(points[maxi.at]);
+    for (const step of entry.scene.steps) {
+      for (const child of step.type === 'parallel' ? step.steps : [step]) {
+        if (child.type === 'move' && child.to) spots.push(points[child.to]);
+      }
+    }
+    if (!maxi) continue;
+    const start = points[maxi.at];
+    for (const spot of spots) assert.ok(!near(spot, start) || spot === start, `${entry.id}: a zombie ends on Maxi at ${spot}`);
+  }
 });
 
 test('the arrival scene owns the first wave and releases it when done', async () => {

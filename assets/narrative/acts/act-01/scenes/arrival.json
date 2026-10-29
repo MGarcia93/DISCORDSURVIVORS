@@ -3,39 +3,145 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [520, 470], "far": [1100, 430], "near": [720, 470], "escape": [280, 470], "house": [1120, 560] },
+    "points": {
+      "ground": [
+        520,
+        470
+      ],
+      "far": [
+        1100,
+        430
+      ],
+      "near": [
+        720,
+        470
+      ],
+      "escape": [
+        280,
+        470
+      ],
+      "house": [
+        1120,
+        560
+      ],
+      "lunge": [
+        640,
+        470
+      ]
+    },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "ground" },
-      "shambler": { "enemy": "zombie", "at": "far" },
-      "latecomer": { "enemy": "zombie", "at": "house" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "shambler": {
+        "enemy": "zombie",
+        "at": "far"
+      },
+      "latecomer": {
+        "enemy": "zombie",
+        "at": "house"
+      }
     }
   },
   "steps": [
-    { "type": "camera", "to": "ground", "zoom": 1.2, "duration": 1.2 },
-    { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué carajo...?" }
-    ] },
-    { "type": "move", "actor": "shambler", "to": "near", "duration": 5.2 },
-    { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Hola? ¿Jhony? ¿Sos vos?" },
-      { "speaker": "maxi-negro", "expression": "scared", "text": "Ah, no. La concha de tu madre." }
-    ] },
-    { "type": "parallel", "steps": [
-      { "type": "move", "actor": "shambler", "to": "ground", "duration": 1.4 },
-      { "type": "move", "actor": "negro", "to": "escape", "duration": 1.4 },
-      { "type": "camera", "to": "escape", "zoom": 1.1, "duration": 1.4 }
-    ] },
-    { "type": "move", "actor": "latecomer", "to": "near", "duration": 4.6 },
-    { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": [
-      "MUNDO 01 — PROJECT ZOMBOID",
-      "Objetivo: Sobrevivir.",
-      "Los jugadores que sobrevivan podrán avanzar al siguiente juego.",
-      "Salir de la partida: deshabilitado."
-    ] },
-    { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "annoyed", "text": "¿Sobrevivir? ¿Y los otros pelotudos dónde están?" },
-      { "speaker": "maxi-negro", "expression": "angry", "text": "Bueno, la concha de su madre. Me dejaron solo." }
-    ] }
+    {
+      "type": "camera",
+      "to": "ground",
+      "zoom": 1.2,
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "¿Qué carajo...?"
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "shambler",
+      "to": "near",
+      "duration": 5.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿Hola? ¿Jhony? ¿Sos vos?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "scared",
+          "text": "Ah, no. La concha de tu madre."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "shambler",
+          "to": "lunge",
+          "duration": 1.4
+        },
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "escape",
+          "duration": 1.4
+        },
+        {
+          "type": "camera",
+          "to": "escape",
+          "zoom": 1.1,
+          "duration": 1.4
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "latecomer",
+      "to": "near",
+      "duration": 4.6
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD SURVIVORS",
+      "duration": 4,
+      "lines": [
+        "MUNDO 01 — PROJECT ZOMBOID",
+        "Objetivo: Sobrevivir.",
+        "Los jugadores que sobrevivan podrán avanzar al siguiente juego.",
+        "Salir de la partida: deshabilitado."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "¿Sobrevivir? ¿Y los otros pelotudos dónde están?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "Bueno, la concha de su madre. Me dejaron solo."
+        }
+      ]
+    }
   ],
-  "effects": [{ "key": "act-01-arrived", "value": true }]
+  "effects": [
+    {
+      "key": "act-01-arrived",
+      "value": true
+    }
+  ]
 }

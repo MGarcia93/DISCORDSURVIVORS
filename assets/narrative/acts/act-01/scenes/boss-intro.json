@@ -3,28 +3,88 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [400, 470], "street": [1010, 430], "approach": [760, 460] },
+    "points": {
+      "ground": [
+        400,
+        470
+      ],
+      "street": [
+        1010,
+        430
+      ],
+      "approach": [
+        760,
+        460
+      ]
+    },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "ground" },
-      "boss": { "enemy": "alarmZombie", "at": "street" },
-      "add": { "enemy": "zombie", "at": "street" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "boss": {
+        "enemy": "alarmZombie",
+        "at": "street"
+      },
+      "add": {
+        "enemy": "zombie",
+        "at": "street"
+      }
     }
   },
   "steps": [
-    { "type": "sound", "sound": "alarm" },
-    { "type": "parallel", "steps": [
-      { "type": "move", "actor": "boss", "to": "approach", "duration": 2.6 },
-      { "type": "move", "actor": "add", "to": "ground", "duration": 2.6 },
-      { "type": "camera", "to": "approach", "zoom": 1.1, "duration": 2.6 }
-    ] },
-    { "type": "notice", "title": "JEFE DETECTADO", "duration": 4, "lines": [
-      "EL ZOMBI DE LA ALARMA",
-      "Un infectado que atrae constantemente nuevas hordas.",
-      "Cuanto más dura el combate, más zombies aparecen."
-    ] },
-    { "type": "camera", "to": "ground", "zoom": 1, "duration": 1 },
-    { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "annoyed", "text": "No, bueno. ¿Qué es esta pelotudez?" }
-    ] }
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "boss",
+          "to": "approach",
+          "duration": 2.6
+        },
+        {
+          "type": "move",
+          "actor": "add",
+          "to": "approach",
+          "duration": 2.6
+        },
+        {
+          "type": "camera",
+          "to": "approach",
+          "zoom": 1.1,
+          "duration": 2.6
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "JEFE DETECTADO",
+      "duration": 4,
+      "lines": [
+        "EL ZOMBI DE LA ALARMA",
+        "Un infectado que atrae constantemente nuevas hordas.",
+        "Cuanto más dura el combate, más zombies aparecen."
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "ground",
+      "zoom": 1,
+      "duration": 1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "No, bueno. ¿Qué es esta pelotudez?"
+        }
+      ]
+    }
   ]
 }

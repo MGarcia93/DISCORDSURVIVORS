@@ -77,24 +77,24 @@
         350
       ],
       "late-a": [
-        480,
-        830
+        1000,
+        -70
       ],
       "late-a-near": [
-        520,
-        560
+        980,
+        340
       ],
       "late-b": [
-        1180,
-        800
+        1100,
+        830
       ],
       "late-b-near": [
         1060,
         690
       ],
       "late-a-exit": [
-        -120,
-        470
+        1000,
+        830
       ]
     },
     "actors": {
@@ -348,7 +348,7 @@
           "type": "move",
           "actor": "late-a",
           "to": "late-a-near",
-          "duration": 5
+          "duration": 4.5
         }
       ]
     },
@@ -356,7 +356,7 @@
       "type": "move",
       "actor": "late-b",
       "to": "late-b-near",
-      "duration": 3.2
+      "duration": 2.6
     },
     {
       "type": "dialogue",
@@ -386,7 +386,7 @@
           "type": "move",
           "actor": "late-a",
           "to": "late-a-exit",
-          "duration": 3
+          "duration": 4.5
         }
       ]
     },
