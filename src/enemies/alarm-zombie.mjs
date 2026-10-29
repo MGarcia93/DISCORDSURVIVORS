@@ -28,6 +28,7 @@ const alarmZombie = {
       key: 'summon',
       chance: 1,
       cooldown: 9,
+      range: 520,
       // "Cuanto más dura el combate, más zombis aparecen": the count grows with
       // the run, not with the wave.
       run(run, enemy, ctx) {
@@ -43,6 +44,7 @@ const alarmZombie = {
       key: 'wave',
       chance: 2,
       cooldown: 6,
+      range: 330,
       // A ring that grows out of the alarm: get out of its way or take it.
       run(run, enemy, ctx) {
         ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 18 });

@@ -242,11 +242,14 @@ function shroomBlast(run, shot, impact) {
 // One reusable selector; the abilities themselves belong to each ficha. When an
 // enemy's attack clock opens, the engine rolls among the actions that are off
 // cooldown, weighted by their chance, and hands the winner to the sheet.
-function pickAction(run, enemy) {
+function pickAction(run, enemy, { inReach = false, distance: gap = Infinity } = {}) {
   const actions = enemy.actions;
   if (!actions?.length) return null;
+  // An action with `range` is a ranged ability: it fires without contact. The
+  // boss has to do something while it is still walking toward the player.
   const ready = actions.filter(action => (action.chance ?? 1) > 0
-    && (enemy.actionCds?.[action.key] ?? 0) <= 0);
+    && (enemy.actionCds?.[action.key] ?? 0) <= 0
+    && (action.range === undefined ? inReach : gap <= action.range));
   if (!ready.length) return null;
   const share = ready.reduce((sum, action) => sum + (action.chance ?? 1), 0);
   let roll = run.random() * share;
@@ -470,8 +473,8 @@ export function step(run, seconds, input = {}) {
       enemy.x += (p.x - enemy.x) / dist * enemy.speed * confusedSlow * dt;
       enemy.y += (p.y - enemy.y) / dist * enemy.speed * confusedSlow * dt;
     }
-    const action = inReach && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0
-      ? (enemy.actions ? pickAction(run, enemy) : { key: 'swipe', kind: 'melee' })
+    const action = p.immune <= 0 && (enemy.attackCd ?? 0) <= 0
+      ? (enemy.actions ? pickAction(run, enemy, { inReach, distance: dist }) : (inReach ? { key: 'swipe', kind: 'melee' } : null))
       : null;
     if (action && action.kind !== 'melee') {
       // The ficha owns the effect; the engine only pays the clock and cooldown.

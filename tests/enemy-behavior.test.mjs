@@ -115,6 +115,32 @@ test('the alarm boss pulls a horde in with its own summon action', () => {
   assert.equal(boss.actionCds.summon, 9, 'and the summon pays its cooldown');
 });
 
+test('the alarm boss uses its abilities while it is still walking toward the player', () => {
+  const run = quietRun();
+  run.random = () => 0.8; // the wave band
+  const boss = createEnemy(run, 'alarmZombie', run.player.x + 250, run.player.y);
+  run.enemies.push(boss);
+  assert.ok(!((boss.attackRange ?? 0) + boss.radius + run.player.hitRadius > 250), 'the player is out of contact');
+  step(run, 0.05, {});
+  assert.equal(run.shockwaves.length, 1, 'the ring leaves the alarm from a distance');
+  assert.equal(boss.actionCds.wave, 6, 'and pays its cooldown');
+
+  const summoning = quietRun();
+  summoning.random = () => 0.1; // the summon band
+  summoning.enemies.push(createEnemy(summoning, 'alarmZombie', summoning.player.x + 400, summoning.player.y));
+  step(summoning, 0.05, {});
+  assert.ok(summoning.enemies.length > 1, 'and it drags a horde in from a distance too');
+});
+
+test('a plain zombie only swings when it touches', () => {
+  const run = quietRun();
+  const far = createEnemy(run, 'zombie', run.player.x + 250, run.player.y);
+  run.enemies.push(far);
+  const hp = run.player.hp;
+  for (let i = 0; i < 20; i++) step(run, 0.05, {});
+  assert.equal(run.player.hp, hp, 'no damage at range');
+});
+
 test('the alarm boss rings a sound wave that has to be walked out of', () => {
   const run = quietRun();
   const boss = createEnemy(run, 'alarmZombie', run.player.x + 30, run.player.y);
