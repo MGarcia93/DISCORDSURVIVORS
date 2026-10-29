@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges">
-<title>Yorick — neutral, the gravedigger's skull under a violet hood</title><desc>Retrato para cinematicas 160x200: capucha violeta, calavera pálida con ojos amarillos, capa con vivos magenta, hombrera de acero y cadenas. El grupo de expresiones cambia cejas, ojos y boca; el resto queda fijo.</desc>
+<title>Yorick — neutral, pale green gravedigger under a violet hood</title><desc>Retrato para cinematicas 160x200, tomado del sprite de referencia: piel verde pálida, cuencas oscuras con ojos amarillos, capucha violeta, capa con vivos magenta, hombrera de acero y cadenas. El grupo de expresiones cambia cejas, ojos y boca; el resto queda fijo.</desc>
 <g id="cloak-back">
 <path fill="#1b1024" d="M14 200V156H26V140H44V132H116V140H134V156H146V200Z"/>
 </g>
@@ -38,19 +38,20 @@
 <path fill="#1b1024" d="M106 46H122V138H118V150H106Z"/>
 <path fill="#6b4a8a" d="M40 40H48V44H40Z"/>
 </g>
-<g id="skull">
+<g id="face">
 <path fill="#0f0c14" d="M54 46H106V52H114V60H118V88H114V98H110V106H104V112H100V120H94V130H66V120H60V112H56V106H50V98H46V88H42V60H46V52H54Z"/>
-<path fill="#cfc8b4" d="M56 48H104V54H112V62H116V86H112V96H108V104H102V110H98V118H92V128H68V118H62V110H58V104H52V96H48V86H44V62H48V54H56Z"/>
-<path fill="#e9e2cf" d="M60 50H98V56H106V64H110V84H104V76H96V70H64V78H56V90H50V64H58V54H60Z"/>
-<path fill="#f6f0de" d="M62 52H94V56H62Z"/>
-<path fill="#b8b09a" d="M68 116H92V122H68ZM52 96H60V106H52ZM108 94H116V102H108Z"/>
-<path fill="#9a927d" d="M70 122H90V128H70Z"/>
-<path fill="#a8a08a" d="M44 86H52V98H44ZM108 84H116V94H108Z"/>
+<path fill="#89a069" d="M56 48H104V54H112V62H116V86H112V96H108V104H102V110H98V118H92V128H68V118H62V110H58V104H52V96H48V86H44V62H48V54H56Z"/>
+<path fill="#a9c086" d="M58 50H102V56H110V64H114V84H108V96H104V104H98V112H94V120H66V112H60V104H56V96H50V84H46V64H50V56H58Z"/>
+<path fill="#cddfab" d="M62 52H98V58H106V66H110V82H102V74H94V68H66V76H58V88H52V66H60V56H62Z"/>
+<path fill="#dcedb9" d="M64 54H94V58H64Z"/>
+<path fill="#67794f" d="M68 116H92V122H68ZM52 96H60V106H52ZM108 94H116V102H108Z"/>
+<path fill="#54643f" d="M70 122H90V128H70Z"/>
+<path fill="#7d9159" d="M44 86H52V98H44ZM108 84H116V94H108Z"/>
 </g>
 <g id="expression-brows">
-<path fill="#b8b09a" d="M52 62H78V66H52ZM82 62H108V66H82Z"/>
-<path fill="#9a927d" d="M52 66H78V68H52ZM82 66H108V68H82Z"/>
-<path fill="#e9e2cf" d="M54 62H74V63H54ZM84 62H104V63H84Z"/>
+<path fill="#89a069" d="M52 62H78V66H52ZM82 62H108V66H82Z"/>
+<path fill="#67794f" d="M52 66H78V68H52ZM82 66H108V68H82Z"/>
+<path fill="#cddfab" d="M54 62H74V63H54ZM84 62H104V63H84Z"/>
 </g>
 <g id="expression-eyes">
 <path fill="#12101a" d="M52 72H78V94H52Z"/>
@@ -59,15 +60,15 @@
 <path fill="#ffd75e" d="M61 78H69V86H61ZM91 78H99V86H91Z"/>
 <path fill="#fff2b0" d="M62 79H65V82H62ZM92 79H95V82H92Z"/>
 <path fill="#8a6a1e" d="M61 85H69V86H61ZM91 85H99V86H91Z"/>
-<path fill="#9a927d" d="M52 92H78V94H52ZM82 92H108V94H82Z"/>
+<path fill="#67794f" d="M52 92H78V94H52ZM82 92H108V94H82Z"/>
 </g>
 <g id="expression-mouth">
-<path fill="#8e866f" d="M78 98H82V104H79V110H75V104H74V100H78Z"/>
+<path fill="#54643f" d="M78 98H82V104H79V110H75V104H74V100H78Z"/>
 <path fill="#1a1622" d="M70 112H90V118H70Z"/>
-<path fill="#cfc8b4" d="M70 116H90V120H70Z"/>
+<path fill="#67794f" d="M70 116H90V120H70Z"/>
 <path fill="#0f0c14" d="M72 114H90V118H72Z"/>
 <path fill="#e9e2cf" d="M73 115H89V117H73Z"/>
 <path fill="#0f0c14" d="M78 114H79V118H78ZM84 114H85V118H84Z"/>
-<path fill="#8e866f" d="M70 118H90V121H70Z"/>
+<path fill="#54643f" d="M70 118H90V121H70Z"/>
 </g>
 </svg>
