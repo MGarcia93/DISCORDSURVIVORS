@@ -106,7 +106,7 @@ test('an enemy with no actions of its own keeps the plain attack', () => {
 
 test('the alarm boss pulls a horde in with its own summon action', () => {
   const run = quietRun();
-  const boss = createEnemy(run, 'boss', run.player.x + 30, run.player.y);
+  const boss = createEnemy(run, 'alarmZombie', run.player.x + 30, run.player.y);
   run.enemies.push(boss);
   run.random = () => 0.6; // lands on the summon band (swipe 3, summon 1, wave 2)
   step(run, 0.05, {});
@@ -117,7 +117,7 @@ test('the alarm boss pulls a horde in with its own summon action', () => {
 
 test('the alarm boss rings a sound wave that has to be walked out of', () => {
   const run = quietRun();
-  const boss = createEnemy(run, 'boss', run.player.x + 30, run.player.y);
+  const boss = createEnemy(run, 'alarmZombie', run.player.x + 30, run.player.y);
   run.enemies.push(boss);
   run.random = () => 0.8; // lands on the wave band
   step(run, 0.05, {});

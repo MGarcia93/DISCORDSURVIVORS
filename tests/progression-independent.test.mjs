@@ -10,7 +10,7 @@ import { resolveStatState } from '../src/stat-modifiers.mjs';
 import { BALANCE } from '../src/reward-data.mjs';
 
 const oneXp = structuredClone(BALANCE);
-oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, boss: 0 };
+oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, alarmZombie: 0 };
 const createRun = (random = Math.random, character = 'negro', options = {}) =>
   engineRun(random, character, { balance: oneXp, ...options });
 

@@ -1,7 +1,7 @@
 import { WIDTH, HEIGHT, WORLD_SCALE, createEnemy, createRun, step } from '../engine.mjs';
 import {
   ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty,
-  enemyContactDamage, enemyDefense, enemyHp, enemySpeed,
+  enemyContactDamage, enemyDefense, enemyHp, enemySpeed, getEnemyKind,
 } from '../enemies/index.mjs';
 import { drawBackground, worldIds, worlds } from '../backgrounds/index.mjs';
 import { drawEnemyFigure } from '../game/figures.mjs';
@@ -17,7 +17,7 @@ const KINDS = Object.keys(ENEMY_KINDS);
 // A crowd is what you want for a walker; a boss is looked at one at a time, with
 // room around it to see what it summons.
 const ALIVE_LIMIT = 6;
-const aliveLimit = kind => (kind === 'boss' ? 1 : ALIVE_LIMIT);
+const aliveLimit = kind => (getEnemyKind(kind).boss ? 1 : ALIVE_LIMIT);
 const SPAWN_EVERY = 0.9;
 
 let arena = null;

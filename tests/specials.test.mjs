@@ -62,7 +62,7 @@ test('Strong enemies take the drop instead of the floor: bosses are only slowed'
   run.spawnIn = 100;
   run.shotIn = 100;
   const p = run.player;
-  const boss = { id: 1, x: p.x + 150, y: p.y, hp: 2200, maxHp: 2200, speed: 88, radius: 38, kind: 'boss' };
+  const boss = { id: 1, x: p.x + 150, y: p.y, hp: 2200, maxHp: 2200, speed: 88, radius: 38, kind: 'alarmZombie', boss: true };
   run.enemies.push(boss);
   activateSpecial(run, 'astral');
   step(run, 0.05, {});

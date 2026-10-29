@@ -55,11 +55,11 @@ export function draw() {
       drawEnemyFigure(ctx, figure, state.run.elapsed);
     }
     ctx.globalAlpha = 1;
-    if (figure.kind !== 'player' && (figure.kind === 'boss' || figure.hp < figure.maxHp)) {
-      const width = (figure.kind === 'boss' ? 90 : figure.kind === 'brute' ? 44 : 30) * 1.1;
-      const y = Math.max(6, figure.y - (figure.kind === 'boss' ? 138 : figure.kind === 'brute' ? 92 : 62) * 1.1);
+    if (figure.kind !== 'player' && (figure.boss || figure.hp < figure.maxHp)) {
+      const width = (figure.boss ? 90 : figure.kind === 'brute' ? 44 : 30) * 1.1;
+      const y = Math.max(6, figure.y - (figure.boss ? 138 : figure.kind === 'brute' ? 92 : 62) * 1.1);
       rounded(ctx, figure.x - width / 2, y, width, 4, 2, '#070b0b');
-      rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.kind === 'boss' ? '#b499f2' : '#d7f779');
+      rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.boss ? '#b499f2' : '#d7f779');
     }
   }
   for (const wave of state.run.shockwaves ?? []) {

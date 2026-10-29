@@ -83,7 +83,7 @@ test('final wave requires defeating the Administrator, not just waiting', () => 
   run.wave = 3;
   run.phase = 'shop';
   startNextWave(run);
-  const boss = run.enemies.find(enemy => enemy.kind === 'boss');
+  const boss = run.enemies.find(enemy => enemy.boss);
   assert.ok(boss);
   run.time = 80;
   step(run, 0.05, {});

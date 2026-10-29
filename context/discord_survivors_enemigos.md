@@ -164,6 +164,12 @@ en la escala: un enemigo común nunca se dibuja más grande que el jugador. El
 brute es el más pesado y queda una cabeza por encima del caminante y por debajo
 del jugador; para que se lea como muro alcanza con el ancho y los hombros.
 
+**El id de un jefe es su nombre, nunca `boss`.** Cada acto tiene el suyo
+(`alarmZombie` en el 1, y los demás cuando existan), y lo que lo marca como jefe
+es el campo `boss: true` de su ficha: eso es lo que el motor consulta para el
+control de masas reducido, la barra de vida de jefe y el cierre de la partida.
+La oleada toma el kind de `BALANCE.waves.bossKind`.
+
 **El jefe del mundo 1 ya tiene su arte**: el *Zombi de la Alarma*, un infectado
 hinchado tipo Boomer que arrastra una alarma de seguridad con baliza y anillos de
 sonido. Sus dos ataques declarados en el guion — invocación y ondas — siguen
@@ -185,9 +191,9 @@ pendientes: son catálogo de patrones, no ficha.
   acciones declaradas, el enemigo hace el ataque básico como siempre.
 - **Primitivas que las habilidades reciben**: `spawnEnemy` (invocar) y
   `shockwave` (anillo que crece y golpea una vez al pasar).
-- **Jefe del mundo 1 — El Zombi de la Alarma**: `swipe` (peso 3), `summon`
-  (peso 1, recarga 9 s, y la cantidad crece con `run.elapsed`) y `wave`
-  (peso 2, recarga 6 s, 18 de daño).
+- **Jefe del mundo 1 — `alarmZombie`** (El Zombi de la Alarma): `swipe`
+  (peso 3), `summon` (peso 1, recarga 9 s, y la cantidad crece con
+  `run.elapsed`) y `wave` (peso 2, recarga 6 s, 18 de daño).
 
 
 - **`brute`** — el resistente que la oleada 3 del acto 1 pedía. Ficha genérica:

@@ -47,7 +47,7 @@ test('Confusion caps at three stacks with bonus elemental damage, and bosses res
   step(run, 0.05, {});
   assert.ok(Math.abs(victim.hp - (1000 - 3 * 8 - 8 * 1.5)) < 1e-6, 'first three hits are plain, the fourth gets the three-stack 50% elemental bonus');
 
-  const boss = { id: 1, x: 600, y: 374, hp: 2200, maxHp: 2200, speed: 0, radius: 38, kind: 'boss' };
+  const boss = { id: 1, x: 600, y: 374, hp: 2200, maxHp: 2200, speed: 0, radius: 38, kind: 'alarmZombie', boss: true };
   run.enemies = [boss];
   run.projectiles = [spread(CHARACTERS.warrior.attack)];
   step(run, 0.05, {});

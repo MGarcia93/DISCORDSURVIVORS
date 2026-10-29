@@ -27,7 +27,7 @@ function clearWave(run) {
 
 test('configured gold rewards control all enemy payouts and survival income independently of XP', () => {
   const balance = structuredClone(oneXp);
-  balance.gold = { rewards: { zombie: 7, runner: 9, boss: 13 }, survival: 11 };
+  balance.gold = { rewards: { zombie: 7, runner: 9, alarmZombie: 13 }, survival: 11 };
   const run = createRun(() => 0.5, 'negro', { balance });
   run.spawnIn = 100;
   run.enemies = ['zombie', 'runner'].map((kind, id) => ({ id, kind, hp: 0, x: 0, y: 0 }));
@@ -39,7 +39,7 @@ test('configured gold rewards control all enemy payouts and survival income inde
   assert.equal(run.xp, 2);
   const bossRun = createRun(() => 0.5, 'negro', { balance });
   bossRun.wave = 4;
-  bossRun.enemies = [{ id: 1, kind: 'boss', hp: 0, x: 0, y: 0 }];
+  bossRun.enemies = [{ id: 1, kind: 'alarmZombie', boss: true, hp: 0, x: 0, y: 0 }];
   step(bossRun, 0, {});
   assert.equal(bossRun.coins, 13);
   assert.equal(bossRun.phase, 'won');
@@ -47,7 +47,7 @@ test('configured gold rewards control all enemy payouts and survival income inde
 
 test('configured zero gold rewards remain zero instead of falling back to legacy amounts', () => {
   const balance = structuredClone(oneXp);
-  balance.gold = { rewards: { zombie: 0, runner: 0, boss: 0 }, survival: 0 };
+  balance.gold = { rewards: { zombie: 0, runner: 0, alarmZombie: 0 }, survival: 0 };
   const run = createRun(() => 0.5, 'negro', { balance });
   kills(run, 1); clearWave(run);
   assert.equal(run.coins, 0);
@@ -171,7 +171,7 @@ test('final boss victory suppresses pending reward screens without losing victor
   const run = createRun(() => 0.5);
   kills(run, 10);
   run.wave = 4;
-  run.enemies = [{ id: ++run.serial, kind: 'boss', hp: 0, maxHp: 1, radius: 1, speed: 0, x: 0, y: 0 }];
+  run.enemies = [{ id: ++run.serial, kind: 'alarmZombie', boss: true, hp: 0, maxHp: 1, radius: 1, speed: 0, x: 0, y: 0 }];
   step(run, 0.01, { x: 1 });
   assert.equal(run.phase, 'won');
   assert.deepEqual(run.pendingLevels, []);

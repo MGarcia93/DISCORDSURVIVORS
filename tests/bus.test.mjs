@@ -32,7 +32,7 @@ test('engine emits kill, waveCleared, playerDown and specialActivated as post-st
 
   const run = createRun(() => 0.5);
   assert.equal(activateSpecial(run, 'chair'), true);
-  run.enemies.push({ id: 1, kind: 'boss', hp: 1, maxHp: 1, x: run.player.x, y: run.player.y,
+  run.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 1, maxHp: 1, x: run.player.x, y: run.player.y,
     radius: 10 * 1.1, speed: 0 });
   for (let i = 0; i < 40 && run.phase === 'playing'; i++) step(run, 0.05, {});
   assert.equal(run.phase, 'won');

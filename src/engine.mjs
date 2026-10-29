@@ -166,7 +166,7 @@ export function createEnemy(run, kind, x, y) {
     radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave),
     attackRange: enemyAttackRange(kind, run.wave),
     attackInterval: enemyAttackInterval(kind, run.wave),
-    actions: def.actions };
+    actions: def.actions, boss: def.boss === true };
 }
 
 export function startNextWave(run) {
@@ -181,7 +181,8 @@ export function startNextWave(run) {
   run.projectiles = [];
   run.player.characterDef.onStageStart?.(run, run.player);
   if (run.wave === run.rewardBalance.waves.bossWave) {
-    run.enemies.push(createEnemy(run, 'boss', WIDTH / 2, 80 * WORLD_SCALE));
+    run.enemies.push(createEnemy(run, run.rewardBalance.waves.bossKind ?? 'alarmZombie',
+      WIDTH / 2, 80 * WORLD_SCALE));
   }
   return true;
 }
@@ -203,7 +204,7 @@ function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 const CONFUSION_SLOW = [0, 0.25, 0.4, 0.55];
 
 function applyConfusion(enemy, stacks, ttl) {
-  const cap = enemy.kind === 'boss' ? 1 : 3;
+  const cap = enemy.boss ? 1 : 3;
   enemy.confusionStacks = Math.min(cap, (enemy.confusionStacks ?? 0) + stacks);
   enemy.confusionTtl = Math.max(enemy.confusionTtl ?? 0, ttl);
 }
@@ -457,7 +458,7 @@ export function step(run, seconds, input = {}) {
     const inReach = dist < reach;
     if ((enemy.stunTtl ?? 0) > 0) {
       // too dazed to walk: spored enemies stand still
-    } else if ((enemy.confusionStacks ?? 0) >= 3 && enemy.kind !== 'boss') {
+    } else if ((enemy.confusionStacks ?? 0) >= 3 && !enemy.boss) {
       const drift = disorientedDrift(enemy, run.elapsed);
       const stumble = enemy.speed * confusedSlow * 0.6;
       enemy.x += drift.x * stumble * dt;
@@ -609,7 +610,7 @@ export function step(run, seconds, input = {}) {
   if (p.hp <= 0) {
     run.phase = 'dead';
     emit('playerDown', { run, player: p });
-  } else if (killed.some(enemy => enemy.kind === 'boss')) {
+  } else if (killed.some(enemy => enemy.boss)) {
     run.phase = 'won';
     run.pendingLevels = [];
     run.levelChoices = run.shopOffers = null;

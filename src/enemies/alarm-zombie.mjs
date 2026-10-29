@@ -7,8 +7,11 @@ import { drawAlarmZombie } from '../sprites.mjs';
 // that rolls between them by weight and pays their cooldowns. The script asks
 // for two things: it summons zombies, and the longer the fight runs the more it
 // drags in; and it rings sound waves that force the player to keep moving.
-const boss = {
-  id: 'boss',
+const alarmZombie = {
+  id: 'alarmZombie',
+  // Marks the kind as a world boss: only bosses get the simplified crowd
+  // control, the boss health bar and the run-ending kill.
+  boss: true,
   stats: {
     life: 2200,       // 2200 points of damage
     defense: 0,
@@ -51,4 +54,4 @@ const boss = {
   },
 };
 
-export default boss;
+export default alarmZombie;

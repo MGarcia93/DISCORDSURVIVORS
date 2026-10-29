@@ -32,17 +32,17 @@ test('enemy sheets are percentages over the base stats with per-wave curves', ()
   assert.equal(enemyHp('runner', 2), 38);
   assert.equal(enemySpeed('zombie', 5), 60 * WORLD_SCALE);
   assert.equal(enemySpeed('runner', 5), 108 * WORLD_SCALE);
-  assert.equal(enemyHp('boss', 4), 2200);
+  assert.equal(enemyHp('alarmZombie', 4), 2200);
   assert.equal(ENEMY_KINDS.zombie.radius, 17);
   assert.equal(ENEMY_KINDS.runner.radius, 13);
-  assert.equal(ENEMY_KINDS.boss.radius, 38);
-  assert.equal(enemySpeed('boss', 4), 52 * WORLD_SCALE);
+  assert.equal(ENEMY_KINDS.alarmZombie.radius, 38);
+  assert.equal(enemySpeed('alarmZombie', 4), 52 * WORLD_SCALE);
   for (const kind of ['zombie', 'runner']) {
     assert.equal(enemyContactDamage(kind), 12);
     assert.equal(enemyBounty(kind), 2);
   }
-  assert.equal(enemyContactDamage('boss'), 30);
-  assert.equal(enemyBounty('boss'), 30);
+  assert.equal(enemyContactDamage('alarmZombie'), 30);
+  assert.equal(enemyBounty('alarmZombie'), 30);
 });
 
 test('spawned zombies and runners read hp, radius and speed from the table', () => {
@@ -77,7 +77,7 @@ test('the wave-4 boss takes its stats from the table', () => {
   run.phase = 'shop';
   assert.equal(startNextWave(run), true);
   const [boss] = run.enemies;
-  assert.equal(boss.kind, 'boss');
+  assert.equal(boss.kind, 'alarmZombie');
   assert.equal(boss.hp, 2200);
   assert.equal(boss.radius, 38 * 1.1);
   assert.equal(boss.speed, 52 * 1.1);
@@ -85,14 +85,14 @@ test('the wave-4 boss takes its stats from the table', () => {
 
 test('contact damage and coin rewards read the table at runtime', () => {
   const run = createRun();
-  run.enemies.push({ id: 1, kind: 'boss', hp: 999, maxHp: 999, x: run.player.x, y: run.player.y,
+  run.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 999, maxHp: 999, x: run.player.x, y: run.player.y,
     radius: 10 * 1.1, speed: 0 });
   const before = run.player.hp;
   step(run, 0.016);
   assert.equal(run.player.hp, before - 30 * (1 - 0.2));
 
   const killRun = createRun(() => 0.5);
-  killRun.enemies.push({ id: 1, kind: 'boss', hp: 1, maxHp: 1, x: killRun.player.x, y: killRun.player.y,
+  killRun.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 1, maxHp: 1, x: killRun.player.x, y: killRun.player.y,
     radius: 10 * 1.1, speed: 0 });
   step(killRun, 0.05, {});
   for (let i = 0; i < 40; i++) step(killRun, 0.05, {});

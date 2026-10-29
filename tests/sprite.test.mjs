@@ -66,7 +66,7 @@ test('the walker kinds are one connected body, never floating pieces', () => {
 });
 
 test('the act 1 boss draws its own alarm zombie at boss density', () => {
-  const boss = enemyShape('boss');
+  const boss = enemyShape('alarmZombie');
   const player = characterShape('negro');
   assert.ok(boss.height > player.height * 1.3, 'a boss is allowed to tower over the player');
   assert.ok(boss.rects.length > 120, 'bosses carry cast-level detail, far above the ~30 of a common enemy');

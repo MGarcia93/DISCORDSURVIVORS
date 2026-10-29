@@ -11,7 +11,7 @@ import { BALANCE } from '../src/reward-data.mjs';
 
 const rng = () => 0.5;
 const oneXp = structuredClone(BALANCE);
-oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, boss: 0 };
+oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, alarmZombie: 0 };
 const createRun = (random = rng, character = 'negro', options = {}) =>
   engineRun(random, character, { balance: oneXp, ...options });
 const endWave = run => { run.spawnIn = run.shotIn = 1e6; run.time = run.duration; step(run, 0, {}); };
@@ -153,7 +153,7 @@ test('S7: pending choices block the boundary; victory clears them and emits once
     const victory = createRun(rng);
     awardXP(victory, 140);
     victory.wave = 4; victory.spawnIn = victory.shotIn = 1e6;
-    victory.enemies.push({ id: ++victory.serial, kind: 'boss', hp: 0, x: 0, y: 0, radius: 20 });
+    victory.enemies.push({ id: ++victory.serial, kind: 'alarmZombie', boss: true, hp: 0, x: 0, y: 0, radius: 20 });
     step(victory, 0, {});
     assert.equal(victory.phase, 'won');
     assert.deepEqual(victory.pendingLevels, []);

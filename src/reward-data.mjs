@@ -5,11 +5,11 @@ import { CHARACTERS } from './characters/index.mjs';
 // combat logic; zero boss XP avoids terminal choices after the final victory.
 export const BALANCE = {
   // Short waves while testing: change duration (seconds) and bossWave here.
-  waves: { duration: 15, bossWave: 4 },
+  waves: { duration: 15, bossWave: 4, bossKind: 'alarmZombie' },
   // Playtest XP: 10 per ordinary kill so every character can reach the new
   // level-3 upgrades quickly. Lower it to 1 for real balance.
   xp: { factor: 10, exponent: 2, rewards: { zombie: 10, runner: 10, brute: 20, boss: 0 } },
-  gold: { rewards: { zombie: 1, runner: 1, brute: 5, boss: 30 }, survival: 5 },
+  gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },
   shopSize: 4,
 };
 

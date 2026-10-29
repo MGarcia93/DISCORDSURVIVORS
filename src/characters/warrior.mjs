@@ -96,7 +96,7 @@ const warrior = {
         if (enemy.hp <= 0 || ctx.distance(enemy, p) > this.radius) continue;
         ctx.hit(run, enemy, p.damage * this.tickFactor, 'spore');
         ctx.confuse(enemy, this.stacksPerTick, this.confusionTtl);
-        if (enemy.kind !== 'boss' && (enemy.maxHp ?? 0) <= this.stunThreshold) enemy.stunTtl = this.stunWindow;
+        if (!enemy.boss && (enemy.maxHp ?? 0) <= this.stunThreshold) enemy.stunTtl = this.stunWindow;
       }
       run.effects.push({ x: p.x, y: p.y, text: '✿', ttl: 0.5, kind: 'spore' });
     },
