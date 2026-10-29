@@ -31,7 +31,7 @@ try {
     await page.waitForTimeout(100);
     assert.equal(await page.locator('.overlay').count(), 0, 'Continue leaves the shop');
     assert.equal(await page.locator('#timer').innerText(), '00:59');
-    assert.equal(await page.locator('#wave-title').innerText(), 'OLEADA 02 / 04');
+    assert.equal(await page.locator('#wave-title').innerText(), 'OLEADA 02 / 06');
     console.log(`PASS shop: ${mobile ? 'mobile' : 'desktop'}`);
     await page.close();
   }

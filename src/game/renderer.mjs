@@ -31,7 +31,7 @@ export function draw() {
   if (!ctx || !state.run) return;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.imageSmoothingEnabled = false;
-  drawBackground(ctx, 'arena', { width: WIDTH, height: HEIGHT });
+  drawBackground(ctx, state.run.act.world, { width: WIDTH, height: HEIGHT });
   const p = state.run.player;
   const astral = p.characterDef.specials.find(special => special.key === 'astral');
   if (p.astral > 0 && astral) {

@@ -16,9 +16,10 @@ export function updateHUD() {
   if (level) level.textContent = `NIVEL ${state.run.level} · XP ${state.run.xp}/${needed}${state.run.pendingLevels.length ? ` · ${state.run.pendingLevels.length} PENDIENTES` : ''}`;
   const xpFill = document.querySelector('#xp-fill');
   if (xpFill) xpFill.style.width = `${Math.min(100, state.run.xp / needed * 100)}%`;
-  const bossWave = state.run.rewardBalance.waves.bossWave;
-  document.querySelector('#timer').textContent = state.run.wave === bossWave ? `☠ JEFE · ${formatTime(state.run.time)}` : formatTime(Math.max(0, state.run.duration - state.run.time));
-  document.querySelector('#wave-title').innerHTML = `${state.run.wave === bossWave ? 'EL ADMINISTRADOR' : `OLEADA 0${state.run.wave}`} <span class="muted">/ 0${bossWave}</span>`;
+  const { boss } = state.run.act;
+  const onBoss = state.run.wave === boss.wave;
+  document.querySelector('#timer').textContent = onBoss ? `☠ JEFE · ${formatTime(state.run.time)}` : formatTime(Math.max(0, state.run.duration - state.run.time));
+  document.querySelector('#wave-title').innerHTML = `${onBoss ? boss.name : `OLEADA 0${state.run.wave}`} <span class="muted">/ 0${boss.wave}</span>`;
   const taskPanel = document.querySelector('#task-panel');
   const task = p.characterDef.taskHud?.(p);
   if (taskPanel && task) {

@@ -30,7 +30,7 @@ export const storyPages = [
     label: '03 / LA ÚLTIMA PARTIDA',
     symbol: '♜',
     tag: 'OBJETIVO · VOLVER AL DISCORD',
-    text: 'Elegí a tu sobreviviente, aguantá tres oleadas y comprá mejoras entre rondas. En la cuarta te espera El Administrador del Servidor. Derrotalo para cerrar esta primera partida.',
+    text: 'Elegí a tu sobreviviente, aguantá seis oleadas y comprá mejoras entre rondas. En la sexta te espera El Zombi de la Alarma. Derrotalo para cerrar esta primera partida.',
     quote: 'Vos caminá. El control remoto pega solo. Si no te movés por dos segundos, recuperás vida.',
     background: 'arena',
     overlay: 'administrator',

@@ -22,10 +22,12 @@ node --check <every file you touched>
 | `src/screens/` | one module per screen; `story-pages.mjs` is pure data |
 | `src/backgrounds/` | world backgrounds (see below) |
 | `src/narrative/` | scene catalog, runtime, presenter, director, viewer |
+| `src/campaign/` | the campaign map: one module per act with its waves, boss and world; validated on load |
 | `src/characters/` | playable fichas; each owns its stats, profile and drawing |
 | `src/enemies/` | enemy fichas; each owns its sheet and drawing, `index.mjs` is the registry |
 | `assets/narrative/` | scene JSON, portraits, manifest |
 | `docs/narrative-authoring.md` | authoring contract for scenes and worlds |
+| `docs/campaign.md` | how to add a world: act shape, contract, wave length |
 | `context/historia/` | approved story scripts — read the act before writing a scene |
 | `.opencode/skills/enemy-authoring/` | how to add an enemy end to end: ficha, wave, rewards, sprite, visual approval, tests |
 
