@@ -53,7 +53,7 @@ test('surviving a wave opens the shop and upgrades can stack', () => {
   assert.equal(startNextWave(run), true);
   assert.equal(run.wave, 2);
   assert.equal(run.phase, 'playing');
-  assert.equal(run.duration, 60);
+  assert.equal(run.duration, run.rewardBalance.waves.duration);
 });
 
 test('specials have cooldowns and the chair reduces movement', () => {

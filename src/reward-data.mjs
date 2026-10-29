@@ -4,6 +4,8 @@ import { CHARACTERS } from './characters/index.mjs';
 // Initial tuning, not a measured balance result. Values are independent of
 // combat logic; zero boss XP avoids terminal choices after the final victory.
 export const BALANCE = {
+  // Short waves while testing: change duration (seconds) and bossWave here.
+  waves: { duration: 15, bossWave: 4 },
   xp: { factor: 10, exponent: 2, rewards: { zombie: 1, runner: 1, boss: 0 } },
   gold: { rewards: { zombie: 1, runner: 1, boss: 30 }, survival: 5 },
   shopSize: 4,

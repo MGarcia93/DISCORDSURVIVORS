@@ -81,7 +81,11 @@ chosen rank once and offers an explicit continuation when the pool is empty;
 ## Initial data and tuning
 
 Edit `src/reward-data.mjs` to add entries to `ITEMS` or `LEVEL_UPGRADES`.
-`BALANCE` holds XP and gold rewards, survival income and shop size. Initial
+`BALANCE` holds wave length (`waves.duration`, in seconds), which wave is the
+boss (`waves.bossWave`), XP and gold rewards, survival income and shop size.
+Waves currently last 15 seconds for playtesting; change that single number to
+lengthen or shorten every wave. HUD labels, boss timing and wave endings all
+read this configuration, so no other file needs editing. Initial
 XP uses the approved `10 * currentLevel ** 2` curve and one XP per ordinary
 kill. Gold, prices, item caps and upgrade magnitudes are provisional tuning,
 not measured final balance. The first catalog includes all eight lore items.

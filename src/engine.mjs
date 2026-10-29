@@ -54,6 +54,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
   characterDef.initPlayer?.(run.player);
   characterDef.onStageStart?.(run, run.player);
   initializeRewards(run, rewards);
+  run.duration = run.rewardBalance.waves.duration;
   return run;
 }
 
@@ -157,14 +158,14 @@ function enemyFromKind(run, kind, x, y) {
 export function startNextWave(run) {
   if (run.phase !== 'shop' || !finishRewards(run)) return false;
   run.wave++;
-  run.duration = 60;
+  run.duration = run.rewardBalance.waves.duration;
   run.time = 0;
   run.spawnIn = 0.5;
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
   run.player.characterDef.onStageStart?.(run, run.player);
-  if (run.wave === 4) {
+  if (run.wave === run.rewardBalance.waves.bossWave) {
     run.enemies.push(enemyFromKind(run, 'boss', WIDTH / 2, 80 * WORLD_SCALE));
   }
   return true;
@@ -316,7 +317,7 @@ export function step(run, seconds, input = {}) {
   }
 
   run.spawnIn -= dt;
-  if (run.wave < 4 && run.spawnIn <= 0 && run.enemies.length < 120) {
+  if (run.wave < run.rewardBalance.waves.bossWave && run.spawnIn <= 0 && run.enemies.length < 120) {
     spawn(run);
     run.spawnIn = Math.max(0.24, 0.85 - run.wave * 0.07 - run.time * 0.006);
   }
@@ -446,7 +447,7 @@ export function step(run, seconds, input = {}) {
     run.pendingLevels = [];
     run.levelChoices = run.shopOffers = null;
     emit('waveCleared', { run });
-  } else if (run.wave < 4 && run.time >= run.duration) {
+  } else if (run.wave < run.rewardBalance.waves.bossWave && run.time >= run.duration) {
     run.phase = 'shop';
     awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
     run.enemies = [];

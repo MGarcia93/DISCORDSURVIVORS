@@ -10,14 +10,18 @@ test('the zoomed-out arena exposes a world 10% larger while keeping movement sca
   assert.equal(run.player.speed, 165 * WORLD_SCALE);
 });
 
-test('normal waves last 60 seconds', () => {
+test('wave length comes from the balance configuration, not a hardcoded stage', () => {
   const run = createRun(() => 0.5);
-  assert.equal(run.duration, 60);
-  run.time = 59.99;
+  assert.equal(run.duration, run.rewardBalance.waves.duration);
+  run.time = run.duration - 0.01;
   step(run, 0.02, {});
   assert.equal(run.phase, 'shop');
   startNextWave(run);
-  assert.equal(run.duration, 60);
+  assert.equal(run.duration, run.rewardBalance.waves.duration);
+  const custom = createRun(() => 0.5, 'negro', { balance: {
+    ...run.rewardBalance, waves: { duration: 7, bossWave: 4 },
+  } });
+  assert.equal(custom.duration, 7);
 });
 
 test('damage upgrades stack up to four levels and cost more each time', () => {
