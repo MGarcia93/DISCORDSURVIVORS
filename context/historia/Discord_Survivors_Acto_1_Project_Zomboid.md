@@ -224,6 +224,12 @@ Mientras Maxi Negro se aleja, vuelve a aparecer la interfaz del Administrador.
 
 **Maxi Negro:** No... No, no, no. ¡LOOOL NO, LA CONCHA DE TU MADRE!
 
+**Jhony:** *(desde la calle, sin darse vuelta)* ¡AL LOL NO JUEGO NI EN PEDO!
+
+**Maxi Negro:** ¡¿Y ESO POR QUÉ, PORQUE NO TOMASTE?!
+
+**Jhony:** ¡TOMO LO QUE QUIERO, PELOTUDO! ¡AL LOL NO JUEGO NI SOBRIO!
+
 La pantalla se vuelve negra.
 
 Se escucha un sonido de conexión de Discord.

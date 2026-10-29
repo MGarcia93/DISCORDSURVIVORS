@@ -16,6 +16,11 @@
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "angry", "text": "No... No, no, no. ¡LOOOL NO, LA CONCHA DE TU MADRE!" }
     ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "jhony", "expression": "angry", "text": "¡AL LOL NO JUEGO NI EN PEDO!" },
+      { "speaker": "maxi-negro", "expression": "surprised", "text": "¡¿Y ESO POR QUÉ, PORQUE NO TOMASTE?!" },
+      { "speaker": "jhony", "expression": "angry", "text": "¡TOMO LO QUE QUIERO, PELOTUDO! ¡AL LOL NO JUEGO NI SOBRIO!" }
+    ] },
     { "type": "notice", "title": "YORICK", "duration": 3.5, "lines": [
       "Ven, pequeño caminante. Tenemos trabajo que hacer."
     ] }

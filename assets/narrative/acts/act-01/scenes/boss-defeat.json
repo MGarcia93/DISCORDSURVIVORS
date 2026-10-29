@@ -15,9 +15,6 @@
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "scared", "text": "Pará, pará. ¿Siguiente entorno? ¡Sacame de acá, hijo de puta!" }
     ] },
-    { "type": "sound", "sound": "gunshot" },
-    { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Esos tiros...? Hay alguien más vivo." }
-    ] }
+    { "type": "sound", "sound": "gunshot" }
   ]
 }

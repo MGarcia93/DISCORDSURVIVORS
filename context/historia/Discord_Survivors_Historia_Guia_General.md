@@ -33,7 +33,7 @@ El tono es de **comedia absurda, insultos y chistes internos**. La historia se d
 ## 4. Reglas de continuidad importantes
 
 - **Personajes jugables iniciales confirmados:** Maxi Negro, Solago, Papasito y Warrior. **No agregar otros como jugables** sin definirlos antes.
-- **Jhony:** cameo del Acto 1; tiene más de 2.000 horas en Project Zomboid, está cómodo matando zombis y **rechaza unirse**.
+- **Jhony:** cameo del Acto 1; tiene más de 2.000 horas en Project Zomboid, está cómodo matando zombis y **rechaza unirse**. **Odia el LoL: no lo juega ni sobrio** (lo grita en el epílogo del Acto 1). Solo vuelve al grupo **borracho**.
 - **Papafrita:** está en **Monster Hunter**, pero **Monster Hunter NO es un mundo jugable** de esta campaña. Al proponerse ir, todos hacen una mueca de asco exagerada, como ante Excalibur de *Soul Eater*. El Administrador analiza el monólogo de Papafrita, **luego** hace también la mueca y vota con el grupo para omitir ese mundo.
 - **Maxi (programador):** NO es Maxi Negro, NO es el jefe final, NO participa en el combate final y NO aparece antes de derrotar al Administrador. Su aparición posterior es el giro de cierre.
 - **Warrior:** nunca jugó Conan, por eso sorprende encontrarlo allí. El servidor clasifica erróneamente Jujuy como Bolivia; **Jujuy es Argentina** y la equivocación es del bot. La forma de hablar de Warrior es un rasgo narrativo, **no un poder ni mecánica**. Sus habilidades giran en torno a humo, hongos y control de masas.

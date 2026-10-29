@@ -45,6 +45,31 @@ test('the development viewer loads every campaign manifest, so a new act appears
   assert.ok(catalog.entries.every(entry => !entry.error));
 });
 
+test('every act line is quoted from the approved script', async () => {
+  const catalog = await catalogFor();
+  const script = (await readFile(new URL('../context/historia/Discord_Survivors_Acto_1_Project_Zomboid.md', import.meta.url), 'utf8')).toLowerCase();
+  const lines = [];
+  for (const entry of catalog.entries.filter(item => item.id.startsWith('act-01-'))) {
+    for (const step of entry.scene.steps) {
+      if (step.type === 'dialogue') lines.push(...step.lines.map(line => line.text));
+      if (step.type === 'notice') lines.push(step.title, ...step.lines);
+    }
+  }
+  assert.ok(lines.length > 25, 'the act really carries dialogue');
+  for (const line of lines) assert.ok(script.includes(line.toLowerCase()), `not in the approved script: ${line}`);
+});
+
+test('the epilogue answers the League announcement with Jhony refusing it', async () => {
+  const catalog = await catalogFor();
+  const epilogue = catalog.entries.find(entry => entry.id === 'act-01-epilogue').scene;
+  const spoken = epilogue.steps.filter(step => step.type === 'dialogue').flatMap(step => step.lines);
+  assert.deepEqual(spoken.slice(-3), [
+    { speaker: 'jhony', expression: 'angry', text: '¡AL LOL NO JUEGO NI EN PEDO!' },
+    { speaker: 'maxi-negro', expression: 'surprised', text: '¡¿Y ESO POR QUÉ, PORQUE NO TOMASTE?!' },
+    { speaker: 'jhony', expression: 'angry', text: '¡TOMO LO QUE QUIERO, PELOTUDO! ¡AL LOL NO JUEGO NI SOBRIO!' },
+  ]);
+});
+
 test('the arrival scene owns the first wave and releases it when done', async () => {
   const catalog = await catalogFor();
   const director = new WaveDirector(catalog);
