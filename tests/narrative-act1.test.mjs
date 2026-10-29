@@ -134,22 +134,34 @@ test('Jhony shoots the runner first and says the line after it', async () => {
   assert.match(steps[lastLine].lines[0].text, /NO ME TRAIGAS MÁS ZOMBIES/);
 });
 
-test('the shambler shows up first and the runner dies the moment it arrives', async () => {
+test('both late zombies enter on the same pan, the runner half a second later', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene;
+  const arrival = scene.steps.find(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
+  const runner = arrival.steps.find(child => child.actor === 'late-b');
+  assert.ok(runner, 'the runner shares the pan with the shambler');
+  assert.equal(runner.delay, 0.5, 'and starts half a second after it');
+  assert.ok(arrival.steps.some(child => child.type === 'camera'), 'the pan is the one that shows them');
   const legs = scene.steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]));
   const walk = id => legs.filter(child => child.type === 'move' && child.actor === id).at(-1);
-  const first = scene.steps.findIndex(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
-  const runner = scene.steps.findIndex(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-b'));
-  assert.ok(first >= 0 && runner > first, 'the one from above appears before the runner');
-  assert.ok(scene.steps[runner].steps.some(child => child.type === 'camera'), 'the camera lands on the runner as it walks in');
+  const [sx, sy] = scene.stage.points[scene.stage.actors['late-b'].at];
+  assert.ok(sy > 748, 'the runner really starts off the frame');
   const jhony = scene.stage.points[scene.stage.actors.jhony.at];
-  const reach = id => {
-    const [x, y] = scene.stage.points[walk(id).to];
-    return Math.hypot(x - jhony[0], y - jhony[1]);
-  };
+  const reach = id => { const [x, y] = scene.stage.points[walk(id).to]; return Math.hypot(x - jhony[0], y - jhony[1]); };
   assert.ok(reach('late-b') > 120, 'the runner stops short of Jhony');
   assert.ok(reach('late-b') < reach('late-a'), 'and still gets closer than the shambler');
+});
+
+test('a delayed step does not move before its delay is over', () => {
+  const stage = { points: { a: [100, 100], b: [300, 100] }, actors: { guide: { character: 'guide', at: 'a' } } };
+  const player = new ScenePlayer({ id: 'probe', stage, steps: [{ type: 'move', actor: 'guide', to: 'b', duration: 1, delay: 0.5 }] },
+    { characters: { guide: { expressions: { neutral: 'x.svg' } } } });
+  player.tick(0.4);
+  assert.equal(player.actors.guide.x, 100, 'still waiting');
+  player.tick(0.2);
+  assert.ok(player.actors.guide.x > 100 && player.actors.guide.x < 300, 'walking once the delay is over');
+  player.tick(1.5);
+  assert.equal(player.actors.guide.x, 300, 'completed after the delay');
 });
 
 test('the arrival scene owns the first wave and releases it when done', async () => {

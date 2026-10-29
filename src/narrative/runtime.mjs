@@ -60,6 +60,7 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
     const resources = [];
     for (const step of steps) {
       requireValue(step && text(step.type), 'Action type is required');
+      if (step.delay !== undefined) requireValue(finite(step.delay) && step.delay >= 0, 'Invalid delay');
       if (timedTypes.has(step.type)) requireValue(finite(step.duration) && step.duration >= 0, `Invalid duration: ${step.type}`);
       if (['move', 'animate'].includes(step.type)) requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
       if (['move', 'camera'].includes(step.type)) requireValue(own(points, step.to), `Unknown point: ${step.to}`);
@@ -158,6 +159,20 @@ export class ScenePlayer {
   }
 
   _start(step) {
+    // `delay` holds a step before it starts, so two actors can enter on the same
+    // camera move half a second apart instead of needing their own pan.
+    if (Number.isFinite(step.delay) && step.delay > 0) {
+      const start = () => this._start({ ...step, delay: 0 });
+      let waited = 0, task = null;
+      return {
+        tick(dt) {
+          if (!task) { waited += dt; if (waited < step.delay) return false; task = start(); }
+          return task.tick(dt);
+        },
+        skip() { task ??= start(); task.skip(); },
+        cancel() { task ??= start(); task.cancel?.(); },
+      };
+    }
     const points = this.scene.stage?.points ?? {};
     if (step.type === 'dialogue') {
       let index = 0;
