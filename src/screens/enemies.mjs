@@ -5,6 +5,7 @@ import {
 } from '../enemies/index.mjs';
 import { drawBackground, worldIds, worlds } from '../backgrounds/index.mjs';
 import { drawEnemyFigure } from '../game/figures.mjs';
+import { drawProjectiles } from '../game/projectiles.mjs';
 import { state } from '../app/state.mjs';
 
 // Development-only sandbox. It runs a real throwaway run: the selected kind
@@ -120,6 +121,7 @@ export function drawEnemyPreview(dt) {
     }
     ctx.globalAlpha = 1;
   }
+  drawProjectiles(ctx, run.projectiles);
   for (const enemy of run.enemies) {
     if (enemy.hp < enemy.maxHp) bar(ctx, enemy.x, enemy.y - 62, 30, enemy.hp / enemy.maxHp, '#d7f779');
   }
