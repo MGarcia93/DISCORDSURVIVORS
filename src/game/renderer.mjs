@@ -1,5 +1,6 @@
 import { WIDTH, HEIGHT, WORLD_SCALE } from '../engine.mjs';
-import { drawChair, drawPatrona, drawAdministrator, drawZombie, drawAnime, drawGamerProjectile, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
+import { drawAnime, drawGamerProjectile, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
+import { drawEnemyFigure } from './figures.mjs';
 import { pixelText } from '../scenes.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
@@ -22,14 +23,7 @@ function pixelRing(ctx, x, y, radius, color) {
 
 // Everything that paints the run canvas: arena, figures, projectiles, effects
 // and the sold-monitor vignette. HUD and overlays are DOM and live elsewhere.
-
-// Sprite map: kind -> drawer for the non-player figures. Adding a character or
-// a special figure only needs an entry here, not new branching in draw().
-const FIGURE_DRAWERS = {
-  chair: (ctx, figure) => drawChair(ctx, figure.x, figure.y, { scale: 2 }),
-  stand: (ctx, figure, time) => drawPatrona(ctx, figure.x, figure.y + 38 * WORLD_SCALE, { time, scale: 2 }),
-  boss: (ctx, figure, time) => drawAdministrator(ctx, figure.x, figure.y + 77, { time, scale: 4 }),
-};
+// The figure drawers themselves live in figures.mjs, shared with the dev screens.
 
 export function draw() {
   const canvas = document.querySelector('.arena-wrap canvas');
@@ -57,15 +51,13 @@ export function draw() {
     if (figure.kind === 'player') {
       p.characterDef.draw(ctx, figure.x, figure.y + 38,
         { time: state.run.elapsed, moving: p.still === 0, facing: state.facing, player: p });
-    } else if (FIGURE_DRAWERS[figure.kind]) {
-      FIGURE_DRAWERS[figure.kind](ctx, figure, state.run.elapsed);
     } else {
-      drawZombie(ctx, figure.x, figure.y + 31, { kind: figure.kind, time: state.run.elapsed, seed: figure.id, scale: 2 });
+      drawEnemyFigure(ctx, figure, state.run.elapsed);
     }
     ctx.globalAlpha = 1;
     if (figure.kind !== 'player' && (figure.kind === 'boss' || figure.hp < figure.maxHp)) {
-      const width = (figure.kind === 'boss' ? 90 : 30) * 1.1;
-      const y = Math.max(6, figure.y - (figure.kind === 'boss' ? 138 : 62) * 1.1);
+      const width = (figure.kind === 'boss' ? 90 : figure.kind === 'brute' ? 44 : 30) * 1.1;
+      const y = Math.max(6, figure.y - (figure.kind === 'boss' ? 138 : figure.kind === 'brute' ? 92 : 62) * 1.1);
       rounded(ctx, figure.x - width / 2, y, width, 4, 2, '#070b0b');
       rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.kind === 'boss' ? '#b499f2' : '#d7f779');
     }

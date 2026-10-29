@@ -1,0 +1,103 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { WAVES, pickKind, spawnInterval, waveConfig } from '../src/waves.mjs';
+import { createRun, startNextWave, step } from '../src/engine.mjs';
+import { BALANCE } from '../src/reward-data.mjs';
+
+// Deterministic draw queue: each call returns the next value and wraps around.
+const sequence = (...values) => { let index = 0; return () => values[index++ % values.length]; };
+
+test('every wave declares its pool, its density and the life each kind uses', () => {
+  assert.equal(WAVES.length, 4);
+  WAVES.forEach((config, index) => {
+    assert.equal(config.wave, index + 1);
+    assert.ok(Number.isInteger(config.perMinute) && config.perMinute >= 0);
+    const share = Object.values(config.mix).reduce((sum, weight) => sum + weight, 0);
+    if (config.perMinute > 0) assert.ok(Math.abs(share - 1) < 1e-9, `wave ${config.wave} mix shares one roll`);
+    for (const kind of Object.keys(config.mix)) {
+      assert.equal(typeof config.life[kind], 'number', `wave ${config.wave} declares ${kind} life`);
+    }
+  });
+  assert.equal(waveConfig(99), null);
+});
+
+test('each spawn rolls the wave pool instead of a hardcoded coin toss', () => {
+  const wave2 = waveConfig(2);
+  assert.equal(pickKind(wave2, () => 0), 'zombie');
+  assert.equal(pickKind(wave2, () => 0.69), 'zombie');
+  assert.equal(pickKind(wave2, () => 0.71), 'runner');
+  assert.equal(pickKind(wave2, () => 0.999), 'runner');
+  assert.equal(pickKind(waveConfig(1), () => 0.9), 'zombie');
+  assert.equal(pickKind(waveConfig(4), () => 0.5), null);
+});
+
+test('wave three fields the resistant zombie the act script asks for', () => {
+  const wave3 = waveConfig(3);
+  assert.equal(wave3.mix.brute, 0.2);
+  assert.equal(wave3.life.brute, 156);
+  assert.equal(pickKind(wave3, () => 0), 'zombie');
+  assert.equal(pickKind(wave3, () => 0.999), 'brute');
+});
+
+test('a wave spawns its whole budget and then stops, however long it runs', () => {
+  const run = createRun(() => 0.37);
+  run.player.hp = run.player.maxHp = 1e9;
+  const expected = Math.round(48 * run.duration / 60);
+  assert.equal(run.spawnBudget, expected);
+  let spawned = 0;
+  let serial = run.serial;
+  while (run.phase === 'playing' && run.time < run.duration - 0.2) {
+    step(run, 0.05, {});
+    spawned += run.serial - serial;
+    serial = run.serial;
+  }
+  assert.equal(run.spawnBudget, 0);
+  assert.equal(spawned, expected);
+});
+
+test('the budget follows the wave length so density does not collapse', () => {
+  const long = createRun(() => 0.5, 'negro', {
+    balance: { ...BALANCE, waves: { duration: 60, bossWave: 4 } },
+  });
+  assert.equal(long.duration, 60);
+  assert.equal(long.spawnBudget, 48);
+});
+
+test('the cadence spreads the budget over the remaining time', () => {
+  assert.equal(spawnInterval(60, 48), 60 / 49);
+  assert.equal(spawnInterval(10, 1), 5);
+  assert.equal(spawnInterval(10, 0), Infinity);
+});
+
+test('spawned enemies take their life percentage from the wave table', () => {
+  const run = createRun(() => 0.1);
+  run.wave = 2;
+  run.random = sequence(0.9, 0.1, 0.1, 0.1);
+  run.spawnIn = 0;
+  step(run, 0.016);
+  const [runner] = run.enemies;
+  assert.equal(runner.kind, 'runner');
+  assert.equal(runner.hp, waveConfig(2).life.runner);
+});
+
+test('a wave three spawn rolls the brute and reads its life from the wave table', () => {
+  const run = createRun(() => 0.1);
+  run.wave = 3;
+  run.random = sequence(0.9, 0.1, 0.1, 0.1);
+  run.spawnIn = 0;
+  step(run, 0.016);
+  const [brute] = run.enemies;
+  assert.equal(brute.kind, 'brute');
+  assert.equal(brute.hp, 156);
+  assert.equal(brute.attackInterval, 1);
+  assert.equal(brute.attackRange, 0);
+});
+
+test('the next wave loads its own budget from the table', () => {
+  const run = createRun(() => 0.5);
+  run.time = run.duration;
+  step(run, 0.02);
+  assert.equal(run.phase, 'shop');
+  assert.equal(startNextWave(run), true);
+  assert.equal(run.spawnBudget, Math.round(waveConfig(2).perMinute * run.duration / 60));
+});

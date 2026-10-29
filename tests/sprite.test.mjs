@@ -1,6 +1,80 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
+import { ENEMY_IDS, getEnemyKind } from '../src/enemies/index.mjs';
+import { getCharacter } from '../src/characters/index.mjs';
+
+// Renders a drawer into world-space rectangles (transform applied), so a
+// silhouette can be measured instead of eyeballed.
+function bounds(draw) {
+  const rects = [];
+  let sx = 1, sy = 1, tx = 0, ty = 0;
+  const ctx = {
+    fillStyle: '',
+    save() {}, restore() {},
+    getTransform: () => ({ a: sx, d: sy }),
+    translate(x, y) { tx += x * sx; ty += y * sy; },
+    scale(x, y) { sx *= x; sy *= y; },
+    fillRect(x, y, w, h) { rects.push({ x: tx + x * sx, y: ty + y * sy, w: w * sx, h: h * sy, color: this.fillStyle }); },
+  };
+  draw(ctx);
+  const left = Math.min(...rects.map(r => r.x));
+  const right = Math.max(...rects.map(r => r.x + r.w));
+  const top = Math.min(...rects.map(r => r.y));
+  const bottom = Math.max(...rects.map(r => r.y + r.h));
+  return { width: right - left, height: bottom - top, rects };
+}
+
+const enemyShape = kind => bounds(ctx => getEnemyKind(kind).draw(ctx, 0, 0, { time: 0.15, seed: 1 }));
+const characterShape = id => bounds(ctx => getCharacter(id).draw(ctx, 0, 0,
+  { time: 0.3, moving: true, facing: 1, player: { chair: 0, stand: 0, smile: 0, anime: 0 } }));
+
+test('every enemy kind draws its own body, and no two silhouettes are the same', () => {
+  const shapes = Object.fromEntries(ENEMY_IDS.map(kind => [kind, enemyShape(kind)]));
+  for (const [kind, shape] of Object.entries(shapes)) {
+    assert.ok(shape.rects.length > 10, `${kind} draws a full figure, not an empty frame`);
+  }
+  const seen = new Set(Object.values(shapes).map(shape => JSON.stringify(shape.rects)));
+  assert.equal(seen.size, ENEMY_IDS.length, 'sharing one recipe across kinds is how they became palette swaps');
+});
+
+test('the walker kinds are one connected body, never floating pieces', () => {
+  // The runner shipped with a one-unit gap at the shoulder and the head off the
+  // neck: a sprite can be "different" and still be broken. Every walker must
+  // flood-fill as a single figure from its shadow to its head.
+  for (const kind of ['zombie', 'runner', 'brute']) {
+    const cells = new Set();
+    for (const rect of enemyShape(kind).rects) {
+      for (let y = Math.round(rect.y); y < Math.round(rect.y + rect.h); y++) {
+        for (let x = Math.round(rect.x); x < Math.round(rect.x + rect.w); x++) cells.add(`${x},${y}`);
+      }
+    }
+    const lowest = [...cells].sort((a, b) => Number(b.split(',')[1]) - Number(a.split(',')[1]))[0];
+    const seen = new Set([lowest]);
+    const queue = [lowest];
+    while (queue.length) {
+      const [x, y] = queue.pop().split(',').map(Number);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const key = `${x + dx},${y + dy}`;
+        if (cells.has(key) && !seen.has(key)) { seen.add(key); queue.push(key); }
+      }
+    }
+    assert.equal(seen.size, cells.size, `${kind} must render as one connected figure`);
+  }
+});
+
+test('the runner reads lean and tall, and the brute reads wide but never bigger than the player', () => {
+  const zombie = enemyShape('zombie');
+  const runner = enemyShape('runner');
+  const brute = enemyShape('brute');
+  const player = characterShape('negro');
+  assert.ok(runner.height > zombie.height * 1.1, 'the runner stands taller than the walker');
+  assert.ok(runner.width < zombie.width, 'and narrower, so the frame reads as fast');
+  assert.ok(brute.width > zombie.width * 1.2, 'the brute is wider than a walker with thicker arms');
+  assert.ok(brute.height > zombie.height, 'and a head taller');
+  assert.ok(brute.height <= player.height, 'but it never towers over the player');
+});
+
 
 test('drawPapazito draws his photo outfit with a brick instead of a goblet in both facings', () => {
   for (const facing of [1, -1]) {

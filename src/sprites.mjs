@@ -118,25 +118,165 @@ export function drawChair(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+// Enemy sprites follow one written budget: closed ink contour, one shade tone per
+// material and a highlight only where it earns its place (sneakers, hands, the
+// top of the head). That is the cast's language at lower density, so a crowd of
+// them never competes with the player on screen.
+
+// The walker's shirt is the only per-instance colour: three rotten tones, each
+// with its own shade and light so the volume survives at 2x.
+const ZOMBIE_SHIRTS = [
+  { light: '#7f9180', base: '#667767', mid: '#5a6b5c', dark: '#4f5c51' },
+  { light: '#7d7289', base: '#655b70', mid: '#584f62', dark: '#4b4253' },
+  { light: '#8f7d60', base: '#786850', mid: '#6a5c47', dark: '#5d5140' },
+];
+
+// A body reads as a cylinder, not as a stripe, when the light falls in steps.
+// Paints the lit edge, the base and two progressively darker bands across a
+// torso of `width` at `x`, so no single hard line cuts the volume in half.
+function torsoBands(ctx, x, y, width, height, tones) {
+  const lit = Math.max(1, Math.round(width * 0.15));
+  const dark = Math.max(1, Math.round(width * 0.2));
+  const mid = Math.max(1, Math.round(width * 0.22));
+  pixel(ctx, x, y, lit, height, tones.light);
+  pixel(ctx, x + width - dark, y, dark, height, tones.dark);
+  pixel(ctx, x + width - dark - mid, y, mid, height, tones.mid);
+  pixel(ctx, x + lit, y, width - lit - mid - dark, height, tones.base);
+}
+
+// Act 1 walker. Slow, stooped, arms hanging: the plainest body of the cast.
 export function drawZombie(ctx, x, y, options = {}) {
-  const { kind = 'zombie', time = 0, seed = 0, scale = 2 } = options;
-  const stride = Math.floor(time * (kind === 'runner' ? 9 : 4) + seed) % 2;
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 4 + seed) % 2;
+  const shirt = ZOMBIE_SHIRTS[seed % 3];
   pose(ctx, x, y, scale);
   pixel(ctx, -10, 0, 21, 2, '#131a20');
   pixel(ctx, -7, -9, 6, 9 - stride, '#2c2b39');
   pixel(ctx, 2, -9, 6, 8 + stride, '#2c2b39');
+  pixel(ctx, -7, -9, 2, 9 - stride, '#211f2c');
+  pixel(ctx, -8, 0, 6, 2, '#4a4658');
+  pixel(ctx, 2, -1, 6, 2, '#4a4658');
+  pixel(ctx, -8, 0, 6, 1, '#8a8496');
+  pixel(ctx, 2, -1, 6, 1, '#8a8496');
+  // Torso: contour, base, shaded flank, lit shoulder and a torn hem.
   pixel(ctx, -9, -25, 19, 17, '#151a24');
-  pixel(ctx, -8, -24, 17, 15, kind === 'runner' ? '#936052' : ['#667767', '#655b70', '#786850'][seed % 3]);
+  torsoBands(ctx, -8, -24, 17, 15, {
+    light: shirt.light, base: shirt.base, mid: shirt.mid, dark: shirt.dark,
+  });
+  // Shadow the head casts on the chest, and a torn hem instead of a band.
+  pixel(ctx, -8, -24, 17, 2, shirt.mid);
+  pixel(ctx, -7, -12, 4, 2, shirt.dark);
+  pixel(ctx, 2, -12, 3, 2, shirt.dark);
+  // Arms: skin with its shade on the back arm and a hand at each end.
   pixel(ctx, -12, -24 + stride, 4, 13, '#718962');
+  pixel(ctx, -12, -13 + stride, 4, 3, '#a8b98a');
   pixel(ctx, 9, -23 - stride, 4, 13, '#8b9e70');
-  pixel(ctx, 2, -17, 5, 6, '#7d956c');
+  pixel(ctx, 9, -12 - stride, 4, 3, '#a8b98a');
+  pixel(ctx, 2, -17, 5, 6, '#718962');
+  // Head: contour, face, shaded jaw, hair with a lit edge and dead eyes.
   pixel(ctx, -8, -36, 17, 14, '#19232b');
   pixel(ctx, -7, -34, 15, 11, '#8b9e70');
+  pixel(ctx, -7, -27, 15, 3, '#718962');
   pixel(ctx, -6, -35, 12, 3, '#424b41');
+  pixel(ctx, -6, -35, 12, 1, '#55604f');
   pixel(ctx, -5, -30, 4, 2, '#d6df94');
   pixel(ctx, 4, -30, 3, 2, '#d6df94');
   pixel(ctx, -2, -26, 6, 2, '#2e3330');
   pixel(ctx, -1, -26, 2, 1, '#d5ceaa');
+  ctx.restore();
+}
+
+// Act 1 runner. All speed, read as a mid-stride runner: the legs break at the
+// knee and scissor between the open stride and the passing pose, the arms bend
+// at the elbow with one swinging back, and the bright sneakers keep the lower
+// half readable on a dark stage. The head stays centred on a short neck, over a
+// narrow torso, so nothing looks pasted on.
+export function drawRunner(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const open = Math.floor(time * 9 + seed) % 2 === 0;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -8, 0, 17, 2, '#131a20');
+  pixel(ctx, -4, -14, 5, 7, '#4a4566');
+  pixel(ctx, open ? -6 : -4, -8, 4, 7, '#4a4566');
+  pixel(ctx, open ? -6 : -4, -8, 1, 7, '#332f45');
+  pixel(ctx, open ? -7 : -5, open ? -2 : -1, 6, 2, '#b9b3c4');
+  pixel(ctx, open ? -7 : -5, open ? -2 : -1, 6, 1, '#d6d2dd');
+  pixel(ctx, 1, -14, 5, 7, '#4a4566');
+  pixel(ctx, open ? 3 : 2, -8, 4, 8, '#4a4566');
+  pixel(ctx, open ? 6 : 5, -8, 1, 8, '#332f45');
+  pixel(ctx, open ? 3 : 2, 0, 6, 2, '#b9b3c4');
+  pixel(ctx, open ? 3 : 2, 0, 6, 1, '#d6d2dd');
+  // Narrow torso, with the hips showing under a torn hem.
+  pixel(ctx, -5, -31, 13, 17, '#151a24');
+  torsoBands(ctx, -4, -30, 11, 15, {
+    light: '#a87666', base: '#936052', mid: '#84544a', dark: '#74463e',
+  });
+  pixel(ctx, -4, -30, 11, 2, '#84544a');
+  pixel(ctx, -4, -17, 4, 2, '#74463e');
+  pixel(ctx, 2, -17, 3, 2, '#74463e');
+  // Bent arms: one swung back, one forward, both joined at the shoulder.
+  pixel(ctx, -7, -29, 3, 8, '#6d8560');
+  pixel(ctx, -9, -22, 6, 3, '#9fae86');
+  pixel(ctx, 6, -29, 3, 8, '#7d956c');
+  pixel(ctx, 5, -22, 7, 3, '#9fae86');
+  // Short neck, then a head centred over the shoulders.
+  pixel(ctx, -1, -35, 4, 4, '#718962');
+  pixel(ctx, -5, -46, 12, 13, '#19232b');
+  pixel(ctx, -4, -44, 10, 10, '#9fae86');
+  pixel(ctx, -4, -37, 10, 3, '#8b9e70');
+  pixel(ctx, -4, -45, 9, 3, '#3d4a37');
+  pixel(ctx, -4, -45, 9, 1, '#4e5c48');
+  pixel(ctx, -2, -40, 4, 2, '#f2f0a2');
+  pixel(ctx, 3, -40, 3, 2, '#f2f0a2');
+  pixel(ctx, -1, -36, 6, 3, '#2a2320');
+  ctx.restore();
+}
+
+// Act 1 brute. Mass before detail: shoulders wider than the torso, no neck, a
+// head sunk between them, thick arms hanging forward and blood down the front.
+// It shares the cast grid, so it reads about a head taller than the walker and
+// just under the player instead of towering over the arena.
+export function drawBrute(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 3 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -13, 0, 27, 2, '#131a20');
+  pixel(ctx, -9, -12, 7, 12 - stride, '#2c2b39');
+  pixel(ctx, 2, -12, 7, 11 + stride, '#2c2b39');
+  pixel(ctx, -9, -12, 2, 12 - stride, '#211f2c');
+  pixel(ctx, -10, 0, 8, 2, '#4a4658');
+  pixel(ctx, 2, -1, 8, 2, '#4a4658');
+  pixel(ctx, -10, 0, 8, 1, '#8a8496');
+  pixel(ctx, 2, -1, 8, 1, '#8a8496');
+  // Shoulders as a slab with real contour, then the belly under it.
+  pixel(ctx, -13, -31, 27, 8, '#151a24');
+  pixel(ctx, -12, -29, 25, 6, '#5d6b52');
+  pixel(ctx, -12, -29, 25, 2, '#6b7a5d');
+  pixel(ctx, -11, -25, 23, 15, '#151a24');
+  pixel(ctx, -10, -24, 21, 13, '#6a4a44');
+  torsoBands(ctx, -10, -24, 21, 13, {
+    light: '#7d5a52', base: '#6a4a44', mid: '#5f403a', dark: '#543833',
+  });
+  pixel(ctx, -4, -20, 9, 3, '#8f2b28');
+  pixel(ctx, -2, -17, 4, 2, '#6d1f1e');
+  // Thick arms in two segments, each with contour so they are not loose slabs.
+  pixel(ctx, -16, -28 + stride, 6, 9, '#151a24');
+  pixel(ctx, -15, -27 + stride, 4, 7, '#718962');
+  pixel(ctx, -15, -20 + stride, 6, 9, '#151a24');
+  pixel(ctx, -14, -19 + stride, 4, 7, '#5f7752');
+  pixel(ctx, 10, -27 - stride, 6, 8, '#151a24');
+  pixel(ctx, 11, -26 - stride, 4, 6, '#8b9e70');
+  pixel(ctx, 9, -20 - stride, 6, 8, '#151a24');
+  pixel(ctx, 10, -19 - stride, 4, 6, '#6d8560');
+  // Head sunk between the shoulders, with a shaded jaw.
+  pixel(ctx, -8, -42, 17, 12, '#19232b');
+  pixel(ctx, -7, -40, 15, 10, '#8b9e70');
+  pixel(ctx, -7, -32, 15, 2, '#718962');
+  pixel(ctx, -6, -41, 13, 2, '#424b41');
+  pixel(ctx, -6, -41, 13, 1, '#55604f');
+  pixel(ctx, -5, -36, 4, 2, '#d6df94');
+  pixel(ctx, 3, -36, 4, 2, '#d6df94');
+  pixel(ctx, -2, -32, 6, 2, '#2e3330');
   ctx.restore();
 }
 

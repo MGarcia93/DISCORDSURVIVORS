@@ -20,12 +20,17 @@ export const HEAL_AMOUNT = 60;
 import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
-import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies.mjs';
-import { DEFENSE_MITIGATION_CAP } from './stats.mjs';
+import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies/index.mjs';
+import { DEFENSE_MITIGATION_CAP, resolveLifePercent } from './stats.mjs';
+import { pickKind, spawnInterval, waveBudget, waveConfig, waveLife } from './waves.mjs';
 import { emit } from './bus.mjs';
 import { createStatState } from './stat-modifiers.mjs';
 import { initializeRewards, awardXP, beginRewards, finishRewards, recordLegacyUpgrade } from './run-rewards.mjs';
 export { chooseLevelReward, skipEmptyChoice, buyItem, nextLevelXP } from './run-rewards.mjs';
+
+// Safety net: the per-wave budget is the real limiter, this only stops a wave
+// from ever flooding the arena if its data asks for an absurd density.
+const ALIVE_CAP = 120;
 
 export function createRun(random = Math.random, character = 'negro', rewards = {}) {
   const characterDef = getCharacter(character);
@@ -55,6 +60,8 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
   characterDef.onStageStart?.(run, run.player);
   initializeRewards(run, rewards);
   run.duration = run.rewardBalance.waves.duration;
+  run.spawnBudget = waveBudget(run.wave, run.duration);
+  run.spawnIn = spawnInterval(run.duration, run.spawnBudget);
   return run;
 }
 
@@ -147,12 +154,17 @@ export function buyHeal(run) {
   return true;
 }
 
-function enemyFromKind(run, kind, x, y) {
+// One enemy built from its sheet. Exported because dev viewers and tests need
+// to place a named kind without running a whole wave.
+export function createEnemy(run, kind, x, y) {
   const def = ENEMY_KINDS[kind];
-  const hp = enemyHp(kind, run.wave);
+  const percent = waveLife(run.wave, kind);
+  const hp = percent === undefined ? enemyHp(kind, run.wave) : resolveLifePercent(percent);
   return { id: ++run.serial, kind, x, y,
     hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
-    radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) };
+    radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave),
+    attackRange: enemyAttackRange(kind, run.wave),
+    attackInterval: enemyAttackInterval(kind, run.wave) };
 }
 
 export function startNextWave(run) {
@@ -160,21 +172,21 @@ export function startNextWave(run) {
   run.wave++;
   run.duration = run.rewardBalance.waves.duration;
   run.time = 0;
-  run.spawnIn = 0.5;
+  run.spawnBudget = waveBudget(run.wave, run.duration);
+  run.spawnIn = spawnInterval(run.duration, run.spawnBudget);
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
   run.player.characterDef.onStageStart?.(run, run.player);
   if (run.wave === run.rewardBalance.waves.bossWave) {
-    run.enemies.push(enemyFromKind(run, 'boss', WIDTH / 2, 80 * WORLD_SCALE));
+    run.enemies.push(createEnemy(run, 'boss', WIDTH / 2, 80 * WORLD_SCALE));
   }
   return true;
 }
 
-function spawn(run) {
+function spawn(run, kind) {
   const edge = Math.floor(run.random() * 4);
-  const kind = run.wave > 1 && run.random() < 0.3 ? 'runner' : 'zombie';
-  const enemy = enemyFromKind(run, kind,
+  const enemy = createEnemy(run, kind,
     edge === 0 ? -20 * WORLD_SCALE : edge === 1 ? WIDTH + 20 * WORLD_SCALE : run.random() * WIDTH,
     edge === 2 ? -20 * WORLD_SCALE : edge === 3 ? HEIGHT + 20 * WORLD_SCALE : run.random() * HEIGHT);
   enemy.speed += run.random() * 10 * WORLD_SCALE;
@@ -317,9 +329,14 @@ export function step(run, seconds, input = {}) {
   }
 
   run.spawnIn -= dt;
-  if (run.wave < run.rewardBalance.waves.bossWave && run.spawnIn <= 0 && run.enemies.length < 120) {
-    spawn(run);
-    run.spawnIn = Math.max(0.24, 0.85 - run.wave * 0.07 - run.time * 0.006);
+  const spawnConfig = waveConfig(run.wave);
+  if (spawnConfig && run.spawnBudget > 0 && run.spawnIn <= 0 && run.enemies.length < ALIVE_CAP) {
+    const kind = pickKind(spawnConfig, run.random);
+    if (kind) {
+      spawn(run, kind);
+      run.spawnBudget--;
+      run.spawnIn = spawnInterval(run.duration - run.time, run.spawnBudget);
+    }
   }
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
@@ -350,6 +367,13 @@ export function step(run, seconds, input = {}) {
     enemy.attackCd = Math.max(0, (enemy.attackCd ?? 0) - dt);
     enemy.confusionTtl = Math.max(0, (enemy.confusionTtl ?? 0) - dt);
     if ((enemy.confusionTtl ?? 0) <= 0) enemy.confusionStacks = 0;
+    // Generic enemy rule, shared by every kind: close the distance, stop when
+    // the attack distance is reached, then swing on the sheet's own cadence.
+    // Reach is measured from the collision edges, so a bigger body stops sooner.
+    // A hand-built enemy without a sheet has contact reach and the player's
+    // immunity floor as its cadence, which is how partial fixtures behaved.
+    const reach = (enemy.attackRange ?? 0) + enemy.radius + p.hitRadius;
+    const inReach = dist < reach;
     if ((enemy.stunTtl ?? 0) > 0) {
       // too dazed to walk: spored enemies stand still
     } else if ((enemy.confusionStacks ?? 0) >= 3 && enemy.kind !== 'boss') {
@@ -357,22 +381,23 @@ export function step(run, seconds, input = {}) {
       const stumble = enemy.speed * confusedSlow * 0.6;
       enemy.x += drift.x * stumble * dt;
       enemy.y += drift.y * stumble * dt;
-    } else {
+    } else if (!inReach) {
       enemy.x += (p.x - enemy.x) / dist * enemy.speed * confusedSlow * dt;
       enemy.y += (p.y - enemy.y) / dist * enemy.speed * confusedSlow * dt;
     }
-    if (dist < enemy.radius + p.hitRadius && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0) {
+    if (inReach && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0) {
       if (zone && run.random() < smoke.missChance) {
         enemy.attackCd = smoke.missCd ?? 1; // the swing connects with smoke, not flesh
         continue;
       }
       const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
-      const contactDamage = enemyContactDamage(enemy.kind);
+      const contactDamage = enemyContactDamage(enemy.kind, run.wave);
       p.hp = Math.max(0, p.hp - contactDamage
         * (1 - Math.min(0.75, p.defense * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
         * contactFactor);
       p.immune = 0.65;
-      if ((enemy.confusionStacks ?? 0) >= 2) enemy.attackCd = 0.8; // slowed mind, slower swings
+      // A confused mind swings slower; otherwise the sheet owns the cadence.
+      enemy.attackCd = (enemy.confusionStacks ?? 0) >= 2 ? 0.8 : (enemy.attackInterval ?? 0.65);
     }
   }
   for (const shot of run.projectiles) {

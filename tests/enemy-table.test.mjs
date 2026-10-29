@@ -1,7 +1,30 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, startNextWave, step } from '../src/engine.mjs';
-import { ENEMY_KINDS, enemyBounty, enemyContactDamage, enemyHp, enemySpeed } from '../src/enemies.mjs';
+import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from '../src/enemies/index.mjs';
+
+test('every enemy kind authors all six combat stats plus its body and bounty', () => {
+  const six = ['life', 'defense', 'attack', 'attackSpeed', 'attackDistance', 'moveSpeed'];
+  for (const [kind, def] of Object.entries(ENEMY_KINDS)) {
+    for (const stat of six) assert.ok(stat in def.stats, `${kind} authors ${stat}`);
+    assert.ok(def.radius > 0, `${kind} declares its collision size outside the sheet`);
+    assert.ok(def.bounty > 0, `${kind} declares its own bounty`);
+  }
+  // Melee kinds stop at contact and swing on the player's immunity floor.
+  assert.equal(enemyAttackRange('zombie'), 0);
+  assert.equal(enemyAttackInterval('zombie'), 100 / 154);
+});
+
+test('the resistant zombie is a slow wall: more life, mitigation and punch, less speed', () => {
+  assert.equal(ENEMY_KINDS.brute.radius, 22);
+  assert.equal(enemyHp('brute', 3), 156);
+  assert.equal(enemyDefense('brute', 3), 0.3);
+  assert.equal(enemyContactDamage('brute', 3), 30);
+  assert.equal(enemyAttackInterval('brute', 3), 1);
+  assert.equal(enemyAttackRange('brute', 3), 0);
+  assert.equal(enemySpeed('brute', 3), 490 * 5 / 100 * WORLD_SCALE);
+  assert.equal(enemyBounty('brute'), 5);
+});
 
 test('enemy sheets are percentages over the base stats with per-wave curves', () => {
   assert.equal(enemyHp('zombie', 1), 46);
@@ -34,6 +57,11 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
 
   const runnerRun = createRun(() => 0.1);
   runnerRun.wave = 2;
+  // Wave 2 rolls its pool first: 0.9 lands on the runner share. The rest of the
+  // queue keeps the position and speed draws identical to the zombie case.
+  const draws = [0.9, 0.1, 0.1, 0.1];
+  let draw = 0;
+  runnerRun.random = () => draws[draw++ % draws.length];
   runnerRun.spawnIn = 0;
   step(runnerRun, 0.016);
   const runner = runnerRun.enemies[0];
