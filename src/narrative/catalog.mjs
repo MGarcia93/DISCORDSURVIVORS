@@ -44,7 +44,10 @@ export async function loadCatalog({ url = manifestURL, urls, fetcher = globalThi
     }
     for (const sound of Object.values(manifest.sounds ?? {})) {
       if (sound.src) sound.src = new URL(sound.src, target).href;
-      else if (!Number.isFinite(sound.frequency) || sound.frequency <= 0 || !Number.isFinite(sound.duration) || sound.duration <= 0) throw Error('Invalid sound definition');
+      // A tonal sound needs a frequency; a noise burst only needs its length.
+      else if (sound.noise) {
+        if (!Number.isFinite(sound.duration) || sound.duration <= 0) throw Error('Invalid sound definition');
+      } else if (!Number.isFinite(sound.frequency) || sound.frequency <= 0 || !Number.isFinite(sound.duration) || sound.duration <= 0) throw Error('Invalid sound definition');
     }
     Object.assign(sounds, manifest.sounds ?? {});
     for (const item of manifest.scenes ?? []) descriptors.push({ item, target });

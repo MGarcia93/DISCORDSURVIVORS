@@ -3,7 +3,7 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [520, 470], "far": [940, 440], "near": [720, 470], "escape": [280, 470], "house": [980, 530] },
+    "points": { "ground": [520, 470], "far": [1100, 430], "near": [720, 470], "escape": [280, 470], "house": [1120, 560] },
     "actors": {
       "negro": { "character": "maxi-negro", "at": "ground" },
       "shambler": { "enemy": "zombie", "at": "far" },

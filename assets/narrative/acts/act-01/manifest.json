@@ -2,7 +2,7 @@
   "characters": "../../characters.json",
   "sounds": {
     "alarm": { "frequency": 880, "duration": 0.35 },
-    "gunshot": { "frequency": 140, "duration": 0.14 }
+    "gunshot": { "noise": true, "duration": 0.18, "cutoff": 1100, "gain": 0.22 }
   },
   "scenes": [
     { "id": "act-01-arrival", "title": "Acto 1: Bienvenido a Knox County", "file": "scenes/arrival.json" },

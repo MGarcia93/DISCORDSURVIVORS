@@ -82,6 +82,20 @@ test('the act stages enemies instead of describing them', async () => {
   assert.equal(actorsOf('act-01-boss-defeat').find(actor => actor.enemy === 'alarmZombie').state, 'dead');
 });
 
+test('the shot is a noise burst and the zombies enter from outside the frame', async () => {
+  const catalog = await catalogFor();
+  assert.equal(catalog.sounds.gunshot.noise, true, 'a shot is noise, not a beep');
+  const scene = id => catalog.entries.find(entry => entry.id === id).scene;
+  // At the widest zoom each scene uses before the walk, the start point is out.
+  const arrival = scene('act-01-arrival');
+  const arrivalRight = Math.min(1144, arrival.stage.points.ground[0] + 1144 / (2 * 1.2));
+  assert.ok(arrival.stage.points[arrival.stage.actors.shambler.at][0] > arrivalRight, 'the first zombie starts off the right edge');
+  const jhony = scene('act-01-jhony');
+  for (const id of ['walker-a', 'walker-b']) {
+    assert.ok(jhony.stage.points[jhony.stage.actors[id].at][1] > 748, `${id} starts below the canvas`);
+  }
+});
+
 test('Jhony actually shoots one down in front of the player', async () => {
   const catalog = await catalogFor();
   const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;

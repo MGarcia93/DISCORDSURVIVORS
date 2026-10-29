@@ -7,7 +7,9 @@
       "entrance": [300, 470],
       "meet": [600, 470],
       "jhony": [880, 460],
-      "walker-far": [1050, 500],
+      "walker-far": [900, 820],
+      "walker-off": [1120, 800],
+      "walker-near-b": [1040, 500],
       "walker-near": [960, 480],
       "corpse-a": [470, 548],
       "corpse-b": [560, 562],
@@ -26,7 +28,7 @@
       "body-e": { "enemy": "brute", "at": "corpse-e", "state": "dead" },
       "body-f": { "enemy": "zombie", "at": "corpse-f", "state": "dead" },
       "walker-a": { "enemy": "zombie", "at": "walker-far" },
-      "walker-b": { "enemy": "zombie", "at": "walker-far" }
+      "walker-b": { "enemy": "zombie", "at": "walker-off" }
     }
   },
   "steps": [
@@ -53,7 +55,7 @@
       { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!" }
     ] },
     { "type": "parallel", "steps": [
-      { "type": "move", "actor": "walker-b", "to": "walker-near", "duration": 1.6 },
+      { "type": "move", "actor": "walker-b", "to": "walker-near-b", "duration": 1.6 },
       { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.6 },
       { "type": "camera", "to": "walker-near", "zoom": 1.35, "duration": 1.6 }
     ] },
