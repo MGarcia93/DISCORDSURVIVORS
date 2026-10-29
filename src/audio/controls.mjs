@@ -11,3 +11,10 @@ export function volumeRow(bus, label, scope = 'menu') {
       data-volume="${bus}" aria-label="${label}">
     <span data-volume-label="${bus}">${value}%</span></p>`;
 }
+
+// The switch belongs with the levels, not on its own button in the menu: a
+// mute button that only mutes is a shortcut, not a setting.
+export function muteRow() {
+  const muted = audio.volumes.muted;
+  return `<p class="mix-row mix-row--toggle"><button class="pixel-button" data-action="toggle-mute" aria-pressed="${muted}">${muted ? 'ACTIVAR SONIDO' : 'SILENCIAR TODO'}</button></p>`;
+}

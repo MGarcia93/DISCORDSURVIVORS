@@ -127,6 +127,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .mix-row label { text-align: right; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; }
 .mix-row input[type="range"] { width: 100%; accent-color: var(--gold); }
 .mix-row span { font-variant-numeric: tabular-nums; color: var(--gold); }
+.mix-row--toggle { grid-template-columns: 1fr; justify-items: center; margin: 16px 0 4px; }
 .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }.shop-dialog { display: flex; flex-direction: column; text-align: center; height: 100%; }
 .shop-dialog .shop-grid { grid-template-columns: repeat(3, 1fr); flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 12px 0; padding-right: 4px; }
 .shop-footer { flex-shrink: 0; padding-top: 4px; }

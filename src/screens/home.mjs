@@ -1,8 +1,7 @@
 import { drawTitle } from '../scenes.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
-import { audio } from '../audio/index.mjs';
-import { volumeRow } from '../audio/controls.mjs';
+import { volumeRow, muteRow } from '../audio/controls.mjs';
 
 // Home screen: title room, main menu and the controls dialog overlays.
 export function home() {
@@ -17,7 +16,7 @@ export function home() {
         <nav class="main-menu" aria-label="Opciones del juego">
           <button class="primary" data-action="characters">EMPEZAR PARTIDA</button>
           <button class="pixel-button" data-action="controls">CONTROLES</button>
-          <button class="pixel-button" data-action="mute" aria-pressed="${audio.muted}">${audio.muted ? '♪ MUDO' : '♪ SONIDO'}</button>
+          <button class="pixel-button" data-action="sound">SONIDO</button>
         </nav>
         <p class="menu-caption">El servidor se cayó.<br>Levantarse del sillón ya no es opcional.</p>
         <p class="menu-help">↑ ↓ ELEGIR &nbsp; / &nbsp; ENTER CONFIRMAR</p>
@@ -37,14 +36,31 @@ export function controls() {
     <p><kbd>WASD</kbd> / <kbd>↑ ← ↓ →</kbd> Moverse<br>El control remoto ataca automáticamente.</p>
     <p><kbd>Q</kbd> Modo Otaku · <kbd>E</kbd> Me da paja<br><kbd>ESC</kbd> Pausar la partida</p>
     <p>Quedate quieto 2 segundos para regenerar vida.<br>En pantalla táctil usá las flechas y los botones.</p>
-    ${volumeRow('music', 'Música', 'menu')}
-    ${volumeRow('sfx', 'Efectos', 'menu')}
-    <button class="primary" data-action="close-controls">ENTENDIDO</button>
+    <button class="primary" data-action="close-menu">ENTENDIDO</button>
     </div></div>`;
-  document.querySelector('[data-action="close-controls"]').focus();
+  openMenuOverlay('controls');
+  document.querySelector('[data-action="close-menu"]').focus();
 }
 
-export function closeControls() {
+// Sound is a menu, not a button: the levels and the switch live together, in
+// the one place a player would look for them.
+export function sound() {
+  document.querySelector('#menu-overlay').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Sonido"><div>
+    <div class="eyebrow">Niveles</div><h2>QUE SE ESCUCHE</h2>
+    <p>La música y las voces de escena van juntas. Los golpes, el disparo y la interfaz van por el otro lado.</p>
+    ${volumeRow('music', 'Música', 'menu')}
+    ${volumeRow('sfx', 'Efectos', 'menu')}
+    ${muteRow()}
+    <button class="primary" data-action="close-menu">LISTO</button>
+    </div></div>`;
+  openMenuOverlay('sound');
+  document.querySelector('[data-action="close-menu"]').focus();
+}
+
+let menuOrigin = 'controls';
+function openMenuOverlay(origin) { menuOrigin = origin; }
+
+export function closeMenuOverlay() {
   document.querySelector('#menu-overlay').innerHTML = '';
-  document.querySelector('[data-action="controls"]').focus();
+  document.querySelector(`[data-action="${menuOrigin}"]`)?.focus();
 }

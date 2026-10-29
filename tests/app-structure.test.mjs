@@ -124,18 +124,18 @@ test('the game trio lives in src/game/* and app only consumes it', () => {
 
 test('screens live in src/screens/* and the composer only wires them', () => {
   for (const [file, symbol] of [
-    ['home.mjs', 'home'], ['home.mjs', 'controls'], ['home.mjs', 'closeControls'],
+    ['home.mjs', 'home'], ['home.mjs', 'controls'], ['home.mjs', 'sound'], ['home.mjs', 'closeMenuOverlay'],
     ['story.mjs', 'story'], ['characters.mjs', 'characters'], ['characters.mjs', 'drawPreview'],
     ['game.mjs', 'game'],
   ]) {
     const source = read(`../src/screens/${file}`);
     assert.match(source, new RegExp(`export function ${symbol}\\b`), `src/screens/${file} exports ${symbol}`);
   }
-  assert.match(app, /import \{ home, controls, closeControls \} from '\.\/screens\/home\.mjs';/, 'app wires the home screen');
+  assert.match(app, /import \{ home, controls, sound, closeMenuOverlay \} from '\.\/screens\/home\.mjs';/, 'app wires the home screen');
   assert.match(app, /import \{ story \} from '\.\/screens\/story\.mjs';/, 'app wires the story screen');
   assert.match(app, /import \{ characters, drawPreview \} from '\.\/screens\/characters\.mjs';/, 'app wires the selection screen');
   assert.match(app, /import \{ game \} from '\.\/screens\/game\.mjs';/, 'app wires the arena DOM builder');
-  assert.doesNotMatch(app, /\bfunction (home|story|characters|game|drawPreview|controls|closeControls)\b/, 'app.mjs no longer owns the screen DOM builders');
+  assert.doesNotMatch(app, /\bfunction (home|story|characters|game|drawPreview|controls|sound|closeMenuOverlay)\b/, 'app.mjs no longer owns the screen DOM builders');
 });
 
 // T1 (app split): the shell's shared mutable state must live in one module so

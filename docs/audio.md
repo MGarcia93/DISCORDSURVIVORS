@@ -171,10 +171,14 @@ so a menu never shouts louder than the arena.
 
 ## The player's own level
 
-Two sliders, in two places that are always reachable: **CONTROLES** on the home
-screen and the **pause overlay** (`ESC` during a run). Same `volumeRow` from
-`src/audio/controls.mjs`, so a slider cannot exist in one place and not the
-other.
+Sound has its own menu, not a button: **SONIDO** on the home screen opens a
+dialog with both sliders and the mute switch, and the **pause overlay** (`ESC`
+during a run) carries the same three controls. Same `volumeRow`/`muteRow` from
+`src/audio/controls.mjs`, so a control cannot exist in one place and not the
+other. CONTROLES is the key manual and nothing else.
+
+A mute button on its own is a shortcut, not a setting — that is why the switch
+lives with the levels.
 
 | Slider | Governs |
 | --- | --- |

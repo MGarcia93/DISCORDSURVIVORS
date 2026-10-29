@@ -9,7 +9,7 @@ import { state } from './app/state.mjs';
 import { updateHUD } from './game/hud.mjs';
 import { overlay } from './game/overlays.mjs';
 import { draw } from './game/renderer.mjs';
-import { home, controls, closeControls } from './screens/home.mjs';
+import { home, controls, sound, closeMenuOverlay } from './screens/home.mjs';
 import { story } from './screens/story.mjs';
 import { characters, drawPreview } from './screens/characters.mjs';
 import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
@@ -121,7 +121,7 @@ function clickSound(button) {
   if (data.sale || data.heal || data.upgrade) return 'coin';
   if (data.character || data.special) return 'select';
   if (data.action === 'next-wave' || data.action === 'resume') return 'confirm';
-  if (data.action === 'home' || data.action === 'close-controls' || data.action === 'sell-menu-close') return 'select';
+  if (data.action === 'home' || data.action === 'close-menu' || data.action === 'sell-menu-close') return 'select';
   return 'tap';
 }
 
@@ -139,12 +139,13 @@ document.addEventListener('click', event => {
     characters();
   }
   if (action === 'controls') controls();
-  if (action === 'mute') {
+  if (action === 'sound') sound();
+  if (action === 'toggle-mute') {
     const muted = audio.toggleMuted();
-    button.textContent = muted ? '♪ MUDO' : '♪ SONIDO';
+    button.textContent = muted ? 'ACTIVAR SONIDO' : 'SILENCIAR TODO';
     button.setAttribute('aria-pressed', String(muted));
   }
-  if (action === 'close-controls') closeControls();
+  if (action === 'close-menu') closeMenuOverlay();
   if (['home', 'characters', 'worlds'].includes(action)) show(action);
   if (action === 'story-start') { state.storyPage = 0; show('story'); }
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
@@ -205,7 +206,7 @@ document.addEventListener('keydown', event => {
       event.preventDefault();
       return;
     }
-    if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeControls();
+    if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeMenuOverlay();
     if (state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
       if (unlockAllForTesting()) {
         state.debugUnlockAll = true;
