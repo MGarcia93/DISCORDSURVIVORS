@@ -1,0 +1,22 @@
+{
+  "id": "act-01-wave-4-alarm",
+  "repeat": "once",
+  "stage": {
+    "background": "zomboid",
+    "points": { "ground": [572, 470], "house": [880, 430] },
+    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } },
+    "props": { "alarm": { "at": "house", "state": "sounding" } }
+  },
+  "steps": [
+    { "type": "sound", "sound": "alarm" },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡PERO QUIÉN MIERDA ACTIVÓ LA ALARMA!" }
+    ] },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": [
+      "Dificultad ajustada al nivel de incompetencia del jugador."
+    ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "Cerrá el orto, bot de mierda." }
+    ] }
+  ]
+}

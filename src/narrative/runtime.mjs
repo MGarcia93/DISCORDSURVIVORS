@@ -1,7 +1,7 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
 const animations = new Set(['idle', 'walk', 'point', 'celebrate']);
 const stageFields = new Set(['points', 'actors', 'props', 'background']);
-const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash']);
+const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
 const requireValue = (condition, message) => { if (!condition) throw new Error(message); };
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -62,6 +62,12 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
         case 'splash':
           requireValue(!parallel, 'Splash is not allowed inside parallel actions');
           validateLine({ speaker: step.speaker, text: step.text }, characters); break;
+        // A system message: no portrait, no speaker, just the world's own UI.
+        case 'notice':
+          requireValue(!parallel, 'Notice is not allowed inside parallel actions');
+          requireValue(text(step.title), 'Notice title is required');
+          requireValue(Array.isArray(step.lines) && step.lines.length > 0 && step.lines.every(line => text(line)), 'Notice lines are required');
+          break;
         case 'wait': break;
         case 'parallel': {
           requireValue(Array.isArray(step.steps), 'Parallel steps must be an array');
@@ -156,6 +162,10 @@ export class ScenePlayer {
       this.splash = { speaker: step.speaker, text: step.text };
       return this._timed(step.duration, t => { if (t === 1) this.splash = null; });
     }
+    if (step.type === 'notice') {
+      this.notice = { title: step.title, lines: [...step.lines] };
+      return this._timed(step.duration, t => { if (t === 1) this.notice = null; });
+    }
     if (step.type === 'wait') return this._timed(step.duration, () => {});
     if (step.type === 'prop') {
       this.props[step.prop].state = step.state;
@@ -207,7 +217,7 @@ export class ScenePlayer {
 
   _finish(status) {
     this.status = status;
-    this.dialogue = null; this.splash = null;
+    this.dialogue = null; this.splash = null; this.notice = null;
     this.camera = { x: 572, y: 374, zoom: 1 };
     for (const actor of Object.values(this.actors)) actor.animation = 'idle';
     if (['completed', 'skipped'].includes(status)) {

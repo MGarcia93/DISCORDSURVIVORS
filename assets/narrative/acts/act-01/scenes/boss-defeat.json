@@ -1,0 +1,23 @@
+{
+  "id": "act-01-boss-defeat",
+  "repeat": "once",
+  "stage": {
+    "background": "zomboid",
+    "points": { "ground": [572, 470] },
+    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } }
+  },
+  "steps": [
+    { "type": "wait", "duration": 1.2 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3.2, "lines": [
+      "Mundo 01 completado.",
+      "Preparando transferencia al siguiente entorno."
+    ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "scared", "text": "Pará, pará. ¿Siguiente entorno? ¡Sacame de acá, hijo de puta!" }
+    ] },
+    { "type": "sound", "sound": "gunshot" },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Esos tiros...? Hay alguien más vivo." }
+    ] }
+  ]
+}

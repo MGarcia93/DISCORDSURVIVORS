@@ -50,7 +50,7 @@ export function createPresenter(root, catalog, onError) {
         }
         ctx.restore();
       }
-      const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, banter]);
+      const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, player?.notice, banter]);
       if (signature !== previous) {
         previous = signature;
         const currentRevision = ++revision;
@@ -60,7 +60,7 @@ export function createPresenter(root, catalog, onError) {
         if (line) lastLine = line;
         // The dialog stays mounted while the scene plays a beat between lines,
         // so the conversation never blinks out and the cast never disappears.
-        const spoken = line ?? (active && !player?.splash ? lastLine : null);
+        const spoken = line ?? (active && !player?.splash && !player?.notice ? lastLine : null);
         if (spoken) {
           // The cast keeps the same slots for the whole scene, ordered by where
           // each actor stands, and faces the centre of the conversation.
@@ -81,6 +81,8 @@ export function createPresenter(root, catalog, onError) {
             ? '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>'
             : '';
           content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
+        } else if (player?.notice) {
+          content.innerHTML = `<div class="narrative-notice" role="status"><strong>${escape(player.notice.title)}</strong>${player.notice.lines.map(text => `<p>${escape(text)}</p>`).join('')}</div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
         } else if (player?.splash) {
           const speaker = player.splash.speaker;
           const image = portrait(speaker);

@@ -21,7 +21,8 @@ try {
   ` });
   await browser.page('Emulation.setDeviceMetricsOverride', { width: 1360, height: 1000, deviceScaleFactor: 1, mobile: false });
   await browser.navigate(`${url}/?dev=narrative`);
-  await browser.wait('document.querySelector("#narrative-select")?.options.length === 4');
+  await browser.wait('document.querySelector("#narrative-select")?.options.length >= 10');
+  assert.equal(await browser.evaluate('document.querySelector("#narrative-select option[value=act-01-jhony]") !== null'), true, 'the act cinematics are listed');
   assert.equal(await browser.evaluate('localStorage.length'), 0);
   await browser.evaluate('document.querySelector("[data-action=narrative-play]").click()');
   await browser.wait('document.querySelector(".narrative-dialog") !== null');

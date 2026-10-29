@@ -1,10 +1,17 @@
-import { loadCatalog } from './catalog.mjs';
+import { actManifestURL, loadCatalog, manifestURL } from './catalog.mjs';
 import { WaveDirector } from './director.mjs';
 import { createPresenter } from './presenter.mjs';
 import { NarrativeAudio } from './audio.mjs';
+import { DEFAULT_ACT } from '../campaign/acts.mjs';
 
-let sharedCatalog;
-const defaultLoad = () => { sharedCatalog ??= loadCatalog(); return sharedCatalog; };
+// One catalog per act, cached: the base manifest plus whatever that act brings.
+const sharedCatalogs = new Map();
+const defaultLoad = act => {
+  const urls = [manifestURL, actManifestURL(act)].filter(Boolean);
+  const key = urls.map(String).join('|');
+  if (!sharedCatalogs.has(key)) sharedCatalogs.set(key, loadCatalog({ urls }));
+  return sharedCatalogs.get(key);
+};
 
 // Browser ownership and async loading stay here, not in the combat engine.
 export class NarrativeHost {
@@ -19,7 +26,7 @@ export class NarrativeHost {
     this.root = root; this.previewMode = preview; this.loading = true;
     root.hidden = false; root.textContent = 'Loading narrative scenes…';
     try {
-      const catalog = await this.load();
+      const catalog = await this.load(run?.act ?? DEFAULT_ACT);
       if (this.generation !== generation) return;
       this.catalog = catalog;
       this.director = new WaveDirector(catalog, { onSound: id => this.audio.play(catalog.sounds[id], message => {

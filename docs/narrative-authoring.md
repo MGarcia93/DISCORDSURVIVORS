@@ -59,6 +59,41 @@ the sprite's black tee, denim shorts and trainers. His catalog entry opts into
 scale and bottom alignment rather than squeezing the hat into a standard frame.
 This adds no story scenes or wave bindings. See [Papafrita's preview and sources](../art/characters/papafrita/README.md).
 
+## Act manifests
+
+Each campaign act brings its own narrative files. The act descriptor in
+`src/campaign/` declares `narrative`, a path relative to
+`assets/narrative/manifest.json`:
+
+```js
+// src/campaign/act-01-zomboid.mjs
+narrative: 'acts/act-01/manifest.json',
+```
+
+That manifest has the same shape as the shared one (`characters`, `sounds`,
+`scenes`, `bindings`) plus `banter`, and its paths resolve from its own folder.
+Everything is merged into one catalog: a run loads the shared manifest plus its
+act, and **the development viewer loads every registered act**. That is the
+whole rule — a cinematic that is not listed in a manifest does not exist, and a
+cinematic that is listed appears in `?dev=narrative` automatically, playable in
+isolation with its validation error shown if the file is broken.
+
+A scene's `stage.background` must name a world from `src/backgrounds/`; an act
+world and its scenes should agree.
+
+## Banter during a wave
+
+An act manifest can schedule combat comments instead of interrupting the run:
+
+```json
+"banter": [
+  { "wave": 2, "at": 8, "speaker": "maxi-negro", "expression": "surprised", "text": "¿Eh?" }
+]
+```
+
+`at` is the second of that wave. Each line fires once per run, never while a
+scene owns the screen, and uses the same compact panel as `enqueueBanter`.
+
 ## Sprite sequence
 
 Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `stage.actors` as named `{ character, at }` entries, and optional `stage.props` as `{ at, state }` entries. `stage.background` names the world the scene happens in (see [World backgrounds](#world-backgrounds)) and defaults to `arena`. Actor/prop IDs are local to that scene; these are presentation entities, not combat enemies. The initial scene state is also its preview setup.
@@ -72,6 +107,7 @@ Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `sta
 | `prop` | `prop`, `state` | Change a scene-local prop state |
 | `sound` | `sound` | Play a catalog sound without waiting |
 | `splash` | `speaker`, `text`, `duration` | Timed presentation using a catalog portrait |
+| `notice` | `title`, `lines`, `duration` | System message: the world's own UI, no portrait |
 | `wait` | `duration` | Wait in narrative seconds |
 | `parallel` | `steps` | Run independent actions together |
 

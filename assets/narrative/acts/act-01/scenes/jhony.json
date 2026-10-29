@@ -1,0 +1,49 @@
+{
+  "id": "act-01-jhony",
+  "repeat": "once",
+  "stage": {
+    "background": "zomboid",
+    "points": { "entrance": [300, 470], "meet": [600, 470], "jhony": [880, 460], "corpses": [650, 545] },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "entrance" },
+      "jhony": { "character": "jhony", "at": "jhony" }
+    },
+    "props": { "corpses": { "at": "corpses", "state": "many" } }
+  },
+  "steps": [
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "negro", "to": "meet", "duration": 1.6 },
+      { "type": "camera", "to": "jhony", "zoom": 1.15, "duration": 1.6 }
+    ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿JHONY? ¡LA CONCHA DE TU MADRE! ¡ESTÁS VIVO!" },
+      { "speaker": "jhony", "expression": "annoyed", "text": "¿Y qué querés, boludo?" },
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¿Cómo que qué quiero? ¡Estamos atrapados en esta mierda!" },
+      { "speaker": "jhony", "expression": "neutral", "text": "¿Y?" }
+    ] },
+    { "type": "animate", "actor": "jhony", "animation": "point", "duration": 0.9 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡¿CÓMO QUE Y?! ¡TENEMOS QUE SALIR!" },
+      { "speaker": "jhony", "expression": "angry", "text": "¡Bueno, salí entonces! ¡No me rompas las pelotas!" },
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡Negro, tenés más de dos mil horas en este juego! ¡Ayudame!" },
+      { "speaker": "jhony", "expression": "angry", "text": "¡¿Y QUÉ TIENE QUE VER?! ¡ANDÁ, PELOTUDO!" },
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "Pero escuchame un segundo, boludo..." },
+      { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIS, LA CONCHA DE TU MADRE!" }
+    ] },
+    { "type": "camera", "to": "corpses", "zoom": 1.25, "duration": 1.2 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "Igual, negro, ¿no te parece que ya jugaste bastante a esta mierda?" },
+      { "speaker": "jhony", "expression": "angry", "text": "¡Y A VOS QUÉ CARAJO TE IMPORTA!" }
+    ] },
+    { "type": "camera", "to": "meet", "zoom": 1.1, "duration": 1.1 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "Bueno, chupame un huevo. Me voy a buscar a los otros." },
+      { "speaker": "jhony", "expression": "angry", "text": "¡BUENO, ANDÁ!" }
+    ] },
+    { "type": "move", "actor": "negro", "to": "entrance", "duration": 1.5 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "jhony", "expression": "angry", "text": "¡Y NO ME TRAIGAS MÁS ZOMBIS!" }
+    ] }
+  ],
+  "effects": [{ "key": "act-01-met-jhony", "value": true }]
+}

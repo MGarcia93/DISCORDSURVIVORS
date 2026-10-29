@@ -1,0 +1,23 @@
+{
+  "id": "act-01-boss-intro",
+  "repeat": "once",
+  "stage": {
+    "background": "zomboid",
+    "points": { "ground": [500, 470], "street": [840, 430] },
+    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } },
+    "props": { "alarm": { "at": "street", "state": "dragged" } }
+  },
+  "steps": [
+    { "type": "sound", "sound": "alarm" },
+    { "type": "camera", "to": "street", "zoom": 1.2, "duration": 1.5 },
+    { "type": "notice", "title": "JEFE DETECTADO", "duration": 4, "lines": [
+      "EL ZOMBI DE LA ALARMA",
+      "Un infectado que atrae constantemente nuevas hordas.",
+      "Cuanto más dura el combate, más zombis aparecen."
+    ] },
+    { "type": "camera", "to": "ground", "zoom": 1, "duration": 1 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "No, bueno. ¿Qué es esta pelotudez?" }
+    ] }
+  ]
+}

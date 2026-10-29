@@ -34,6 +34,7 @@ export class WaveDirector {
   constructor(catalog, { onSound = () => {} } = {}) {
     this.catalog = catalog; this.onSound = onSound;
     this.banter = new BanterQueue(catalog.characters, { sounds: catalog.sounds, onSound });
+    this.schedule = catalog.banter ?? [];
     this.detach();
   }
   get blocked() { return Boolean(this.player?.active || this.pending); }
@@ -45,6 +46,7 @@ export class WaveDirector {
     try { this.player?.cancel(); } catch { /* Disposal must always release ownership. */ }
     this.run = null; this.player = null; this.pending = null;
     this.seen = new Set(); this.handled = new Set(); this.flags = Object.create(null);
+    this.due = new Set();
     this.error = null; this.banter.clear();
   }
   _allowed() { return this.run && (['shop', 'won'].includes(this.run.phase) || (this.run.phase === 'playing' && this.run.time === 0)); }
@@ -102,7 +104,16 @@ export class WaveDirector {
   tick(dt) {
     if (this.player?.active) this.player.tick(dt);
     this._drain();
-    if (this.run?.phase === 'playing' && !this.blocked) this.banter.tick(dt);
+    if (this.run?.phase === 'playing' && !this.blocked) { this._scheduleBanter(); this.banter.tick(dt); }
+  }
+  // Lines an act schedules during a wave: each one fires once per run, at its
+  // own second of its own wave, and never while a scene owns the screen.
+  _scheduleBanter() {
+    for (const [index, line] of this.schedule.entries()) {
+      if (this.due.has(index) || line.wave !== this.run.wave || this.run.time < line.at) continue;
+      this.due.add(index);
+      this.banter.enqueue({ speaker: line.speaker, expression: line.expression, text: line.text });
+    }
   }
   advance() { this.player?.advance(); this._drain(); }
   skip() { this.player?.skip(); this._drain(); }

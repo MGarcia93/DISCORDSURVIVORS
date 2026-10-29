@@ -1,0 +1,27 @@
+{
+  "characters": "../../characters.json",
+  "sounds": {
+    "alarm": { "frequency": 880, "duration": 0.35 },
+    "gunshot": { "frequency": 140, "duration": 0.14 }
+  },
+  "scenes": [
+    { "id": "act-01-arrival", "title": "Acto 1: Bienvenido a Knox County", "file": "scenes/arrival.json" },
+    { "id": "act-01-wave-4-alarm", "title": "Acto 1: La alarma", "file": "scenes/wave-4-alarm.json" },
+    { "id": "act-01-boss-intro", "title": "Acto 1: El Zombi de la Alarma", "file": "scenes/boss-intro.json" },
+    { "id": "act-01-boss-defeat", "title": "Acto 1: Mundo completado", "file": "scenes/boss-defeat.json" },
+    { "id": "act-01-jhony", "title": "Acto 1: El veterano de las 2.000 horas", "file": "scenes/jhony.json" },
+    { "id": "act-01-epilogue", "title": "Acto 1: Epílogo", "file": "scenes/epilogue.json" }
+  ],
+  "bindings": [
+    { "when": "before_wave", "wave": 1, "scene": "act-01-arrival" },
+    { "when": "before_wave", "wave": 4, "scene": "act-01-wave-4-alarm" },
+    { "when": "before_wave", "wave": 6, "scene": "act-01-boss-intro" },
+    { "when": "after_wave", "wave": 6, "scene": "act-01-boss-defeat" },
+    { "when": "after_wave", "wave": 6, "scene": "act-01-jhony" },
+    { "when": "after_wave", "wave": 6, "scene": "act-01-epilogue" }
+  ],
+  "banter": [
+    { "wave": 2, "at": 8, "speaker": "maxi-negro", "expression": "surprised", "text": "¿Eh? ¿Hay otro boludo vivo por acá?" },
+    { "wave": 5, "at": 8, "speaker": "maxi-negro", "expression": "tired", "text": "Ya fue, me da paja." }
+  ]
+}

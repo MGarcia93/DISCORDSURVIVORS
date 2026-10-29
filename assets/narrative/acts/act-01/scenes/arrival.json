@@ -1,0 +1,29 @@
+{
+  "id": "act-01-arrival",
+  "repeat": "once",
+  "stage": {
+    "background": "zomboid",
+    "points": { "ground": [572, 470], "wreck": [880, 420] },
+    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } },
+    "props": { "car": { "at": "wreck", "state": "wrecked" } }
+  },
+  "steps": [
+    { "type": "camera", "to": "ground", "zoom": 1.25, "duration": 1.2 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué carajo...?" },
+      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Hola? ¿Jhony? ¿Sos vos, negro?" },
+      { "speaker": "maxi-negro", "expression": "scared", "text": "Ah, no. La concha de tu madre." }
+    ] },
+    { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": [
+      "MUNDO 01 — PROJECT ZOMBOID",
+      "Objetivo: Sobrevivir.",
+      "Los jugadores que sobrevivan podrán avanzar al siguiente juego.",
+      "Salir de la partida: deshabilitado."
+    ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "¿Sobrevivir? ¿Y los otros pelotudos dónde están?" },
+      { "speaker": "maxi-negro", "expression": "angry", "text": "Bueno, la concha de su madre. Me dejaron solo." }
+    ] }
+  ],
+  "effects": [{ "key": "act-01-arrived", "value": true }]
+}

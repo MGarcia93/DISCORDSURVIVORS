@@ -14,6 +14,9 @@ export default {
   status: 'playable',
   world: 'zomboid',
   duration: 60,
+  // Relative to assets/narrative/manifest.json: the act brings its own cast,
+  // scenes, bindings and wave banter, and the viewer plays all of it.
+  narrative: 'acts/act-01/manifest.json',
   boss: { wave: 6, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' },
   waves: [
     { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46 } },

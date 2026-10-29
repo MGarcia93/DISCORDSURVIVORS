@@ -1,10 +1,12 @@
 import { NarrativeHost } from './host.mjs';
-import { loadCatalog } from './catalog.mjs';
+import { campaignCatalogURLs, loadCatalog } from './catalog.mjs';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+// The viewer plays every manifest the campaign registers, so a new act's
+// cinematics show up here without touching this module.
 export function loadPreviewCatalog({ fetcher = globalThis.fetch } = {}) {
-  return loadCatalog({ fetcher: (url, options) => fetcher(url, { ...options, cache: 'no-store' }) });
+  return loadCatalog({ urls: campaignCatalogURLs(), fetcher: (url, options) => fetcher(url, { ...options, cache: 'no-store' }) });
 }
 
 export function openViewer(container) {

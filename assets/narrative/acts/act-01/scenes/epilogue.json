@@ -1,0 +1,24 @@
+{
+  "id": "act-01-epilogue",
+  "repeat": "once",
+  "stage": {
+    "background": "zomboid",
+    "points": { "ground": [572, 470] },
+    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } }
+  },
+  "steps": [
+    { "type": "notice", "title": "ADMINISTRADOR DEL SERVIDOR", "duration": 5, "lines": [
+      "Mundo 01 completado.",
+      "Supervivencia confirmada: Maxi Negro.",
+      "Usuario Jhony localizado. Incorporación al grupo rechazada.",
+      "Cargando siguiente juego... LEAGUE OF LEGENDS."
+    ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "No... No, no, no. ¡LOOOL NO, LA CONCHA DE TU MADRE!" }
+    ] },
+    { "type": "notice", "title": "YORICK", "duration": 3.5, "lines": [
+      "Ven, pequeño caminante. Tenemos trabajo que hacer."
+    ] }
+  ],
+  "effects": [{ "key": "act-01-completed", "value": true }]
+}
