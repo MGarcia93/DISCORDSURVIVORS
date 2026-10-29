@@ -1,0 +1,7 @@
+{
+  "name": "Yorick",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {}
+  }
+}

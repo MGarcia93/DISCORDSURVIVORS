@@ -1,5 +1,5 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
-const animations = new Set(['idle', 'walk', 'point', 'celebrate']);
+const animations = new Set(['idle', 'walk', 'point', 'celebrate', 'kneel']);
 const stageFields = new Set(['points', 'actors', 'props', 'background']);
 const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice', 'flash']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);

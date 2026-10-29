@@ -2,10 +2,11 @@ import { CHARACTERS } from '../characters/index.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
 import { drawEnemyFigure } from '../game/figures.mjs';
 import jhony from '../npcs/jhony.mjs';
+import yorick from '../npcs/yorick.mjs';
 import papafrita from '../npcs/papafrita.mjs';
 
 // Narrative actors may be NPCs without entering the playable roster.
-const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita };
+const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita, yorick };
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -55,7 +56,7 @@ export function createPresenter(root, catalog, onError) {
           }
           const def = STAGE_SPRITES[catalog.characters[actor.character].sprite];
           const lift = actor.animation === 'celebrate' ? Math.abs(Math.sin(player.time * 7)) * 12 : 0;
-          def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {} });
+          def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {}, kneeling: actor.animation === 'kneel' });
           if (actor.animation === 'point') {
             ctx.fillStyle = '#f3dea4'; ctx.fillRect(actor.x + 16 * actor.facing, actor.y - 45, 35 * actor.facing, 6);
           }

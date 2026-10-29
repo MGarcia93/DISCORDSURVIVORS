@@ -865,11 +865,23 @@ const YORICK_INK = '#0a0c17';
 // pauldron, a lantern at the hip and a spade taller than he is. The pauldron, the
 // lantern and the spade are what make him read as Yorick and not as a hooded zombie.
 export function drawYorick(ctx, x, y, options = {}) {
-  const { time = 0, scale = 2 } = options;
+  const { time = 0, scale = 2, kneeling = false } = options;
   const step = Math.floor(time * 2) % 2;
   const flicker = Math.floor(time * 7) % 2;
   pose(ctx, x, y, scale);
   pixel(ctx, -17, 0, 35, 2, '#0a0c17');
+  // Cinematic pose: he falls to his knees, so the legs fold onto the ground and
+  // everything above the waist drops with them. The combat ficha never uses it.
+  if (kneeling) {
+    pixel(ctx, -14, -10, 12, 10, YORICK_INK);
+    pixel(ctx, -13, -9, 10, 8, YORICK_TUNIC.base);
+    pixel(ctx, 2, -10, 12, 10, YORICK_INK);
+    pixel(ctx, 3, -9, 10, 8, YORICK_TUNIC.mid);
+    pixel(ctx, -15, -2, 14, 2, '#2b2738');
+    pixel(ctx, 1, -2, 14, 2, '#2b2738');
+  }
+  ctx.save();
+  if (kneeling) ctx.translate(0, 13);
   // Tombstones and candles riding on his back, with violet flames.
   pixel(ctx, -12, -62, 9, 12, '#1b1a24');
   pixel(ctx, -11, -61, 7, 10, '#3b3a49');
@@ -886,6 +898,7 @@ export function drawYorick(ctx, x, y, options = {}) {
   pixel(ctx, 7, -59, 2, 3, YORICK_FLAME.dark);
   pixel(ctx, 8, -62 + flicker, 1, 3, YORICK_FLAME.light);
   // Legs and heavy boots.
+  if (!kneeling) {
   pixel(ctx, -10, -18, 8, 18, YORICK_INK);
   pixel(ctx, -9, -17, 6, 16, YORICK_TUNIC.base);
   pixel(ctx, 3, -18, 8, 18, YORICK_INK);
@@ -896,6 +909,7 @@ export function drawYorick(ctx, x, y, options = {}) {
   pixel(ctx, 3, -5, 10, 5, YORICK_INK);
   pixel(ctx, 4, -4, 8, 3, '#2b2738');
   pixel(ctx, 3, -1, 10, 1, '#454058');
+  }
   // Tunic and belt, with the skull charm on the hip.
   pixel(ctx, -11, -36, 23, 19, YORICK_INK);
   torsoBands(ctx, -10, -35, 21, 17, YORICK_TUNIC);
@@ -970,6 +984,7 @@ export function drawYorick(ctx, x, y, options = {}) {
   pixel(ctx, 17, -33, 7, 6, YORICK_INK);
   pixel(ctx, 18, -32, 5, 4, YORICK_SKIN.base);
   pixel(ctx, 18, -32, 5, 1, YORICK_SKIN.light);
+  ctx.restore();
   ctx.restore();
 }
 

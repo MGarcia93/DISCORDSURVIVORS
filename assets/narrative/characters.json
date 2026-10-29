@@ -31,12 +31,17 @@
   "guide": {
     "name": "Sample guide",
     "sprite": "negro",
-    "expressions": { "neutral": "portraits/guide-neutral.svg", "surprised": "portraits/guide-surprised.svg" }
+    "expressions": {
+      "neutral": "portraits/guide-neutral.svg",
+      "surprised": "portraits/guide-surprised.svg"
+    }
   },
   "guest": {
     "name": "Sample visitor",
     "sprite": "warrior",
-    "expressions": { "neutral": "portraits/guest-neutral.svg" }
+    "expressions": {
+      "neutral": "portraits/guest-neutral.svg"
+    }
   },
   "maxi-negro": {
     "name": "Maxi Negro",
@@ -92,6 +97,13 @@
       "scared": "portraits/papazito/scared.svg",
       "tired": "portraits/papazito/tired.svg",
       "disgusted": "portraits/papazito/disgusted.svg"
+    }
+  },
+  "yorick": {
+    "name": "Yorick",
+    "sprite": "yorick",
+    "expressions": {
+      "neutral": "portraits/yorick/neutral.svg"
     }
   }
 }
