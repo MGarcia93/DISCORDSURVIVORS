@@ -30,6 +30,12 @@ export function createPresenter(root, catalog, onError) {
     render(player, banter, error, { preview = false } = {}) {
       const active = player?.active, showStage = player && (active || preview);
       canvas.hidden = !showStage;
+      // While a conversation is up, whoever has a portrait slot is represented
+      // by that portrait: drawing the same actor on the stage behind it left a
+      // small sprite standing on a portrait.
+      const speakingCast = new Set((player?.scene?.steps ?? [])
+        .flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []));
+      const inConversation = Boolean(player?.dialogue);
       if (showStage) {
         const ctx = canvas.getContext('2d'), camera = player.camera;
         ctx.save();
@@ -54,6 +60,7 @@ export function createPresenter(root, catalog, onError) {
             ctx.restore();
             continue;
           }
+          if (inConversation && speakingCast.has(actor.character)) continue;
           const def = STAGE_SPRITES[catalog.characters[actor.character].sprite];
           const lift = actor.animation === 'celebrate' ? Math.abs(Math.sin(player.time * 7)) * 12 : 0;
           def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {}, kneeling: actor.animation === 'kneel' });
