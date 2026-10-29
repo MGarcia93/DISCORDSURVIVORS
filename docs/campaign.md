@@ -9,6 +9,7 @@ its boss. The campaign is not one continuous run, so progress is per act.
 | --- | --- |
 | `src/campaign/acts.mjs` | the campaign map: every world, its order and its status |
 | `src/campaign/act-01-zomboid.mjs` | one act: waves, boss, world, real wave length |
+| `src/campaign/act-02-rift.mjs` | the second act: six waves, the Maiden, Yorick |
 | `src/campaign/validate.mjs` | the contract an act must satisfy |
 | `src/waves.mjs` | interpretation only: budget, life and the spawn roll |
 
@@ -33,6 +34,9 @@ export default {
   world: 'monster-hunter',   // must exist in src/backgrounds/
   duration: 60,              // real wave length in seconds
   boss: { wave: 6, kind: 'alarmZombie', name: 'EL JEFE' },
+  // Optional: one mini-boss, always before the boss wave. It is flagged
+  // `boss: true` for its art and health bar, but killing it never ends the run.
+  miniboss: { wave: 5, kind: 'maiden', name: 'LA MINIJEFA' },
   waves: [                   // one row per wave, numbered from 1
     { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46 } },
     // ...
@@ -41,8 +45,12 @@ export default {
 ```
 
 The validator rejects an unknown world, an unknown enemy kind, a wave whose mix
-does not share one roll, a kind with no declared life, and a boss that is not on
-the last wave. A `planned` act only needs its slot.
+does not share one roll, a kind with no declared life, a boss that is not on the
+last wave, and a mini-boss that is unknown, unnamed or not before the boss. A
+`planned` act only needs its slot.
+
+Only the act's own boss closes the run: a boss-flagged mini-boss dying on its
+wave does not end the map.
 
 ## Wave length
 
