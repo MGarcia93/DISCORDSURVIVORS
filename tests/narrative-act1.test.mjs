@@ -94,7 +94,7 @@ test('the shot is a noise burst and the zombies enter from outside the frame', a
   // Every living zombie starts outside the canvas and walks in; the street
   // itself is already a graveyard.
   const alive = Object.entries(jhony.stage.actors).filter(([, actor]) => actor.enemy && actor.state !== 'dead');
-  assert.equal(alive.length, 4, 'one takes the shot and three more arrive');
+  assert.equal(alive.length, 3, 'one takes the first shot and two more arrive');
   for (const [id, actor] of alive) {
     const [x, y] = jhony.stage.points[actor.at];
     assert.ok(x > 1144 || y > 748, `${id} starts off the frame`);
