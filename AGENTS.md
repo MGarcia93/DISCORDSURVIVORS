@@ -23,9 +23,11 @@ node --check <every file you touched>
 | `src/backgrounds/` | world backgrounds (see below) |
 | `src/narrative/` | scene catalog, runtime, presenter, director, viewer |
 | `src/characters/` | playable fichas; each owns its stats, profile and drawing |
+| `src/enemies/` | enemy fichas; each owns its sheet and drawing, `index.mjs` is the registry |
 | `assets/narrative/` | scene JSON, portraits, manifest |
 | `docs/narrative-authoring.md` | authoring contract for scenes and worlds |
 | `context/historia/` | approved story scripts — read the act before writing a scene |
+| `.opencode/skills/enemy-authoring/` | how to add an enemy end to end: ficha, wave, rewards, sprite, visual approval, tests |
 
 ## World backgrounds
 
@@ -55,9 +57,10 @@ rules that keep the game playable:
 | URL | What it does |
 | --- | --- |
 | `?dev=worlds` | every world at stage size with the cast; pick an actor and walk it with WASD or the arrow keys |
+| `?dev=enemies` | a throwaway run of one enemy kind on a chosen world: it walks in, stops at its own attack distance and swings on its own cadence against a dummy that never moves. Shows the resolved sheet for the chosen wave |
 | `?dev=narrative` | select, play, restart and skip standalone scenes |
 
-Both are isolated: they never write progress or unlocks.
+All three are isolated: they never write progress or unlocks.
 
 ## Scene JSON
 
