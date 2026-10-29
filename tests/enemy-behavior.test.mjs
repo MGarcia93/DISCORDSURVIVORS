@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, step, WORLD_SCALE } from '../src/engine.mjs';
+import { createEnemy, createRun, step, WORLD_SCALE } from '../src/engine.mjs';
 
 // A run that never spawns on its own: every test places exactly the enemies it
 // wants to reason about, so nothing else moves.
@@ -62,4 +62,68 @@ test('the player immunity stays a floor between two hits of the same enemy', () 
   const afterFirst = run.player.hp;
   step(run, 0.05, {});
   assert.equal(run.player.hp, afterFirst, 'the second swing lands after the immunity, not before');
+});
+
+test('an enemy with declared actions rolls one by weight and pays its cooldown', () => {
+  const run = quietRun();
+  const fired = [];
+  const enemy = place(run, {
+    attackRange: 60,
+    actions: [
+      { key: 'swipe', chance: 1, kind: 'melee' },
+      { key: 'howl', chance: 3, cooldown: 5, run: () => fired.push('howl') },
+    ],
+  });
+  run.random = () => 0.9; // the heavy side of the roll
+  step(run, 0.05, {});
+  assert.deepEqual(fired, ['howl'], 'the weighted action wins the roll');
+  assert.equal(enemy.actionCds.howl, 5, 'and takes its own cooldown');
+});
+
+test('an action on cooldown is never rolled', () => {
+  const run = quietRun();
+  const fired = [];
+  const enemy = place(run, {
+    attackRange: 60,
+    actions: [
+      { key: 'swipe', chance: 1, kind: 'melee' },
+      { key: 'howl', chance: 3, cooldown: 5, run: () => fired.push('howl') },
+    ],
+  });
+  enemy.actionCds = { howl: 5 };
+  run.random = () => 0.9;
+  step(run, 0.05, {});
+  assert.deepEqual(fired, [], 'the cooling action is out of the pool');
+  assert.ok(run.player.hp < 1000, 'so the swipe lands instead');
+});
+
+test('an enemy with no actions of its own keeps the plain attack', () => {
+  const run = quietRun();
+  place(run, { attackRange: 0 });
+  step(run, 0.05, {});
+  assert.ok(run.player.hp < 1000, 'the basic hit still resolves');
+});
+
+test('the alarm boss pulls a horde in with its own summon action', () => {
+  const run = quietRun();
+  const boss = createEnemy(run, 'boss', run.player.x + 30, run.player.y);
+  run.enemies.push(boss);
+  run.random = () => 0.6; // lands on the summon band (swipe 3, summon 1, wave 2)
+  step(run, 0.05, {});
+  assert.equal(run.enemies.length, 3, 'the boss plus the two it dragged in');
+  assert.ok(run.enemies.some(enemy => enemy.kind === 'zombie'), 'summoned zombies, not decorations');
+  assert.equal(boss.actionCds.summon, 9, 'and the summon pays its cooldown');
+});
+
+test('the alarm boss rings a sound wave that has to be walked out of', () => {
+  const run = quietRun();
+  const boss = createEnemy(run, 'boss', run.player.x + 30, run.player.y);
+  run.enemies.push(boss);
+  run.random = () => 0.8; // lands on the wave band
+  step(run, 0.05, {});
+  assert.equal(run.shockwaves.length, 1, 'a ring left the alarm');
+  const hpBefore = run.player.hp;
+  for (let tick = 0; tick < 60; tick++) step(run, 0.05, {});
+  assert.ok(run.player.hp < hpBefore, 'standing in the ring costs health');
+  assert.equal(run.shockwaves.length, 0, 'and the ring dies once it is spent');
 });

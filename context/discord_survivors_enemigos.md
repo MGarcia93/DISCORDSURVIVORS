@@ -81,22 +81,24 @@ sumar enemigos es:
 
 **Los jefes y semi jefes tendrán ataques especiales.** No son enemigos genéricos
 con más vida: su comportamiento incluye ataques propios, además de la regla
-genérica de desplazamiento y ataque. Ese es el caso que siempre justifica tocar
-el motor, y por eso se diseña aparte.
+genérica de desplazamiento y ataque. Lo que el motor tiene que saber hacer es
+**elegir** entre esas acciones; cuáles son, lo define cada ficha.
 
-Para que eso sea barato de hacer, el motor no debe conocer enemigos: debe
-conocer **patrones de ataque reutilizables**. La ficha declara qué patrón usa y
-con qué números; sumar un jefe nuevo es elegir del catálogo, no agregar ramas.
+Lo que se reutiliza es **el selector**, no las habilidades. Cada enemigo define
+las suyas en su propia ficha; el motor resuelve una sola vez cómo se elige.
 
-- Cada patrón es una pieza con su aviso previo (telegrafiado), duración, daño y
-  recarga, y sirve para cualquier enemigo que lo declare.
-- La ficha declara el patrón junto al resto de sus datos: no hay código por
-  enemigo.
-- Si un jefe pide un patrón que todavía no existe, se implementa **una vez** como
-  patrón y queda disponible para todos los que vengan después.
+- La ficha declara sus acciones: clave, **peso de probabilidad**, **recarga** y
+  qué hace cada una. El ataque básico es una acción más.
+- Cuando el enemigo está en alcance y su reloj de ataque se abre, el motor
+  **elige al azar entre las acciones disponibles** (las que no están en recarga)
+  según sus pesos, ejecuta la elegida y le pone su recarga.
+- Si una acción tiene recarga pero no peso, compite igual que las demás.
+- **Ningún enemigo hereda las habilidades de otro.** Si dos jefes invocan, cada
+  uno escribe su invocación en su ficha; lo compartido es el reloj y la tirada,
+  no el efecto.
 
-Candidatos para el primer catálogo: estallido radial, embestida, invocación,
-disparo dirigido y zona persistente.
+Así, sumar un ataque a un jefe es autoría de datos en su archivo, y el motor no
+crece con cada enemigo nuevo.
 
 ### Minijefes por mundo
 
@@ -140,7 +142,7 @@ sprite:
 | | rectángulos | qué lleva |
 |---|---:|---|
 | Enemigo común | ~30 | contorno de tinta cerrado, cuatro tonos en escalón (luz, base, medio, oscuro), brillo solo en zapatillas y manos |
-| Jefe / semi jefe | 60-90 | el detalle del cast: cara, pliegues, heridas, varios tonos por material |
+| Jefe / semi jefe | 120-240 | el detalle del cast: cara construida, costuras, bolsillos, dedos, cordones, tornillos, y **masas con esquinas escalonadas** |
 | Personajes jugables | 30-87 | la referencia más rica |
 
 La razón del corte no es ahorrar trabajo, es **jerarquía de lectura**: puede
@@ -152,25 +154,41 @@ El sombreado va **en escalones, nunca en un bloque de un solo corte**: un torso
 con una franja dura se lee como cartel, no como volumen. La luz entra desde la
 izquierda y cae en dos pasos hacia la derecha.
 
+Y ninguna masa se dibuja como una caja de borde duro: el contorno escalona una o
+dos unidades en las esquinas (`roundedMass` en `src/sprites.mjs`). Es lo que
+separa "sprite del cast" de "rectángulo con relleno", y es lo que más se nota
+cuando falta.
+
 **Todos comparten la escala del cast.** El tamaño se expresa en la silueta, no
 en la escala: un enemigo común nunca se dibuja más grande que el jugador. El
 brute es el más pesado y queda una cabeza por encima del caminante y por debajo
 del jugador; para que se lea como muro alcanza con el ancho y los hombros.
 
-**Los jefes de cada acto todavía usan arte prestado.** El del mundo 1 no es el
-Administrador: ese es el jefe final del acto 5. Se reemplaza cuando exista el
-skill de creación de enemigos.
+**El jefe del mundo 1 ya tiene su arte**: el *Zombi de la Alarma*, un infectado
+hinchado tipo Boomer que arrastra una alarma de seguridad con baliza y anillos de
+sonido. Sus dos ataques declarados en el guion — invocación y ondas — siguen
+pendientes: son catálogo de patrones, no ficha.
 
 ## Decisiones abiertas
 
 - Estructura de seis oleadas: el motor corre cuatro y la sexta debe cerrar con el
   jefe del acto.
-- El jefe del mundo 1: su dibujo propio (hoy usa el del Administrador) y sus dos
-  ataques declarados en el guion, invocación y ondas de sonido.
+- El balance de las dos habilidades del jefe: cuántos zombis por invocación y
+  cuánto daña la onda.
 - Umbral a partir del cual un enemigo se considera "a distancia" y cómo golpea a
   esa distancia.
 
 ## Implementado
+
+- **Selector de acciones**: cuando el reloj de ataque se abre, el motor tira
+  entre las acciones de la ficha según su peso y les paga la recarga. Sin
+  acciones declaradas, el enemigo hace el ataque básico como siempre.
+- **Primitivas que las habilidades reciben**: `spawnEnemy` (invocar) y
+  `shockwave` (anillo que crece y golpea una vez al pasar).
+- **Jefe del mundo 1 — El Zombi de la Alarma**: `swipe` (peso 3), `summon`
+  (peso 1, recarga 9 s, y la cantidad crece con `run.elapsed`) y `wave`
+  (peso 2, recarga 6 s, 18 de daño).
+
 
 - **`brute`** — el resistente que la oleada 3 del acto 1 pedía. Ficha genérica:
   vida `120 + 12 × ola`, defensa 60%, ataque 300%, una velocidad de ataque de una

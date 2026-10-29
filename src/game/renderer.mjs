@@ -10,9 +10,9 @@ export function rounded(ctx, x, y, width, height, radius, fill) {
   ctx.fillRect(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
 }
 
-function pixelRing(ctx, x, y, radius, color) {
+function pixelRing(ctx, x, y, radius, color, opacity = 0.65) {
   ctx.save();
-  ctx.globalAlpha *= 0.65;
+  ctx.globalAlpha *= opacity;
   ctx.fillStyle = color;
   for (let i = 0; i < 48; i++) {
     const angle = i / 48 * Math.PI * 2;
@@ -61,6 +61,9 @@ export function draw() {
       rounded(ctx, figure.x - width / 2, y, width, 4, 2, '#070b0b');
       rounded(ctx, figure.x - width / 2, y, width * Math.max(0, figure.hp / figure.maxHp), 4, 2, figure.kind === 'boss' ? '#b499f2' : '#d7f779');
     }
+  }
+  for (const wave of state.run.shockwaves ?? []) {
+    pixelRing(ctx, wave.x, wave.y, wave.radius, '#ffb3c4', 1 - wave.radius / wave.maxRadius);
   }
   if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time: state.run.elapsed, scale: 1 });
   if (p.smile > 0) {

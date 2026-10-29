@@ -42,6 +42,8 @@ test('the walker kinds are one connected body, never floating pieces', () => {
   // The runner shipped with a one-unit gap at the shoulder and the head off the
   // neck: a sprite can be "different" and still be broken. Every walker must
   // flood-fill as a single figure from its shadow to its head.
+  // The boss is excluded on purpose: its sound rings are separate VFX in the air,
+  // so the body is connected but the particle rings are not part of the figure.
   for (const kind of ['zombie', 'runner', 'brute']) {
     const cells = new Set();
     for (const rect of enemyShape(kind).rects) {
@@ -61,6 +63,14 @@ test('the walker kinds are one connected body, never floating pieces', () => {
     }
     assert.equal(seen.size, cells.size, `${kind} must render as one connected figure`);
   }
+});
+
+test('the act 1 boss draws its own alarm zombie at boss density', () => {
+  const boss = enemyShape('boss');
+  const player = characterShape('negro');
+  assert.ok(boss.height > player.height * 1.3, 'a boss is allowed to tower over the player');
+  assert.ok(boss.rects.length > 120, 'bosses carry cast-level detail, far above the ~30 of a common enemy');
+  assert.ok(boss.rects.some(rect => rect.color === '#7a2f2f'), 'the dragged alarm is part of the boss, not borrowed art');
 });
 
 test('the runner reads lean and tall, and the brute reads wide but never bigger than the player', () => {

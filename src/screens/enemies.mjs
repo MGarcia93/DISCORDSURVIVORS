@@ -14,7 +14,10 @@ import { state } from '../app/state.mjs';
 export const isEnemyDevelopment = () => new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'enemies';
 
 const KINDS = Object.keys(ENEMY_KINDS);
+// A crowd is what you want for a walker; a boss is looked at one at a time, with
+// room around it to see what it summons.
 const ALIVE_LIMIT = 6;
+const aliveLimit = kind => (kind === 'boss' ? 1 : ALIVE_LIMIT);
 const SPAWN_EVERY = 0.9;
 
 let arena = null;
@@ -95,7 +98,7 @@ export function drawEnemyPreview(dt) {
   const tick = Math.min(dt, 0.05);
 
   spawnIn -= tick;
-  if (spawnIn <= 0 && run.enemies.length < ALIVE_LIMIT) {
+  if (spawnIn <= 0 && run.enemies.length < aliveLimit(state.enemyPreviewKind)) {
     spawnAtEdge(run, state.enemyPreviewKind);
     spawnIn = SPAWN_EVERY;
   }

@@ -37,7 +37,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
   const s = characterDef.stats;
   const run = {
     phase: 'playing', wave: 1, duration: 60, time: 0, elapsed: 0, coins: 0, kills: 0,
-    random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0,
+    random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0, shockwaves: [],
     player: {
       character: characterDef.id, characterDef,
        x: WIDTH / 2, y: HEIGHT / 2,
@@ -165,7 +165,8 @@ export function createEnemy(run, kind, x, y) {
     hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
     radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave),
     attackRange: enemyAttackRange(kind, run.wave),
-    attackInterval: enemyAttackInterval(kind, run.wave) };
+    attackInterval: enemyAttackInterval(kind, run.wave),
+    actions: def.actions };
 }
 
 export function startNextWave(run) {
@@ -234,6 +235,24 @@ function shroomBlast(run, shot, impact) {
   }
 }
 
+// One reusable selector; the abilities themselves belong to each ficha. When an
+// enemy's attack clock opens, the engine rolls among the actions that are off
+// cooldown, weighted by their chance, and hands the winner to the sheet.
+function pickAction(run, enemy) {
+  const actions = enemy.actions;
+  if (!actions?.length) return null;
+  const ready = actions.filter(action => (action.chance ?? 1) > 0
+    && (enemy.actionCds?.[action.key] ?? 0) <= 0);
+  if (!ready.length) return null;
+  const share = ready.reduce((sum, action) => sum + (action.chance ?? 1), 0);
+  let roll = run.random() * share;
+  for (const action of ready) {
+    roll -= action.chance ?? 1;
+    if (roll < 0) return action;
+  }
+  return ready[ready.length - 1];
+}
+
 function nearest(run, origin, excluded = [], maxDistance = Infinity) {
   return run.enemies.filter(e => e.hp > 0 && !excluded.includes(e.id)
       && distance(e, origin) <= maxDistance)
@@ -258,6 +277,14 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     run.projectiles.push({ x: source.x, y: source.y, target: alt.id,
       damage: damage * 0.6, kind, device, hit: [], ttl: 3, angle: 0, attack });
   }
+}
+
+// A ring that grows out of a point and hurts the player once as it passes them.
+// Offered to enemy abilities through ctx, so a boss can ring without new engine
+// branches per enemy.
+function shockwave(run, { x, y, damage, speed = 320 * WORLD_SCALE, maxRadius = 340 * WORLD_SCALE }) {
+  run.shockwaves = run.shockwaves ?? [];
+  run.shockwaves.push({ x, y, damage, speed, maxRadius, radius: 0, hit: false });
 }
 
 // Untargeted rings keep their launch direction, even in an empty arena.
@@ -317,7 +344,9 @@ export function step(run, seconds, input = {}) {
   const dt = Math.min(0.05, Math.max(0, seconds));
   const p = run.player;
   const def = p.characterDef;
-   const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input };
+   const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input,
+     spawnEnemy: (kind, x, y) => { const enemy = createEnemy(run, kind, x, y); run.enemies.push(enemy); return enemy; },
+     shockwave: options => shockwave(run, options) };
   run.time += dt;
   run.elapsed += dt;
   const decayKeys = [
@@ -412,6 +441,11 @@ export function step(run, seconds, input = {}) {
     const smokeSlow = zone ? smoke.slow + enemy.smokeIn * smoke.stackSlow : 0;
     const confusedSlow = confusionSlowFactor(enemy) * (1 - smokeSlow);
     enemy.attackCd = Math.max(0, (enemy.attackCd ?? 0) - dt);
+    if (enemy.actionCds) {
+      for (const key of Object.keys(enemy.actionCds)) {
+        enemy.actionCds[key] = Math.max(0, enemy.actionCds[key] - dt);
+      }
+    }
     enemy.confusionTtl = Math.max(0, (enemy.confusionTtl ?? 0) - dt);
     if ((enemy.confusionTtl ?? 0) <= 0) enemy.confusionStacks = 0;
     // Generic enemy rule, shared by every kind: close the distance, stop when
@@ -432,7 +466,16 @@ export function step(run, seconds, input = {}) {
       enemy.x += (p.x - enemy.x) / dist * enemy.speed * confusedSlow * dt;
       enemy.y += (p.y - enemy.y) / dist * enemy.speed * confusedSlow * dt;
     }
-    if (inReach && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0) {
+    const action = inReach && p.immune <= 0 && (enemy.attackCd ?? 0) <= 0
+      ? (enemy.actions ? pickAction(run, enemy) : { key: 'swipe', kind: 'melee' })
+      : null;
+    if (action && action.kind !== 'melee') {
+      // The ficha owns the effect; the engine only pays the clock and cooldown.
+      enemy.actionCds = enemy.actionCds ?? {};
+      enemy.actionCds[action.key] = action.cooldown ?? 0;
+      enemy.attackCd = enemy.attackInterval ?? 0.65;
+      action.run?.(run, enemy, ctx);
+    } else if (action) {
       if (zone && run.random() < smoke.missChance) {
         enemy.attackCd = smoke.missCd ?? 1; // the swing connects with smoke, not flesh
         continue;
@@ -456,6 +499,17 @@ export function step(run, seconds, input = {}) {
       enemy.attackCd = (enemy.confusionStacks ?? 0) >= 2 ? 0.8 : (enemy.attackInterval ?? 0.65);
     }
   }
+  for (const wave of run.shockwaves ?? []) {
+    const before = wave.radius;
+    wave.radius += wave.speed * dt;
+    const gap = distance(wave, p);
+    if (!wave.hit && p.immune <= 0 && gap + p.hitRadius >= before && gap - p.hitRadius <= wave.radius) {
+      wave.hit = true;
+      p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)));
+      p.immune = 0.65;
+    }
+  }
+  if (run.shockwaves) run.shockwaves = run.shockwaves.filter(wave => wave.radius <= wave.maxRadius);
   for (const shot of run.projectiles) {
     shot.ttl -= dt;
     shot.angle += dt * 12;

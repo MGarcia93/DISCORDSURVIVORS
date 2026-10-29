@@ -144,6 +144,18 @@ function torsoBands(ctx, x, y, width, height, tones) {
   pixel(ctx, x + lit, y, width - lit - mid - dark, height, tones.base);
 }
 
+// The cast never draws a hard-cornered box: every mass steps in by a couple of
+// units at the corners. This paints one rounded rectangle out of five strips, so
+// a body reads as flesh and cloth instead of a rectangle.
+function roundedMass(ctx, x, y, width, height, color) {
+  if (height < 6 || width < 6) { pixel(ctx, x, y, width, height, color); return; }
+  pixel(ctx, x + 2, y, width - 4, 1, color);
+  pixel(ctx, x + 1, y + 1, width - 2, 1, color);
+  pixel(ctx, x, y + 2, width, height - 4, color);
+  pixel(ctx, x + 1, y + height - 2, width - 2, 1, color);
+  pixel(ctx, x + 2, y + height - 1, width - 4, 1, color);
+}
+
 // Act 1 walker. Slow, stooped, arms hanging: the plainest body of the cast.
 export function drawZombie(ctx, x, y, options = {}) {
   const { time = 0, seed = 0, scale = 2 } = options;
@@ -277,6 +289,178 @@ export function drawBrute(ctx, x, y, options = {}) {
   pixel(ctx, -5, -36, 4, 2, '#d6df94');
   pixel(ctx, 3, -36, 4, 2, '#d6df94');
   pixel(ctx, -2, -32, 6, 2, '#2e3330');
+  ctx.restore();
+}
+
+// Act 1 boss: the Alarm Zombie. Built like the bloated infected that explode on
+// you: an enormous sagging belly over short legs, thick arms that cannot reach
+// past it, and a small head sunk between the shoulders, centred on the body.
+// It drags a security alarm that never stops screaming. A boss stands alone on
+// stage, so it carries the cast's detail and its rounded masses: a built face,
+// seams, a chest pocket, buttons, folds, fingers, laces, screws and bile.
+export function drawAlarmZombie(ctx, x, y, options = {}) {
+  const { time = 0, scale = 3 } = options;
+  const step = Math.floor(time * 2) % 2;
+  const shirt = { light: '#5d637a', base: '#4a4f63', mid: '#3f4457', dark: '#343849' };
+  const seam = '#2e3142';
+  const skin = { light: '#bcc59c', base: '#a3b08c', shade: '#879472', dark: '#6b7758' };
+  const bile = { light: '#c2d05a', base: '#a8b94a', dark: '#8f9f3d' };
+  // One rounded cloth mass: ink ring, base fill, then the light falling across it.
+  const clothMass = (x, y, w, h) => {
+    roundedMass(ctx, x, y, w, h, '#151a24');
+    roundedMass(ctx, x + 1, y + 1, w - 2, h - 2, shirt.base);
+    const inset = h - 4;
+    pixel(ctx, x + 2, y + 2, Math.max(1, Math.round(w * 0.16)), inset, shirt.light);
+    pixel(ctx, x + w - 4, y + 2, 2, inset, shirt.dark);
+    pixel(ctx, x + w - 7, y + 2, 3, inset, shirt.mid);
+  };
+  const skinMass = (x, y, w, h) => {
+    roundedMass(ctx, x, y, w, h, '#151a24');
+    roundedMass(ctx, x + 1, y + 1, w - 2, h - 2, skin.base);
+    pixel(ctx, x + 2, y + 2, Math.max(1, Math.round(w * 0.25)), Math.max(1, h - 4), skin.light);
+    pixel(ctx, x + w - 3, y + 2, 1, Math.max(1, h - 4), skin.shade);
+  };
+  pose(ctx, x, y, scale);
+  pixel(ctx, -34, 0, 60, 3, '#131a20');
+  // Short thick legs: the belly carries the boss, not the legs.
+  pixel(ctx, -11, -12, 9, 12 - step, '#151a24');
+  pixel(ctx, -10, -11, 7, 10 - step, '#4a5a7a');
+  pixel(ctx, -10, -11, 2, 10 - step, '#3b4863');
+  pixel(ctx, -9, -8, 3, 1, '#3b4863');
+  pixel(ctx, 2, -12, 9, 11 + step, '#151a24');
+  pixel(ctx, 3, -11, 7, 9 + step, '#4a5a7a');
+  pixel(ctx, 8, -11, 2, 9 + step, '#3b4863');
+  pixel(ctx, 4, -7, 3, 1, '#3b4863');
+  // Boots with a sole line and two laces.
+  roundedMass(ctx, -12, 0, 11, 3, '#151a24');
+  roundedMass(ctx, -11, 0, 9, 2, '#57505f');
+  pixel(ctx, -11, 1, 9, 1, '#3f3a48');
+  pixel(ctx, -9, 0, 1, 1, '#8a8496');
+  pixel(ctx, -7, 0, 1, 1, '#8a8496');
+  roundedMass(ctx, 2, -1 + step, 11, 3, '#151a24');
+  roundedMass(ctx, 3, -1 + step, 9, 2, '#57505f');
+  pixel(ctx, 3, step, 9, 1, '#3f3a48');
+  pixel(ctx, 5, -1 + step, 1, 1, '#8a8496');
+  pixel(ctx, 7, -1 + step, 1, 1, '#8a8496');
+  // Pear-shaped body, bare and bloated: hips, belly wider than the chest, then
+  // shoulders, all in stretched skin instead of a uniform.
+  skinMass(-19, -22, 38, 12);
+  skinMass(-17, -34, 34, 13);
+  skinMass(-14, -41, 28, 8);
+  // Sick blotches: the infection shows as raw patches, not more green.
+  pixel(ctx, 7, -30, 6, 5, '#8f6f6a');
+  pixel(ctx, 10, -27, 4, 3, '#7a5a56');
+  pixel(ctx, -12, -23, 5, 4, '#8f6f6a');
+  pixel(ctx, 12, -37, 4, 3, '#7a5a56');
+  pixel(ctx, -4, -31, 3, 3, '#8f6f6a');
+  // Veins and stretch marks running across the belly.
+  pixel(ctx, -14, -30, 7, 1, skin.shade);
+  pixel(ctx, -9, -29, 4, 1, skin.shade);
+  pixel(ctx, 1, -33, 9, 1, skin.shade);
+  pixel(ctx, -12, -18, 6, 1, skin.shade);
+  pixel(ctx, 3, -17, 8, 1, skin.dark);
+  pixel(ctx, -6, -26, 1, 5, skin.shade);
+  pixel(ctx, 2, -23, 1, 4, skin.shade);
+  pixel(ctx, -16, -38, 5, 1, skin.light);
+  pixel(ctx, 6, -38, 6, 1, skin.light);
+  // A torn rag hanging off one shoulder: the only cloth left up here.
+  pixel(ctx, -14, -41, 9, 5, '#151a24');
+  pixel(ctx, -13, -40, 7, 4, '#4a4f63');
+  pixel(ctx, -13, -40, 7, 1, '#5d637a');
+  pixel(ctx, -7, -37, 2, 2, '#3f4457');
+  // Bile: a run that starts at the collar and drips down the belly, plus splashes.
+  pixel(ctx, 3, -35, 3, 1, bile.light);
+  pixel(ctx, 4, -34, 2, 3, bile.base);
+  pixel(ctx, 3, -31, 4, 4, bile.base);
+  pixel(ctx, 5, -27, 3, 4, bile.dark);
+  pixel(ctx, 6, -23, 2, 3, bile.base);
+  pixel(ctx, 7, -20, 2, 2, bile.dark);
+  pixel(ctx, 11, -28, 2, 2, bile.base);
+  pixel(ctx, -10, -25, 2, 3, bile.dark);
+  pixel(ctx, -3, -19, 3, 2, bile.base);
+  pixel(ctx, -13, -17, 2, 2, bile.dark);
+  // Thick short arms: shoulder, elbow, forearm, knuckles and three fingers.
+  skinMass(-22, -38, 8, 14);
+  pixel(ctx, -21, -30, 2, 2, skin.shade);
+  skinMass(-21, -27, 8, 11);
+  pixel(ctx, -20, -19, 6, 1, skin.shade);
+  roundedMass(ctx, -21, -18, 8, 5, '#151a24');
+  pixel(ctx, -20, -17, 6, 3, skin.shade);
+  pixel(ctx, -19, -15, 1, 2, skin.base);
+  pixel(ctx, -17, -15, 1, 2, skin.base);
+  pixel(ctx, -15, -15, 1, 2, skin.base);
+  skinMass(14, -38, 8, 13);
+  pixel(ctx, 19, -30, 2, 2, skin.shade);
+  skinMass(14, -27, 8, 10);
+  pixel(ctx, 15, -19, 6, 1, skin.shade);
+  roundedMass(ctx, 14, -18, 8, 5, '#151a24');
+  pixel(ctx, 15, -17, 6, 3, skin.shade);
+  pixel(ctx, 16, -15, 1, 2, skin.base);
+  pixel(ctx, 18, -15, 1, 2, skin.base);
+  pixel(ctx, 20, -15, 1, 2, skin.base);
+  // Small head sunk between the shoulders, centred on the body.
+  roundedMass(ctx, -7, -50, 15, 12, '#151a24');
+  roundedMass(ctx, -6, -49, 13, 10, skin.base);
+  pixel(ctx, -6, -47, 13, 2, skin.light);
+  pixel(ctx, -6, -49, 12, 2, '#3a3a2c');
+  pixel(ctx, -6, -49, 12, 1, '#4f4f3a');
+  pixel(ctx, -5, -46, 3, 2, '#3a3a2c');
+  pixel(ctx, -5, -45, 5, 1, skin.shade);
+  pixel(ctx, 1, -45, 4, 1, skin.shade);
+  pixel(ctx, -5, -44, 4, 3, skin.dark);
+  pixel(ctx, 2, -44, 4, 3, skin.dark);
+  pixel(ctx, -4, -43, 2, 2, '#f2f0a2');
+  pixel(ctx, 3, -43, 2, 2, '#f2f0a2');
+  pixel(ctx, -4, -43, 1, 1, '#fdfbe0');
+  pixel(ctx, 3, -43, 1, 1, '#fdfbe0');
+  pixel(ctx, -1, -42, 3, 2, skin.shade);
+  pixel(ctx, -6, -42, 2, 3, skin.shade);
+  pixel(ctx, 5, -42, 2, 3, skin.shade);
+  pixel(ctx, -8, -45, 2, 3, skin.shade);
+  pixel(ctx, 4, -47, 3, 1, '#6d1f1e');
+  pixel(ctx, -6, -40, 12, 1, skin.shade);
+  pixel(ctx, -4, -39, 9, 4, '#2a2320');
+  pixel(ctx, -3, -39, 1, 1, '#d5ceaa');
+  pixel(ctx, -1, -39, 1, 1, '#d5ceaa');
+  pixel(ctx, 1, -39, 1, 1, '#d5ceaa');
+  pixel(ctx, 3, -39, 1, 1, '#d5ceaa');
+  pixel(ctx, -2, -36, 5, 1, '#6d1f1e');
+  // Bile dripping from the jaw.
+  pixel(ctx, -3, -35, 3, 3, bile.base);
+  pixel(ctx, -2, -32, 2, 2, bile.dark);
+  // The alarm it refuses to drop: handle, rounded box, grille, screws, dent, cable.
+  pixel(ctx, -30, -17, 7, 1, '#2a2320');
+  pixel(ctx, -23, -16, 3, 2, '#2a2320');
+  pixel(ctx, -26, -15, 3, 2, '#2a2320');
+  roundedMass(ctx, -33, -14, 16, 14, '#151a24');
+  roundedMass(ctx, -32, -13, 14, 12, '#7a2f2f');
+  pixel(ctx, -32, -12, 14, 2, '#96403f');
+  pixel(ctx, -32, -4, 14, 2, '#5a2121');
+  pixel(ctx, -30, -9, 2, 5, '#5a2121');
+  pixel(ctx, -26, -9, 2, 5, '#5a2121');
+  pixel(ctx, -22, -9, 2, 5, '#5a2121');
+  pixel(ctx, -31, -12, 1, 1, '#b0585a');
+  pixel(ctx, -20, -12, 1, 1, '#b0585a');
+  pixel(ctx, -20, -3, 1, 1, '#b0585a');
+  pixel(ctx, -25, -6, 2, 2, '#4a1a1a');
+  // Siren on its post, blinking on the beat, clear of the box.
+  pixel(ctx, -29, -17, 3, 4, '#2a2320');
+  roundedMass(ctx, -31, -21, 7, 4, '#151a24');
+  pixel(ctx, -30, -20, 5, 2, time % 1 < 0.5 ? '#e85c79' : '#ffb3c4');
+  pixel(ctx, -30, -20, 1, 1, '#ffe0e8');
+  // Sound leaving the alarm: two rings that travel out and fade.
+  const pulse = (time * 1.6) % 1;
+  for (let ring = 0; ring < 2; ring++) {
+    const phase = (pulse + ring * 0.5) % 1;
+    const radius = 4 + phase * 10;
+    ctx.save();
+    ctx.globalAlpha *= 1 - phase;
+    for (let i = 0; i < 12; i++) {
+      const angle = -2.6 + i * 0.15;
+      pixel(ctx, -27 + Math.cos(angle) * radius, -24 + Math.sin(angle) * radius * 0.8, 2, 1, '#ffb3c4');
+    }
+    ctx.restore();
+  }
   ctx.restore();
 }
 
