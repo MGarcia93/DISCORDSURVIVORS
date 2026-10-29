@@ -1,14 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  createRun, step, buyItem, chooseLevelReward, skipEmptyChoice, chooseUpgrade, startNextWave, sellBelonging,
+  createRun as engineRun, step, buyItem, chooseLevelReward, skipEmptyChoice, chooseUpgrade, startNextWave, sellBelonging,
 } from '../src/engine.mjs';
 import { awardXP, beginRewards } from '../src/run-rewards.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
 import { WaveDirector } from '../src/narrative/director.mjs';
 import { on } from '../src/bus.mjs';
+import { BALANCE } from '../src/reward-data.mjs';
 
 const rng = () => 0.5;
+const oneXp = structuredClone(BALANCE);
+oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, boss: 0 };
+const createRun = (random = rng, character = 'negro', options = {}) =>
+  engineRun(random, character, { balance: oneXp, ...options });
 const endWave = run => { run.spawnIn = run.shotIn = 1e6; run.time = run.duration; step(run, 0, {}); };
 const shop = run => { run.phase = 'shop'; beginRewards(run); };
 const catalogWith = (items, upgrades = []) => createCatalog({ items, upgrades });

@@ -1,12 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  createRun, step, chooseUpgrade, buyHeal, startNextWave,
+  createRun as engineRun, step, chooseUpgrade, buyHeal, startNextWave,
   chooseLevelReward, buyItem, sellBelonging, UPGRADES,
 } from '../src/engine.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
 import { beginRewards, awardXP } from '../src/run-rewards.mjs';
 import { resolveStatState } from '../src/stat-modifiers.mjs';
+import { BALANCE } from '../src/reward-data.mjs';
+
+const oneXp = structuredClone(BALANCE);
+oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, boss: 0 };
+const createRun = (random = Math.random, character = 'negro', options = {}) =>
+  engineRun(random, character, { balance: oneXp, ...options });
 
 const modifier = (stat, value) => ({ stat, operation: 'flat', value });
 const catalog = modifiers => createCatalog({

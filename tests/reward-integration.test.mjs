@@ -1,10 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  createRun, step, startNextWave, activateSpecial, chooseLevelReward,
+  createRun as engineRun, step, startNextWave, activateSpecial, chooseLevelReward,
   skipEmptyChoice, buyItem, chooseUpgrade, buyHeal, sellBelonging,
 } from '../src/engine.mjs';
 import { BALANCE } from '../src/reward-data.mjs';
+
+// The shipped balance grants playtest XP; these cases pin the curve itself, so
+// they run with one XP per ordinary kill and override only what they test.
+const oneXp = structuredClone(BALANCE);
+oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, boss: 0 };
+const createRun = (random = Math.random, character = 'negro', options = {}) =>
+  engineRun(random, character, { balance: oneXp, ...options });
 
 function kills(run, count) {
   run.spawnIn = 100;
@@ -19,7 +26,7 @@ function clearWave(run) {
 }
 
 test('configured gold rewards control all enemy payouts and survival income independently of XP', () => {
-  const balance = structuredClone(BALANCE);
+  const balance = structuredClone(oneXp);
   balance.gold = { rewards: { zombie: 7, runner: 9, boss: 13 }, survival: 11 };
   const run = createRun(() => 0.5, 'negro', { balance });
   run.spawnIn = 100;
@@ -39,7 +46,7 @@ test('configured gold rewards control all enemy payouts and survival income inde
 });
 
 test('configured zero gold rewards remain zero instead of falling back to legacy amounts', () => {
-  const balance = structuredClone(BALANCE);
+  const balance = structuredClone(oneXp);
   balance.gold = { rewards: { zombie: 0, runner: 0, boss: 0 }, survival: 0 };
   const run = createRun(() => 0.5, 'negro', { balance });
   kills(run, 1); clearWave(run);
