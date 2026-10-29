@@ -1,5 +1,6 @@
 import { WIDTH, HEIGHT, createRun } from '../engine.mjs';
 import { balanceFor } from '../reward-data.mjs';
+import { getAct } from '../campaign/acts.mjs';
 import { state } from '../app/state.mjs';
 import { updateHUD } from '../game/hud.mjs';
 import { audio } from '../audio/index.mjs';
@@ -8,7 +9,7 @@ import { audio } from '../audio/index.mjs';
 export function game() {
   state.run = createRun(Math.random, state.selectedCharacter, {
     balance: balanceFor(globalThis.location?.hostname, globalThis.location?.search),
-  });
+  }, getAct(state.selectedAct));
   state.facing = 1;
   state.lastPhase = '';
   const act = state.run.act;

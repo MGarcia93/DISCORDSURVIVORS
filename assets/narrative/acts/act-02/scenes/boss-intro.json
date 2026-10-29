@@ -1,0 +1,43 @@
+{
+  "id": "act-02-boss-intro",
+  "repeat": "once",
+  "stage": {
+    "background": "rift",
+    "points": {
+      "ground": [500, 500],
+      "solago": [650, 510],
+      "yorick": [860, 470],
+      "shovel": [900, 560]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "solago": { "character": "solago", "at": "solago" },
+      "yorick": { "character": "yorick", "at": "yorick" }
+    }
+  },
+  "steps": [
+    {
+      "type": "notice",
+      "title": "JEFE DETECTADO",
+      "duration": 4,
+      "lines": ["YORICK — EL ENTERRADOR", "Objetivo del jefe: Recuperar a su supuesto caminante."]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        { "type": "camera", "to": "yorick", "zoom": 1.25, "duration": 1.6 },
+        { "type": "move", "actor": "yorick", "to": "ground", "duration": 1.6 }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "yorick", "expression": "angry", "text": "¡Devuélveme a mi pequeño caminante!" },
+        { "speaker": "solago", "expression": "angry", "text": "¡QUE NO SOY UN MURGANEO, LA CONCHA DE TU MADRE!" },
+        { "speaker": "maxi-negro", "expression": "happy", "text": "Pará, Solago, que es el único campeón que te dejamos jugar en ranked. Un poco de respeto." },
+        { "speaker": "solago", "expression": "angry", "text": "¡NEGRO, AYUDAME A MATARLO!" }
+      ]
+    }
+  ],
+  "effects": [{ "key": "act-02-boss-met", "value": true }]
+}

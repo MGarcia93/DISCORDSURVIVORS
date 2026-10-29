@@ -1,0 +1,40 @@
+{
+  "id": "act-02-boss-defeat",
+  "repeat": "once",
+  "stage": {
+    "background": "rift",
+    "points": {
+      "ground": [420, 500],
+      "solago": [600, 510],
+      "yorick": [800, 480],
+      "corpse": [980, 600]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "solago": { "character": "solago", "at": "solago" },
+      "yorick": { "character": "yorick", "at": "yorick" },
+      "walker": { "enemy": "mistWalker", "at": "corpse", "state": "dead" }
+    }
+  },
+  "steps": [
+    { "type": "wait", "duration": 0.6 },
+    { "type": "animate", "actor": "yorick", "animation": "kneel", "duration": 1.4 },
+    { "type": "camera", "to": "yorick", "zoom": 1.3, "duration": 1.2 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "yorick", "expression": "tired", "text": "Mi pequeño caminante... ¿por qué me abandonaste?" },
+        { "speaker": "solago", "expression": "angry", "text": "¡PORQUE NO SOY TUYO, PELOTUDO!" }
+      ]
+    },
+    { "type": "camera", "to": "ground", "zoom": 1.1, "duration": 1.2 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "Bueno, igual admití que por primera vez hiciste algo útil en una partida de LoL." },
+        { "speaker": "solago", "expression": "angry", "text": "Chupame bien la pija." }
+      ]
+    }
+  ],
+  "effects": [{ "key": "act-02-boss-beaten", "value": true }]
+}

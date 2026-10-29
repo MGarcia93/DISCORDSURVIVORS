@@ -1,0 +1,41 @@
+{
+  "id": "act-02-epilogue",
+  "repeat": "once",
+  "stage": {
+    "background": "rift",
+    "points": {
+      "ground": [500, 500],
+      "solago": [660, 510]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "solago": { "character": "solago", "at": "solago" }
+    }
+  },
+  "steps": [
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR DEL SERVIDOR",
+      "duration": 6,
+      "lines": [
+        "Mundo 02 completado.",
+        "Jugador Solago recuperado.",
+        "Integrantes reunidos: 2.",
+        "Preparando siguiente entorno... DIABLO."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "tired", "text": "Bueno, por lo menos salimos de esta mierda." },
+        { "speaker": "solago", "expression": "neutral", "text": "¿Y ahora dónde vamos?" },
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Al Diablo, parece." },
+        { "speaker": "solago", "expression": "surprised", "text": "¿Y quién mierda está ahí?" },
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "Y... Papasito, seguro." }
+      ]
+    },
+    { "type": "flash", "at": "ground", "duration": 0.4 },
+    { "type": "notice", "title": "PAPASITO", "duration": 4, "lines": ["Dale, hijo de puta... Tirame el legendario de una vez."] }
+  ],
+  "effects": [{ "key": "act-02-finished", "value": true }]
+}

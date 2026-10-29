@@ -103,7 +103,10 @@
     "name": "Yorick",
     "sprite": "yorick",
     "expressions": {
-      "neutral": "portraits/yorick/neutral.svg"
+      "neutral": "portraits/yorick/neutral.svg",
+      "angry": "portraits/yorick/angry.svg",
+      "surprised": "portraits/yorick/surprised.svg",
+      "tired": "portraits/yorick/tired.svg"
     }
   }
 }

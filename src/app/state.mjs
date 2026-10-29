@@ -25,6 +25,7 @@ export const state = {
   hudElapsed: 0,
   facing: 1,
   selectedCharacter: 'negro',
+  selectedAct: 'act-01',
   solagoUnlocked: isCharacterUnlocked('solago'),
   warriorUnlocked: isCharacterUnlocked('warrior'),
   papazitoUnlocked: isCharacterUnlocked('papazito'),

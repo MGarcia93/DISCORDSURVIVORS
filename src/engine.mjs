@@ -184,6 +184,11 @@ export function startNextWave(run) {
   run.enemies = [];
   run.projectiles = [];
   run.player.characterDef.onStageStart?.(run, run.player);
+  // The act may declare one mini-boss before the boss: it arrives once, when
+  // its own wave starts, and killing it does not close the run.
+  if (run.act.miniboss && run.wave === run.act.miniboss.wave) {
+    run.enemies.push(createEnemy(run, run.act.miniboss.kind, WIDTH / 2, 90 * WORLD_SCALE));
+  }
   if (run.wave === run.act.boss.wave) {
     run.enemies.push(createEnemy(run, run.act.boss.kind,
       WIDTH / 2, 80 * WORLD_SCALE));
@@ -693,7 +698,7 @@ export function step(run, seconds, input = {}) {
   if (p.hp <= 0) {
     run.phase = 'dead';
     emit('playerDown', { run, player: p });
-  } else if (killed.some(enemy => enemy.boss)) {
+  } else if (killed.some(enemy => enemy.boss && enemy.kind === run.act.boss?.kind)) {
     run.phase = 'won';
     run.pendingLevels = [];
     run.levelChoices = run.shopOffers = null;

@@ -32,6 +32,20 @@ function validateWaves(act) {
   });
 }
 
+// An act may carry one mini-boss on an earlier wave. It is optional, it never
+// closes the run, and it must sit before the boss.
+function validateMiniboss(act) {
+  const { id, miniboss, boss } = act;
+  if (miniboss === undefined) return;
+  if (!miniboss || typeof miniboss !== 'object' || Array.isArray(miniboss)) {
+    throw Error(`${id}: miniboss must be an object`);
+  }
+  if (!Number.isInteger(miniboss.wave) || miniboss.wave < 1) throw Error(`${id}: invalid miniboss wave`);
+  if (miniboss.wave >= boss.wave) throw Error(`${id}: miniboss must be before the boss wave`);
+  if (!own(ENEMY_KINDS, miniboss.kind)) throw Error(`${id}: unknown miniboss kind: ${miniboss.kind}`);
+  if (!text(miniboss.name)) throw Error(`${id}: miniboss name is required`);
+}
+
 function validateBoss(act) {
   const { id, boss, waves } = act;
   if (!boss || typeof boss !== 'object') throw Error(`${id}: boss is required`);
@@ -54,6 +68,7 @@ export function validateAct(act, { expectedOrder } = {}) {
   if (!Number.isFinite(act.duration) || act.duration <= 0) throw Error(`${act.id}: invalid duration`);
   validateWaves(act);
   validateBoss(act);
+  validateMiniboss(act);
   return act;
 }
 

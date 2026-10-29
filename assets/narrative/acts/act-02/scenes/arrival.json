@@ -1,0 +1,77 @@
+{
+  "id": "act-02-arrival",
+  "repeat": "once",
+  "stage": {
+    "background": "rift",
+    "points": {
+      "ground": [572, 470],
+      "left": [300, 490],
+      "right": [880, 490],
+      "far-left": [180, 560],
+      "far-right": [980, 560]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "minion-a": { "enemy": "meleeMinion", "at": "left" },
+      "minion-b": { "enemy": "meleeMinion", "at": "right" },
+      "minion-c": { "enemy": "meleeMinion", "at": "far-left" },
+      "minion-d": { "enemy": "meleeMinion", "at": "far-right" }
+    }
+  },
+  "steps": [
+    {
+      "type": "notice",
+      "title": "YORICK",
+      "duration": 3,
+      "lines": ["Ven, pequeño caminante. Tenemos trabajo que hacer."]
+    },
+    { "type": "flash", "at": "ground", "duration": 0.3 },
+    { "type": "wait", "duration": 0.5 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "No, la concha de tu madre. ¿De todos los juegos tenía que tocar esta mierda?" }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR DEL SERVIDOR",
+      "duration": 5,
+      "lines": [
+        "MUNDO 02 — LEAGUE OF LEGENDS",
+        "Objetivo: Sobrevivir a las oleadas.",
+        "Advertencia: se ha detectado un jugador con habilidades cuestionables."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Solago?" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 2.5, "lines": ["Confirmado."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "Y sí, ¿quién más va a ser?" }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        { "type": "camera", "to": "left", "zoom": 1.25, "duration": 1.6 },
+        { "type": "animate", "actor": "minion-a", "animation": "walk", "duration": 1.4 }
+      ]
+    },
+    { "type": "camera", "to": "right", "zoom": 1.25, "duration": 1.4 },
+    { "type": "camera", "to": "ground", "zoom": 1.05, "duration": 1.2 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "scared", "text": "Pará... ¿por qué me miran todos a mí?" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": ["Emparejamiento equilibrado: todos contra usted."] }
+  ],
+  "effects": [{ "key": "act-02-arrived", "value": true }]
+}

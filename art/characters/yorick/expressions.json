@@ -2,6 +2,40 @@
   "name": "Yorick",
   "base": "portrait-neutral.svg",
   "expressions": {
-    "neutral": {}
+    "neutral": {},
+    "angry": {
+      "brows": [
+        { "fill": "#10171b", "d": "M80 77H85V80H90V83H95V87H90V85H85V83H80ZM98 83H102V84H105V88H101V86H98Z" },
+        { "fill": "#4d605c", "d": "M82 83H87V85H92V87H88V86H82ZM99 86H103V88H99Z" }
+      ],
+      "eyes": [
+        { "fill": "#0c1419", "d": "M82 86H88V88H94V93H88V91H82ZM99 89H104V93H99Z" },
+        { "fill": "#42d4c1", "d": "M84 88H88V90H92V92H88V90H84ZM100 90H103V92H100Z" },
+        { "fill": "#c5f8e7", "d": "M85 88H87V89H85ZM101 90H102V91H101Z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#10171b", "d": "M81 74H87V76H92V79H95V82H90V80H85V78H81ZM98 78H102V80H105V83H101V81H98Z" },
+        { "fill": "#4d605c", "d": "M83 78H87V80H92V82H88V81H83ZM99 81H102V83H99Z" }
+      ],
+      "eyes": [
+        { "fill": "#0c1419", "d": "M82 83H89V85H94V92H87V90H82ZM99 85H104V92H99Z" },
+        { "fill": "#42d4c1", "d": "M85 84H88V86H91V90H87V88H85ZM100 86H103V90H100Z" },
+        { "fill": "#c5f8e7", "d": "M86 85H88V88H86ZM101 87H102V89H101Z" }
+      ]
+    },
+    "tired": {
+      "brows": [
+        { "fill": "#10171b", "d": "M81 79H87V80H93V83H95V86H90V84H84V83H80V81H81ZM98 82H102V84H105V87H101V86H98Z" },
+        { "fill": "#4d605c", "d": "M83 84H89V86H94V88H88V86H83ZM99 86H103V88H99Z" }
+      ],
+      "eyes": [
+        { "fill": "#0c1419", "d": "M82 87H89V89H94V93H88V91H82ZM99 89H104V93H99Z" },
+        { "fill": "#299b96", "d": "M85 89H89V90H92V92H88V91H85ZM100 91H103V92H100Z" },
+        { "fill": "#89d4c7", "d": "M86 89H88V90H86ZM101 91H102V92H101Z" },
+        { "fill": "#526363", "d": "M83 94H88V96H92V98H88V97H83ZM100 94H104V96H100Z" }
+      ]
+    }
   }
 }
