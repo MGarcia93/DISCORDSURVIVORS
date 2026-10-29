@@ -16,7 +16,7 @@ const mistWalker = {
   radius: 12,
   bounty: 2,
   draw(ctx, x, y, options = {}) {
-    drawMistWalker(ctx, x, y + 33, { scale: 2, ...options });
+    drawMistWalker(ctx, x, y + 42, { scale: 2, ...options });
   },
 };
 

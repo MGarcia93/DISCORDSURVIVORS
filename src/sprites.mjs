@@ -665,58 +665,88 @@ export function drawEnemyShot(ctx, device = 'bolt') {
 
 const MIST = { light: '#cfd8e8', base: '#a7b4c9', mid: '#8b98ad', dark: '#6d788c' };
 
-// Act 2 — League of Legends, waves 3 and 4. Yorick's mist walker: a hooded
-// shroud of fog and bone that chases in packs. It has no legs (the cloth ravels
-// into the ground), one arm hangs with fingers and the other is raised, so the
-// silhouette never mirrors; the only bright note is the two cold eyes.
+// Act 2 — League of Legends, waves 3 and 4. Yorick's mist walker, drawn from
+// the Rift's own ghoul: a hunched teal brute with no eyes and a maw of fangs,
+// wrapped forearms and shins, long arms and short bent legs. The head is the
+// biggest mass on the body, which is what separates it from a person in a robe.
+const GHOUL_SKIN = { light: '#8fd0e0', base: '#5fa8bd', mid: '#4b8da3', dark: '#3a6f83' };
+const GHOUL_WRAP = { light: '#dfcfb6', base: '#bda98c', dark: '#8e7c63' };
+const GHOUL_TEETH = '#f1edda';
+const GHOUL_MAW = '#3a1a24';
+
 export function drawMistWalker(ctx, x, y, options = {}) {
   const { time = 0, seed = 0, scale = 2 } = options;
-  const drift = Math.floor(time * 6 + seed) % 2;
+  const stride = Math.floor(time * 5 + seed) % 2;
   pose(ctx, x, y, scale);
-  pixel(ctx, -8, 0, 17, 2, '#131a20');
-  // Ragged hem: uneven strips are what keep the robe from reading as a barrel.
-  pixel(ctx, -8, -6, 17, 6, '#151a24');
-  torsoBands(ctx, -7, -5, 15, 4, MIST);
-  pixel(ctx, -7, -1, 2, 2, MIST.dark);
-  pixel(ctx, -4, 0, 3, 2, MIST.mid);
-  pixel(ctx, 0, -1 + drift, 3, 3, MIST.dark);
-  pixel(ctx, 4, 0, 2, 2, MIST.base);
-  pixel(ctx, 7, -1, 2, 2, MIST.mid);
-  // Lower shroud and chest: one tapering mass.
-  pixel(ctx, -8, -13, 17, 8, '#151a24');
-  torsoBands(ctx, -7, -12, 15, 6, MIST);
-  pixel(ctx, -7, -22, 15, 10, '#151a24');
-  torsoBands(ctx, -6, -21, 13, 8, MIST);
-  pixel(ctx, -4, -18, 7, 1, '#3d4657');
-  pixel(ctx, -2, -16, 5, 1, '#3d4657');
-  // Shoulders: wide, then a step inward, so the mass slopes.
-  pixel(ctx, -8, -23, 17, 2, '#151a24');
-  pixel(ctx, -6, -25, 13, 2, '#151a24');
-  pixel(ctx, -5, -25, 11, 1, MIST.mid);
-  // Left arm hangs to the ground with two fingers.
-  pixel(ctx, -10, -22, 4, 12, '#151a24');
-  pixel(ctx, -9, -21, 3, 10, MIST.base);
-  pixel(ctx, -12, -11, 5, 2, '#151a24');
-  pixel(ctx, -12, -11, 1, 2, MIST.light);
-  pixel(ctx, -10, -11, 1, 2, MIST.light);
-  // Right arm is raised out of the cloak, three steps of a bent limb.
-  pixel(ctx, 7, -23, 4, 4, '#151a24');
-  pixel(ctx, 8, -22, 3, 3, MIST.mid);
-  pixel(ctx, 10, -26, 5, 4, '#151a24');
-  pixel(ctx, 11, -25, 3, 3, MIST.base);
-  pixel(ctx, 13, -27, 2, 3, '#151a24');
-  pixel(ctx, 13, -26, 1, 2, MIST.light);
-  // Hood: a cone that sits on the chest, with the eyes deep in its opening.
-  pixel(ctx, -4, -31, 9, 8, '#19232b');
-  pixel(ctx, -3, -30, 7, 6, MIST.dark);
-  pixel(ctx, -3, -28, 7, 4, '#202a38');
-  pixel(ctx, -2, -27, 2, 2, '#9ff0ff');
-  pixel(ctx, 2, -27, 2, 2, '#9ff0ff');
-  pixel(ctx, -3, -33, 7, 2, '#19232b');
-  pixel(ctx, -2, -35, 5, 2, '#19232b');
-  pixel(ctx, -1, -37, 3, 2, '#19232b');
-  pixel(ctx, -2, -34, 3, 1, MIST.mid);
-  pixel(ctx, -1, -36, 1, 1, MIST.mid);
+  pixel(ctx, -12, 0, 25, 2, '#131a20');
+  // Short bent legs: thigh, wrapped shin, wide clawed foot.
+  pixel(ctx, -9, -14, 7, 8 - stride, GHOUL_SKIN.dark);
+  pixel(ctx, -8, -14, 5, 7 - stride, GHOUL_SKIN.mid);
+  pixel(ctx, 2, -14, 7, 7 + stride, GHOUL_SKIN.dark);
+  pixel(ctx, 3, -14, 5, 6 + stride, GHOUL_SKIN.base);
+  pixel(ctx, -9, -7, 7, 8, '#151a24');
+  pixel(ctx, -8, -6, 5, 6, GHOUL_WRAP.base);
+  pixel(ctx, -8, -5, 5, 1, GHOUL_WRAP.light);
+  pixel(ctx, -8, -3, 5, 1, GHOUL_WRAP.dark);
+  pixel(ctx, 2, -7, 7, 8, '#151a24');
+  pixel(ctx, 3, -6, 5, 6, GHOUL_WRAP.base);
+  pixel(ctx, 3, -5, 5, 1, GHOUL_WRAP.light);
+  pixel(ctx, 3, -3, 5, 1, GHOUL_WRAP.dark);
+  pixel(ctx, -11, -2, 10, 3, '#151a24');
+  pixel(ctx, -10, -2, 8, 2, GHOUL_SKIN.mid);
+  pixel(ctx, 1, -2, 10, 3, '#151a24');
+  pixel(ctx, 2, -2, 8, 2, GHOUL_SKIN.dark);
+  pixel(ctx, -10, 0, 2, 2, GHOUL_TEETH);
+  pixel(ctx, -7, 0, 2, 2, GHOUL_TEETH);
+  pixel(ctx, 3, 0, 2, 2, GHOUL_TEETH);
+  pixel(ctx, 6, 0, 2, 2, GHOUL_TEETH);
+  // Body: a hunched mass, belly under the chest, shoulders behind the head.
+  pixel(ctx, -9, -24, 19, 11, '#151a24');
+  torsoBands(ctx, -8, -23, 17, 9, GHOUL_SKIN);
+  pixel(ctx, -11, -30, 23, 7, '#151a24');
+  torsoBands(ctx, -10, -29, 21, 5, GHOUL_SKIN);
+  pixel(ctx, -8, -35, 17, 5, '#151a24');
+  pixel(ctx, -7, -34, 15, 4, GHOUL_SKIN.base);
+  pixel(ctx, -7, -34, 15, 1, GHOUL_SKIN.light);
+  // Long arms: bare shoulder, wrapped forearm, clawed hand at the knees.
+  pixel(ctx, -16, -30, 6, 10, '#151a24');
+  pixel(ctx, -15, -29, 4, 8, GHOUL_SKIN.base);
+  pixel(ctx, -17, -21, 7, 11, '#151a24');
+  pixel(ctx, -16, -20, 5, 9, GHOUL_WRAP.base);
+  pixel(ctx, -16, -19, 5, 1, GHOUL_WRAP.light);
+  pixel(ctx, -16, -16, 5, 1, GHOUL_WRAP.dark);
+  pixel(ctx, -16, -11, 5, 2, GHOUL_SKIN.mid);
+  pixel(ctx, -17, -10, 2, 3, GHOUL_TEETH);
+  pixel(ctx, -14, -10, 2, 3, GHOUL_TEETH);
+  pixel(ctx, 10, -30, 6, 10, '#151a24');
+  pixel(ctx, 11, -29, 4, 8, GHOUL_SKIN.mid);
+  pixel(ctx, 10, -21, 7, 11, '#151a24');
+  pixel(ctx, 11, -20, 5, 9, GHOUL_WRAP.base);
+  pixel(ctx, 11, -19, 5, 1, GHOUL_WRAP.light);
+  pixel(ctx, 11, -16, 5, 1, GHOUL_WRAP.dark);
+  pixel(ctx, 11, -11, 5, 2, GHOUL_SKIN.mid);
+  pixel(ctx, 11, -10, 2, 3, GHOUL_TEETH);
+  pixel(ctx, 14, -10, 2, 3, GHOUL_TEETH);
+  // The head is a maw: a heavy skull over an opening ringed with fangs.
+  roundedMass(ctx, -10, -45, 21, 10, '#151a24');
+  roundedMass(ctx, -9, -44, 19, 8, GHOUL_SKIN.base);
+  pixel(ctx, -9, -44, 7, 2, GHOUL_SKIN.light);
+  pixel(ctx, -9, -39, 19, 1, GHOUL_SKIN.mid);
+  pixel(ctx, -9, -38, 19, 9, '#151a24');
+  pixel(ctx, -8, -37, 17, 7, GHOUL_MAW);
+  pixel(ctx, -8, -37, 17, 2, '#241019');
+  pixel(ctx, -6, -34, 13, 4, '#7d3147');
+  pixel(ctx, -6, -34, 13, 1, '#a3495f');
+  // Fangs are few and uneven: a row of equal teeth reads as a grin, not a maw.
+  pixel(ctx, -8, -38, 2, 3, GHOUL_TEETH);
+  pixel(ctx, -3, -38, 2, 4, GHOUL_TEETH);
+  pixel(ctx, 1, -38, 1, 3, GHOUL_TEETH);
+  pixel(ctx, 5, -38, 2, 4, GHOUL_TEETH);
+  pixel(ctx, -7, -33, 1, 3, GHOUL_TEETH);
+  pixel(ctx, -1, -33, 2, 2, GHOUL_TEETH);
+  pixel(ctx, 4, -33, 1, 3, GHOUL_TEETH);
+  pixel(ctx, -8, -30, 17, 3, '#151a24');
+  pixel(ctx, -7, -30, 15, 2, GHOUL_SKIN.mid);
   ctx.restore();
 }
 
