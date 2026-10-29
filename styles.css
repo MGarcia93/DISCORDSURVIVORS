@@ -56,7 +56,19 @@ button, h1, h2, h3 { font-weight: 900; }
 .roster-card span { color: #695a78; font-size: 20px; font-weight: bold; }
 .roster-card small { font-size: 7px; color: #99889f; text-overflow: ellipsis; overflow: hidden; }
 .roster-note { color: #99889f; font-size: 9px; margin-top: 12px; }
-.detail-panel { padding: 22px 24px; background: #241e30; border: 2px solid #55435f; box-shadow: inset 0 0 0 3px #171321, 4px 4px #12101b; }
+/* The panel never grows with the profile: its content is out of flow, so the
+   grid row is sized by the stage and roster on the left. Choosing another
+   ficha then never moves the page, however many skills it lists. The row
+   itself fills the free height of the screen, so a long profile uses the room
+   the selection screen already has instead of scrolling early. */
+.character-screen { display: flex; flex-direction: column; }
+.character-screen .character-layout { flex: 1 1 auto; }
+.detail-panel { position: relative; background: #241e30; border: 2px solid #55435f; box-shadow: inset 0 0 0 3px #171321, 4px 4px #12101b; overflow: hidden; }
+.detail-body { position: absolute; inset: 0; padding: 22px 24px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #6a536b #1b1725; }
+.detail-body:focus-visible { outline: 3px solid #f2dfb4; outline-offset: -3px; }
+.detail-body::-webkit-scrollbar { width: 8px; }
+.detail-body::-webkit-scrollbar-track { background: #1b1725; }
+.detail-body::-webkit-scrollbar-thumb { background: #6a536b; border: 2px solid #1b1725; }
 .detail-panel h2 { font-size: 28px; color: var(--gold); letter-spacing: 3px; margin: 5px 0 10px; text-shadow: 3px 3px #15111d; }
 .character-quote { color: #b6a5b8; font-size: 12px; margin-bottom: 22px; }
 .character-desc { color: #d9c8d7; font-size: 11px; line-height: 1.85; margin-bottom: 7px; padding-left: 10px; border-left: 3px solid #7f6689; }
@@ -187,7 +199,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 @media (max-width: 1000px) {
   body { padding: 12px; } #content, .home-screen, .screen, .story-screen { min-height: calc(100dvh - 30px); }
   .home-content { width: 60%; padding-left: 5%; } .title-subtitle { font-size: 10px; letter-spacing: 3px; }
-  .main-menu button { font-size: 12px; } .character-layout { gap: 20px; } .detail-panel { padding: 20px 16px; }
+  .main-menu button { font-size: 12px; } .character-layout { gap: 20px; } .detail-body { padding: 20px 16px; }
   .stats { gap: 16px; } .roster { gap: 4px; } .roster-card small { font-size: 6px; }
 }
 @media (max-width: 650px) {
@@ -204,6 +216,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .menu-help, .room-caption { display: none; } .game-status { padding: 17px 14px; font-size: 7px; letter-spacing: 0; }
   .screen { padding: 25px 18px; } .screen-heading { padding-bottom: 18px; } .screen-heading .screen-counter { display: none; }
   .screen-heading h1 { font-size: 18px; } .eyebrow { font-size: 9px; } .character-layout { grid-template-columns: 1fr; margin-top: 20px; }
+  .detail-body { position: static; overflow: visible; }
   .stats.solago-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sprite-stage canvas { max-height: 270px; } .roster-card { height: 59px; } .roster-card small { font-size: 6px; }
   .detail-panel h2 { font-size: 24px; } .stats { gap: 30px; } .bottom-actions { flex-wrap: wrap; }
