@@ -1,84 +1,80 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges" data-expression="neutral">
   <title>Yorick — neutral</title>
-  <desc>Retrato 160x200 tomado del sprite de referencia: piel verde palida, ojos hundidos, nariz ancha, boca grande con dientes, capucha violeta, lapida con llamas violetas detras, capa con vivos magenta, hombrera de acero y cadenas. Las expresiones cambian cejas, ojos y boca.</desc>
-  <g id="gravestone">
-    <path fill="#12101a" d="M130 62H160V152H130Z" />
-    <path fill="#4a4a58" d="M133 64H160V150H133Z" />
-    <path fill="#5f5f70" d="M136 68H160V148H136Z" />
-    <path fill="#39394a" d="M133 142H160V150H133Z" />
-    <path fill="#2b2b3a" d="M143 82H148V108H143ZM138 88H153V95H138Z" />
-    <path fill="#b06bff" d="M136 46H140V58H136ZM146 40H151V56H146ZM154 48H158V60H154Z" />
-    <path fill="#d9b6ff" d="M146 42H148V50H146ZM137 48H138V55H137Z" />
+  <desc>Retrato 160x200 tomado de la referencia: capucha negra alta y raida, piel gris verdosa, ojos verdes encendidos, boca seria, cuerda marron al cinturon y fuego verde alrededor. Las expresiones cambian cejas, ojos y boca.</desc>
+  <g id="soul-fire">
+    <path fill="#1f7a52" d="M16 156H22V136H26V120H22V110H28V132H32V152H28V158H16Z" />
+    <path fill="#2fbf7d" d="M20 152H26V138H29V126H26V118H30V136H34V154H20Z" />
+    <path fill="#7dffb0" d="M23 148H27V138H25V144H23Z" />
+    <path fill="#1f7a52" d="M132 158H140V140H136V126H142V144H146V160H132Z" />
+    <path fill="#2fbf7d" d="M134 154H139V142H136V134H139V146H144V156H134Z" />
+    <path fill="#7dffb0" d="M135 150H138V142H137V148H135Z" />
+    <path fill="#2fbf7d" d="M30 74H34V66H31V60H35V70H38V76H30Z" />
+    <path fill="#7dffb0" d="M31 72H33V64H32V70H31Z" />
+    <path fill="#2fbf7d" d="M124 80H128V72H125V66H129V76H132V82H124Z" />
+    <path fill="#1f7a52" d="M100 44H106V36H102V30H108V40H112V48H100Z" />
   </g>
   <g id="cloak-back">
-    <path fill="#1b1024" d="M14 200V156H26V140H44V132H116V140H134V156H146V200Z" />
+    <path fill="#0b0810" d="M12 200V150H24V132H44V122H116V132H136V150H148V200Z" />
   </g>
   <g id="cloak">
-    <path fill="#33203f" d="M10 200V166H22V152H44V142H116V152H138V166H150V200Z" />
-    <path fill="#452a5b" d="M18 200V170H30V156H50V148H110V156H130V170H142V200Z" />
-    <path fill="#5f3f78" d="M30 170H44V158H52V150H62V200H30Z" />
-    <path fill="#241530" d="M118 170H132V158H124V150H108V200H118Z" />
-    <path fill="#a83c96" d="M58 146H66V200H58Z" />
-    <path fill="#a83c96" d="M94 146H102V200H94Z" />
-    <path fill="#d45cbb" d="M58 146H60V200H58Z" />
-    <path fill="#d45cbb" d="M94 146H96V200H94Z" />
+    <path fill="#1b1424" d="M8 200V162H20V146H42V134H118V146H140V162H152V200Z" />
+    <path fill="#241a2c" d="M16 200V166H28V150H48V140H112V150H132V166H144V200Z" />
+    <path fill="#2a2034" d="M28 166H42V152H50V144H60V200H28Z" />
+    <path fill="#100c16" d="M116 166H130V152H122V144H108V200H116Z" />
+    <path fill="#0b0810" d="M52 158H60V200H52ZM100 158H108V200H100ZM74 172H86V200H74Z" />
   </g>
-  <g id="pauldron">
-    <path fill="#0f0c14" d="M6 148H50V178H6Z" />
-    <path fill="#828c9a" d="M8 150H48V176H8Z" />
-    <path fill="#aeb7c4" d="M8 150H48V156H8Z" />
-    <path fill="#5d6775" d="M8 170H48V176H8Z" />
-    <path fill="#3b4451" d="M14 160H20V166H14ZM26 160H32V166H26ZM38 160H44V166H38Z" />
-    <path fill="#c9d2de" d="M14 160H17V163H14ZM26 160H29V163H26ZM38 160H41V163H38Z" />
-  </g>
-  <g id="chains">
-    <path fill="#3b4451" d="M52 154H62V162H52Z" />
-    <path fill="#5d6775" d="M56 162H66V170H56Z" />
-    <path fill="#3b4451" d="M60 170H70V178H60Z" />
-    <path fill="#5d6775" d="M64 178H74V186H64Z" />
-    <path fill="#aeb7c4" d="M52 154H55V157H52ZM56 162H59V165H56ZM60 170H63V173H60ZM64 178H67V181H64Z" />
+  <g id="belt">
+    <path fill="#3f2a18" d="M18 174H142V182H18Z" />
+    <path fill="#6b4a2e" d="M20 176H140V180H20Z" />
+    <path fill="#8a6238" d="M20 176H140V177H20Z" />
+    <path fill="#8a6238" d="M74 170H86V186H74Z" />
+    <path fill="#6b4a2e" d="M76 172H84V184H76Z" />
+    <path fill="#3f2a18" d="M79 176H81V181H79Z" />
+    <path fill="#6b4a2e" d="M56 180H62V190H56ZM98 180H104V190H98Z" />
   </g>
   <g id="hood">
-    <path fill="#0f0c14" d="M32 32H128V44H140V140H134V152H120V160H40V152H26V140H20V44H32Z" />
-    <path fill="#33203f" d="M36 36H124V48H136V138H130V150H118V156H42V150H30V138H24V48H36Z" />
-    <path fill="#452a5b" d="M42 42H118V52H128V136H122V146H112V152H48V146H38V136H32V52H42Z" />
-    <path fill="#241530" d="M50 54H110V60H118V132H112V142H48V132H42V60H50Z" />
-    <path fill="#5f3f78" d="M36 36H52V44H42V54H34V136H30V138H24V48H36Z" />
-    <path fill="#1b1024" d="M108 44H124V138H120V150H108Z" />
-    <path fill="#6b4a8a" d="M38 38H46V42H38Z" />
-    <path fill="#2a1a36" d="M54 132H106V140H54Z" />
+    <path fill="#0b0810" d="M34 34H126V44H138V126H132V146H124V156H36V146H28V126H22V44H34Z" />
+    <path fill="#1b1424" d="M38 38H122V48H134V124H128V142H120V152H40V142H32V124H26V48H38Z" />
+    <path fill="#241a2c" d="M44 44H116V54H126V122H120V138H112V148H48V138H40V122H34V54H44Z" />
+    <path fill="#100c16" d="M50 58H110V64H118V120H112V132H48V120H42V64H50Z" />
+    <path fill="#2a2034" d="M38 38H54V46H44V56H36V122H32V124H26V48H38Z" />
+    <path fill="#0b0810" d="M108 42H122V124H118V142H108Z" />
+    <path fill="#100c16" d="M70 18H90V28H98V42H62V28H70Z" />
+    <path fill="#1b1424" d="M72 20H88V30H94V40H66V30H72Z" />
+    <path fill="#2a2034" d="M74 22H86V32H90V38H70V32H74Z" />
+    <path fill="#100c16" d="M54 134H106V146H54Z" />
   </g>
   <g id="face">
-    <path fill="#0f0c14" d="M54 46H106V52H114V60H118V90H114V100H110V108H104V116H98V126H92V134H68V126H62V116H56V108H50V100H46V90H42V60H46V52H54Z" />
-    <path fill="#7d9159" d="M56 48H104V54H112V62H116V88H112V98H108V106H102V114H96V124H92V130H68V124H64V114H58V106H52V98H48V88H44V62H48V54H56Z" />
-    <path fill="#a9c086" d="M58 50H102V56H110V64H114V86H110V96H106V104H100V112H96V122H64V112H60V104H54V96H50V86H46V64H50V56H58Z" />
-    <path fill="#cddfab" d="M62 52H98V58H106V66H110V80H104V72H96V66H64V74H58V86H52V66H60V56H62Z" />
-    <path fill="#dcedb9" d="M64 54H94V58H64Z" />
-    <path fill="#67794f" d="M66 118H94V124H66Z" />
-    <path fill="#54643f" d="M68 124H92V130H68Z" />
-    <path fill="#8fa46b" d="M44 88H52V100H44ZM112 86H118V96H112Z" />
+    <path fill="#0b0810" d="M54 46H106V52H114V60H118V90H114V100H110V108H104V116H98V126H92V134H68V126H62V116H56V108H50V100H46V90H42V60H46V52H54Z" />
+    <path fill="#6f7d6a" d="M56 48H104V54H112V62H116V88H112V98H108V106H102V114H96V124H92V130H68V124H64V114H58V106H52V98H48V88H44V62H48V54H56Z" />
+    <path fill="#93a08c" d="M58 50H102V56H110V64H114V86H110V96H106V104H100V112H96V122H64V112H60V104H54V96H50V86H46V64H50V56H58Z" />
+    <path fill="#b6c2ad" d="M62 52H98V58H106V66H110V80H104V72H96V66H64V74H58V86H52V66H60V56H62Z" />
+    <path fill="#c9d3c2" d="M64 54H94V58H64Z" />
+    <path fill="#55614f" d="M66 118H94V124H66Z" />
+    <path fill="#48533f" d="M68 124H92V130H68Z" />
+    <path fill="#6f7d6a" d="M44 88H52V100H44ZM112 86H118V96H112Z" />
   </g>
   <g id="expression-brows">
-    <path fill="#7d9159" d="M50 64H78V70H50ZM82 64H110V70H82Z" />
-    <path fill="#cddfab" d="M52 64H74V66H52ZM86 64H108V66H86Z" />
-    <path fill="#54643f" d="M50 70H78V72H50ZM82 70H110V72H82Z" />
+    <path fill="#6f7d6a" d="M50 64H78V70H50ZM82 64H110V70H82Z" />
+    <path fill="#b6c2ad" d="M52 64H74V66H52ZM86 64H108V66H86Z" />
+    <path fill="#48533f" d="M50 70H78V72H50ZM82 70H110V72H82Z" />
   </g>
   <g id="expression-eyes">
-    <path fill="#12101a" d="M54 74H76V86H54Z" />
-    <path fill="#12101a" d="M84 74H106V86H84Z" />
-    <path fill="#2a2436" d="M57 76H73V84H57ZM87 76H103V84H87Z" />
-    <path fill="#f3f0d8" d="M60 78H66V82H60ZM90 78H96V82H90Z" />
-    <path fill="#8a6a1e" d="M60 82H66V83H60ZM90 82H96V83H90Z" />
-    <path fill="#67794f" d="M54 84H76V86H54ZM84 84H106V86H84Z" />
+    <path fill="#0b0810" d="M56 74H76V86H56Z" />
+    <path fill="#0b0810" d="M84 74H104V86H84Z" />
+    <path fill="#101c14" d="M58 76H74V84H58ZM86 76H102V84H86Z" />
+    <path fill="#2fbf7d" d="M60 77H70V83H60ZM88 77H98V83H88Z" />
+    <path fill="#a8ffc8" d="M62 78H67V81H62ZM90 78H95V81H90Z" />
+    <path fill="#48533f" d="M56 84H76V86H56ZM84 84H104V86H84Z" />
   </g>
   <g id="expression-mouth">
-    <path fill="#8fa46b" d="M74 88H86V96H82V102H78V96H74Z" />
-    <path fill="#67794f" d="M74 96H86V100H74Z" />
-    <path fill="#1a1622" d="M60 104H100V120H60Z" />
-    <path fill="#54643f" d="M62 104H98V108H62Z" />
-    <path fill="#e9e2cf" d="M64 108H96V114H64Z" />
-    <path fill="#0f0c14" d="M70 108H72V114H70ZM78 108H80V114H78ZM86 108H88V114H86Z" />
-    <path fill="#3a2430" d="M66 114H94V118H66Z" />
-    <path fill="#67794f" d="M62 118H98V121H62Z" />
+    <path fill="#6f7d6a" d="M72 88H88V94H84V100H76V94H72Z" />
+    <path fill="#48533f" d="M72 96H88V100H72Z" />
+    <path fill="#0b0810" d="M64 106H96V114H64Z" />
+    <path fill="#c9d3c2" d="M68 108H92V111H68Z" />
+    <path fill="#0b0810" d="M72 108H74V111H72ZM79 108H81V111H79ZM86 108H88V111H86Z" />
+    <path fill="#3d4736" d="M66 111H94V114H66Z" />
+    <path fill="#55614f" d="M64 114H96V118H64Z" />
+    <path fill="#3d4736" d="M68 118H92V122H68Z" />
   </g>
 </svg>
