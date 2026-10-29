@@ -125,32 +125,47 @@ test('a down step kills an enemy and refuses a cast member', () => {
     /Only an enemy actor can go down: guide/);
 });
 
-test('Jhony shoots the runner first and says the line after it', async () => {
-  const catalog = await catalogFor();
-  const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
-  const lastDown = steps.map(step => step.type).lastIndexOf('down');
-  const lastLine = steps.map(step => step.type).lastIndexOf('dialogue');
-  assert.ok(lastDown >= 0 && lastLine > lastDown, 'the shot closes the action and the line closes the scene');
-  assert.match(steps[lastLine].lines[0].text, /NO ME TRAIGAS MÁS ZOMBIES/);
-});
-
-test('the shambler comes from below and the runner from far above, a second later', async () => {
+test('the pan is a window: each zombie walks toward Jhony at its own pace', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene;
-  const arrival = scene.steps.find(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
-  const runner = arrival.steps.find(child => child.actor === 'late-b');
-  assert.equal(runner.delay, 1, 'the runner waits a full second');
-  assert.ok(arrival.steps.some(child => child.type === 'camera'), 'one pan shows both');
+  const pan = scene.steps.find(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
+  const camera = pan.steps.find(child => child.type === 'camera');
+  const shambler = pan.steps.find(child => child.actor === 'late-a');
+  const runner = pan.steps.find(child => child.actor === 'late-b');
+  assert.equal(camera.duration, 5, 'the pan sets the window');
+  for (const walk of [shambler, runner]) {
+    assert.equal(walk.toward, 'jhony', 'they come toward Jhony');
+    assert.ok(walk.speed > 0, 'each one travels at its own speed');
+    assert.ok((walk.delay ?? 0) + walk.duration <= camera.duration, 'and nobody outlives the pan');
+  }
+  assert.ok(runner.speed > shambler.speed, 'the runner is faster');
+  assert.equal(runner.delay, 1, 'and starts a second later');
   const [, shamblerY] = scene.stage.points[scene.stage.actors['late-a'].at];
   const [, runnerY] = scene.stage.points[scene.stage.actors['late-b'].at];
   assert.ok(shamblerY > 748, 'the shambler starts below the frame');
   assert.ok(runnerY < -100, 'the runner starts well above it');
-  const legs = scene.steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]));
-  const walk = id => legs.filter(child => child.type === 'move' && child.actor === id).at(-1);
-  const jhony = scene.stage.points[scene.stage.actors.jhony.at];
-  const reach = id => { const [x, y] = scene.stage.points[walk(id).to]; return Math.hypot(x - jhony[0], y - jhony[1]); };
-  assert.ok(reach('late-b') > 120, 'the runner stops short of Jhony');
-  assert.ok(reach('late-b') < reach('late-a'), 'and still gets closer than the shambler');
+});
+
+test('after the line, Jhony shoots the runner where it stopped', async () => {
+  const catalog = await catalogFor();
+  const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
+  const lastLine = steps.map(step => step.type).lastIndexOf('dialogue');
+  const lastDown = steps.map(step => step.type).lastIndexOf('down');
+  assert.ok(lastLine < lastDown, 'the line lands before the shot');
+  assert.match(steps[lastLine].lines[0].text, /NO ME TRAIGAS MÁS ZOMBIES/);
+  const between = steps.slice(lastLine + 1, lastDown + 1);
+  assert.ok(between.some(step => step.type === 'sound' && step.sound === 'gunshot'), 'a shot answers it');
+  assert.equal(between.filter(step => step.type === 'move').length, 0, 'nobody moves for the shot');
+});
+
+test('a paced move covers speed times duration toward its target', () => {
+  const stage = { points: { start: [100, 500], target: [100, 100] }, actors: { z: { enemy: 'zombie', at: 'start' } } };
+  const player = new ScenePlayer({ id: 'probe', stage, steps: [{ type: 'move', actor: 'z', toward: 'target', speed: 100, duration: 1 }] }, { enemies: { zombie: {} } });
+  player.tick(1);
+  assert.equal(player.actors.z.x, 100);
+  assert.equal(player.actors.z.y, 400, '100 px covered in one second at 100 px/s');
+  assert.throws(() => validateScene({ id: 'probe', stage, steps: [{ type: 'move', actor: 'z', toward: 'target', duration: 1 }] }, { enemies: { zombie: {} } }),
+    /needs a positive speed/);
 });
 
 test('a delayed step does not move before its delay is over', () => {

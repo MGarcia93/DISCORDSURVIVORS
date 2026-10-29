@@ -63,7 +63,14 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
       if (step.delay !== undefined) requireValue(finite(step.delay) && step.delay >= 0, 'Invalid delay');
       if (timedTypes.has(step.type)) requireValue(finite(step.duration) && step.duration >= 0, `Invalid duration: ${step.type}`);
       if (['move', 'animate'].includes(step.type)) requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
-      if (['move', 'camera'].includes(step.type)) requireValue(own(points, step.to), `Unknown point: ${step.to}`);
+      if (step.type === 'camera') requireValue(own(points, step.to), `Unknown point: ${step.to}`);
+      // A move either reaches a point or walks toward one at its own pace: the
+      // second form ends where the pan ends, so speed stops depending on distance.
+      if (step.type === 'move') {
+        requireValue(own(points, step.to) || own(points, step.toward), `Unknown point: ${step.to ?? step.toward}`);
+        if (step.toward) requireValue(finite(step.speed) && step.speed > 0, 'A paced move needs a positive speed');
+        else requireValue(step.speed === undefined, 'A move with speed must use toward');
+      }
       switch (step.type) {
         case 'dialogue':
           requireValue(!parallel, 'Dialogue is not allowed inside parallel actions');
@@ -83,7 +90,7 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
         // An enemy drops where it stands: visible death during a scene.
         // A muzzle flash or a hit spark: a short bright burst at a point.
         case 'flash':
-          requireValue(own(points, step.at), `Unknown point: ${step.at}`);
+          requireValue(own(points, step.at) || own(actors, step.actor), `Unknown point: ${step.at ?? step.actor}`);
           break;
         case 'down':
           requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
@@ -189,7 +196,17 @@ export class ScenePlayer {
       };
     }
     if (step.type === 'move') {
-      const actor = this.actors[step.actor], from = { x: actor.x, y: actor.y }, [x, y] = points[step.to];
+      const actor = this.actors[step.actor], from = { x: actor.x, y: actor.y };
+      let x, y;
+      if (step.toward) {
+        const [tx, ty] = points[step.toward];
+        const distance = Math.hypot(tx - from.x, ty - from.y) || 1;
+        const travel = Math.min(distance, step.speed * step.duration);
+        x = from.x + (tx - from.x) / distance * travel;
+        y = from.y + (ty - from.y) / distance * travel;
+      } else {
+        [x, y] = points[step.to];
+      }
       actor.facing = x < from.x ? -1 : 1;
       return this._timed(step.duration, t => {
         actor.x = from.x + (x - from.x) * t; actor.y = from.y + (y - from.y) * t;
@@ -224,8 +241,8 @@ export class ScenePlayer {
       return { tick: () => true, skip() {} };
     }
     if (step.type === 'flash') {
-      const [x, y] = points[step.at];
-      this.flash = { x, y };
+      const [x, y] = points[step.at] ?? [0, 0];
+      this.flash = step.actor ? { actor: step.actor } : { x, y };
       return this._timed(step.duration, t => { if (t === 1) this.flash = null; });
     }
     if (step.type === 'down') {

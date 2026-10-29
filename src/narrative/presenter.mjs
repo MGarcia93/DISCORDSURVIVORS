@@ -62,7 +62,8 @@ export function createPresenter(root, catalog, onError) {
         }
         if (player.flash) {
           // Pixel burst: hot core, yellow cross, orange tips.
-          const { x, y } = player.flash;
+          const spot = player.flash.actor ? player.actors[player.flash.actor] : player.flash;
+          const x = spot.x, y = spot.y - (player.flash.actor ? 42 : 0);
           ctx.fillStyle = '#fff6cf'; ctx.fillRect(x - 4, y - 4, 8, 8);
           ctx.fillStyle = '#ffd166';
           ctx.fillRect(x - 16, y - 2, 32, 4); ctx.fillRect(x - 2, y - 16, 4, 32);
