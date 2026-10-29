@@ -57,11 +57,17 @@ export function clearBackgroundCache() {
   bakeCache.clear();
 }
 
+// The module for an id. Public so a check can inspect one world's painting
+// without going through the per-frame path.
+export function getWorld(id) {
+  return WORLDS[id] ?? WORLDS[defaultWorld];
+}
+
 // Paints the named world and returns the id actually used, so a typo cannot
 // leave an empty stage. Validation rejects unknown ids before playback; this
 // fallback only protects a mistyped literal added after a catalog was loaded.
 export function drawBackground(ctx, id, { width, height, time = 0, factory = defaultCanvasFactory } = {}) {
-  const world = WORLDS[id] ?? WORLDS[defaultWorld];
+  const world = getWorld(id);
   const baked = bakeWorld(world, width, height, factory);
   if (baked) ctx.drawImage(baked, 0, 0);
   else world.draw(ctx, { width, height });

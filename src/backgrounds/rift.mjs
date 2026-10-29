@@ -1,104 +1,170 @@
-import { pixel } from '../sprites.mjs';
-import { glow, noise } from './paint.mjs';
+import { art, CONTOUR, CAST_SHADOW, disc, glow, noise } from './paint.mjs';
 
 // Act 2 — League of Legends. The Summoner's Rift lane seen from above: a stone
 // road cut through the jungle, tree crowns around it, one tower base per team
 // and runes on the slabs. The whole canvas is ground.
+//
+// Painted through `art()` in art pixels (one art pixel is two canvas pixels,
+// the cast's unit). Round masses go through `disc()`: a crown built from nested
+// squares reads as a target, not a tree.
+const JUNGLE = { base: '#14302a', dark: '#17372e', clump: '#1d4234', lit: '#255240' };
+const STONE = { base: '#2c3c55', alt: '#31425d', joint: '#1a2440', grain: '#3a4c6a' };
+const CROWN = { dark: '#173a2c', mid: '#1e4a36', light: '#255a41', rim: '#2f6b4b' };
+const SHRUB = { dark: '#173a2c', mid: '#1c4534', light: '#21503c', rim: '#2b6044' };
+const JUNGLE_MASS = { dark: '#12271f', mid: '#163327', light: '#1a3b2d' };
+
 export default {
   id: 'rift',
   title: 'Act 2 — Summoner’s Rift',
-  draw(ctx, { width: w, height: h }) {
-    const px = (x, y, ww, hh, color) => pixel(ctx, x * w, y * h, ww * w, hh * h, color);
+  draw(ctx, { width, height }) {
+    const { fill, px, disc, w: aw, h: ah } = art(ctx, width, height);
 
-    // Jungle floor under everything.
-    pixel(ctx, 0, 0, w, h, '#16352a');
-    for (let i = 0; i < 240; i++) {
-      const x = (noise(i, 3) / 97) * w, y = (noise(i, 7) / 97) * h;
-      pixel(ctx, x, y, w * 0.006, h * 0.010, noise(i, 11) < 50 ? '#1b3d30' : '#1f4535');
+    // --- Jungle floor -----------------------------------------------------
+    fill(0, 0, 1, 1, JUNGLE.base);
+    for (let i = 0; i < 200; i++) {
+      const x = Math.round((noise(i, 3) / 97) * aw);
+      const y = Math.round((noise(i, 7) / 97) * ah);
+      px(x, y, 3, 2, i % 2 ? JUNGLE.dark : JUNGLE.clump);
+    }
+    // Grass clumps in threes, the density the cast's grain implies.
+    for (let i = 0; i < 70; i++) {
+      const x = Math.round((noise(i, 23) / 97) * aw);
+      const y = Math.round((noise(i, 29) / 97) * ah);
+      px(x, y, 2, 3, JUNGLE.clump);
+      px(x + 2, y + 1, 2, 2, JUNGLE.lit);
+      px(x + 1, y - 2, 1, 2, JUNGLE.clump);
     }
 
-    // The lane: wide stone slabs across the full width.
-    const laneTop = 0.28, laneBottom = 0.72;
-    px(0, laneTop, 1, laneBottom - laneTop, '#2b3a52');
-    for (let row = 0; row < 6; row++) {
-      const y = laneTop + ((laneBottom - laneTop) * row) / 6;
-      for (let col = 0; col < 15; col++) {
-        const x = (col + (row % 2) * 0.5) / 15;
-        const shade = noise(col, row, 3) < 45 ? '#29374e' : '#2f3f59';
-        px(x + 0.003, y + 0.004, 1 / 15 - 0.006, (laneBottom - laneTop) / 6 - 0.008, shade);
-        px(x + 0.003, y + 0.004, 1 / 15 - 0.006, 0.004, '#394e6b');
+    // --- The lane ---------------------------------------------------------
+    const laneTop = Math.round(ah * 0.28);
+    const laneBottom = Math.round(ah * 0.72);
+    const laneH = laneBottom - laneTop;
+    px(0, laneTop, aw, laneH, STONE.base);
+    // Big slabs in running bond with one unit of joint. A lit top edge on every
+    // slab turns the lane into a brick wall; the joints carry the pattern.
+    const slabW = 52, slabH = 24;
+    for (let row = 0; row * slabH < laneH; row++) {
+      const y = laneTop + row * slabH;
+      const rowH = Math.min(slabH, laneBottom - y);
+      if (rowH <= 0) break;
+      const offset = row % 2 ? -Math.floor(slabW / 2) : 0;
+      for (let col = -1; col * slabW + offset < aw; col++) {
+        let x = offset + col * slabW;
+        let w = slabW;
+        if (x < 0) { w += x; x = 0; }
+        if (x + w > aw) w = aw - x;
+        if (w <= 0) continue;
+        const seed = noise(col, row, 3);
+        px(x, y, w, rowH, seed < 45 ? STONE.base : STONE.alt);
+        // One unit of joint on two sides only: drawing all four doubles the
+        // seam between neighbours and turns the lane into a brick wall.
+        px(x, y, w, 1, STONE.joint);
+        px(x, y, 1, rowH, STONE.joint);
+        if (w >= 14) {
+          px(x + 4, y + 5, 6, 1, STONE.grain);
+          px(x + 6, y + 6, 3, 1, STONE.joint);
+        }
+        if (seed < 22 && rowH >= 10) px(x + 9, y + rowH - 7, 5, 2, JUNGLE.clump);
+        if (seed > 76) px(x + w - 16, y + 4, 7, 1, STONE.grain);
       }
-      px(0, y, 1, 0.003, '#1a2740');
     }
-    // Gold trim on both edges of the lane.
-    px(0, laneTop - 0.008, 1, 0.008, '#c9a24a');
-    px(0, laneBottom, 1, 0.008, '#c9a24a');
-    px(0, laneTop - 0.004, 1, 0.004, '#7c6329');
-    px(0, laneBottom + 0.008, 1, 0.004, '#7c6329');
+    // Gold trim along both edges of the lane.
+    for (const edgeY of [laneTop - 6, laneBottom + 1]) {
+      px(0, edgeY, aw, 5, '#c9a24a');
+      px(0, edgeY + 1, aw, 2, '#a5813a');
+      px(0, edgeY + 4, aw, 1, '#7c6329');
+    }
 
     // Runes and scuff marks on the slabs.
-    for (let i = 0; i < 24; i++) {
-      const x = (0.03 + (noise(i, 17) / 97) * 0.94) * w;
-      const y = (laneTop + 0.03 + (noise(i, 19) / 97) * (laneBottom - laneTop - 0.06)) * h;
-      pixel(ctx, x, y, w * 0.012, h * 0.004, i % 3 ? '#4b7f96' : '#3f6b80');
-    }
-
-    // Tree crowns seen from above, with shadows to the bottom-right.
-    const crown = (cx, cy, radius, tone) => {
-      px(cx - radius + 0.008, cy - radius + 0.010, radius * 2, radius * 2, '#0e2019');
-      px(cx - radius, cy - radius, radius * 2, radius * 2, tone);
-      px(cx - radius * 0.72, cy - radius * 0.72, radius * 1.44, radius * 1.44, '#1e4a36');
-      px(cx - radius * 0.42, cy - radius * 0.48, radius * 0.84, radius * 0.84, '#255a41');
-      px(cx - radius * 0.16, cy - radius * 0.26, radius * 0.36, radius * 0.36, '#2d6a4a');
-    };
-    for (let i = 0; i < 22; i++) {
-      const cx = 0.03 + (i / 22) * 0.94 + (noise(i, 5) - 48) / 900;
-      const cy = (i % 2 ? 0.12 : 0.87) + (noise(i, 9) - 48) / 1400;
-      crown(cx, cy, 0.042 + (noise(i, 13) % 20) / 1200, '#173b2c');
-    }
-    // Shrubs hugging the lane edges.
-    for (let i = 0; i < 16; i++) {
-      const x = 0.02 + (noise(i, 31) / 97) * 0.96;
-      const y = (i % 2 ? laneTop - 0.015 : laneBottom + 0.015) + (noise(i, 37) - 48) / 1800;
-      crown(x, y, 0.020, '#1b4331');
-    }
-
-    // Towers seen from above: a stone ring, crenellations, a dark roof and a
-    // glowing gem at the centre.
-    const tower = (cx, cy, gem, glowColor) => {
-      const radius = 0.050;
-      px(cx - radius + 0.008, cy - radius + 0.010, radius * 2, radius * 2, '#0f1c24');
-      px(cx - radius, cy - radius, radius * 2, radius * 2, '#2e4059');
-      px(cx - radius * 0.88, cy - radius * 0.88, radius * 1.76, radius * 1.76, '#3d5573');
-      px(cx - radius * 0.74, cy - radius * 0.74, radius * 1.48, radius * 1.48, '#22304a');
-      for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
-        px(cx + dx * radius * 0.74 - 0.009, cy + dy * radius * 0.74 - 0.009, 0.018, 0.018, '#4a648a');
+    for (let i = 0; i < 26; i++) {
+      const x = Math.round(((0.03 + (noise(i, 17) / 97) * 0.94) * aw) / 2) * 2;
+      const y = Math.round((laneTop + 8 + (noise(i, 19) / 97) * (laneH - 16)) / 2) * 2;
+      px(x, y, 8, 2, i % 3 ? '#4b7f96' : '#3f6b80');
+      if (i % 4 === 0) {
+        px(x + 2, y - 3, 2, 3, '#4b7f96');
+        px(x + 2, y + 2, 2, 3, '#3f6b80');
       }
-      px(cx - radius * 0.42, cy - radius * 0.42, radius * 0.84, radius * 0.84, '#1b2740');
-      px(cx - 0.016, cy - 0.016, 0.032, 0.032, gem);
-      px(cx - 0.008, cy - 0.008, 0.016, 0.016, '#ffffff');
-      glow(ctx, cx * w, cy * h, 0.034 * w, glowColor, { steps: 3, alpha: 0.06 });
+    }
+
+    // --- Jungle canopy ----------------------------------------------------
+    // A canopy seen from above is a mass of overlapping crowns, not a row of
+    // separate balls: the back layer is flat and the front layer carries the
+    // contour where the mass meets the lane.
+    const crownTone = (cx, cy, radius, tones, edge) => {
+      disc(cx, cy, radius, tones, edge ? { edge: CONTOUR } : undefined);
+      px(cx - Math.round(radius * 0.62), cy - Math.round(radius * 0.45), Math.round(radius * 0.7), Math.round(radius * 0.55), tones.light);
+      px(cx + Math.round(radius * 0.08), cy + Math.round(radius * 0.10), Math.round(radius * 0.75), Math.round(radius * 0.55), tones.dark);
     };
-    tower(0.13, 0.50, '#4fa8e8', '#7fe8ff');
-    tower(0.87, 0.50, '#c0413f', '#ff9a86');
+    const band = (frontFraction, backFraction, salt) => {
+      const front = Math.round(frontFraction * (ah / 2)) * 2;
+      const back = Math.round(backFraction * (ah / 2)) * 2;
+      // Back layer: larger, darker, no contour, overlapping so no gaps show.
+      for (let i = 0; i < 16; i++) {
+        const cx = Math.round(((i + 0.5) / 16) * aw + ((noise(i, salt) % 7) - 3) * 4) / 2 * 2;
+        const cy = back + ((noise(i, salt + 3) % 5) - 2) * 4;
+        crownTone(cx, cy, 12 + (noise(i, salt + 7) % 5) * 2, JUNGLE_MASS, false);
+      }
+      // Front layer: the silhouette the light hits.
+      for (let i = 0; i < 13; i++) {
+        const cx = Math.round(((i + 0.5) / 13) * aw + ((noise(i, salt + 11) % 7) - 3) * 4) / 2 * 2;
+        const cy = front + ((noise(i, salt + 13) % 5) - 2) * 4;
+        crownTone(cx, cy, 9 + (noise(i, salt + 17) % 4) * 2, CROWN, true);
+      }
+    };
+    // Top band sits between the canvas edge and the lane, bottom band mirrors it.
+    band(0.200, 0.070, 3);
+    band(0.785, 0.935, 41);
+    // Shrubs on the grass beside the gold trim, never on the trim itself.
+    for (let i = 0; i < 12; i++) {
+      const cx = Math.round(((i + 0.5) / 12) * aw / 2) * 2;
+      const cy = Math.round((i % 2 ? 0.235 : 0.775) * (ah / 2)) * 2 + ((noise(i, 37) % 3) - 1) * 2;
+      disc(cx, cy, 5 + (noise(i, 39) % 2) * 2, SHRUB, { edge: CONTOUR });
+    }
+
+    // --- Towers -----------------------------------------------------------
+    // A stone ring seen from above: stepped circular base, dark roof sunk into
+    // the middle, four buttresses and the team gem on top.
+    const tower = (cx, cy, gem, halo) => {
+      const r = Math.max(14, Math.round((0.052 * ah) / 2) * 2);
+      disc(cx + 3, cy + 4, r, { light: CAST_SHADOW, mid: CAST_SHADOW, dark: CAST_SHADOW });
+      disc(cx, cy, r, { light: '#3d5573', mid: '#334963', dark: '#2a3b52' }, { edge: CONTOUR });
+      disc(cx, cy, r - 8, { light: '#22304a', mid: '#1b2740', dark: '#161f33' });
+      for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+        px(cx + dx * (r - 9) - 4, cy + dy * (r - 9) - 4, 8, 8, CONTOUR);
+        px(cx + dx * (r - 9) - 3, cy + dy * (r - 9) - 3, 6, 6, '#44608a');
+      }
+      // Gem: a stepped diamond, brightest at the top-left.
+      for (let row = -5; row < 5; row++) {
+        const half = 10 - Math.abs(row) * 2;
+        if (half <= 0) continue;
+        px(cx - half, cy + row * 2, half * 2, 2, row < -1 ? '#eafcff' : row < 2 ? gem : '#1d3f66');
+      }
+      px(cx - 6, cy - 4, 4, 2, '#ffffff');
+      glow(ctx, cx * 2, cy * 2, 34, halo, { steps: 3, alpha: 0.06 });
+    };
+    const towerY = Math.round((0.5 * ah) / 2) * 2;
+    const towerOffset = Math.max(40, Math.round(0.13 * aw));
+    tower(towerOffset, towerY, '#4fa8e8', '#7fe8ff');
+    tower(aw - towerOffset, towerY, '#c0413f', '#ff9a86');
 
     // Team light soaking the lane from each side.
     ctx.save();
     ctx.globalAlpha *= 0.08;
-    px(0, laneTop, 0.10, laneBottom - laneTop, '#4f9fe8');
-    px(0.90, laneTop, 0.10, laneBottom - laneTop, '#e05a4f');
+    px(0, laneTop, 56, laneH, '#4f9fe8');
+    px(aw - 56, laneTop, 56, laneH, '#e05a4f');
     ctx.restore();
   },
   animate(ctx, { width: w, height: h, time = 0 }) {
     const pulse = 0.5 + 0.5 * Math.sin(time * 2.2);
-    glow(ctx, w * 0.13, h * 0.50, w * 0.020, '#7fe8ff', { steps: 3, alpha: 0.03 + pulse * 0.05 });
-    glow(ctx, w * 0.87, h * 0.50, w * 0.020, '#ffb3a4', { steps: 3, alpha: 0.03 + (1 - pulse) * 0.05 });
+    glow(ctx, w * 0.129, h * 0.5, w * 0.020, '#7fe8ff', { steps: 3, alpha: 0.03 + pulse * 0.05 });
+    glow(ctx, w * 0.871, h * 0.5, w * 0.020, '#ffb3a4', { steps: 3, alpha: 0.03 + (1 - pulse) * 0.05 });
     ctx.save();
     ctx.globalAlpha *= 0.5;
     for (let i = 0; i < 7; i++) {
       const x = w * (0.20 + i * 0.09), y = h * (0.40 + (i % 3) * 0.09);
       const lit = Math.sin(time * 1.5 + i * 0.9) > 0;
-      pixel(ctx, x, y, w * 0.010, h * 0.004, lit ? '#7fe8ff' : '#4b7f96');
+      ctx.fillStyle = lit ? '#7fe8ff' : '#4b7f96';
+      ctx.fillRect(Math.round(x / 2) * 2, Math.round(y / 2) * 2, 10, 4);
     }
     ctx.restore();
   },
