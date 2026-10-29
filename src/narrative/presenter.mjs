@@ -1,5 +1,6 @@
 import { CHARACTERS } from '../characters/index.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
+import { drawEnemyFigure } from '../game/figures.mjs';
 import jhony from '../npcs/jhony.mjs';
 import papafrita from '../npcs/papafrita.mjs';
 
@@ -41,6 +42,16 @@ export function createPresenter(root, catalog, onError) {
           ctx.fillRect(x - 25, y - 65, 50, 60);
         }
         for (const actor of Object.values(player.actors).sort((a, b) => a.y - b.y)) {
+          if (actor.enemy) {
+            // Enemies stand on the stage and walk with their own art; a dead one
+            // lies on the ground instead.
+            ctx.save();
+            ctx.translate(actor.x, actor.y);
+            if (actor.dead) { ctx.rotate(-Math.PI / 2); ctx.globalAlpha = 0.6; }
+            drawEnemyFigure(ctx, { kind: actor.enemy, x: 0, y: 0, id: 1 }, player.time);
+            ctx.restore();
+            continue;
+          }
           const def = STAGE_SPRITES[catalog.characters[actor.character].sprite];
           const lift = actor.animation === 'celebrate' ? Math.abs(Math.sin(player.time * 7)) * 12 : 0;
           def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {} });

@@ -3,12 +3,31 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "entrance": [300, 470], "meet": [600, 470], "jhony": [880, 460], "corpses": [650, 545] },
+    "points": {
+      "entrance": [300, 470],
+      "meet": [600, 470],
+      "jhony": [880, 460],
+      "walker-far": [1050, 500],
+      "walker-near": [960, 480],
+      "corpse-a": [470, 548],
+      "corpse-b": [560, 562],
+      "corpse-c": [700, 552],
+      "corpse-d": [790, 540],
+      "corpse-e": [980, 552],
+      "corpse-f": [400, 538]
+    },
     "actors": {
       "negro": { "character": "maxi-negro", "at": "entrance" },
-      "jhony": { "character": "jhony", "at": "jhony" }
-    },
-    "props": { "corpses": { "at": "corpses", "state": "many" } }
+      "jhony": { "character": "jhony", "at": "jhony" },
+      "body-a": { "enemy": "zombie", "at": "corpse-a", "state": "dead" },
+      "body-b": { "enemy": "zombie", "at": "corpse-b", "state": "dead" },
+      "body-c": { "enemy": "runner", "at": "corpse-c", "state": "dead" },
+      "body-d": { "enemy": "zombie", "at": "corpse-d", "state": "dead" },
+      "body-e": { "enemy": "brute", "at": "corpse-e", "state": "dead" },
+      "body-f": { "enemy": "zombie", "at": "corpse-f", "state": "dead" },
+      "walker-a": { "enemy": "zombie", "at": "walker-far" },
+      "walker-b": { "enemy": "zombie", "at": "walker-far" }
+    }
   },
   "steps": [
     { "type": "parallel", "steps": [
@@ -21,7 +40,10 @@
       { "speaker": "maxi-negro", "expression": "angry", "text": "¿Cómo que qué quiero? ¡Estamos atrapados en esta mierda!" },
       { "speaker": "jhony", "expression": "neutral", "text": "¿Y?" }
     ] },
-    { "type": "animate", "actor": "jhony", "animation": "point", "duration": 0.9 },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "walker-a", "to": "walker-near", "duration": 1.8 },
+      { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.8 }
+    ] },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "angry", "text": "¡¿CÓMO QUE Y?! ¡TENEMOS QUE SALIR!" },
       { "speaker": "jhony", "expression": "angry", "text": "¡Bueno, salí entonces! ¡No me rompas las pelotas!" },
@@ -30,7 +52,8 @@
       { "speaker": "maxi-negro", "expression": "annoyed", "text": "Pero escuchame un segundo, boludo..." },
       { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!" }
     ] },
-    { "type": "camera", "to": "corpses", "zoom": 1.25, "duration": 1.2 },
+    { "type": "move", "actor": "walker-b", "to": "walker-near", "duration": 1.6 },
+    { "type": "camera", "to": "corpse-c", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "neutral", "text": "Igual, Jhony, ¿no te parece que ya jugaste bastante a esta mierda?" },
       { "speaker": "jhony", "expression": "angry", "text": "¡Y A VOS QUÉ CARAJO TE IMPORTA!" }

@@ -1,6 +1,7 @@
 import { validateLine, validateScene } from './runtime.mjs';
 import { worldIds } from '../backgrounds/index.mjs';
 import { ACTS } from '../campaign/acts.mjs';
+import { ENEMY_KINDS } from '../enemies/index.mjs';
 
 export const manifestURL = new URL('../../assets/narrative/manifest.json', import.meta.url);
 const BACKGROUNDS = Object.freeze(Object.fromEntries(worldIds.map(id => [id, true])));
@@ -61,7 +62,7 @@ export async function loadCatalog({ url = manifestURL, urls, fetcher = globalThi
       entry.scene = await read(new URL(item.file, target));
       if (entry.scene.id !== item.id) throw Error('Scene id does not match manifest');
       if (item.module) entry.actions = (await importer(new URL(item.module, target).href)).actions;
-      validateScene(entry.scene, { characters, sounds, actions: entry.actions, backgrounds: BACKGROUNDS });
+      validateScene(entry.scene, { characters, sounds, actions: entry.actions, backgrounds: BACKGROUNDS, enemies: ENEMY_KINDS });
     } catch (error) { entry.error = `${item.id}: ${error.message}`; }
     entries.push(entry);
   }
@@ -76,5 +77,5 @@ export async function loadCatalog({ url = manifestURL, urls, fetcher = globalThi
     if (!Number.isFinite(line.at) || line.at < 0) throw Error(`Invalid banter time: ${JSON.stringify(line)}`);
     try { validateLine(line, characters); } catch (error) { throw Error(`Invalid banter line: ${error.message}`); }
   }
-  return { characters, sounds, entries, bindings, banter, backgrounds: BACKGROUNDS };
+  return { characters, sounds, entries, bindings, banter, backgrounds: BACKGROUNDS, enemies: ENEMY_KINDS };
 }

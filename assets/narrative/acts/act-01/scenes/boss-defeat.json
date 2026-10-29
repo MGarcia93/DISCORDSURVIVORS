@@ -3,8 +3,13 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [572, 470] },
-    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } }
+    "points": { "ground": [572, 470], "street": [880, 480], "corpse-a": [700, 545], "corpse-b": [980, 545] },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "boss": { "enemy": "alarmZombie", "at": "street", "state": "dead" },
+      "body-a": { "enemy": "zombie", "at": "corpse-a", "state": "dead" },
+      "body-b": { "enemy": "runner", "at": "corpse-b", "state": "dead" }
+    }
   },
   "steps": [
     { "type": "wait", "duration": 1.2 },

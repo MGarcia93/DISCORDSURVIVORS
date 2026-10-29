@@ -3,13 +3,20 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [500, 470], "street": [840, 430] },
-    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } },
-    "props": { "alarm": { "at": "street", "state": "dragged" } }
+    "points": { "ground": [400, 470], "street": [1010, 430], "approach": [760, 460] },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "boss": { "enemy": "alarmZombie", "at": "street" },
+      "add": { "enemy": "zombie", "at": "street" }
+    }
   },
   "steps": [
     { "type": "sound", "sound": "alarm" },
-    { "type": "camera", "to": "street", "zoom": 1.2, "duration": 1.5 },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "boss", "to": "approach", "duration": 2.6 },
+      { "type": "move", "actor": "add", "to": "ground", "duration": 2.6 },
+      { "type": "camera", "to": "approach", "zoom": 1.1, "duration": 2.6 }
+    ] },
     { "type": "notice", "title": "JEFE DETECTADO", "duration": 4, "lines": [
       "EL ZOMBI DE LA ALARMA",
       "Un infectado que atrae constantemente nuevas hordas.",

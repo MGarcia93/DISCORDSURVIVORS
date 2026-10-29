@@ -70,6 +70,25 @@ test('the epilogue answers the League announcement with Jhony refusing it', asyn
   ]);
 });
 
+test('the act stages enemies instead of describing them', async () => {
+  const catalog = await catalogFor();
+  const scene = id => catalog.entries.find(entry => entry.id === id).scene;
+  const actorsOf = id => Object.values(scene(id).stage.actors);
+  const enemies = actorsOf('act-01-arrival').filter(actor => actor.enemy);
+  assert.equal(enemies.length, 2, 'two zombies walk into the arrival');
+  assert.ok(scene('act-01-arrival').steps.some(step => step.type === 'move' && step.actor === 'shambler'), 'and one really walks');
+  const corpses = actorsOf('act-01-jhony').filter(actor => actor.state === 'dead');
+  assert.equal(corpses.length, 6, 'the veteran stands on a street full of bodies');
+  assert.equal(actorsOf('act-01-boss-defeat').find(actor => actor.enemy === 'alarmZombie').state, 'dead');
+});
+
+test('an enemy actor must name a real kind and a real state', () => {
+  const stage = { points: { a: [10, 10] }, actors: { z: { enemy: 'dragon', at: 'a' } } };
+  assert.throws(() => validateScene({ id: 'probe', stage, steps: [] }, { enemies: { zombie: {} } }), /Unknown enemy actor: z/);
+  const asleep = { id: 'probe', stage: { ...stage, actors: { z: { enemy: 'zombie', at: 'a', state: 'asleep' } } }, steps: [] };
+  assert.throws(() => validateScene(asleep, { enemies: { zombie: {} } }), /Invalid enemy state: z/);
+});
+
 test('the arrival scene owns the first wave and releases it when done', async () => {
   const catalog = await catalogFor();
   const director = new WaveDirector(catalog);

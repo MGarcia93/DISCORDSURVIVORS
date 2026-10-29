@@ -27,7 +27,7 @@ export function validateLine(line, characters) {
   requireValue(text(line.text), 'Dialogue text is required');
 }
 
-export function validateScene(scene, { characters = {}, sounds = {}, actions = {}, backgrounds = {} } = {}) {
+export function validateScene(scene, { characters = {}, sounds = {}, actions = {}, backgrounds = {}, enemies = {} } = {}) {
   requireValue(scene && text(scene.id), 'Scene id is required');
   requireValue(['always', 'once'].includes(scene.repeat ?? 'always'), 'Invalid repeat policy');
   const stage = scene.stage ?? {};
@@ -41,8 +41,15 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
     requireValue(Array.isArray(point) && point.length === 2 && point.every(finite), `Invalid point: ${id}`);
   }
   for (const [id, actor] of Object.entries(actors)) {
-    requireValue(own(characters, actor.character), `Unknown actor character: ${id}`);
     requireValue(own(points, actor.at), `Unknown point: ${actor.at}`);
+    // An actor is either a cast member (portrait speaker with a stage sprite)
+    // or an enemy standing in the scene. Enemies never speak or unlock.
+    if (own(actor, 'enemy')) {
+      requireValue(own(enemies, actor.enemy), `Unknown enemy actor: ${id}`);
+      requireValue(['alive', 'dead'].includes(actor.state ?? 'alive'), `Invalid enemy state: ${id}`);
+      continue;
+    }
+    requireValue(own(characters, actor.character), `Unknown actor character: ${id}`);
   }
   for (const [id, prop] of Object.entries(props)) {
     requireValue(own(points, prop.at) && text(prop.state), `Invalid prop: ${id}`);
@@ -120,7 +127,10 @@ export class ScenePlayer {
     this.camera = { x: 572, y: 374, zoom: 1 };
     this.actors = Object.fromEntries(Object.entries(scene.stage?.actors ?? {}).map(([id, actor]) => {
       const [x, y] = scene.stage.points[actor.at];
-      return [id, { character: actor.character, x, y, facing: 1, animation: 'idle' }];
+      return [id, {
+        character: actor.character, enemy: actor.enemy, dead: (actor.state ?? 'alive') === 'dead',
+        x, y, facing: 1, animation: actor.state === 'dead' ? 'idle' : 'idle',
+      }];
     }));
     this.props = structuredClone(scene.stage?.props ?? {});
     this.index = 0;

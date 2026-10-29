@@ -3,17 +3,29 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [572, 470], "wreck": [880, 420] },
-    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } },
-    "props": { "car": { "at": "wreck", "state": "wrecked" } }
+    "points": { "ground": [520, 470], "far": [940, 440], "near": [720, 470], "escape": [280, 470], "house": [980, 530] },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "shambler": { "enemy": "zombie", "at": "far" },
+      "latecomer": { "enemy": "zombie", "at": "house" }
+    }
   },
   "steps": [
-    { "type": "camera", "to": "ground", "zoom": 1.25, "duration": 1.2 },
+    { "type": "camera", "to": "ground", "zoom": 1.2, "duration": 1.2 },
     { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué carajo...?" },
+      { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué carajo...?" }
+    ] },
+    { "type": "move", "actor": "shambler", "to": "near", "duration": 2.4 },
+    { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Hola? ¿Jhony? ¿Sos vos?" },
       { "speaker": "maxi-negro", "expression": "scared", "text": "Ah, no. La concha de tu madre." }
     ] },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "shambler", "to": "ground", "duration": 1.4 },
+      { "type": "move", "actor": "negro", "to": "escape", "duration": 1.4 },
+      { "type": "camera", "to": "escape", "zoom": 1.1, "duration": 1.4 }
+    ] },
+    { "type": "move", "actor": "latecomer", "to": "near", "duration": 2 },
     { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": [
       "MUNDO 01 — PROJECT ZOMBOID",
       "Objetivo: Sobrevivir.",

@@ -96,7 +96,19 @@ scene owns the screen, and uses the same compact panel as `enqueueBanter`.
 
 ## Sprite sequence
 
-Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `stage.actors` as named `{ character, at }` entries, and optional `stage.props` as `{ at, state }` entries. `stage.background` names the world the scene happens in (see [World backgrounds](#world-backgrounds)) and defaults to `arena`. Actor/prop IDs are local to that scene; these are presentation entities, not combat enemies. The initial scene state is also its preview setup.
+Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `stage.actors` as named entries, and optional `stage.props` as `{ at, state }` entries.
+
+An actor is either a member of the cast or an enemy:
+
+```json
+"actors": {
+  "negro": { "character": "maxi-negro", "at": "ground" },
+  "shambler": { "enemy": "zombie", "at": "street" },
+  "corpse": { "enemy": "brute", "at": "floor", "state": "dead" }
+}
+```
+
+`enemy` names a kind from `src/enemies/` and `state` is `alive` (default) or `dead`: a dead enemy lies on the ground and never speaks. Enemy actors take the same `move` and `animate` steps as the cast, so a scene can walk a zombie in or push the boss forward; they never talk, unlock or fight. `stage.background` names the world the scene happens in (see [World backgrounds](#world-backgrounds)) and defaults to `arena`. Actor/prop IDs are local to that scene; these are presentation entities, not combat enemies. The initial scene state is also its preview setup.
 
 | Step | Fields | Meaning |
 | --- | --- | --- |

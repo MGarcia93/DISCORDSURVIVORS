@@ -3,12 +3,21 @@
   "repeat": "once",
   "stage": {
     "background": "zomboid",
-    "points": { "ground": [572, 470], "house": [880, 430] },
-    "actors": { "negro": { "character": "maxi-negro", "at": "ground" } },
-    "props": { "alarm": { "at": "house", "state": "sounding" } }
+    "points": { "ground": [520, 470], "house": [1000, 500], "close": [800, 480] },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "first": { "enemy": "zombie", "at": "close" },
+      "second": { "enemy": "zombie", "at": "house" },
+      "third": { "enemy": "runner", "at": "house" }
+    }
   },
   "steps": [
     { "type": "sound", "sound": "alarm" },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "second", "to": "close", "duration": 2 },
+      { "type": "move", "actor": "third", "to": "ground", "duration": 2 },
+      { "type": "camera", "to": "close", "zoom": 1.15, "duration": 2 }
+    ] },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "angry", "text": "¡PERO QUIÉN MIERDA ACTIVÓ LA ALARMA!" }
     ] },

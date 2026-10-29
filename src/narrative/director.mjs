@@ -59,7 +59,7 @@ export class WaveDirector {
     try {
       this.player = new ScenePlayer(entry.scene, {
         characters: this.catalog.characters, sounds: this.catalog.sounds, actions: entry.actions,
-        backgrounds: this.catalog.backgrounds,
+        backgrounds: this.catalog.backgrounds, enemies: this.catalog.enemies,
         onSound: this.onSound, onEffect: effect => { this.flags[effect.key] = effect.value; },
       });
       this._record();
