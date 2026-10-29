@@ -13,6 +13,14 @@ export const BALANCE = {
   shopSize: 4,
 };
 
+// Local playtests use short waves; any hosted build keeps the real minute.
+export const LOCAL_WAVE_SECONDS = 15;
+
+export function balanceFor(hostname) {
+  const local = ['localhost', '127.0.0.1', '[::1]'].includes(String(hostname ?? '').toLowerCase());
+  return local ? { ...BALANCE, waves: { ...BALANCE.waves, duration: LOCAL_WAVE_SECONDS } } : BALANCE;
+}
+
 const flat = (stat, value) => ({ stat, operation: 'flat', value });
 const percent = (stat, value) => ({ stat, operation: 'percent', value });
 

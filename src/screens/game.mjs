@@ -1,10 +1,13 @@
 import { WIDTH, HEIGHT, createRun } from '../engine.mjs';
+import { balanceFor } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { updateHUD } from '../game/hud.mjs';
 
 // Arena DOM builder: built once per run; HUD values update separately.
 export function game() {
-  state.run = createRun(Math.random, state.selectedCharacter);
+  state.run = createRun(Math.random, state.selectedCharacter, {
+    balance: balanceFor(globalThis.location?.hostname),
+  });
   state.facing = 1;
   state.lastPhase = '';
   const def = state.run.player.characterDef;

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WAVES, pickKind, spawnInterval, waveConfig } from '../src/waves.mjs';
 import { createRun, startNextWave, step } from '../src/engine.mjs';
-import { BALANCE } from '../src/reward-data.mjs';
+import { BALANCE, balanceFor } from '../src/reward-data.mjs';
 
 // Deterministic draw queue: each call returns the next value and wraps around.
 const sequence = (...values) => { let index = 0; return () => values[index++ % values.length]; };
@@ -123,4 +123,18 @@ test('the shipped balance plays full-minute waves and leaves the boss untimed', 
   step(run, 0.05, {});
   assert.equal(run.phase, 'playing', 'the boss wave does not end on the wave clock');
   assert.ok(run.time > run.duration);
+});
+
+test('local playtests run short waves while production keeps the full minute', () => {
+  assert.equal(BALANCE.waves.duration, 60, 'shipped balance stays real time');
+  assert.equal(balanceFor('localhost').waves.duration, 15);
+  assert.equal(balanceFor('127.0.0.1').waves.duration, 15);
+  assert.equal(balanceFor('[::1]').waves.duration, 15);
+  assert.equal(balanceFor('discord-survivors.com').waves.duration, 60);
+  assert.equal(balanceFor(undefined).waves.duration, 60);
+  assert.equal(balanceFor('localhost').waves.bossWave, BALANCE.waves.bossWave);
+  assert.equal(balanceFor('localhost').xp.factor, BALANCE.xp.factor);
+  const local = createRun(() => 0.5, 'negro', { balance: balanceFor('localhost') });
+  assert.equal(local.duration, 15);
+  assert.equal(local.spawnBudget, Math.round(48 * 15 / 60));
 });
