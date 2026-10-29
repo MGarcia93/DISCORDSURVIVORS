@@ -125,14 +125,28 @@ test('a down step kills an enemy and refuses a cast member', () => {
     /Only an enemy actor can go down: guide/);
 });
 
-test('Jhony closes the scene by shooting the next one', async () => {
+test('Jhony shoots the runner first and says the line after it', async () => {
   const catalog = await catalogFor();
   const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
+  const lastDown = steps.map(step => step.type).lastIndexOf('down');
   const lastLine = steps.map(step => step.type).lastIndexOf('dialogue');
-  const after = steps.slice(lastLine + 1);
-  const shot = after.findIndex(step => step.type === 'sound' && step.sound === 'gunshot');
-  assert.ok(shot >= 0, 'a shot answers his own line');
-  assert.equal(after[shot + 1]?.type, 'down', 'and a zombie drops');
+  assert.ok(lastDown >= 0 && lastLine > lastDown, 'the shot closes the action and the line closes the scene');
+  assert.match(steps[lastLine].lines[0].text, /NO ME TRAIGAS MÁS ZOMBIES/);
+});
+
+test('the last two arrive together, the runner goes deeper than the shambler', async () => {
+  const catalog = await catalogFor();
+  const scene = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene;
+  const arrival = scene.steps.find(step => step.type === 'parallel' && step.steps.some(child => child.actor === 'late-a'));
+  assert.ok(arrival.steps.some(child => child.actor === 'late-b'), 'both walk in on the same beat');
+  const jhony = scene.stage.points[scene.stage.actors.jhony.at];
+  const reach = id => {
+    const move = scene.steps.flatMap(step => (step.type === 'parallel' ? step.steps : [step]))
+      .filter(child => child.type === 'move' && child.actor === id).at(-1);
+    const [x, y] = scene.stage.points[move.to];
+    return Math.hypot(x - jhony[0], y - jhony[1]);
+  };
+  assert.ok(reach('late-b') < reach('late-a'), 'the runner closes in, the shambler keeps its distance');
 });
 
 test('a flash must point at a real stage point', () => {

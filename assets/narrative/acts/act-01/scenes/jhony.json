@@ -81,20 +81,16 @@
         -70
       ],
       "late-a-near": [
-        980,
-        340
+        1010,
+        300
       ],
       "late-b": [
         1100,
         830
       ],
       "late-b-near": [
-        1060,
-        690
-      ],
-      "late-a-exit": [
-        1000,
-        830
+        900,
+        560
       ]
     },
     "actors": {
@@ -348,15 +344,15 @@
           "type": "move",
           "actor": "late-a",
           "to": "late-a-near",
-          "duration": 4.5
+          "duration": 3.5
+        },
+        {
+          "type": "move",
+          "actor": "late-b",
+          "to": "late-b-near",
+          "duration": 2.6
         }
       ]
-    },
-    {
-      "type": "move",
-      "actor": "late-b",
-      "to": "late-b-near",
-      "duration": 2.6
     },
     {
       "type": "dialogue",
@@ -374,31 +370,10 @@
       ]
     },
     {
-      "type": "parallel",
-      "steps": [
-        {
-          "type": "move",
-          "actor": "negro",
-          "to": "entrance",
-          "duration": 1.5
-        },
-        {
-          "type": "move",
-          "actor": "late-a",
-          "to": "late-a-exit",
-          "duration": 4.5
-        }
-      ]
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "jhony",
-          "expression": "angry",
-          "text": "¡Y NO ME TRAIGAS MÁS ZOMBIES!"
-        }
-      ]
+      "type": "move",
+      "actor": "negro",
+      "to": "entrance",
+      "duration": 1.5
     },
     {
       "type": "camera",
@@ -423,6 +398,16 @@
       "type": "flash",
       "at": "impact-b",
       "duration": 0.18
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡Y NO ME TRAIGAS MÁS ZOMBIES!"
+        }
+      ]
     },
     {
       "type": "wait",
