@@ -130,6 +130,11 @@ prepare choices before the shop. The narrative director refuses a before-wave
 scene while choices remain. Final victory discards pending choices without
 opening a shop, while preserving the existing victory event.
 
+Item portraits are pixel art drawn in `src/game/item-icons.mjs`, not image
+assets: each id has a 32×32 drawing that scales to its card canvas. A new item
+id needs one drawing there; until it exists the card shows a neutral crate
+instead of a blank space, so catalog authoring never breaks the shop.
+
 The four-offer shop replaces the legacy upgrade list in the interface: each
 offer shows its lore, mechanical effect, real capped stat preview, price and
 owned/maximum count. A bought offer stays visible and disabled; rendering never
@@ -153,6 +158,7 @@ node --test tests/reward-catalog.test.mjs
 node --test tests/reward-data.test.mjs
 node --test tests/run-rewards.test.mjs
 node --test tests/reward-ui.test.mjs
+node --test tests/character-upgrades.test.mjs
 node --test tests/*.test.mjs
 node --check src/stat-modifiers.mjs
 ```

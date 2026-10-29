@@ -6,6 +6,7 @@ import { formatTime } from './hud.mjs';
 import { getCharacter } from '../characters/index.mjs';
 import { rewardPreviewLines } from './reward-view.mjs';
 import { countOf } from '../run-rewards.mjs';
+import { drawItemIcon } from './item-icons.mjs';
 
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -71,12 +72,14 @@ export function overlay() {
       const disabled = offer.bought || count >= item.maxCopies || state.run.coins < item.price || !preview;
       const description = describeReward(item, EFFECTS).map(escapeText).join(' · ');
       return `<button class="reward-card item-card ${offer.bought ? 'bought' : ''}" data-item="${escapeText(item.id)}" ${disabled ? 'disabled' : ''}>
-        <span class="reward-top"><span class="reward-icon" aria-hidden="true">${escapeText(item.icon ?? '◈')}</span><span class="reward-price">${item.price} ◈</span></span>
-        <b class="reward-name">${escapeText(item.name)}</b>
-        <span class="reward-effect">${description}</span>
-        <span class="reward-preview">${preview ? preview.map(escapeText).join('<br>') : 'No compatible con las estadísticas actuales'}</span>
-        <span class="reward-lore">${escapeText(item.lore)}</span>
-        <span class="reward-foot"><span class="reward-owned">${count}/${item.maxCopies}</span><span class="reward-state">${offer.bought ? 'COMPRADO' : 'TOCÁ PARA COMPRAR'}</span></span>
+        <span class="reward-art"><canvas data-art="${escapeText(item.id)}" width="64" height="64" aria-hidden="true"></canvas></span>
+        <span class="reward-body">
+          <span class="reward-top"><b class="reward-name">${escapeText(item.name)}</b><span class="reward-price">${item.price} ◈</span></span>
+          <span class="reward-effect">${description}</span>
+          <span class="reward-preview">${preview ? preview.map(escapeText).join('<br>') : 'No compatible con las estadísticas actuales'}</span>
+          <span class="reward-lore">${escapeText(item.lore)}</span>
+          <span class="reward-foot"><span class="reward-owned">${count}/${item.maxCopies}</span><span class="reward-state">${offer.bought ? 'COMPRADO' : 'TOCÁ PARA COMPRAR'}</span></span>
+        </span>
       </button>`;
     }).join('');
     const full = state.run.player.hp >= state.run.player.maxHp;
@@ -90,5 +93,8 @@ export function overlay() {
     body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? victoryFicha?.victoryLine ?? 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   }
   box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'levelUp' ? 'Elegir mejora de nivel' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' || phase === 'levelUp' ? 'shop-dialog' : ''}">${body}</div></div>`;
+  for (const canvas of box.querySelectorAll?.('canvas[data-art]') ?? []) {
+    drawItemIcon(canvas.getContext('2d'), canvas.dataset.art, canvas.width);
+  }
   box.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
 }

@@ -150,6 +150,10 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .reward-card:disabled { opacity: 0.5; }
 .reward-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 30px; }
 .reward-icon { font-size: 24px; line-height: 1; }
+.item-card { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: start; gap: 13px; }
+.reward-art { display: grid; place-items: center; width: 72px; height: 72px; padding: 4px; border: 2px solid #4b3a5b; background: radial-gradient(circle at 50% 35%, #33263f, #1d1622 75%); }
+.reward-art canvas { width: 64px; height: 64px; image-rendering: pixelated; }
+.reward-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .reward-price { padding: 3px 9px; border: 2px solid #8a6b4a; background: #1d1622; color: var(--gold); font-size: 12px; letter-spacing: 1px; }
 .reward-name { font-size: 14px; letter-spacing: 0.5px; color: var(--paper); }
 .reward-effect { font-size: 11px; color: #f0dcae; line-height: 1.5; }
