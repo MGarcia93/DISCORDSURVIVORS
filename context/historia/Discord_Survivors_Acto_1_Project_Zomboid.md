@@ -56,7 +56,7 @@ Se incorpora lentamente.
 
 A unos metros, una figura se acerca caminando de forma extraña.
 
-**Maxi Negro:** ¿Hola? ¿Jhony? ¿Sos vos, negro?
+**Maxi Negro:** ¿Hola? ¿Jhony? ¿Sos vos?
 
 El desconocido se da vuelta. Tiene media cara arrancada.
 
@@ -188,7 +188,7 @@ Es Jhony.
 
 *Jhony sigue matando zombis sin siquiera mirarlo.*
 
-**Maxi Negro:** ¡Negro, tenés más de dos mil horas en este juego! ¡Ayudame!
+**Maxi Negro:** ¡Jhony, tenés más de dos mil horas en este juego! ¡Ayudame!
 
 **Jhony:** ¡¿Y QUÉ TIENE QUE VER?! ¡ANDATE, PELOTUDO!
 
@@ -198,7 +198,7 @@ Es Jhony.
 
 *Maxi Negro mira los cientos de cadáveres que rodean a Jhony.*
 
-**Maxi Negro:** Igual, negro, ¿no te parece que ya jugaste bastante a esta mierda?
+**Maxi Negro:** Igual, Jhony, ¿no te parece que ya jugaste bastante a esta mierda?
 
 **Jhony:** ¡Y A VOS QUÉ CARAJO TE IMPORTA!
 

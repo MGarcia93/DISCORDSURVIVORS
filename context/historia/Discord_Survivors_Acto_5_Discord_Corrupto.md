@@ -134,7 +134,7 @@ De repente, aparece un esclavista y corre directamente hacia Warrior.
 
 **Warrior:** ¡LA CONCHA DE TU MADRE! ¡OTRA VEZ NO!
 
-**Maxi Negro:** ¡JAJAJA! ¡NEGRO, TODAVÍA TE ESTÁN BUSCANDO!
+**Maxi Negro:** ¡JAJAJA! ¡WARRIOR, TODAVÍA TE ESTÁN BUSCANDO!
 
 **ADMINISTRADOR:** Usuario Warrior identificado. Nacionalidad estimada: Bolivia.
 
@@ -166,7 +166,7 @@ Una enorme imagen de un sillón aparece flotando frente a Maxi Negro.
 
 **ADMINISTRADOR:** Motivación principal: evitar cualquier esfuerzo.
 
-**Maxi Negro:** ¡Y BUENO, NEGRO! ¡ME DA PAJA!
+**Maxi Negro:** ¡Y BUENO, BOT! ¡ME DA PAJA!
 
 **ADMINISTRADOR:** Debilidad detectada: responsabilidades.
 
@@ -236,7 +236,7 @@ La última pantalla muestra un mapa de Sudamérica.
 
 **ADMINISTRADOR:** Bolivia.
 
-**Maxi Negro:** ¡JAJAJA! ¡NO LE DISCUTAS AL BOT, NEGRO!
+**Maxi Negro:** ¡JAJAJA! ¡NO LE DISCUTAS AL BOT, WARRIOR!
 
 *Warrior, completamente enojado, llena la pantalla de humo.*
 
@@ -296,7 +296,7 @@ El servidor comienza a producir más errores.
 
 **Papasito:** Che, esto está andando como el culo.
 
-**Maxi Negro:** ¡Y SÍ, NEGRO! ¡LO PROGRAMARON CON LAS PATAS!
+**Maxi Negro:** ¡Y SÍ, PAPASITO! ¡LO PROGRAMARON CON LAS PATAS!
 
 **ADMINISTRADOR:** Advertencia. Críticas al desarrollo detectadas.
 
@@ -510,7 +510,7 @@ En pantalla aparece un mensaje:
 
 **Solago:** Pará... ¿Eso es bueno o malo?
 
-**Maxi Negro:** ¡QUÉ SÉ YO, NEGRO!
+**Maxi Negro:** ¡QUÉ SÉ YO, SOLAGO!
 
 **Papasito:** No me gusta una mierda.
 
@@ -524,7 +524,7 @@ Los personajes recuperan sus habilidades especiales.
 
 Maxi Negro vuelve a tener su sillón y su waifu, Solago combate con sus dientes y habilidades, Papasito lanza ladrillos y Warrior controla las hordas mediante humo y hongos.
 
-**Maxi Negro:** ¡DALE, NEGROS! ¡QUE YA CASI ESTÁ!
+**Maxi Negro:** ¡DALE, PELOTUDOS! ¡QUE YA CASI ESTÁ!
 
 Finalmente, los protagonistas consiguen darle el último golpe.
 
@@ -580,7 +580,7 @@ Los cuatro personajes aparecen en el canal de voz original de Discord.
 
 Todo parece haber vuelto a la normalidad.
 
-**Maxi Negro:** ¡AL FIN, NEGRO! ¡VOLVIMOS!
+**Maxi Negro:** ¡AL FIN, PELOTUDOS! ¡VOLVIMOS!
 
 **Solago:** ¡LA CONCHA DE SU MADRE, QUÉ JUEGO DE MIERDA!
 
@@ -604,7 +604,7 @@ De repente, se escucha una notificación:
 
 **Maxi se ha unido al canal de voz.**
 
-**Maxi:** Bueno, negros. ¿Qué onda? ¿Les gustó el jueguito?
+**Maxi:** Bueno, muchachos. ¿Qué onda? ¿Les gustó el jueguito?
 
 *Silencio absoluto.*
 
@@ -766,7 +766,7 @@ Después de un rato de risas y puteadas, finalmente todo vuelve a la normalidad.
 
 Los cinco están conectados al Discord.
 
-**Maxi Negro:** Bueno, negro. Igual el jueguito estuvo bueno.
+**Maxi Negro:** Bueno, Maxi. Igual el jueguito estuvo bueno.
 
 **Solago:** Sí, estuvo bastante bien.
 
@@ -790,7 +790,7 @@ Los cinco están conectados al Discord.
 
 **Warrior:** ¿Y si jugamos otra cosa?
 
-**Maxi Negro:** ¡DALE, NEGRO! ¡ELEGÍ ALGO!
+**Maxi Negro:** ¡DALE, WARRIOR! ¡ELEGÍ ALGO!
 
 **Solago:** Bueno, un Project.
 

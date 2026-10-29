@@ -185,7 +185,7 @@ De repente aparece una ventana del Administrador.
 
 **Warrior:** ¡SOY DE JUJUY, HIJO DE PUTA!
 
-**Maxi Negro:** Sí, sí, ya sabemos, negro.
+**Maxi Negro:** Sí, sí, ya sabemos, Warrior.
 
 *Un esclavista se acerca a los protagonistas.*
 
@@ -285,7 +285,7 @@ Warrior se queda observando todo con interés.
 
 **Warrior:** ¡NO ESTABA BUSCANDO ESO!
 
-**Maxi Negro:** Sí, sí, negro, seguro. ¿Y cómo sabías que estaba acá?
+**Maxi Negro:** Sí, sí, Warrior, seguro. ¿Y cómo sabías que estaba acá?
 
 *Warrior intenta explicarlo.*
 
@@ -317,7 +317,7 @@ Warrior aprovecha el humo para escapar de los enemigos mientras aparecen hongos 
 
 **Warrior:** ¡SOY DE JUJUY!
 
-**Maxi Negro:** ¡BUENO, NEGRO! ¡NO TE CALENTÉS!
+**Maxi Negro:** ¡BUENO, WARRIOR! ¡NO TE CALENTÉS!
 
 La oleada continúa mientras aparecen guerreros, arqueros y alquimistas.
 
@@ -363,7 +363,7 @@ El alquimista arroja una poción al suelo.
 
 De repente, aparecen tres copias de Maxi Negro.
 
-**Solago:** ¡JAJAJA! ¡NEGRO, AHORA HAY CUATRO NEGROS!
+**Solago:** ¡JAJAJA! ¡NEGRO, AHORA HAY CUATRO!
 
 **Maxi Negro:** ¡NOOO! ¡LA CONCHA DE TU MADRE!
 
@@ -385,7 +385,7 @@ Warrior utiliza sus nubes de humo para confundir a los enemigos reales.
 
 **Solago:** Che, igual el boliviano nos está salvando.
 
-**Maxi Negro:** Y sí, negro. Está en su elemento.
+**Maxi Negro:** Y sí, boludo. Está en su elemento.
 
 Finalmente consiguen derrotar al alquimista.
 
@@ -433,7 +433,7 @@ Es el responsable de los esclavistas.
 
 *Los tres miran a Warrior.*
 
-**Maxi Negro:** ¡JAJAJA! ¡NEGRO, TE VINIERON A BUSCAR!
+**Maxi Negro:** ¡JAJAJA! ¡WARRIOR, TE VINIERON A BUSCAR!
 
 **Warrior:** ¡NO VUELVO A ESA MIERDA!
 
@@ -544,7 +544,7 @@ La Rueda del Dolor se detiene.
 
 **Papasito:** ¿Y Maxi?
 
-**Maxi Negro:** Ni idea, negro. No apareció en ninguno de los juegos.
+**Maxi Negro:** Ni idea, Papasito. No apareció en ninguno de los juegos.
 
 **Warrior:** ¿Y PAPAFRITA?
 
@@ -677,7 +677,7 @@ La Rueda del Dolor se detiene.
 
 **ADMINISTRADOR:** Ahora les toca jugar contra mí.
 
-**Maxi Negro:** Bueno, vengan, negros. Vamos a romperle el orto a este bot.
+**Maxi Negro:** Bueno, vengan, pelotudos. Vamos a romperle el orto a este bot.
 
 *La pantalla se vuelve negra.*
 

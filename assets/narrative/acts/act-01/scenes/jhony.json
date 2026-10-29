@@ -25,14 +25,14 @@
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "angry", "text": "¡¿CÓMO QUE Y?! ¡TENEMOS QUE SALIR!" },
       { "speaker": "jhony", "expression": "angry", "text": "¡Bueno, salí entonces! ¡No me rompas las pelotas!" },
-      { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡Negro, tenés más de dos mil horas en este juego! ¡Ayudame!" },
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡Jhony, tenés más de dos mil horas en este juego! ¡Ayudame!" },
       { "speaker": "jhony", "expression": "angry", "text": "¡¿Y QUÉ TIENE QUE VER?! ¡ANDATE, PELOTUDO!" },
       { "speaker": "maxi-negro", "expression": "annoyed", "text": "Pero escuchame un segundo, boludo..." },
       { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIS, LA CONCHA DE TU MADRE!" }
     ] },
     { "type": "camera", "to": "corpses", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "neutral", "text": "Igual, negro, ¿no te parece que ya jugaste bastante a esta mierda?" },
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "Igual, Jhony, ¿no te parece que ya jugaste bastante a esta mierda?" },
       { "speaker": "jhony", "expression": "angry", "text": "¡Y A VOS QUÉ CARAJO TE IMPORTA!" }
     ] },
     { "type": "camera", "to": "meet", "zoom": 1.1, "duration": 1.1 },

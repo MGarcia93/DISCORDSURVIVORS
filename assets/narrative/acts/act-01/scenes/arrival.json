@@ -11,7 +11,7 @@
     { "type": "camera", "to": "ground", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué carajo...?" },
-      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Hola? ¿Jhony? ¿Sos vos, negro?" },
+      { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Hola? ¿Jhony? ¿Sos vos?" },
       { "speaker": "maxi-negro", "expression": "scared", "text": "Ah, no. La concha de tu madre." }
     ] },
     { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": [

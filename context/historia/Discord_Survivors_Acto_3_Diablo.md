@@ -411,7 +411,7 @@ Durante la pelea, Papasito ayuda al grupo, aunque sigue sin contestar cuando le 
 
 *Papasito lanza un ladrillo.*
 
-**Maxi Negro:** ¡BIEN, NEGRO! ¡AL FIN HICISTE ALGO!
+**Maxi Negro:** ¡BIEN, PAPASITO! ¡AL FIN HICISTE ALGO!
 
 **Papasito:** ...
 
@@ -502,7 +502,7 @@ Preparando siguiente entorno...
 
 **Maxi Negro:** Capaz Jhony. Lo dejamos en Project, pero por ahí ahora se une el hijo de puta.
 
-**Solago:** ¿Jhony? Ese negro debe seguir matando zombis.
+**Solago:** ¿Jhony? Ese hijo de puta debe seguir matando zombis.
 
 **Maxi Negro:** Y bueno, capaz está Maxi.
 
