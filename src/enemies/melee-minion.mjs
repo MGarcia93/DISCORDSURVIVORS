@@ -7,7 +7,7 @@ const meleeMinion = {
   id: 'meleeMinion',
   stats: {
     life: wave => 26 + 5 * wave,
-    defense: 20,                        // 20% -> 1 defence point -> 5% mitigation
+    defense: 20,                        // 20% -> 2 defence points -> 10% mitigation
     attack: 110,                        // 110% -> 11 contact damage
     attackSpeed: 154,                   // 154% -> one swing every 0.65 s
     attackDistance: 0,                  // melee: contact, measured from the edge

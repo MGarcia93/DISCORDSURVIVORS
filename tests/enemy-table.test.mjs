@@ -100,3 +100,29 @@ test('contact damage and coin rewards read the table at runtime', () => {
   assert.equal(killRun.coins, 30);
   assert.equal(killRun.phase, 'won');
 });
+
+test('the Rift minions keep the same six-stat sheet, each with its own numbers', () => {
+  assert.equal(enemyHp('meleeMinion', 1), 31);
+  assert.equal(enemyDefense('meleeMinion'), 0.1);
+  assert.equal(enemyContactDamage('meleeMinion'), 11);
+  assert.equal(enemyAttackRange('meleeMinion'), 0, 'the soldier has to touch');
+  assert.equal(enemyAttackInterval('meleeMinion'), 100 / 154);
+  assert.equal(enemySpeed('meleeMinion', 1), 1010 * 5 / 100 * WORLD_SCALE);
+  assert.equal(ENEMY_KINDS.meleeMinion.radius, 13);
+  assert.equal(enemyBounty('meleeMinion'), 1);
+
+  assert.equal(enemyHp('mageMinion', 2), 32);
+  assert.equal(enemyContactDamage('mageMinion'), 10);
+  assert.ok(Math.abs(enemyAttackRange('mageMinion') - 187) < 1e-9, 'the mage keeps its distance');
+  assert.equal(enemyAttackInterval('mageMinion'), 1);
+  assert.equal(ENEMY_KINDS.mageMinion.projectile, 'bolt');
+  assert.equal(enemyBounty('mageMinion'), 2);
+
+  assert.equal(enemyHp('siegeMinion', 2), 62);
+  assert.equal(enemyDefense('siegeMinion'), 0.2);
+  assert.equal(enemyContactDamage('siegeMinion'), 16);
+  assert.ok(Math.abs(enemyAttackRange('siegeMinion') - 198) < 1e-9);
+  assert.equal(enemyAttackInterval('siegeMinion'), 100 / 60);
+  assert.equal(ENEMY_KINDS.siegeMinion.projectile, 'shell');
+  assert.equal(enemyBounty('siegeMinion'), 3);
+});

@@ -33,10 +33,10 @@ function resetArena() {
   run.enemies = [];
   run.projectiles = [];
   // The dummy soaks everything and never shoots, so the only thing on stage is
-  // the enemy being inspected.
+  // the enemy being inspected. `shotIn` lives on the run, not on the player:
+  // setting it on the player was a no-op and the dummy kept auto-attacking.
   run.player.hp = run.player.maxHp = 1e9;
-  run.player.shotIn = Infinity;
-  run.player.shotInterval = Infinity;
+  run.shotIn = Infinity;
   spawnIn = 0;
   arena = run;
   return run;

@@ -153,3 +153,54 @@ test('the alarm boss rings a sound wave that has to be walked out of', () => {
   assert.ok(run.player.hp < hpBefore, 'standing in the ring costs health');
   assert.equal(run.shockwaves.length, 0, 'and the ring dies once it is spent');
 });
+
+test('a ranged kind fires a straight shot instead of landing an instant hit', () => {
+  const run = quietRun();
+  run.enemies.push(createEnemy(run, 'mageMinion', run.player.x + 150, run.player.y));
+  step(run, 0.02, {});
+  const shot = run.projectiles.find(entry => entry.team === 'enemy');
+  assert.ok(shot, 'it reaches the player without touching');
+  assert.equal(run.player.hp, 1000, 'the damage is still in the air');
+  assert.equal(shot.device, 'bolt', 'and carries the art of its own shooter');
+  assert.ok(shot.vx < 0, 'flying toward the player');
+});
+
+test('the enemy shot lands on the player after its travel time', () => {
+  const run = quietRun();
+  run.enemies.push(createEnemy(run, 'mageMinion', run.player.x + 150, run.player.y));
+  for (let tick = 0; tick < 60; tick++) step(run, 0.02, {});
+  assert.ok(run.player.hp < 1000, 'the bolt arrives and hits');
+});
+
+test('a shot that is stepped out of never lands', () => {
+  const run = quietRun();
+  const mage = createEnemy(run, 'mageMinion', run.player.x + 150, run.player.y);
+  run.enemies.push(mage);
+  step(run, 0.02, {});
+  mage.attackCd = 999; // one shot only: this is about that shot, not the next one
+  run.player.y -= 260; // out of the line it was fired along
+  for (let tick = 0; tick < 60; tick++) step(run, 0.02, {});
+  assert.equal(run.player.hp, 1000, 'it flies where the player was, not where they went');
+});
+
+test('enemy fire crosses other enemies without hurting them', () => {
+  const run = quietRun();
+  // The player's own weapon would also hurt the blocker; this is about the bolt.
+  run.shotIn = Infinity;
+  run.enemies.push(createEnemy(run, 'mageMinion', run.player.x + 200, run.player.y));
+  const blocker = createEnemy(run, 'zombie', run.player.x + 90, run.player.y);
+  blocker.speed = 0;
+  run.enemies.push(blocker);
+  const blockerHp = blocker.hp;
+  for (let tick = 0; tick < 60; tick++) step(run, 0.02, {});
+  assert.equal(blocker.hp, blockerHp, 'the bolt belongs to the other team');
+  assert.ok(run.player.hp < 1000, 'and still reaches the player');
+});
+
+test('a contact kind still lands its hit on the same step', () => {
+  const run = quietRun();
+  run.enemies.push(createEnemy(run, 'meleeMinion', run.player.x + 10, run.player.y));
+  step(run, 0.02, {});
+  assert.equal(run.projectiles.length, 0, 'no shot for a body that has to touch');
+  assert.ok(run.player.hp < 1000);
+});

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
+import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawEnemyShot, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
 import { ENEMY_IDS, getEnemyKind } from '../src/enemies/index.mjs';
 import { getCharacter } from '../src/characters/index.mjs';
 
@@ -44,7 +44,7 @@ test('the walker kinds are one connected body, never floating pieces', () => {
   // flood-fill as a single figure from its shadow to its head.
   // The boss is excluded on purpose: its sound rings are separate VFX in the air,
   // so the body is connected but the particle rings are not part of the figure.
-  for (const kind of ['zombie', 'runner', 'brute']) {
+  for (const kind of ['zombie', 'runner', 'brute', 'meleeMinion', 'mageMinion', 'siegeMinion']) {
     const cells = new Set();
     for (const rect of enemyShape(kind).rects) {
       for (let y = Math.round(rect.y); y < Math.round(rect.y + rect.h); y++) {
@@ -434,4 +434,27 @@ test('Solago has a visibly compressed crouching pose during the Stand', () => {
   const trouserTop = rectangles => Math.min(...rectangles.filter(rect => rect[4] === '#292735').map(rect => rect[1]));
   assert.notDeepEqual(crouching, standing);
   assert.ok(trouserTop(crouching) < trouserTop(standing), 'Crouched legs tuck higher under the body');
+});
+
+test('the Rift minions stay on the cast grid and never tower over the player', () => {
+  const player = characterShape('negro');
+  for (const kind of ['meleeMinion', 'mageMinion', 'siegeMinion']) {
+    const shape = enemyShape(kind);
+    assert.ok(shape.height <= player.height, `${kind} is ${shape.height}px and must not pass the player's ${player.height}px`);
+    assert.ok(shape.rects.length >= 25, `${kind} carries a full body, not a placeholder`);
+  }
+});
+
+test('enemy shots are drawn per shooter and the siege shell is not a dot', () => {
+  const render = device => {
+    const rectangles = [];
+    drawEnemyShot({ fillRect(...args) { rectangles.push([...args, this.fillStyle]); }, fillStyle: '' }, device);
+    const width = Math.max(...rectangles.map(r => r[0] + r[2])) - Math.min(...rectangles.map(r => r[0]));
+    return { count: rectangles.length, width };
+  };
+  const bolt = render('bolt');
+  const shell = render('shell');
+  assert.ok(bolt.count >= 3 && shell.count >= 5, 'both shots have their own art');
+  assert.ok(shell.width >= 14, `the shell is ${shell.width}px wide and must read as artillery`);
+  assert.notDeepEqual(render('shell'), bolt, 'artillery is not a magic dart');
 });

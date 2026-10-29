@@ -7,7 +7,7 @@ const siegeMinion = {
   id: 'siegeMinion',
   stats: {
     life: wave => 46 + 8 * wave,
-    defense: 40,                        // 40% -> 2 defence points -> 10% mitigation
+    defense: 40,                        // 40% -> 4 defence points -> 20% mitigation
     attack: 160,                        // 160% -> 16 damage per shell
     attackSpeed: 60,                    // 60% -> one shell every 1.67 s
     attackDistance: 180,                // 180% -> 198 px of reach
