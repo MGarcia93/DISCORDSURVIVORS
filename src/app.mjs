@@ -13,6 +13,7 @@ import { home, controls, closeControls } from './screens/home.mjs';
 import { story } from './screens/story.mjs';
 import { characters, drawPreview } from './screens/characters.mjs';
 import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
+import { enemiesScreen, drawEnemyPreview, isEnemyDevelopment } from './screens/enemies.mjs';
 import { game } from './screens/game.mjs';
 import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment } from './narrative/integration.mjs';
 
@@ -46,6 +47,7 @@ function show(name) {
   if (name === 'home') home();
   if (name === 'characters') characters();
   if (name === 'worlds') worldsScreen();
+  if (name === 'enemies') enemiesScreen();
   if (name === 'story') story();
   if (name === 'game') { game(); narrative.attach(state.run, document.querySelector('#narrative-layer')); }
   if (name === 'narrative') showNarrativeViewer(state.content);
@@ -88,6 +90,7 @@ function frame(timestamp) {
   }
   if (state.screen === 'story') drawStory(document.querySelector('#story-scene'), storyPages[state.storyPage] ?? storyPages[0], animationTime);
   if (state.screen === 'worlds') drawWorldPreview(dt, animationTime);
+  if (state.screen === 'enemies') drawEnemyPreview(dt);
   requestAnimationFrame(frame);
 }
 
@@ -208,5 +211,5 @@ function resumeNarrative() { if (!document.hidden) activeNarrativeHost().resume(
 window.addEventListener('blur', suspend);
 window.addEventListener('focus', resumeNarrative);
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); else resumeNarrative(); });
-show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds' : 'home');
+show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds' : isEnemyDevelopment() ? 'enemies' : 'home');
 requestAnimationFrame(frame);
