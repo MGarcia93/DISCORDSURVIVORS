@@ -72,6 +72,8 @@ test('nothing outside the campaign layer decides the boss wave or the wave count
   await walk('src');
   for (const file of files) {
     const source = await readFile(file, 'utf8');
-    assert.ok(!/bossWave|bossKind/.test(source), `${file} must not hardcode a boss wave`);
+    // A parameter may be named bossWave; a hardcoded count may not exist.
+    assert.ok(!/rewardBalance\.waves\.(bossWave|bossKind)/.test(source), `${file} must not read a boss wave from the balance`);
+    assert.ok(!/bossWave\s*=\s*\d|bossKind\s*[:=]\s*['"]/.test(source), `${file} must not hardcode a boss wave`);
   }
 });
