@@ -4,9 +4,18 @@ import { createRun, step } from '../src/engine.mjs';
 import { awardXP } from '../src/run-rewards.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
 import { handleRewardAction } from '../src/game/reward-actions.mjs';
+import { drawItemIcon, ILLUSTRATED_ITEMS } from '../src/game/item-icons.mjs';
 
 const previousDocument = globalThis.document, previousWindow = globalThis.window;
-const box = { innerHTML: '', querySelector: () => ({ focus() {} }) };
+const drawnArt = [];
+const makeContext = () => ({ clearRect() {}, fillRect() {}, fillStyle: '', imageSmoothingEnabled: true });
+const box = {
+  innerHTML: '',
+  querySelector: () => ({ focus() {} }),
+  querySelectorAll: selector => selector !== 'canvas[data-art]' ? [] : [...box.innerHTML.matchAll(/data-art="([^"]+)"/g)]
+    .map(match => ({ dataset: { art: match[1] }, width: 64, height: 64,
+      getContext: () => { drawnArt.push(match[1]); return makeContext(); } })),
+};
 globalThis.document = { querySelector: selector => selector === '#game-overlay' ? box : null };
 globalThis.window = { matchMedia: () => ({ matches: false }) };
 const { state } = await import('../src/app/state.mjs');
@@ -100,6 +109,31 @@ test('catalog text is escaped and the real capped-stat preview is visible', () =
   assert.match(box.innerHTML, /Defensa: 4 → 15/);
   assert.match(box.innerHTML, /0\/1/);
   assert.equal(run.player.defense, 0.2);
+});
+
+test('every shop offer paints its own item portrait on a canvas', () => {
+  const run = createRun(() => 0.5);
+  endWave(run);
+  drawnArt.length = 0;
+  render(run);
+  const offers = ids('item');
+  const art = [...box.innerHTML.matchAll(/data-art="([^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(art, offers, 'one canvas per offer, in order');
+  assert.deepEqual(drawnArt, offers, 'each canvas is painted with its item art');
+  for (const id of ['scissors', 'bleach', 'slipper', 'antidepressants', 'extortion-phone', 'magic-mushrooms', 'alcohol', 'chicken']) {
+    const ctx = makeContext();
+    drawItemIcon(ctx, id, 64);
+    assert.ok(true, id);
+  }
+});
+
+test('unknown item ids still paint the fallback crate instead of a blank card', () => {
+  const ctx = makeContext();
+  let painted = 0;
+  ctx.fillRect = () => { painted += 1; };
+  drawItemIcon(ctx, 'not-a-real-item', 64);
+  assert.ok(painted > 0);
+  assert.ok(!ILLUSTRATED_ITEMS.includes('not-a-real-item'));
 });
 
 test('valid catalog IDs matching object properties render and acquire their first rank', () => {
