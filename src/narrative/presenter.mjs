@@ -14,7 +14,7 @@ export function createPresenter(root, catalog, onError) {
   }
   root.innerHTML = '<canvas class="narrative-stage" width="1144" height="748" aria-label="Scripted scene"></canvas><div class="narrative-content"></div><p class="narrative-error" role="status" hidden></p>';
   const canvas = root.querySelector('canvas'), content = root.querySelector('.narrative-content'), errorBox = root.querySelector('.narrative-error');
-  let previous = '', previousFocus = null, disposed = false, revision = 0, lastLine = null;
+  let previous = '', previousFocus = null, disposed = false, revision = 0;
   const portrait = (speaker, expression = 'neutral') => {
     const character = catalog.characters[speaker];
     const layout = character.portraitLayout === 'extended' ? ' portrait-extended' : '';
@@ -55,12 +55,10 @@ export function createPresenter(root, catalog, onError) {
         previous = signature;
         const currentRevision = ++revision;
         const line = player?.dialogue;
-        if (!active) lastLine = null;
         if (active && !previousFocus) previousFocus = document.activeElement;
-        if (line) lastLine = line;
-        // The dialog stays mounted while the scene plays a beat between lines,
-        // so the conversation never blinks out and the cast never disappears.
-        const spoken = line ?? (active && !player?.splash && !player?.notice ? lastLine : null);
+        // No stale line: a beat between two conversations (a move, a camera
+        // push) shows the stage, not the sentence the player already read.
+        const spoken = line ?? null;
         if (spoken) {
           // The cast keeps the same slots for the whole scene, ordered by where
           // each actor stands, and faces the centre of the conversation.
@@ -103,6 +101,6 @@ export function createPresenter(root, catalog, onError) {
       root.hidden = !showStage && !banter && !error;
       errorBox.hidden = !error; errorBox.textContent = error ?? '';
     },
-    dispose() { disposed = true; revision++; lastLine = null; restoreFocus(); root.innerHTML = ''; root.hidden = true; },
+    dispose() { disposed = true; revision++; restoreFocus(); root.innerHTML = ''; root.hidden = true; },
   };
 }
