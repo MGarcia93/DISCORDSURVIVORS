@@ -16,6 +16,8 @@ import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from '
 import { enemiesScreen, drawEnemyPreview, isEnemyDevelopment } from './screens/enemies.mjs';
 import { game } from './screens/game.mjs';
 import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment } from './narrative/integration.mjs';
+import { audio } from './audio/index.mjs';
+import { musicCue, SFX } from './audio/mix.mjs';
 
 // Any map victory passes through the bus: progression records the unlock and
 // app reads it back through the chain to refresh the roster cache and mark
@@ -25,6 +27,14 @@ on('waveCleared', ({ run: clearedRun }) => {
   for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = isCharacterUnlocked(id);
   clearedRun.unlocked = UNLOCK_CHAIN.find(id => isCharacterUnlocked(id)) ?? null;
 });
+
+// Gameplay SFX hang off the same post-state events the rest of the shell reads.
+// El Negro throws things, he does not shoot them: the engine event is called
+// `shot` because a projectile left the player, but what it sounds like is a
+// thrown remote, joystick or phone.
+on('shot', () => audio.playSound(SFX.throw, 'throw'));
+on('kill', () => audio.playSound(SFX.kill, 'kill'));
+on('playerDown', () => audio.playSound(SFX.down));
 
 // A sale-menu special (ficha-defined items) pauses the run for its merchant UI.
 on('specialActivated', ({ run: activatedRun, special }) => {
@@ -91,10 +101,21 @@ function frame(timestamp) {
   if (state.screen === 'story') drawStory(document.querySelector('#story-scene'), storyPages[state.storyPage] ?? storyPages[0], animationTime);
   if (state.screen === 'worlds') drawWorldPreview(dt, animationTime);
   if (state.screen === 'enemies') drawEnemyPreview(dt);
+  // The bed follows the state the shell already has: screen, run phase, wave,
+  // pause and whether a scene owns the screen. One call, one signature check.
+  audio.setCue(musicCue({
+    screen: state.screen,
+    run: state.screen === 'game' ? state.run : null,
+    paused: state.paused,
+    blocked: narrative.blocked,
+  }));
+  audio.tick();
   requestAnimationFrame(frame);
 }
 
 document.addEventListener('click', event => {
+  // Browsers only allow audio after a gesture; this is the first one we get.
+  audio.unlock();
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
   const action = button.dataset.action;
@@ -105,6 +126,11 @@ document.addEventListener('click', event => {
     characters();
   }
   if (action === 'controls') controls();
+  if (action === 'mute') {
+    const muted = audio.toggleMuted();
+    button.textContent = muted ? '♪ MUDO' : '♪ SONIDO';
+    button.setAttribute('aria-pressed', String(muted));
+  }
   if (action === 'close-controls') closeControls();
   if (['home', 'characters', 'worlds'].includes(action)) show(action);
   if (action === 'story-start') { state.storyPage = 0; show('story'); }
@@ -128,8 +154,21 @@ document.addEventListener('click', event => {
   if (button.dataset.heal && state.run) { buyHeal(state.run); state.lastPhase = ''; overlay(); updateHUD(); }
 });
 
+document.addEventListener('input', event => {
+  const slider = event.target?.closest?.('[data-volume]');
+  if (!slider) return;
+  const bus = slider.dataset.volume;
+  const level = audio.setVolume(bus, Number(slider.value) / 100);
+  const label = document.querySelector(`[data-volume-label="${bus}"]`);
+  if (label && level !== null) label.textContent = `${Math.round(level * 100)}%`;
+});
+
 document.addEventListener('keydown', event => {
+  audio.unlock();
   const key = event.key.toLowerCase();
+  // A focused slider owns its own keys: during a run the arrows would otherwise
+  // move the player instead of the level.
+  if (event.target?.tagName === 'INPUT' && key !== 'escape') return;
   if (activeNarrativeHost().blocked) {
     trapNarrativeFocus(event);
     if (activeNarrativeHost().key(key, event.repeat) || key === 'tab') {

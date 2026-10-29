@@ -7,6 +7,7 @@ import { getCharacter } from '../characters/index.mjs';
 import { rewardPreviewLines } from './reward-view.mjs';
 import { countOf } from '../run-rewards.mjs';
 import { drawItemIcon } from './item-icons.mjs';
+import { volumeRow } from '../audio/controls.mjs';
 
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -21,7 +22,7 @@ export function overlay() {
   state.lastPhase = phase;
   if (phase === 'playing') { box.innerHTML = ''; return; }
   let body = '';
-  if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p><div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
+  if (phase === 'paused') body = `<div class="eyebrow">Micrófono silenciado</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p>${volumeRow('music', 'Música', 'pause')}${volumeRow('sfx', 'Efectos', 'pause')}<div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button><button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
   if (phase === 'sellMenu') {
     // Data-driven merchant: every special that carries an items table owns a
     // pause-sale menu; nothing here knows a character id.

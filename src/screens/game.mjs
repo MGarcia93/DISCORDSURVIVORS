@@ -2,6 +2,7 @@ import { WIDTH, HEIGHT, createRun } from '../engine.mjs';
 import { balanceFor } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { updateHUD } from '../game/hud.mjs';
+import { audio } from '../audio/index.mjs';
 
 // Arena DOM builder: built once per run; HUD values update separately.
 export function game() {
@@ -16,7 +17,7 @@ export function game() {
     .join('');
   state.content.innerHTML = `
     <section class="game-screen">
-    <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
+    <div class="arena-header"><div><div class="eyebrow">Mundo 01 · El apocalipsis de los boludos</div><h2 id="wave-title">OLEADA 01 <span class="muted">/ 04</span></h2></div><button class="secondary" data-action="mute" aria-pressed="${audio.muted}">${audio.muted ? '♪ MUDO' : '♪ SONIDO'}</button><button class="secondary" data-action="pause">Ⅱ PAUSA</button></div>
     <div class="arena-wrap"><canvas width="1144" height="748" aria-label="Arena de supervivencia ampliada. Movete con WASD o las flechas. Q y E activan tus habilidades."></canvas>
       <div class="hud"><div class="health-box"><div class="hud-label"><span id="player-name"></span><span id="hp-label"></span></div><div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div><div class="level-line"><small id="level" aria-live="off"></small><span class="xp-track"><span class="xp-fill" id="xp-fill"></span></span></div></div><div class="hud-numbers"><span id="coins"></span><span id="timer"></span></div></div>
       <div id="task-panel" class="task-panel" ${def.taskHud ? '' : 'hidden'}><div><b>${def.taskHudTitle ?? 'PERMISO PARA JUGAR'}</b><span id="task-label"></span></div><div class="task-track"><div id="task-fill" class="task-fill"></div></div></div>

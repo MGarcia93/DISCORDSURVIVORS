@@ -64,7 +64,8 @@ The two silhouettes stay deliberately distinct at gameplay scale: El Negro is th
 - El Negro is the starter. Solago is the second playable character and unlocks after beating the first map. Other confirmed members remain unavailable placeholders until their kits are implemented.
 - The three regular waves last 60 seconds each. The final boss wave has no time limit. This is a prototype format, not the proposed 15–20 minute final run.
 - One arena, two normal enemy types, one boss, three attacks/abilities for El Negro and Solago, six stackable upgrades, and a repeatable delivery heal.
-- Only character unlock progress is stored; there are no run saves, accounts, audio, multiplayer, or additional worlds yet.
+- Only character unlock progress and the audio settings (mute plus a music and an SFX level) are stored; there are no run saves, accounts, multiplayer, or additional worlds yet.
+- Audio is one `AudioContext` with two buses: a music bed that opens its filter wave by wave, and a polyphonic SFX bus the narrative shares. The Act 1 music is a provisional 32-second demo, lapped with a short crossfade; see `docs/audio.md`.
 - The gamer volley alternates between a TV remote, joystick, and cellphone. Each shot locks onto its first target and disappears if that enemy dies before impact, instead of homing toward an unrelated enemy. A landed hit can still bounce through up to two more targets. The smaller, long-haired waifu companion has her own layered hairstyle, outfit, and pixel-art silhouette.
 - The anime summon is a smaller, detailed pixel-art companion with its own outfit and long lilac hair.
 - The supplied gamer illustration remains in `assets/` as a reference; the UI now uses original pixel sprites instead. Other supplied photographs have not been copied into the project.
