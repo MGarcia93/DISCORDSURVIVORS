@@ -1,15 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { WAVES, pickKind, spawnInterval, waveConfig } from '../src/waves.mjs';
+import { pickKind, spawnInterval, waveBudget, waveConfig } from '../src/waves.mjs';
 import { createRun, startNextWave, step } from '../src/engine.mjs';
 import { BALANCE, balanceFor } from '../src/reward-data.mjs';
+import act01 from '../src/campaign/act-01-zomboid.mjs';
 
 // Deterministic draw queue: each call returns the next value and wraps around.
 const sequence = (...values) => { let index = 0; return () => values[index++ % values.length]; };
 
-test('every wave declares its pool, its density and the life each kind uses', () => {
-  assert.equal(WAVES.length, 4);
-  WAVES.forEach((config, index) => {
+test('every wave of the act declares its pool, its density and the life each kind uses', () => {
+  assert.equal(act01.waves.length, 6);
+  act01.waves.forEach((config, index) => {
     assert.equal(config.wave, index + 1);
     assert.ok(Number.isInteger(config.perMinute) && config.perMinute >= 0);
     const share = Object.values(config.mix).reduce((sum, weight) => sum + weight, 0);
@@ -18,21 +19,21 @@ test('every wave declares its pool, its density and the life each kind uses', ()
       assert.equal(typeof config.life[kind], 'number', `wave ${config.wave} declares ${kind} life`);
     }
   });
-  assert.equal(waveConfig(99), null);
+  assert.equal(waveConfig(act01, 99), null);
 });
 
 test('each spawn rolls the wave pool instead of a hardcoded coin toss', () => {
-  const wave2 = waveConfig(2);
+  const wave2 = waveConfig(act01, 2);
   assert.equal(pickKind(wave2, () => 0), 'zombie');
   assert.equal(pickKind(wave2, () => 0.69), 'zombie');
   assert.equal(pickKind(wave2, () => 0.71), 'runner');
   assert.equal(pickKind(wave2, () => 0.999), 'runner');
-  assert.equal(pickKind(waveConfig(1), () => 0.9), 'zombie');
-  assert.equal(pickKind(waveConfig(4), () => 0.5), null);
+  assert.equal(pickKind(waveConfig(act01, 1), () => 0.9), 'zombie');
+  assert.equal(pickKind(waveConfig(act01, 6), () => 0.5), null);
 });
 
 test('wave three fields the resistant zombie the act script asks for', () => {
-  const wave3 = waveConfig(3);
+  const wave3 = waveConfig(act01, 3);
   assert.equal(wave3.mix.brute, 0.2);
   assert.equal(wave3.life.brute, 156);
   assert.equal(pickKind(wave3, () => 0), 'zombie');
@@ -57,10 +58,11 @@ test('a wave spawns its whole budget and then stops, however long it runs', () =
 
 test('the budget follows the wave length so density does not collapse', () => {
   const long = createRun(() => 0.5, 'negro', {
-    balance: { ...BALANCE, waves: { duration: 60, bossWave: 4 } },
+    balance: { ...BALANCE, waves: { duration: 60 } },
   });
   assert.equal(long.duration, 60);
   assert.equal(long.spawnBudget, 48);
+  assert.equal(waveBudget(act01, 1, 30), 24);
 });
 
 test('the cadence spreads the budget over the remaining time', () => {
@@ -77,7 +79,7 @@ test('spawned enemies take their life percentage from the wave table', () => {
   step(run, 0.016);
   const [runner] = run.enemies;
   assert.equal(runner.kind, 'runner');
-  assert.equal(runner.hp, waveConfig(2).life.runner);
+  assert.equal(runner.hp, waveConfig(act01, 2).life.runner);
 });
 
 test('a wave three spawn rolls the brute and reads its life from the wave table', () => {
@@ -99,15 +101,15 @@ test('the next wave loads its own budget from the table', () => {
   step(run, 0.02);
   assert.equal(run.phase, 'shop');
   assert.equal(startNextWave(run), true);
-  assert.equal(run.spawnBudget, Math.round(waveConfig(2).perMinute * run.duration / 60));
+  assert.equal(run.spawnBudget, Math.round(waveConfig(act01, 2).perMinute * run.duration / 60));
 });
 
-test('the shipped balance plays full-minute waves and leaves the boss untimed', () => {
+test('the shipped act plays full-minute waves and leaves the boss untimed', () => {
   const run = createRun(() => 0.5);
   run.player.hp = run.player.maxHp = 1e9;
   assert.equal(run.duration, 60, 'real-time waves last one minute');
   assert.equal(run.spawnBudget, 48, 'the wave keeps its per-minute density');
-  const bossWave = run.rewardBalance.waves.bossWave;
+  const bossWave = run.act.boss.wave;
   while (run.wave < bossWave) {
     run.time = run.duration;
     step(run, 0, {});
@@ -125,15 +127,16 @@ test('the shipped balance plays full-minute waves and leaves the boss untimed', 
   assert.ok(run.time > run.duration);
 });
 
-test('local playtests run short waves while production keeps the full minute', () => {
-  assert.equal(BALANCE.waves.duration, 60, 'shipped balance stays real time');
+test('wave length belongs to the act and only localhost shortens it', () => {
+  assert.equal(Object.hasOwn(BALANCE, 'waves'), false, 'the balance no longer owns wave data');
   assert.equal(balanceFor('localhost').waves.duration, 15);
   assert.equal(balanceFor('127.0.0.1').waves.duration, 15);
   assert.equal(balanceFor('[::1]').waves.duration, 15);
-  assert.equal(balanceFor('discord-survivors.com').waves.duration, 60);
-  assert.equal(balanceFor(undefined).waves.duration, 60);
-  assert.equal(balanceFor('localhost').waves.bossWave, BALANCE.waves.bossWave);
-  assert.equal(balanceFor('localhost').xp.factor, BALANCE.xp.factor);
+  assert.equal(balanceFor('discord-survivors.com').waves, undefined);
+  assert.equal(balanceFor(undefined).waves, undefined);
+  assert.equal(balanceFor('localhost', '?waves=60').waves.duration, 60, 'the real pacing is forceable locally');
+  assert.equal(balanceFor('discord-survivors.com', '?waves=45').waves.duration, 45);
+  assert.equal(balanceFor('localhost', '?waves=nope').waves.duration, 15);
   const local = createRun(() => 0.5, 'negro', { balance: balanceFor('localhost') });
   assert.equal(local.duration, 15);
   assert.equal(local.spawnBudget, Math.round(48 * 15 / 60));

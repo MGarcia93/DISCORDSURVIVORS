@@ -53,7 +53,7 @@ test('surviving a wave opens the shop and upgrades can stack', () => {
   assert.equal(startNextWave(run), true);
   assert.equal(run.wave, 2);
   assert.equal(run.phase, 'playing');
-  assert.equal(run.duration, run.rewardBalance.waves.duration);
+  assert.equal(run.duration, run.act.duration);
 });
 
 test('specials have cooldowns and the chair reduces movement', () => {
@@ -78,9 +78,9 @@ test('death is terminal and retry starts a clean run', () => {
   assert.equal(createRun().kills, 0);
 });
 
-test('final wave requires defeating the Administrator, not just waiting', () => {
+test('final wave requires defeating the act boss, not just waiting', () => {
   const run = createRun(() => 0.5);
-  run.wave = 3;
+  run.wave = run.act.boss.wave - 1;
   run.phase = 'shop';
   startNextWave(run);
   const boss = run.enemies.find(enemy => enemy.boss);

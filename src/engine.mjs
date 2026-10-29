@@ -23,6 +23,7 @@ import { getCharacter } from './characters/index.mjs';
 import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies/index.mjs';
 import { DEFENSE_MITIGATION_CAP, resolveLifePercent } from './stats.mjs';
 import { pickKind, spawnInterval, waveBudget, waveConfig, waveLife } from './waves.mjs';
+import { DEFAULT_ACT } from './campaign/acts.mjs';
 import { emit } from './bus.mjs';
 import { createStatState } from './stat-modifiers.mjs';
 import { initializeRewards, awardXP, beginRewards, finishRewards, recordLegacyUpgrade } from './run-rewards.mjs';
@@ -32,12 +33,12 @@ export { chooseLevelReward, skipEmptyChoice, buyItem, nextLevelXP } from './run-
 // from ever flooding the arena if its data asks for an absurd density.
 const ALIVE_CAP = 120;
 
-export function createRun(random = Math.random, character = 'negro', rewards = {}) {
+export function createRun(random = Math.random, character = 'negro', rewards = {}, act = DEFAULT_ACT) {
   const characterDef = getCharacter(character);
   const s = characterDef.stats;
   const run = {
-    phase: 'playing', wave: 1, duration: 60, time: 0, elapsed: 0, coins: 0, kills: 0,
-    random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0, shockwaves: [],
+    phase: 'playing', wave: 1, duration: act.duration, time: 0, elapsed: 0, coins: 0, kills: 0,
+    act, random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0, shockwaves: [],
     player: {
       character: characterDef.id, characterDef,
        x: WIDTH / 2, y: HEIGHT / 2,
@@ -59,8 +60,10 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
   characterDef.initPlayer?.(run.player);
   characterDef.onStageStart?.(run, run.player);
   initializeRewards(run, rewards);
-  run.duration = run.rewardBalance.waves.duration;
-  run.spawnBudget = waveBudget(run.wave, run.duration);
+  // The act owns the real wave length. The environment balance only shortens it
+  // for local playtests, which is what `balanceFor` injects.
+  run.duration = run.rewardBalance.waves?.duration ?? act.duration;
+  run.spawnBudget = waveBudget(act, run.wave, run.duration);
   run.spawnIn = spawnInterval(run.duration, run.spawnBudget);
   return run;
 }
@@ -159,7 +162,7 @@ export function buyHeal(run) {
 // to place a named kind without running a whole wave.
 export function createEnemy(run, kind, x, y) {
   const def = ENEMY_KINDS[kind];
-  const percent = waveLife(run.wave, kind);
+  const percent = waveLife(run.act, run.wave, kind);
   const hp = percent === undefined ? enemyHp(kind, run.wave) : resolveLifePercent(percent);
   return { id: ++run.serial, kind, x, y,
     hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
@@ -172,16 +175,16 @@ export function createEnemy(run, kind, x, y) {
 export function startNextWave(run) {
   if (run.phase !== 'shop' || !finishRewards(run)) return false;
   run.wave++;
-  run.duration = run.rewardBalance.waves.duration;
+  run.duration = run.rewardBalance.waves?.duration ?? run.act.duration;
   run.time = 0;
-  run.spawnBudget = waveBudget(run.wave, run.duration);
+  run.spawnBudget = waveBudget(run.act, run.wave, run.duration);
   run.spawnIn = spawnInterval(run.duration, run.spawnBudget);
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
   run.player.characterDef.onStageStart?.(run, run.player);
-  if (run.wave === run.rewardBalance.waves.bossWave) {
-    run.enemies.push(createEnemy(run, run.rewardBalance.waves.bossKind ?? 'alarmZombie',
+  if (run.wave === run.act.boss.wave) {
+    run.enemies.push(createEnemy(run, run.act.boss.kind,
       WIDTH / 2, 80 * WORLD_SCALE));
   }
   return true;
@@ -402,7 +405,7 @@ export function step(run, seconds, input = {}) {
   }
 
   run.spawnIn -= dt;
-  const spawnConfig = waveConfig(run.wave);
+  const spawnConfig = waveConfig(run.act, run.wave);
   if (spawnConfig && run.spawnBudget > 0 && run.spawnIn <= 0 && run.enemies.length < ALIVE_CAP) {
     const kind = pickKind(spawnConfig, run.random);
     if (kind) {
@@ -615,7 +618,7 @@ export function step(run, seconds, input = {}) {
     run.pendingLevels = [];
     run.levelChoices = run.shopOffers = null;
     emit('waveCleared', { run });
-  } else if (run.wave < run.rewardBalance.waves.bossWave && run.time >= run.duration) {
+  } else if (run.wave < run.act.boss.wave && run.time >= run.duration) {
     run.phase = 'shop';
     awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
     run.enemies = [];

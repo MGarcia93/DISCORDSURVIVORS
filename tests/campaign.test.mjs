@@ -1,0 +1,77 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readdir, readFile } from 'node:fs/promises';
+import { ACTS, DEFAULT_ACT, PLAYABLE_ACTS, getAct } from '../src/campaign/acts.mjs';
+import act01 from '../src/campaign/act-01-zomboid.mjs';
+import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
+
+const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
+const playable = () => structuredClone(act01);
+
+test('the campaign registers five worlds in order and only the first one is playable', () => {
+  assert.equal(ACTS.length, 5);
+  assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5]);
+  assert.equal(new Set(ACTS.map(act => act.id)).size, 5);
+  assert.equal(PLAYABLE_ACTS.length, 1);
+  assert.equal(DEFAULT_ACT.id, 'act-01');
+  assert.equal(getAct('act-03').status, 'planned');
+  assert.equal(getAct('nope'), DEFAULT_ACT);
+  // Monster Hunter is a rejected pitch in Act 4, not a world.
+  assert.ok(!ACTS.some(act => /monster/i.test(act.id) || /monster/i.test(act.title)));
+});
+
+test('act one is the approved Project Zomboid chapter the script describes', () => {
+  assert.equal(act01.world, 'zomboid');
+  assert.equal(act01.title, '2.000 horas al pedo');
+  assert.equal(act01.duration, 60);
+  assert.equal(act01.waves.length, 6);
+  assert.deepEqual(act01.boss, { wave: 6, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' });
+  assert.equal(act01.waves[5].perMinute, 0, 'the boss wave fields the boss, not a clock budget');
+});
+
+test('a planned world only needs its campaign slot', () => {
+  assert.equal(validateAct(planned()).status, 'planned');
+});
+
+test('the validator names what an incomplete act is missing', () => {
+  const cases = [
+    ['unknown world', { world: 'atlantis' }, /unknown world: atlantis/],
+    ['unknown status', { status: 'maybe' }, /invalid status/],
+    ['missing duration', { duration: 0 }, /invalid duration/],
+    ['no waves', { waves: [] }, /waves are required/],
+    ['wave numbering gap', { waves: act01.waves.slice(0, 1) }, /boss must be on the last wave/],
+    ['unknown enemy in a mix', { waves: act01.waves.map((row, i) => (i === 0 ? { ...row, mix: { dragon: 1 }, life: { dragon: 10 } } : row)) }, /unknown enemy: dragon/],
+    ['mix that does not share one roll', { waves: act01.waves.map((row, i) => (i === 1 ? { ...row, mix: { zombie: 0.5, runner: 0.2 } } : row)) }, /mix must share one roll/],
+    ['missing life for a kind', { waves: act01.waves.map((row, i) => (i === 2 ? { ...row, life: { zombie: 58, runner: 43 } } : row)) }, /must declare brute life/],
+    ['unknown boss kind', { boss: { ...act01.boss, kind: 'nope' } }, /unknown boss kind/],
+    ['boss before the last wave', { boss: { ...act01.boss, wave: 3 } }, /boss must be on the last wave/],
+  ];
+  for (const [label, patch, expected] of cases) {
+    assert.throws(() => validateAct({ ...playable(), ...patch }), expected, label);
+  }
+});
+
+test('the campaign rejects duplicate ids and order holes', () => {
+  assert.throws(() => validateCampaign([playable(), planned()]), /order must be 2/);
+  assert.throws(() => validateCampaign([playable(), { ...planned(), order: 2 }, { ...planned(), order: 2 }]), /order must be 3/);
+  const duplicate = { ...playable(), id: 'act-01' };
+  assert.throws(() => validateCampaign([duplicate, { ...planned(), order: 2, id: 'act-01' }]), /Duplicate act id/);
+  assert.throws(() => validateCampaign([]), /at least one act/);
+  assert.throws(() => validateCampaign([{ ...planned(), order: 1 }]), /one playable act/);
+});
+
+test('nothing outside the campaign layer decides the boss wave or the wave count', async () => {
+  const files = [];
+  const walk = async dir => {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const path = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) await walk(path);
+      else if (path.endsWith('.mjs')) files.push(path);
+    }
+  };
+  await walk('src');
+  for (const file of files) {
+    const source = await readFile(file, 'utf8');
+    assert.ok(!/bossWave|bossKind/.test(source), `${file} must not hardcode a boss wave`);
+  }
+});

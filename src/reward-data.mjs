@@ -4,8 +4,8 @@ import { CHARACTERS } from './characters/index.mjs';
 // Initial tuning, not a measured balance result. Values are independent of
 // combat logic; zero boss XP avoids terminal choices after the final victory.
 export const BALANCE = {
-  // Real-time playtest waves: one minute each, final boss wave untimed.
-  waves: { duration: 60, bossWave: 4, bossKind: 'alarmZombie' },
+  // Wave length, density and the boss belong to the act (src/campaign/). This
+  // object only carries economy plus the local short-wave override below.
   // Playtest XP: 10 per ordinary kill so every character can reach the new
   // level-3 upgrades quickly. Lower it to 1 for real balance.
   xp: { factor: 10, exponent: 2, rewards: { zombie: 10, runner: 10, brute: 20, boss: 0 } },
@@ -13,12 +13,17 @@ export const BALANCE = {
   shopSize: 4,
 };
 
-// Local playtests use short waves; any hosted build keeps the real minute.
+// Local playtests use short waves; any hosted build keeps the act's real
+// length. `?waves=<seconds>` forces a length anywhere, so the real pacing can be
+// exercised locally. This is the only place that reads the hostname.
 export const LOCAL_WAVE_SECONDS = 15;
 
-export function balanceFor(hostname) {
+export function balanceFor(hostname, search = '') {
+  const requested = Number(new URLSearchParams(search).get('waves'));
+  const forced = Number.isFinite(requested) && requested > 0 ? requested : null;
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(String(hostname ?? '').toLowerCase());
-  return local ? { ...BALANCE, waves: { ...BALANCE.waves, duration: LOCAL_WAVE_SECONDS } } : BALANCE;
+  const duration = forced ?? (local ? LOCAL_WAVE_SECONDS : null);
+  return duration === null ? BALANCE : { ...BALANCE, waves: { duration } };
 }
 
 const flat = (stat, value) => ({ stat, operation: 'flat', value });

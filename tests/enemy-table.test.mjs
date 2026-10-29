@@ -71,9 +71,9 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   assert.equal(runner.speed, 97 * 1.1);
 });
 
-test('the wave-4 boss takes its stats from the table', () => {
+test('the act boss takes its stats from the table on its own wave', () => {
   const run = createRun();
-  run.wave = 3;
+  run.wave = run.act.boss.wave - 1;
   run.phase = 'shop';
   assert.equal(startNextWave(run), true);
   const [boss] = run.enemies;

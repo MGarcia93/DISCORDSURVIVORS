@@ -1,37 +1,28 @@
-// Wave authoring data. A wave declares what may appear in it, how many enemies
-// it may spawn, and the life percentage each kind uses there. The engine never
-// names a wave: adding a world is adding rows to this table.
+// Wave interpretation. The rows themselves belong to an act (src/campaign/),
+// so this module never names a world, a wave count or a boss: it only reads the
+// three numbers every row carries.
 //
 // Density is `perMinute`, so a wave keeps the same pressure whether the reward
-// balance runs 15-second test waves or 60-second waves. The engine turns it
-// into a budget for the actual duration and stops spawning when it runs out: a
-// wave never becomes an endless treadmill just because the player kills slowly.
+// balance runs 15-second playtest waves or 60-second real ones. The engine
+// turns it into a budget for the actual duration and stops spawning when it
+// runs out: a wave never becomes an endless treadmill just because the player
+// kills slowly.
 //
 // Mix weights are shares of a single roll, so { zombie: 0.7, runner: 0.3 } means
 // every spawn is a 70/30 draw. Life percentages are over BASE_STATS
 // (src/stats.mjs): 46 == 46 hp for that wave.
-//
-// A wave with no row here spawns nothing, so raising `waves.bossWave` in the
-// reward balance needs its rows authored first.
-export const WAVES = [
-  { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46 } },
-  { wave: 2, perMinute: 60, mix: { zombie: 0.7, runner: 0.3 }, life: { zombie: 52, runner: 38 } },
-  { wave: 3, perMinute: 72, mix: { zombie: 0.55, runner: 0.25, brute: 0.2 }, life: { zombie: 58, runner: 43, brute: 156 } },
-  { wave: 4, perMinute: 0, mix: {}, life: { zombie: 64, runner: 48 } },
-];
-
-export function waveConfig(wave) {
-  return WAVES[wave - 1] ?? null;
+export function waveConfig(act, wave) {
+  return act?.waves?.[wave - 1] ?? null;
 }
 
-export function waveBudget(wave, duration) {
-  const config = waveConfig(wave);
+export function waveBudget(act, wave, duration) {
+  const config = waveConfig(act, wave);
   if (!config || !Number.isFinite(duration)) return 0;
   return Math.round(config.perMinute * duration / 60);
 }
 
-export function waveLife(wave, kind) {
-  return waveConfig(wave)?.life?.[kind];
+export function waveLife(act, wave, kind) {
+  return waveConfig(act, wave)?.life?.[kind];
 }
 
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave

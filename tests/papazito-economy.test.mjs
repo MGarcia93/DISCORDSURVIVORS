@@ -6,7 +6,7 @@ function arena(random = () => 0.5) {
   // These cases model the escalation inside a full-length stage, independent of
   // the shorter wave duration used for playtesting.
   const run = createRun(random, 'papazito', { balance: {
-    waves: { duration: 60, bossWave: 4 },
+    waves: { duration: 60 },
     xp: { factor: 10, exponent: 2, rewards: { zombie: 1, runner: 1, boss: 0 } },
     gold: { rewards: { zombie: 1, runner: 1, boss: 30 }, survival: 5 },
     shopSize: 4,

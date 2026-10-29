@@ -12,14 +12,14 @@ test('the zoomed-out arena exposes a world 10% larger while keeping movement sca
 
 test('wave length comes from the balance configuration, not a hardcoded stage', () => {
   const run = createRun(() => 0.5);
-  assert.equal(run.duration, run.rewardBalance.waves.duration);
+  assert.equal(run.duration, run.act.duration);
   run.time = run.duration - 0.01;
   step(run, 0.02, {});
   assert.equal(run.phase, 'shop');
   startNextWave(run);
-  assert.equal(run.duration, run.rewardBalance.waves.duration);
+  assert.equal(run.duration, run.act.duration);
   const custom = createRun(() => 0.5, 'negro', { balance: {
-    ...run.rewardBalance, waves: { duration: 7, bossWave: 4 },
+    ...run.rewardBalance, waves: { duration: 7 },
   } });
   assert.equal(custom.duration, 7);
 });
