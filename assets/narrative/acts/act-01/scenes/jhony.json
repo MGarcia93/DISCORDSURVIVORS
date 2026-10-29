@@ -12,6 +12,7 @@
       "walker-near": [900, 600],
       "muzzle": [910, 415],
       "impact": [900, 545],
+      "impact-b": [1060, 632],
       "corpse-a": [470, 548],
       "corpse-b": [560, 562],
       "corpse-c": [700, 552],
@@ -100,7 +101,13 @@
     { "type": "move", "actor": "negro", "to": "entrance", "duration": 1.5 },
     { "type": "dialogue", "lines": [
       { "speaker": "jhony", "expression": "angry", "text": "¡Y NO ME TRAIGAS MÁS ZOMBIES!" }
-    ] }
+    ] },
+    { "type": "camera", "to": "late-b-near", "zoom": 1.3, "duration": 1.8 },
+    { "type": "flash", "at": "muzzle", "duration": 0.12 },
+    { "type": "sound", "sound": "gunshot" },
+    { "type": "down", "actor": "late-b" },
+    { "type": "flash", "at": "impact-b", "duration": 0.18 },
+    { "type": "wait", "duration": 0.5 }
   ],
   "effects": [{ "key": "act-01-met-jhony", "value": true }]
 }

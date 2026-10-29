@@ -125,6 +125,16 @@ test('a down step kills an enemy and refuses a cast member', () => {
     /Only an enemy actor can go down: guide/);
 });
 
+test('Jhony closes the scene by shooting the next one', async () => {
+  const catalog = await catalogFor();
+  const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
+  const lastLine = steps.map(step => step.type).lastIndexOf('dialogue');
+  const after = steps.slice(lastLine + 1);
+  const shot = after.findIndex(step => step.type === 'sound' && step.sound === 'gunshot');
+  assert.ok(shot >= 0, 'a shot answers his own line');
+  assert.equal(after[shot + 1]?.type, 'down', 'and a zombie drops');
+});
+
 test('a flash must point at a real stage point', () => {
   const stage = { points: { a: [10, 10] } };
   assert.throws(() => validateScene({ id: 'probe', stage, steps: [{ type: 'flash', at: 'nowhere', duration: 0.1 }] }, {}), /Unknown point: nowhere/);
