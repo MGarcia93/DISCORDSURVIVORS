@@ -241,6 +241,9 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-portraits { display: flex; justify-content: space-around; align-items: flex-end; min-height: 0; overflow: hidden; }
 .narrative-portraits > div { flex: 1 1 0; min-width: 0; max-width: 270px; }
 .narrative-portrait { display: block; width: 100%; max-height: 310px; object-fit: contain; image-rendering: pixelated; }
+/* Papafrita's 184x238 frame extends the 160x200 cast frame at equal pixel scale. */
+.narrative-portraits > .portrait-extended-frame { flex-grow: 1.15; max-width: 310.5px; }
+.narrative-portrait.portrait-extended { max-height: 368.9px; }
 /* Portraits are drawn facing the viewer's right, so the ones standing on the
    right half are mirrored to look back at the conversation. Whoever is not
    talking stays dimmed but readable. */
@@ -253,9 +256,12 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-skip { position: absolute; top: 10px; right: 10px; pointer-events: auto; }
 .narrative-splash { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #151320d9; }
 .narrative-splash img { width: 35%; }
+.narrative-splash-extended-frame { position: relative; width: 35%; aspect-ratio: 4 / 5; max-height: 310px; }
+.narrative-splash-extended-frame .portrait-extended { position: absolute; bottom: 0; left: 50%; height: 119%; width: auto; max-height: none; transform: translateX(-50%); }
 .narrative-splash h2 { color: #d7f779; text-align: center; }
 .narrative-banter { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 12px; width: min(440px, 65%); padding: 10px; background: #191725e8; border: 2px solid #786b95; font: 13px/1.5 monospace; }
 .narrative-banter img { width: 55px; height: 65px; }
+.narrative-banter .portrait-extended { width: 63.25px; height: 77.35px; flex-shrink: 0; align-self: flex-end; }
 .narrative-banter p { margin: 4px 0 0; overflow-wrap: anywhere; }
 .narrative-error { position: absolute; top: 8px; left: 8px; max-width: 90%; padding: 10px; background: #3d1829; color: #fff; font: 12px/1.5 monospace; overflow-wrap: anywhere; }
 .narrative-viewer { max-width: 1250px; margin: auto; }
@@ -283,6 +289,10 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .narrative-text button, .narrative-skip { padding: 8px; font-size: 9px; }
   .narrative-portraits > div { flex: 1 1 0; }
   .narrative-portrait { max-height: 100px; }
+  .narrative-portrait.portrait-extended { max-height: 119px; }
+  .narrative-splash-extended-frame { max-height: 100px; }
+  .narrative-splash-extended-frame .portrait-extended { max-height: none; }
   .narrative-banter { padding: 6px; gap: 6px; font-size: 10px; width: 70%; }
   .narrative-banter img { width: 32px; height: 40px; }
+  .narrative-banter .portrait-extended { width: 36.8px; height: 47.6px; }
 }

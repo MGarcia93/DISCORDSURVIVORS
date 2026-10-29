@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Papafrita — sprite proposal</title>
+<style>
+  body { margin: 0; background: #15141d; color: #eee4d6; font: 16px monospace; }
+  main { width: 1060px; margin: 26px auto; }
+  h1 { font-size: 24px; margin-bottom: 8px; }
+  p { color: #aaa4b8; margin: 8px 0 18px; }
+  canvas { display: block; image-rendering: pixelated; width: 1060px; height: 610px; }
+</style>
+<main>
+  <h1>PAPAFRITA / NPC SPRITE — DRAFT 01</h1>
+  <p>Shared 46px grid · Black tee · Denim bermuda shorts · Black trainers / white soles · Ponytail</p>
+  <canvas width="1060" height="610"></canvas>
+  <p>Visual approval first. No roster, unlocks, combat, narrative registration or tests.</p>
+</main>
+<script type="module">
+  import { drawElNegro, drawSolago } from '../../../src/sprites.mjs';
+  import { drawPapafrita } from './sprite-draft.mjs';
+  const ctx = document.querySelector('canvas').getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#211e2b'; ctx.fillRect(0, 0, 1060, 610);
+  const label = (text, x, y, color = '#bcb3c7') => {
+    ctx.fillStyle = color; ctx.font = '14px monospace'; ctx.textAlign = 'center'; ctx.fillText(text, x, y);
+  };
+  const floor = y => {
+    ctx.fillStyle = '#363142'; ctx.fillRect(25, y, 1010, 4);
+    ctx.fillStyle = '#595062'; ctx.fillRect(25, y, 1010, 1);
+  };
+  floor(323);
+  label('EL NEGRO / EXISTING', 155, 30);
+  label('PAPAFRITA / FRONT', 420, 30, '#e8ba83');
+  label('PAPAFRITA / FACING LEFT', 685, 30, '#e8ba83');
+  label('SOLAGO / EXISTING', 930, 30);
+  drawElNegro(ctx, 155, 320, { scale: 4 });
+  drawPapafrita(ctx, 420, 320, { scale: 4 });
+  drawPapafrita(ctx, 685, 320, { scale: 4, facing: -1 });
+  drawSolago(ctx, 930, 320, { scale: 4 });
+  label('ENLARGED ×4 / SHARED HUMAN HEIGHT AND BASELINE', 530, 362);
+  floor(573);
+  label('GAME SCALE ×2', 150, 405);
+  drawElNegro(ctx, 110, 570, { scale: 2 });
+  drawPapafrita(ctx, 200, 570, { scale: 2 });
+  label('IDLE', 410, 405);
+  drawPapafrita(ctx, 410, 570, { scale: 2 });
+  label('WALK / A', 630, 405);
+  drawPapafrita(ctx, 630, 570, { scale: 2, moving: true, time: 0 });
+  label('WALK / B', 850, 405);
+  drawPapafrita(ctx, 850, 570, { scale: 2, moving: true, time: 0.125 });
+  window.previewReady = true;
+</script>
+</html>

@@ -1,4 +1,33 @@
 {
+  "papafrita": {
+    "name": "Papafrita",
+    "sprite": "papafrita",
+    "portraitLayout": "extended",
+    "expressions": {
+      "neutral": "portraits/papafrita/neutral.svg",
+      "happy": "portraits/papafrita/happy.svg",
+      "annoyed": "portraits/papafrita/annoyed.svg",
+      "angry": "portraits/papafrita/angry.svg",
+      "surprised": "portraits/papafrita/surprised.svg",
+      "scared": "portraits/papafrita/scared.svg",
+      "tired": "portraits/papafrita/tired.svg",
+      "disgusted": "portraits/papafrita/disgusted.svg"
+    }
+  },
+  "jhony": {
+    "name": "Jhony",
+    "sprite": "jhony",
+    "expressions": {
+      "neutral": "portraits/jhony/neutral.svg",
+      "happy": "portraits/jhony/happy.svg",
+      "annoyed": "portraits/jhony/annoyed.svg",
+      "angry": "portraits/jhony/angry.svg",
+      "surprised": "portraits/jhony/surprised.svg",
+      "scared": "portraits/jhony/scared.svg",
+      "tired": "portraits/jhony/tired.svg",
+      "disgusted": "portraits/jhony/disgusted.svg"
+    }
+  },
   "guide": {
     "name": "Sample guide",
     "sprite": "negro",

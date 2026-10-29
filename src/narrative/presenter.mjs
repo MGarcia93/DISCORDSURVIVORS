@@ -1,18 +1,24 @@
 import { CHARACTERS } from '../characters/index.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
+import jhony from '../npcs/jhony.mjs';
+import papafrita from '../npcs/papafrita.mjs';
+
+// Narrative actors may be NPCs without entering the playable roster.
+const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita };
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 export function createPresenter(root, catalog, onError) {
   for (const [id, character] of Object.entries(catalog.characters)) {
-    if (!Object.hasOwn(CHARACTERS, character.sprite)) throw Error(`Unknown sprite for ${id}: ${character.sprite}`);
+    if (!Object.hasOwn(STAGE_SPRITES, character.sprite)) throw Error(`Unknown sprite for ${id}: ${character.sprite}`);
   }
   root.innerHTML = '<canvas class="narrative-stage" width="1144" height="748" aria-label="Scripted scene"></canvas><div class="narrative-content"></div><p class="narrative-error" role="status" hidden></p>';
   const canvas = root.querySelector('canvas'), content = root.querySelector('.narrative-content'), errorBox = root.querySelector('.narrative-error');
   let previous = '', previousFocus = null, disposed = false, revision = 0, lastLine = null;
   const portrait = (speaker, expression = 'neutral') => {
     const character = catalog.characters[speaker];
-    return `<img class="narrative-portrait" src="${escape(character.expressions[expression])}" alt="${escape(character.name)} — ${escape(expression)}">`;
+    const layout = character.portraitLayout === 'extended' ? ' portrait-extended' : '';
+    return `<img class="narrative-portrait${layout}" src="${escape(character.expressions[expression])}" alt="${escape(character.name)} — ${escape(expression)}">`;
   };
   const restoreFocus = () => {
     if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
@@ -35,7 +41,7 @@ export function createPresenter(root, catalog, onError) {
           ctx.fillRect(x - 25, y - 65, 50, 60);
         }
         for (const actor of Object.values(player.actors).sort((a, b) => a.y - b.y)) {
-          const def = CHARACTERS[catalog.characters[actor.character].sprite];
+          const def = STAGE_SPRITES[catalog.characters[actor.character].sprite];
           const lift = actor.animation === 'celebrate' ? Math.abs(Math.sin(player.time * 7)) * 12 : 0;
           def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {} });
           if (actor.animation === 'point') {
@@ -74,9 +80,13 @@ export function createPresenter(root, catalog, onError) {
           const actions = line
             ? '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>'
             : '';
-          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
+          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
         } else if (player?.splash) {
-          content.innerHTML = `<div class="narrative-splash">${portrait(player.splash.speaker)}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
+          const speaker = player.splash.speaker;
+          const image = portrait(speaker);
+          const framed = catalog.characters[speaker].portraitLayout === 'extended'
+            ? `<div class="narrative-splash-extended-frame">${image}</div>` : image;
+          content.innerHTML = `<div class="narrative-splash">${framed}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
         } else if (active) {
           content.innerHTML = '<button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>';
         } else if (banter) {

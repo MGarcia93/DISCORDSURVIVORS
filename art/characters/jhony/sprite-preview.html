@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Jhony — sprite design draft</title>
+<style>
+  body { margin: 0; background: #15141d; color: #eee4d6; font: 16px monospace; }
+  main { width: 1060px; margin: 28px auto; }
+  h1 { font-size: 25px; margin-bottom: 8px; }
+  p { color: #aaa4b8; margin: 8px 0 20px; }
+  canvas { display: block; image-rendering: pixelated; width: 1060px; height: 540px; }
+</style>
+<main>
+  <h1>JHONY / STAGE SPRITE — DRAFT 03</h1>
+  <p>Black leather jacket · Silver zip / lapels · Torn sleeves / tank top · Blood splashes</p>
+  <canvas width="1060" height="540"></canvas>
+  <p>Visual proposal only — no roster, gameplay, narrative integration or tests.</p>
+</main>
+<script type="module">
+  import { drawElNegro, drawWarrior } from '../../../src/sprites.mjs';
+  import { drawJhony } from './sprite-draft.mjs';
+  const ctx = document.querySelector('canvas').getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#211e2b'; ctx.fillRect(0, 0, 1060, 540);
+  const label = (text, x, y, color = '#bcb3c7') => {
+    ctx.fillStyle = color; ctx.font = '14px monospace'; ctx.textAlign = 'center'; ctx.fillText(text, x, y);
+  };
+  const floor = (x, y, w) => {
+    ctx.fillStyle = '#363142'; ctx.fillRect(x, y, w, 4);
+    ctx.fillStyle = '#595062'; ctx.fillRect(x, y, w, 1);
+  };
+  floor(25, 283, 1010);
+  label('EL NEGRO / EXISTING', 155, 35);
+  label('JHONY / FRONT', 420, 35, '#e8ba83');
+  label('JHONY / FACING LEFT', 685, 35, '#e8ba83');
+  label('WARRIOR / EXISTING', 930, 35);
+  drawElNegro(ctx, 155, 280, { scale: 4 });
+  drawJhony(ctx, 420, 280, { scale: 4 });
+  drawJhony(ctx, 685, 280, { scale: 4, facing: -1 });
+  drawWarrior(ctx, 930, 280, { scale: 4 });
+  label('ENLARGED ×4 / SHARED BASELINE', 530, 320);
+  floor(25, 486, 1010);
+  label('GAME SCALE ×2', 150, 367);
+  drawElNegro(ctx, 110, 484, { scale: 2 });
+  drawJhony(ctx, 190, 484, { scale: 2 });
+  label('IDLE', 410, 367);
+  drawJhony(ctx, 410, 484, { scale: 2 });
+  label('WALK / A', 630, 367);
+  drawJhony(ctx, 630, 484, { scale: 2, moving: true, time: 0 });
+  label('WALK / B', 850, 367);
+  drawJhony(ctx, 850, 484, { scale: 2, moving: true, time: 0.125 });
+  window.previewReady = true;
+</script>
+</html>

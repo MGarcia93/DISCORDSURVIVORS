@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="552" height="714" viewBox="-12 -38 184 238" shape-rendering="crispEdges" data-expression="disgusted">
+  <title>Papafrita — disgusted</title>
+  <desc>Draft three's full-cheeked face, double chin and neck proportions are restored. The requested ponytail is retained. Only the armoured body is enlarged: fifteen percent wider and eight percent taller about the bottom crop, keeping its existing plates, trim and shoulder design together. The head and neck are outside this body transformation. Extra canvas room holds the creature and wider body without shrinking the face. Cinematic art only.</desc>
+  <g id="neck" transform="translate(0 -20)">
+    <path fill="#97644e" d="M56 118h58v24h7v16H49v-16h7z" />
+    <path fill="#c58f68" d="M62 126h45v17h7v8H56v-8h6z" />
+    <path fill="#dda67b" d="M66 134h35v10h7v3H66z" />
+  </g>
+  <g id="armoured-body" transform="translate(-12 -16) scale(1.15 1.08)">
+    <g id="lower-armour">
+      <path fill="#1b1923" d="M1 157h158v43H1z" />
+      <path fill="#34313b" d="M8 165h33v35H8zM122 165h30v35h-30z" />
+      <path fill="#7d343b" d="M38 165h89v35H38zM5 179h27v15H5zM132 179h23v15h-23z" />
+      <path fill="#a64b49" d="M43 175h30v11h24v-11h23v25H43z" />
+      <path fill="#5e2b35" d="M73 180h24v8h16v12H62v-12h11z" />
+      <path fill="#c46959" d="M53 183h6v12h-6zM101 181h7v4h-7z" />
+      <path fill="#ad9678" d="M39 178h4v22h-4zM121 178h3v22h-3z" />
+      <path fill="#24232d" d="M12 194h24v6H12zM128 194h22v6h-22zM76 190h17v4H76z" />
+    </g>
+    <g id="body-outline" transform="translate(0 -20)">
+      <path fill="#1b1923" d="M41 133h24v-7h39v6h18v7h12v8h12v15h9v20h4v18H1v-20h4v-19h9v-14h13v-8h14z" />
+    </g>
+    <g id="shoulder-spikes" transform="translate(0 -20)">
+      <path fill="#1b1923" d="M10 112h5v8h7v8h7v9h9v19H21v-9h-8v-14h-3zM1 139h5v6h11v6h12v11H12v-6H1zM149 116h5v27h-7v12h-19v-17h8v-9h7v-7h6zM154 145h5v17h-13v5h-17v-12h13v-5h12z" />
+      <path fill="#57525a" d="M14 122h4v7h7v9h8v10H24v-9h-7v-9h-3zM145 127h5v13h-7v9h-10v-8h7v-8h5zM5 147h7v5h10v5H12v-4H5zM152 153h4v5h-14v-3h10z" />
+      <path fill="#8a7b78" d="M14 122h2v7h6v4h-5v-3h-3zM146 128h2v10h-4v-4h2zM7 149h5v2H7z" />
+    </g>
+    <g id="under-armour" transform="translate(0 -20)">
+      <path fill="#24232d" d="M55 139h11v8h35v-8h12v12h16v49H34v-48h21z" />
+      <path fill="#3a3339" d="M58 149h11v5h28v-5h13v9h-10v8H70v-8H58z" />
+      <path fill="#151820" d="M63 156h8v5h25v-5h9v15H62zM41 166h12v34H41zM115 165h10v35h-10z" />
+      <path fill="#575058" d="M72 154h23v3H72zM76 160h15v2H76z" />
+    </g>
+    <g id="carapace-breastplate" transform="translate(0 -20)">
+      <path fill="#44232d" d="M45 153h20v8h13v5h16v-5h12v-9h19v48H38v-39h7z" />
+      <path fill="#7d343b" d="M46 157h16v9h14v7h20v-7h14v-9h12v43H42v-35h4z" />
+      <path fill="#a64b49" d="M47 168h15v7h15v8h15v-7h17v-8h11v29H45v-18h2z" />
+      <path fill="#c46959" d="M56 169h5v9h15v4H62v-3h-6zM101 178h9v5h-9zM57 187h5v7h-5z" />
+      <path fill="#5e2b35" d="M78 179h12v8h11v13H72v-11h-8v-6h14zM109 187h6v13h-12v-7h6z" />
+      <path fill="#24232d" d="M63 157h5v8h11v5h14v-5h11v-8h5v11h-13v7H76v-7H63zM78 187h16v4H78z" />
+      <path fill="#ad9678" d="M52 159h4v8h9v5h13v7h13v-7h14v-5h7v-8h3v11h-8v6H94v7H76v-7H63v-5H52z" />
+      <path fill="#e1c9a0" d="M54 160h2v8h9v4h13v7h13v-7h14v-4h8v3h-6v5H94v7H76v-7H63v-5H54z" />
+      <path fill="#7c6d64" d="M42 183h4v17h-4zM121 181h3v19h-3z" />
+    </g>
+    <g id="carapace-shoulders" transform="translate(0 -20)">
+      <path fill="#44232d" d="M32 137h16v7h9v10h-7v14H37v11H10v-10H4v-13h9v-10h19zM116 141h17v7h13v11h9v16h-11v8h-23v-10h-12v-18h7z" />
+      <path fill="#87373e" d="M29 144h15v6h9v5h-8v10H34v10H14v-8H8v-7h10v-10h11zM120 147h11v7h12v10h8v8h-11v7h-15v-11h-11v-10h6z" />
+      <path fill="#af504c" d="M29 145h11v7H29v6H18v6h-6v-4h9v-10h8zM123 150h7v7h11v9h-7v-5h-11z" />
+      <path fill="#c96d5a" d="M30 146h8v3h-8zM22 153h6v3h-6zM124 152h4v5h-4z" />
+      <path fill="#602a35" d="M32 159h13v7H33v7H17v-4h15zM118 164h8v8h13v6h-15v-8h-6z" />
+      <path fill="#b29a7c" d="M10 166h13v3h11v-4h10v4h-8v4H23v-3H10zM124 172h11v-3h13v4h-11v4h-13z" />
+      <path fill="#e1c9a0" d="M12 166h11v2H12zM25 170h9v2h-9zM137 170h9v2h-9z" />
+      <path fill="#34313b" d="M17 177h14v7h9v16H10v-12h7zM129 181h14v8h9v11h-28v-12h5z" />
+      <path fill="#84373f" d="M11 185h17v7h10v8H5v-8h6zM133 187h12v6h9v7h-29v-8h8z" />
+      <path fill="#b15a50" d="M12 186h12v3H12zM135 188h7v3h-7z" />
+    </g>
+  </g>
+  <g id="hair-back" transform="translate(0 -38)">
+    <path fill="#211e26" d="M45 69h15v-7h40v6h17v12h8v27h-7v16h-9v7H51v-7H40v-17h-5V85h10z" />
+    <path fill="#3b3031" d="M39 89h7v15h-4v14h-4v-14h-3V96h4zM111 82h7v23h-5v15h-6v-9h4z" />
+    <path fill="#51403b" d="M39 96h3v11h-3z" />
+  </g>
+  <g id="ponytail" transform="translate(0 -38)">
+    <path fill="#211e26" d="M28 53h7v-7h14v5h8v12h-5v10h-8v16h-5v19h-7V85h-5V72h-5V59h6z" />
+    <path fill="#3b3031" d="M30 57h8v-6h9v6h6v8h-7v8h-9v12h-5V72h-6V61h4zM35 82h6v14h-3v9h-3z" />
+    <path fill="#56413b" d="M35 54h10v3H35zM29 62h4v7h-4zM37 82h2v12h-2z" />
+    <path fill="#211e26" d="M35 70h14v5H35z" />
+    <path fill="#a49a90" d="M36 71h12v2H36z" />
+  </g>
+  <g id="head" transform="translate(0 -38)">
+    <path fill="#211e26" d="M57 73h40v4h17v8h11v12h7v14h4v17h-4v11h-9v9h-14v6H76v-4H62v-7H51v-11h-6v-14h-3V99h6V85h9z" />
+    <path fill="#97644e" d="M60 78h35v5h18v8h10v13h7v11h3v12h-5v10h-9v8h-13v5H78v-5H65v-7H55v-11h-6v-13h-3v-13h6V89h8z" />
+    <path fill="#c58f68" d="M65 80h29v7h17v8h9v12h7v12h3v9h-6v9h-12v8H80v-5H68v-9H58v-12h-6v-15h5V94h8z" />
+    <path fill="#e0aa7b" d="M72 84h20v5h15v8h9v14h8v15h-7v9h-13v5H83v-5H73v-10H63v-13h-4v-9h7V91h6z" />
+    <path fill="#ebba8c" d="M76 85h16v5h11v4H70v-5h6zM65 111h16v7h7v8H75v-4H65zM105 112h16v12h-16z" />
+    <path fill="#b17b58" d="M52 109h7v13h8v11h12v8H68v-6H58v-10h-6zM123 114h6v14h-6v9h-12v7h-11v-5h11v-9h8v-8h4z" />
+  </g>
+  <g id="double-chin" transform="translate(0 -38)">
+    <path fill="#97644e" d="M62 134h14v8h28v-7h16v12h-9v9H99v5H78v-5H66v-8h-4z" />
+    <path fill="#c58f68" d="M67 139h9v8h28v-6h10v9h-13v6H80v-5H70v-6h-3z" />
+    <path fill="#dda67b" d="M76 148h26v5H82v-2h-6z" />
+    <path fill="#ad7658" d="M72 143h7v3h23v-3h6v6H79v-2h-7z" />
+  </g>
+  <g id="ears" transform="translate(0 -38)">
+    <path fill="#97644e" d="M46 99h9v5h5v16h-5v6h-9v-7h-4v-15h4z" />
+    <path fill="#c58f68" d="M47 103h6v5h4v10h-6v5h-4z" />
+    <path fill="#e0aa7b" d="M47 104h3v7h-3z" />
+    <path fill="#865443" d="M51 109h3v9h-3z" />
+  </g>
+  <g id="hair-front" transform="translate(0 -38)">
+    <path fill="#211e26" d="M45 90V76h8v-8h14v-5h30v4h15v8h9v18h-7v-8h-11v-5H83v5H69v8H59v10h-8v13h-6v-14h-3V92h3z" />
+    <path fill="#3b3031" d="M50 79h9v-7h12v-4h24v4h15v7h7v6h-9v-7H82v4H67v8H56v10h-6z" />
+    <path fill="#56413b" d="M58 76h12v-5h22v3H74v5H61v6h-6v-4h3zM95 74h10v4H95zM49 96h4v10h-4z" />
+    <path fill="#71534a" d="M68 74h9v2h-9zM82 69h9v2h-9z" />
+  </g>
+  <g id="facial-hair" transform="translate(0 -38)">
+    <path fill="#3b3031" d="M54 119h6v9h8v7h11v5h24v-4h12v-8h9v-7h5v15h-8v9h-13v6H78v-4H65v-7H56v-10h-5v-9h3z" />
+    <path fill="#29252c" d="M65 133h9v8h29v-4h14v7h-10v8H78v-5H65z" />
+    <path fill="#56413b" d="M55 124h4v8h8v6h-5v-3h-7zM74 141h7v4h-7zM109 136h5v6h-5z" />
+    <path fill="#34282b" d="M77 122h8v-2h9v2h8v-1h9v4h-8v1H92v-2h-7v3h-8z" />
+  </g>
+  <g id="expression-brows" transform="translate(0 -38)">
+    <path fill="#34282b" d="M68 93h8v2h7v3h7v5H80v-3h-7v-3h-5zM102 98h7v-2h11v4h-8v2h-10z" />
+    <path fill="#b17b58" d="M94 97h2v5h-2zM98 98h2v4h-2z" />
+  </g>
+  <g id="expression-eyes" transform="translate(0 -38)">
+    <path fill="#ac7557" d="M68 104h22v11H68zM102 104h18v11h-18z" />
+    <path fill="#f0dfc1" d="M71 109h17v4H71zM105 108h13v5h-13z" />
+    <path fill="#241f28" d="M81 109h5v4h-5zM112 108h5v5h-5zM69 104h11v1h9v4H69zM103 104h16v4h-16z" />
+  </g>
+  <g id="nose" transform="translate(0 -38)">
+    <path fill="#b17b58" d="M94 105h4v13h5v6h-9v-2h-5v-4h5z" />
+    <path fill="#ebba8c" d="M98 112h4v6h7v4H98z" />
+    <path fill="#865443" d="M91 121h5v3h-5zM106 121h5v2h-5z" />
+  </g>
+  <g id="expression-mouth" transform="translate(0 -38)">
+    <path fill="#825140" d="M80 128h12v-3h12v3h8v11H80z" />
+    <path fill="#422c30" d="M83 129h10v-2h9v3h7v7H83z" />
+    <path fill="#eddbba" d="M84 129h10v-1h7v3h7v4H84z" />
+    <path fill="#b18c75" d="M91 129h1v6h-1zM100 130h1v5h-1zM84 132h24v1H84z" />
+    <path fill="#d8a074" d="M87 141h17v2H87z" />
+  </g>
+  <g id="creature-neck" transform="translate(0 -38)">
+    <path fill="#242630" d="M65 26h32v12h-4v12h4v10h5v12H62v-9h-3V49h4V34h2z" />
+    <path fill="#89878c" d="M68 30h24v11h-3v10h4v12h5v5H65v-7h-2V49h4V36h1z" />
+    <path fill="#bcb3a3" d="M74 31h15v10h-4v11h4v10h5v4H72V55h-2V42h4z" />
+    <path fill="#e5d4b2" d="M79 34h8v7h-4v12h4v10H77v-8h-3V43h5z" />
+    <path fill="#5c6976" d="M66 38h4v14h-3v8h-3V49h2z" />
+    <path fill="#30bab8" d="M64 45h5v8h-5zM88 49h5v5h-5zM63 60h5v6h-5z" />
+    <path fill="#82dfcc" d="M65 45h2v5h-2zM90 49h2v3h-2z" />
+  </g>
+  <g id="creature-fins" transform="translate(0 -38)">
+    <path fill="#242630" d="M49 0h5v5h7v6h7v9H55v-5h-7V7h1zM104 0h5v8h5v10h-13V8h3zM45 15h13v5h7v9H50v-4h-9v-6h4zM108 17h11v5h6v7h-18v-5h-3v-4h4zM50 30h13v9h-7v7H44v-9h6zM104 31h11v7h7v8h-12v-5h-7v-7h1zM58 38h9v9h-4v8H52V44h6zM100 38h9v8h4v7h-9v-7h-4z" />
+    <path fill="#bccbd0" d="M51 5h3v5h7v6h-6v-4h-4zM105 7h4v8h-6v-4h2zM46 19h10v5h6v2H50v-4h-4zM110 21h8v4h4v2h-13zM53 33h7v4h-6v6h-7v-4h6zM106 34h6v6h7v3h-8v-5h-5zM60 42h4v5h-4v5h-5v-6h5zM103 41h4v6h3v3h-5v-5h-2z" />
+    <path fill="#e8e7d5" d="M51 5h2v4h6v3h-5v-2h-3zM106 7h2v6h-4v-2h2zM46 19h9v3h-9zM112 21h5v3h-5zM52 36h4v4h-7v2h-2v-3h5zM110 38h3v3h5v2h-7zM59 47h3v4h-5v-2h2z" />
+    <path fill="#65c9c2" d="M58 13h4v3h-4zM104 13h4v3h-4zM55 24h5v2h-5zM109 25h4v2h-4zM54 34h4v3h-4z" />
+  </g>
+  <g id="creature-head" transform="translate(0 -38)">
+    <path fill="#242630" d="M68 6h25v4h10v8h4v12h-5v7H63v-5h-5V18h4v-7h6z" />
+    <path fill="#7c7e87" d="M69 10h22v4h9v7h4v9h-6v4H66v-4h-5V19h5v-6h3z" />
+    <path fill="#a4a2a2" d="M72 10h18v5h7v5H72v-3h-6v-3h6z" />
+    <path fill="#c0b9aa" d="M77 11h12v4h5v3H78v-2h-5v-3h4z" />
+    <path fill="#5b6272" d="M65 28h35v5H65z" />
+    <path fill="#242630" d="M66 29h3v4h-3zM73 30h3v4h-3zM81 30h3v4h-3zM89 30h3v4h-3zM97 29h3v4h-3z" />
+  </g>
+  <g id="creature-eyes" transform="translate(0 -38)">
+    <path fill="#247f91" d="M62 17h4v-3h8v3h4v10h-4v3h-8v-3h-4zM91 17h4v-3h7v4h4v9h-4v3h-8v-3h-3z" />
+    <path fill="#35d1c8" d="M65 17h9v3h2v6h-3v2h-7v-3h-2v-5h1zM95 17h6v3h3v6h-3v2h-6z" />
+    <path fill="#86f0d8" d="M66 17h5v3h-3v5h-3v-5h1zM96 17h4v3h-2v5h-3v-6h1z" />
+    <path fill="#214553" d="M70 19h3v7h-3zM99 19h3v7h-3z" />
+  </g>
+</svg>

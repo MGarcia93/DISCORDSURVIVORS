@@ -1,11 +1,10 @@
 import { worldIds, worlds } from '../backgrounds/index.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
-import { ROSTER } from '../characters/index.mjs';
 import { state } from '../app/state.mjs';
-import { drawCast } from './world-cast.mjs';
+import { drawCast, STAGE_CAST } from './world-cast.mjs';
 
 // Development-only viewer: every world at full stage size, animating, with the
-// playable cast standing on it at the same scale scenes use. The selected
+// playable cast and NPCs standing at the same scale scenes use. The selected
 // ficha walks with WASD or the arrow keys so staging can be tried in place.
 // Reachable at ?dev=worlds and it never writes progress.
 export const isWorldDevelopment = () => new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'worlds';
@@ -18,8 +17,8 @@ let facing = 1;
 let moving = false;
 
 const castOn = () => state.worldPreviewCast !== false;
-const slotFor = id => 0.30 + Math.max(0, ROSTER.findIndex(character => character.id === id)) * 0.14;
-const actorLabel = () => (ROSTER.find(character => character.id === state.worldPreviewActor) ?? ROSTER[0]).label;
+const slotFor = id => 0.30 + Math.max(0, STAGE_CAST.findIndex(character => character.id === id)) * 0.14;
+const actorLabel = () => (STAGE_CAST.find(character => character.id === state.worldPreviewActor) ?? STAGE_CAST[0]).label;
 
 export function isWorldKey(key) { return WORLD_KEYS.has(key); }
 
@@ -59,7 +58,7 @@ export function worldsScreen() {
     <p class="world-viewer-intro">Every act's backdrop. Development viewer — no progress is saved.</p>
     <div class="actions">
       <label>World <select id="world-select" aria-label="World">${worlds.map(world => `<option value="${world.id}"${world.id === state.worldPreview ? ' selected' : ''}>${world.title}</option>`).join('')}</select></label>
-      <label>Actor <select id="world-actor" aria-label="Controlled character">${ROSTER.map(character => `<option value="${character.id}"${character.id === state.worldPreviewActor ? ' selected' : ''}>${character.label}</option>`).join('')}</select></label>
+      <label>Actor <select id="world-actor" aria-label="Controlled character">${STAGE_CAST.map(character => `<option value="${character.id}"${character.id === state.worldPreviewActor ? ' selected' : ''}>${character.label}</option>`).join('')}</select></label>
       <label class="world-cast-toggle"><input type="checkbox" id="world-cast"${castOn() ? ' checked' : ''}> Show the cast</label>
     </div>
     <div class="world-stage-wrap"><canvas id="world-stage" class="world-stage" width="1144" height="748" tabindex="0" aria-label="World background preview"></canvas></div>

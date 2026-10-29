@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Papafrita — cinematic integration preview</title>
+<link rel="stylesheet" href="../../../styles.css">
+<style>
+  body { display: block; padding: 12px; }
+  main { margin: auto; max-width: 1144px; }
+  h1 { font-size: 20px; }
+  .preview-controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  select { max-width: 100%; }
+</style>
+<main>
+  <h1>Papafrita / cinematic integration preview</h1>
+  <p>Development preview only. No scenes, unlocks or progress are saved.</p>
+  <div class="preview-controls">
+    <label>Expression <select id="expression"></select></label>
+    <label>Presentation <select id="mode"><option>dialogue</option><option>splash</option><option>banter</option></select></label>
+  </div>
+  <div class="narrative-viewer-stage"><div id="narrative-layer"></div></div>
+  <p id="preview-status" role="status">Loading portraits…</p>
+</main>
+<script type="module">
+  import { loadCatalog } from '../../../src/narrative/catalog.mjs';
+  import { createPresenter } from '../../../src/narrative/presenter.mjs';
+  const catalog = await loadCatalog();
+  const root = document.querySelector('#narrative-layer');
+  const status = document.querySelector('#preview-status');
+  const select = document.querySelector('#expression');
+  const mode = document.querySelector('#mode');
+  const query = new URLSearchParams(location.search);
+  for (const name of Object.keys(catalog.characters.papafrita.expressions)) {
+    const option = document.createElement('option'); option.value = name; option.textContent = name; select.append(option);
+  }
+  select.value = query.get('expression') ?? 'neutral';
+  if (!select.value) select.value = 'neutral';
+  mode.value = query.get('mode') ?? 'dialogue';
+  if (!mode.value) mode.value = 'dialogue';
+  const view = createPresenter(root, catalog, error => { status.textContent = error; document.body.dataset.error = error; });
+  async function render() {
+    const line = { speaker: 'papafrita', expression: select.value, text: 'Portrait integration preview — no story progression.' };
+    const player = {
+      active: true, time: 0, camera: { x: 572, y: 374, zoom: 1 }, props: {},
+      scene: {
+        stage: { background: 'arena', points: { left: [360, 480], right: [760, 480] },
+          actors: { host: { character: 'maxi-negro', at: 'left' }, visitor: { character: 'papafrita', at: 'right' } } },
+        steps: [{ type: 'dialogue', lines: [{ speaker: 'maxi-negro', text: 'Preview' }, line] }],
+      },
+      actors: {
+        host: { character: 'maxi-negro', x: 360, y: 480, facing: 1, animation: 'idle' },
+        visitor: { character: 'papafrita', x: 760, y: 480, facing: -1, animation: 'idle' },
+      },
+      ...(mode.value === 'dialogue' ? { dialogue: line } : {}),
+      ...(mode.value === 'splash' ? { splash: { speaker: 'papafrita', text: 'Papafrita' } } : {}),
+    };
+    view.render(mode.value === 'banter' ? null : player, mode.value === 'banter' ? line : null, null);
+    await Promise.all([...root.querySelectorAll('img')].map(image => image.decode()));
+    const portraits = [...root.querySelectorAll('.narrative-portraits img')];
+    const scale = image => {
+      const box = image.getBoundingClientRect();
+      return Math.min(box.width / image.naturalWidth, box.height / image.naturalHeight) * 3;
+    };
+    const matches = portraits.length !== 2 || Math.abs(scale(portraits[0]) - scale(portraits[1])) < 0.02;
+    document.body.dataset.scaleMatch = String(matches);
+    document.body.dataset.ready = 'true';
+    status.textContent = `${mode.value} / ${select.value} — portraits loaded; shared pixel scale: ${matches ? 'matched' : 'mismatch'}`;
+  }
+  select.addEventListener('change', render);
+  mode.addEventListener('change', render);
+  await render();
+</script>
+</html>

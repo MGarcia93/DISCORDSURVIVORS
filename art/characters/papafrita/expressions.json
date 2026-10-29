@@ -1,0 +1,125 @@
+{
+  "name": "Papafrita",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {},
+    "happy": {
+      "brows": [
+        { "fill": "#34282b", "d": "M68 96h8v-3h13v4H77v2h-9zM102 95h12v2h6v3h-10v-2h-8z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 105h22v10H68zM102 105h18v10h-18z" },
+        { "fill": "#241f28", "d": "M70 107h4v-3h10v2h4v4h-4v-3h-9v3h-5zM104 107h4v-3h7v2h4v4h-4v-3h-7v3h-4z" },
+        { "fill": "#c58f68", "d": "M73 114h14v2H73zM107 114h10v2h-10z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M78 127h8v2h18v-2h9v7h-7v5H86v-3h-8z" },
+        { "fill": "#422c30", "d": "M82 129h27v4h-6v4H88v-4h-6z" },
+        { "fill": "#eddbba", "d": "M83 129h25v3h-5v2H88v-2h-5z" },
+        { "fill": "#d8a074", "d": "M89 139h14v2H89z" }
+      ]
+    },
+    "annoyed": {
+      "brows": [
+        { "fill": "#34282b", "d": "M68 99h21v4H68zM102 94h12v3h6v4h-10v-3h-8z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 104h22v11H68zM102 104h18v11h-18z" },
+        { "fill": "#f0dfc1", "d": "M71 109h17v4H71zM105 108h13v5h-13z" },
+        { "fill": "#241f28", "d": "M81 109h5v4h-5zM112 108h5v5h-5zM69 104h20v5H69zM103 104h16v4h-16z" },
+        { "fill": "#c58f68", "d": "M73 115h14v2H73zM107 115h10v2h-10z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M80 130h21v-2h10v4h-10v2H80z" },
+        { "fill": "#422c30", "d": "M83 130h17v-1h8v2h-8v1H83z" },
+        { "fill": "#d8a074", "d": "M87 136h16v2H87z" }
+      ]
+    },
+    "angry": {
+      "brows": [
+        { "fill": "#34282b", "d": "M67 95h7v2h8v2h8v5H79v-2h-7v-2h-5zM102 99h7v-2h6v-2h6v5h-7v2h-12z" },
+        { "fill": "#b17b58", "d": "M94 96h2v5h-2zM98 96h2v5h-2z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 104h22v11H68zM102 104h18v11h-18z" },
+        { "fill": "#f0dfc1", "d": "M71 106h8v2h9v5H71zM105 108h7v-2h6v7h-13z" },
+        { "fill": "#241f28", "d": "M81 108h5v5h-5zM111 108h5v5h-5zM69 103h10v2h10v3H79v-2H69zM103 105h9v-2h7v3h-7v2h-9z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M82 126h23v2h7v10h-7v4H86v-4h-7v-9h3z" },
+        { "fill": "#422c30", "d": "M85 128h19v2h5v6h-6v4H88v-4h-6v-6h3z" },
+        { "fill": "#eddbba", "d": "M85 128h20v3H85z" },
+        { "fill": "#b16a62", "d": "M90 136h12v4H90z" },
+        { "fill": "#d8a074", "d": "M90 143h12v2H90z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#34282b", "d": "M68 92h8v-3h13v4H77v2h-9zM102 90h12v2h6v4h-10v-3h-8z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 101h22v14H68zM102 101h18v14h-18z" },
+        { "fill": "#f0dfc1", "d": "M71 103h17v10H71zM105 103h13v10h-13z" },
+        { "fill": "#241f28", "d": "M80 105h4v6h-4zM110 105h4v6h-4zM70 101h18v2H70zM104 101h14v2h-14z" },
+        { "fill": "#c58f68", "d": "M73 115h14v2H73zM107 115h10v2h-10z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M87 126h14v3h4v9h-4v3H87v-3h-4v-9h4z" },
+        { "fill": "#422c30", "d": "M89 128h10v3h3v5h-3v3H89v-3h-3v-5h3z" },
+        { "fill": "#d8a074", "d": "M90 142h10v2H90z" }
+      ]
+    },
+    "scared": {
+      "brows": [
+        { "fill": "#34282b", "d": "M68 98h7v-3h7v-3h8v4h-6v3h-8v2h-8zM102 92h7v3h6v3h5v4h-7v-3h-6v-3h-5z" },
+        { "fill": "#b17b58", "d": "M94 93h2v6h-2zM98 93h2v6h-2z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 102h22v13H68zM102 102h18v13h-18z" },
+        { "fill": "#f0dfc1", "d": "M71 104h17v9H71zM105 104h13v9h-13z" },
+        { "fill": "#241f28", "d": "M82 105h3v6h-3zM109 105h3v6h-3zM70 102h11v1h7v2H70zM104 103h8v-1h6v3h-14z" },
+        { "fill": "#b17b58", "d": "M73 115h14v2H73zM107 115h10v2h-10z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M85 126h19v3h7v10H80v-9h5z" },
+        { "fill": "#422c30", "d": "M86 129h17v2h5v6H83v-6h3z" },
+        { "fill": "#eddbba", "d": "M87 128h15v3H87z" },
+        { "fill": "#d8a074", "d": "M86 141h18v2H86z" }
+      ]
+    },
+    "tired": {
+      "brows": [
+        { "fill": "#34282b", "d": "M68 99h21v3H68zM102 99h18v3h-18z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 105h22v11H68zM102 105h18v11h-18z" },
+        { "fill": "#f0dfc1", "d": "M71 110h17v3H71zM105 110h13v3h-13z" },
+        { "fill": "#241f28", "d": "M81 110h5v3h-5zM112 110h5v3h-5zM69 105h20v5H69zM103 105h16v5h-16z" },
+        { "fill": "#97644e", "d": "M73 115h14v2H73zM107 115h10v2h-10z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M83 132h21v1h6v3H83z" },
+        { "fill": "#422c30", "d": "M86 132h17v2H86z" },
+        { "fill": "#d8a074", "d": "M89 138h14v2H89z" }
+      ]
+    },
+    "disgusted": {
+      "brows": [
+        { "fill": "#34282b", "d": "M68 93h8v2h7v3h7v5H80v-3h-7v-3h-5zM102 98h7v-2h11v4h-8v2h-10z" },
+        { "fill": "#b17b58", "d": "M94 97h2v5h-2zM98 98h2v4h-2z" }
+      ],
+      "eyes": [
+        { "fill": "#ac7557", "d": "M68 104h22v11H68zM102 104h18v11h-18z" },
+        { "fill": "#f0dfc1", "d": "M71 109h17v4H71zM105 108h13v5h-13z" },
+        { "fill": "#241f28", "d": "M81 109h5v4h-5zM112 108h5v5h-5zM69 104h11v1h9v4H69zM103 104h16v4h-16z" }
+      ],
+      "mouth": [
+        { "fill": "#825140", "d": "M80 128h12v-3h12v3h8v11H80z" },
+        { "fill": "#422c30", "d": "M83 129h10v-2h9v3h7v7H83z" },
+        { "fill": "#eddbba", "d": "M84 129h10v-1h7v3h7v4H84z" },
+        { "fill": "#b18c75", "d": "M91 129h1v6h-1zM100 130h1v5h-1zM84 132h24v1H84z" },
+        { "fill": "#d8a074", "d": "M87 141h17v2H87z" }
+      ]
+    }
+  }
+}

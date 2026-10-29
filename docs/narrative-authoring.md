@@ -44,6 +44,21 @@ Papazito (`papasito`) supports the same eight expressions over his construction-
 
 These images are generated from one source portrait and facial overrides, not independently redrawn characters. See [the El Negro workflow](../art/characters/negro/README.md), [the Solago workflow](../art/characters/solago/README.md), [the Warrior workflow](../art/characters/warrior/README.md), [the Papazito workflow](../art/characters/papazito/README.md) and the [`character-portraits` skill](../.opencode/skills/character-portraits/SKILL.md).
 
+Jhony (`jhony`) is an NPC with the same eight expressions and his own stage sprite.
+His approved base keeps long loose hair, clear glasses, a pointed beard and one
+lip hoop on the viewer's left; no ear or nose jewelry. His torn black leather
+jacket, red lining and blood splashes match the approved stage sprite. Use
+`annoyed` or `angry` for his quick temper and `neutral` for his comfort in Project
+Zomboid. See [Jhony's sources and rebuild command](../art/characters/jhony/README.md).
+Registering him as a speaker does not make him playable or activate Act 1 scenes.
+
+Papafrita (`papafrita`) has eight expressions and a casual NPC stage sprite but
+is not playable. His cinematic armour and creature hat intentionally differ from
+the sprite's black tee, denim shorts and trainers. His catalog entry opts into
+`"portraitLayout": "extended"` for the approved 184×238 frame: preserve pixel
+scale and bottom alignment rather than squeezing the hat into a standard frame.
+This adds no story scenes or wave bindings. See [Papafrita's preview and sources](../art/characters/papafrita/README.md).
+
 ## Sprite sequence
 
 Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `stage.actors` as named `{ character, at }` entries, and optional `stage.props` as `{ at, state }` entries. `stage.background` names the world the scene happens in (see [World backgrounds](#world-backgrounds)) and defaults to `arena`. Actor/prop IDs are local to that scene; these are presentation entities, not combat enemies. The initial scene state is also its preview setup.
