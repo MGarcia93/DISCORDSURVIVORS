@@ -42,8 +42,10 @@ test('smile counterattack only fires while the smile shield is up', () => {
   const bite = smile => {
     const run = make('solago', ['smile-counter']);
     run.player.smile = smile;
+    // Contact only: an enemy with reach now fires a projectile, which lands a
+    // step later and would not exercise the counter in this single step.
     const attacker = { id: 9, kind: 'zombie', hp: 1e6, maxHp: 1e6, x: run.player.x, y: run.player.y,
-      radius: 20, speed: 0, attackRange: 40, interval: 0.4, attackCd: 0 };
+      radius: 20, speed: 0, attackRange: 0, interval: 0.4, attackCd: 0 };
     run.enemies.push(attacker);
     step(run, 0.05, {});
     return 1e6 - attacker.hp;

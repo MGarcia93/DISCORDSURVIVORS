@@ -1,5 +1,5 @@
 import { WIDTH, HEIGHT, WORLD_SCALE } from '../engine.mjs';
-import { drawAnime, drawGamerProjectile, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
+import { drawAnime, drawGamerProjectile, drawEnemyShot, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
 import { drawEnemyFigure } from './figures.mjs';
 import { pixelText } from '../scenes.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
@@ -107,7 +107,10 @@ export function draw() {
   }
   for (const shot of state.run.projectiles) {
     ctx.save(); ctx.translate(Math.round(shot.x), Math.round(shot.y)); ctx.rotate(Math.floor(shot.angle / (Math.PI / 2)) * Math.PI / 2);
-    if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone' || shot.device === 'shroom' || shot.device === 'brick') {
+    if (shot.team === 'enemy') {
+      // Enemy fire has its own art per shooter; the flight is the same object.
+      drawEnemyShot(ctx, shot.device);
+    } else if (shot.device === 'remote' || shot.device === 'joystick' || shot.device === 'phone' || shot.device === 'shroom' || shot.device === 'brick') {
       drawGamerProjectile(ctx, shot.device);
     } else {
       rounded(ctx, -6, -2, 12, 4, 0, '#d4b6ff'); rounded(ctx, -2, -6, 4, 12, 0, '#e7d8f2');

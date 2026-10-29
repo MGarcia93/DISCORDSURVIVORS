@@ -464,6 +464,246 @@ export function drawAlarmZombie(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+// Act 2 — League of Legends. Both teams march on Maxi Negro, so the minion
+// bodies are one recipe and the team colour is what changes: the blue and the
+// red wave read as two factions without a second sprite.
+const MINION_TEAMS = [
+  { light: '#6f9fd0', base: '#47749f', mid: '#3a6086', dark: '#2f4d6c' },
+  { light: '#cf6a58', base: '#a64a3c', mid: '#8b3c31', dark: '#713028' },
+];
+const MINION_METAL = { light: '#c7d0dd', base: '#9fa9bb', mid: '#828da2', dark: '#6a748c' };
+
+// Wave 1 melee minion. A small armoured soldier: helmet with a visor slit and a
+// plume, breastplate, a round shield on one arm and an axe on the other. It is
+// the plainest of the act and never taller than the walker.
+export function drawMeleeMinion(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 5 + seed) % 2;
+  const team = MINION_TEAMS[seed % 2];
+  pose(ctx, x, y, scale);
+  pixel(ctx, -8, 0, 17, 2, '#131a20');
+  // Legs and metal-capped boots.
+  pixel(ctx, -6, -9, 5, 9 - stride, '#2c2b39');
+  pixel(ctx, 1, -9, 5, 8 + stride, '#2c2b39');
+  pixel(ctx, -7, 0, 6, 2, '#4a4658');
+  pixel(ctx, 1, -1, 6, 2, '#4a4658');
+  pixel(ctx, -7, 0, 6, 1, '#8a8496');
+  pixel(ctx, 1, -1, 6, 1, '#8a8496');
+  // Breastplate, then the team sash across the waist.
+  pixel(ctx, -8, -21, 17, 13, '#151a24');
+  torsoBands(ctx, -7, -20, 15, 11, MINION_METAL);
+  pixel(ctx, -7, -10, 15, 2, team.dark);
+  pixel(ctx, -7, -10, 15, 1, team.base);
+  // Pauldrons over a slim arm.
+  pixel(ctx, -11, -22, 5, 5, '#151a24');
+  pixel(ctx, -10, -21, 3, 3, team.base);
+  pixel(ctx, -10, -21, 3, 1, team.light);
+  pixel(ctx, 7, -22, 5, 5, '#151a24');
+  pixel(ctx, 8, -21, 3, 3, team.mid);
+  pixel(ctx, -11, -17, 3, 6, '#151a24');
+  pixel(ctx, -10, -16, 2, 5, team.mid);
+  // Helm with visor slit, nose guard, brow band and plume.
+  pixel(ctx, -7, -31, 15, 10, '#19232b');
+  pixel(ctx, -6, -30, 13, 7, MINION_METAL.base);
+  pixel(ctx, -6, -30, 13, 2, MINION_METAL.light);
+  pixel(ctx, -6, -24, 13, 2, MINION_METAL.dark);
+  pixel(ctx, -5, -27, 11, 2, '#20262f');
+  pixel(ctx, -4, -27, 2, 1, team.light);
+  pixel(ctx, 4, -27, 2, 1, team.light);
+  pixel(ctx, -1, -27, 2, 4, MINION_METAL.dark);
+  pixel(ctx, -1, -34, 3, 3, '#151a24');
+  pixel(ctx, -1, -33, 3, 2, team.base);
+  pixel(ctx, 2, -32, 3, 2, team.dark);
+  // Round shield on the near arm, touching the plate.
+  roundedMass(ctx, -15, -19, 8, 13, '#151a24');
+  roundedMass(ctx, -14, -18, 6, 11, team.dark);
+  pixel(ctx, -14, -18, 6, 2, team.base);
+  pixel(ctx, -14, -18, 1, 9, team.light);
+  pixel(ctx, -12, -15, 3, 4, MINION_METAL.light);
+  pixel(ctx, -11, -14, 1, 2, team.dark);
+  // Axe: long handle in the far hand, stepped crescent head clear of the helmet.
+  pixel(ctx, 8, -23, 2, 19, '#3b2a20');
+  pixel(ctx, 8, -23, 1, 19, '#5a3f2e');
+  pixel(ctx, 7, -17, 3, 3, MINION_METAL.dark);
+  pixel(ctx, 10, -27, 4, 1, '#151a24');
+  pixel(ctx, 10, -26, 6, 1, '#151a24');
+  pixel(ctx, 10, -25, 8, 6, '#151a24');
+  pixel(ctx, 10, -19, 6, 1, '#151a24');
+  pixel(ctx, 10, -18, 3, 1, '#151a24');
+  pixel(ctx, 11, -25, 6, 4, MINION_METAL.base);
+  pixel(ctx, 11, -25, 6, 1, MINION_METAL.light);
+  pixel(ctx, 11, -22, 4, 1, MINION_METAL.dark);
+  pixel(ctx, 16, -24, 1, 2, MINION_METAL.light);
+  ctx.restore();
+}
+
+// Wave 2 mage minion. Robed and hooded, a staff taller than its body with a
+// violet orb, and glowing eyes in the hood's shadow. The robe is the team's
+// colour so the two factions still read at a glance.
+export function drawMageMinion(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const sway = Math.floor(time * 3 + seed) % 2;
+  const team = MINION_TEAMS[seed % 2];
+  pose(ctx, x, y, scale);
+  pixel(ctx, -8, 0, 17, 2, '#131a20');
+  // Robe: a narrow chest that flares into a skirt, with a shaded side and hem.
+  pixel(ctx, -7, -25, 15, 15, '#151a24');
+  torsoBands(ctx, -6, -24, 13, 13, team);
+  pixel(ctx, -9, -12, 19, 12, '#151a24');
+  pixel(ctx, -8, -12, 17, 10, team.base);
+  pixel(ctx, -8, -12, 3, 10, team.light);
+  pixel(ctx, 6, -12, 2, 10, team.dark);
+  pixel(ctx, -8, -3, 17, 2, team.mid);
+  pixel(ctx, -6, -2 + sway, 4, 2, team.dark);
+  pixel(ctx, 3, -2 - sway, 4, 2, team.dark);
+  // Sash and hem trim, so the robe is not one flat field of colour.
+  pixel(ctx, -7, -13, 15, 2, team.dark);
+  pixel(ctx, -7, -13, 15, 1, team.light);
+  pixel(ctx, -8, -5, 17, 1, team.dark);
+  // Hood, then the dark face with two lit eyes.
+  pixel(ctx, -2, -37, 4, 3, '#19232b');
+  pixel(ctx, -1, -37, 2, 2, team.mid);
+  pixel(ctx, -6, -34, 13, 10, '#19232b');
+  pixel(ctx, -5, -33, 11, 8, team.mid);
+  pixel(ctx, -5, -33, 3, 8, team.base);
+  pixel(ctx, -4, -30, 9, 5, '#20263a');
+  pixel(ctx, -3, -29, 2, 2, '#c9b6ff');
+  pixel(ctx, 3, -29, 2, 2, '#c9b6ff');
+  // Sleeves and hands.
+  pixel(ctx, -10, -24, 4, 9, '#151a24');
+  pixel(ctx, -10, -23, 3, 7, team.mid);
+  pixel(ctx, -10, -15, 3, 3, '#a8b98a');
+  pixel(ctx, 7, -24, 4, 9, '#151a24');
+  pixel(ctx, 8, -23, 3, 7, team.base);
+  pixel(ctx, 8, -15, 3, 3, '#a8b98a');
+  // Staff: shaft touching the hand, orb crowning it above the hood.
+  pixel(ctx, 9, -32, 2, 33, '#3b2a20');
+  pixel(ctx, 9, -32, 1, 33, '#5a3f2e');
+  pixel(ctx, 9, -14, 2, 2, '#8a8496');
+  pixel(ctx, 7, -37, 6, 6, '#151a24');
+  pixel(ctx, 8, -36, 4, 4, '#b48cf0');
+  pixel(ctx, 9, -36, 2, 2, '#e6d9ff');
+  ctx.restore();
+}
+
+// Wave 2 siege minion. A wheeled cannon carriage: two big wheels, a wide
+// chassis, a barrel longer than the body and a tiny operator behind a banner.
+// Wide before tall, so it reads as artillery next to the infantry.
+export function drawSiegeMinion(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const rock = Math.floor(time * 4 + seed) % 2;
+  const team = MINION_TEAMS[seed % 2];
+  pose(ctx, x, y, scale);
+  pixel(ctx, -13, 0, 31, 2, '#131a20');
+  // Wheels: rounded masses with a hub, one lifted a pixel as it rolls.
+  roundedMass(ctx, -13, -8, 10, 9, '#151a24');
+  roundedMass(ctx, -12, -7, 8, 7, '#4a4658');
+  pixel(ctx, -9, -5, 3, 3, '#8a8496');
+  roundedMass(ctx, 3, -8 - rock, 10, 9, '#151a24');
+  roundedMass(ctx, 4, -7 - rock, 8, 7, '#4a4658');
+  pixel(ctx, 7, -5 - rock, 3, 3, '#8a8496');
+  // Chassis and the carriage body it carries.
+  pixel(ctx, -12, -13, 27, 6, '#151a24');
+  pixel(ctx, -11, -12, 25, 4, '#3a3f4d');
+  pixel(ctx, -11, -12, 25, 1, '#4c5262');
+  pixel(ctx, -11, -20, 16, 9, '#151a24');
+  torsoBands(ctx, -10, -19, 14, 7, team);
+  pixel(ctx, -10, -19, 14, 1, team.light);
+  // Barrel: breech, tube, muzzle ring, all pointing to the same side.
+  pixel(ctx, 4, -21, 15, 6, '#151a24');
+  pixel(ctx, 5, -20, 13, 4, '#5b6274');
+  pixel(ctx, 5, -20, 13, 1, '#7d8496');
+  pixel(ctx, 16, -22, 4, 8, '#151a24');
+  pixel(ctx, 17, -21, 2, 6, '#3a3f4d');
+  pixel(ctx, 17, -21, 2, 1, '#8a8496');
+  pixel(ctx, 6, -22, 3, 2, '#8a8496');
+  // Operator: a small head over the breech with a team cap.
+  pixel(ctx, -5, -28, 8, 8, '#19232b');
+  pixel(ctx, -4, -27, 6, 5, '#8b9e70');
+  pixel(ctx, -5, -29, 8, 2, team.dark);
+  pixel(ctx, -4, -29, 6, 1, team.base);
+  pixel(ctx, -3, -25, 2, 1, '#2e3330');
+  pixel(ctx, 1, -25, 2, 1, '#2e3330');
+  // Banner on the cast side: pole from the chassis, cloth with its bright edge.
+  pixel(ctx, -15, -28, 2, 16, '#3b2a20');
+  pixel(ctx, -15, -28, 1, 16, '#5a3f2e');
+  pixel(ctx, -14, -27, 8, 7, '#151a24');
+  pixel(ctx, -13, -26, 6, 5, team.base);
+  pixel(ctx, -13, -26, 6, 1, team.light);
+  pixel(ctx, -13, -22, 6, 1, team.dark);
+  ctx.restore();
+}
+
+// Enemy projectiles. They are the same object as the cast's shots; only the art
+// changes with the shooter, exactly like remote/joystick/phone/shroom/brick.
+export function drawEnemyShot(ctx, device = 'bolt') {
+  if (device === 'shell') {
+    // Siege shell: an iron ball with a lit rim and a dark bore.
+    roundedMass(ctx, -4, -4, 8, 8, '#2a2320');
+    roundedMass(ctx, -3, -3, 6, 6, '#4a4658');
+    pixel(ctx, -3, -3, 2, 2, '#8a8496');
+    pixel(ctx, -1, -1, 2, 2, '#2a2320');
+    return;
+  }
+  if (device === 'shot') {
+    // Turret slug: a hot tracer, not a spell.
+    pixel(ctx, -7, -1, 14, 2, '#f2c86a');
+    pixel(ctx, -7, -1, 14, 1, '#ffe9b0');
+    pixel(ctx, 5, -2, 3, 4, '#fff4cf');
+    return;
+  }
+  // Mage bolt: a violet dart with a white-hot core.
+  pixel(ctx, -6, -1, 12, 2, '#7a5bb8');
+  pixel(ctx, -4, -2, 8, 4, '#a98bf0');
+  pixel(ctx, -2, -1, 5, 2, '#e6d9ff');
+  pixel(ctx, 4, -1, 2, 2, '#f7f2ff');
+}
+
+// Act 2 — League of Legends, wave 4. The turret: a stone obelisk bolted to the
+// ground with a crystal eye and runes. It never walks; it turns and fires from
+// beyond the lane, so the player has to close the gap and break it.
+export function drawTurret(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const pulse = Math.floor(time * 3) % 2;
+  const stone = { light: '#6d7488', base: '#565d70', mid: '#474d5e', dark: '#383e4d' };
+  const gem = pulse
+    ? { light: '#e2fbff', base: '#5fd0e8', dark: '#2f8ba6' }
+    : { light: '#bff4ff', base: '#4bbcd6', dark: '#287a92' };
+  pose(ctx, x, y, scale);
+  pixel(ctx, -14, 0, 29, 2, '#131a20');
+  // Two stepped base tiers: a structure, not a body.
+  roundedMass(ctx, -15, -6, 31, 8, '#151a24');
+  roundedMass(ctx, -14, -5, 29, 6, stone.base);
+  pixel(ctx, -14, -5, 29, 2, stone.light);
+  pixel(ctx, -14, -1, 29, 1, stone.dark);
+  roundedMass(ctx, -11, -12, 23, 8, '#151a24');
+  roundedMass(ctx, -10, -11, 21, 6, stone.mid);
+  pixel(ctx, -10, -11, 21, 2, stone.base);
+  // Shaft with a lit left flank and carved runes.
+  pixel(ctx, -8, -26, 17, 15, '#151a24');
+  torsoBands(ctx, -7, -25, 15, 13, stone);
+  pixel(ctx, -7, -25, 15, 2, stone.light);
+  pixel(ctx, -4, -22, 2, 2, gem.base);
+  pixel(ctx, 1, -22, 2, 2, gem.base);
+  pixel(ctx, -2, -19, 2, 3, gem.base);
+  // Collar that holds the eye, with a prong on each side.
+  roundedMass(ctx, -9, -29, 19, 5, '#151a24');
+  roundedMass(ctx, -8, -28, 17, 3, stone.mid);
+  pixel(ctx, -9, -36, 4, 4, '#151a24');
+  pixel(ctx, -8, -35, 2, 2, stone.light);
+  pixel(ctx, 5, -36, 4, 4, '#151a24');
+  pixel(ctx, 6, -35, 2, 2, stone.light);
+  // Crystal eye: socket, lit facets, white core, and a glyph resting on it.
+  pixel(ctx, -5, -38, 11, 10, '#151a24');
+  pixel(ctx, -4, -37, 9, 8, gem.dark);
+  pixel(ctx, -3, -36, 7, 6, gem.base);
+  pixel(ctx, -2, -35, 5, 4, gem.light);
+  pixel(ctx, -1, -34, 3, 2, '#ffffff');
+  pixel(ctx, -1, -41, 3, 3, '#151a24');
+  pixel(ctx, 0, -41, 1, 3, gem.light);
+  ctx.restore();
+}
+
 export function drawAdministrator(ctx, x, y, options = {}) {
   pose(ctx, x, y, options.scale || 4);
   const hover = Math.floor(Math.sin((options.time || 0) * 2) * 2);

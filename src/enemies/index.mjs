@@ -6,6 +6,10 @@ import zombie from './zombie.mjs';
 import runner from './runner.mjs';
 import brute from './brute.mjs';
 import alarmZombie from './alarm-zombie.mjs';
+import meleeMinion from './melee-minion.mjs';
+import mageMinion from './mage-minion.mjs';
+import siegeMinion from './siege-minion.mjs';
+import turret from './turret.mjs';
 
 // Enemy registry, built from one module per kind exactly like src/characters/.
 // Each ficha owns its sheet and its drawing; this file only resolves percentages
@@ -15,10 +19,11 @@ import alarmZombie from './alarm-zombie.mjs';
 // Every kind authors the same six combat stats (life, defense, attack,
 // attackSpeed, attackDistance, moveSpeed). `radius` and `bounty` are body and
 // economy, so they stay as raw fields outside the sheet.
-export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie };
+export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, turret };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
-export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id];
+export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,
+  meleeMinion.id, mageMinion.id, siegeMinion.id, turret.id];
 
 export function getEnemyKind(id) {
   return ENEMY_KINDS[id] ?? ENEMY_KINDS.zombie;

@@ -169,6 +169,7 @@ export function createEnemy(run, kind, x, y) {
     radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave),
     attackRange: enemyAttackRange(kind, run.wave),
     attackInterval: enemyAttackInterval(kind, run.wave),
+    projectile: def.projectile,
     actions: def.actions, boss: def.boss === true };
 }
 
@@ -306,6 +307,46 @@ function fireRadial(run, source, damage, { count, speed, radius }) {
       vx: dx * speed, vy: dy * speed, damage, kind: 'brick', device: 'brick',
       hit: [], ttl: 2.4, angle: direction, radius: 3 * WORLD_SCALE });
   }
+}
+
+// One place decides how much of an incoming hit reaches the player: defence,
+// the sold-defence penalty, the character's situational bonus, the shield and
+// the immunity floor. A swing and a projectile both go through it, so the two
+// can never drift apart.
+function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } = {}) {
+  const p = run.player;
+  let incoming = damage
+    * (1 - Math.min(0.75, p.defense * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
+    * contactFactor;
+  if ((p.shield ?? 0) > 0 && incoming > 0) {
+    const absorbed = Math.min(p.shield, incoming);
+    p.shield -= absorbed;
+    incoming -= absorbed;
+    run.effects.push({ x: p.x, y: p.y - 70 * WORLD_SCALE, text: 'BLOQUEO', ttl: 0.6, kind: 'shield' });
+  }
+  p.hp = Math.max(0, p.hp - incoming);
+  p.immune = 0.65;
+  const counter = p.rewardBonuses.smileCounter ?? 0;
+  if (counter > 0 && (p.smile ?? 0) > 0 && enemy) hit(run, enemy, p.damage * counter, 'bite');
+  return incoming;
+}
+
+// A ranged enemy's shot is the player's projectile with another owner: it leaves
+// the enemy toward where the player stands and flies straight, so stepping out
+// of it works. The ficha only names the art and the damage it carries.
+function fireEnemyShot(run, enemy) {
+  const p = run.player;
+  const dx = p.x - enemy.x;
+  const dy = p.y - enemy.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const speed = 300 * WORLD_SCALE;
+  run.projectiles.push({
+    x: enemy.x, y: enemy.y,
+    vx: dx / length * speed, vy: dy / length * speed,
+    team: 'enemy', device: enemy.projectile ?? 'bolt',
+    damage: enemyContactDamage(enemy.kind, run.wave),
+    radius: 5 * WORLD_SCALE, ttl: 3, angle: Math.atan2(dy, dx), hit: [],
+  });
 }
 
 function hit(run, enemy, damage, kind = 'damage') {
@@ -490,21 +531,12 @@ export function step(run, seconds, input = {}) {
         enemy.attackCd = smoke.missCd ?? 1; // the swing connects with smoke, not flesh
         continue;
       }
-      const defenseBonus = def.contactDefenseBonus?.(p) ?? 0;
-      const contactDamage = enemyContactDamage(enemy.kind, run.wave);
-      let incoming = contactDamage
-        * (1 - Math.min(0.75, p.defense * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
-        * contactFactor;
-      if ((p.shield ?? 0) > 0 && incoming > 0) {
-        const absorbed = Math.min(p.shield, incoming);
-        p.shield -= absorbed;
-        incoming -= absorbed;
-        run.effects.push({ x: p.x, y: p.y - 70 * WORLD_SCALE, text: 'BLOQUEO', ttl: 0.6, kind: 'shield' });
-      }
-      p.hp = Math.max(0, p.hp - incoming);
-      p.immune = 0.65;
-      const counter = p.rewardBonuses.smileCounter ?? 0;
-      if (counter > 0 && (p.smile ?? 0) > 0) hit(run, enemy, p.damage * counter, 'bite');
+      // A kind with reach does not teleport its damage: it fires. Anything with
+      // contact reach still lands the swing on the player's body.
+      if ((enemy.attackRange ?? 0) > 0) fireEnemyShot(run, enemy);
+      else hurtPlayer(run, enemy, enemyContactDamage(enemy.kind, run.wave), {
+        defenseBonus: def.contactDefenseBonus?.(p) ?? 0, contactFactor,
+      });
       // A confused mind swings slower; otherwise the sheet owns the cadence.
       enemy.attackCd = (enemy.confusionStacks ?? 0) >= 2 ? 0.8 : (enemy.attackInterval ?? 0.65);
     }
@@ -522,10 +554,29 @@ export function step(run, seconds, input = {}) {
   if (run.shockwaves) run.shockwaves = run.shockwaves.filter(wave => wave.radius <= wave.maxRadius);
   for (const shot of run.projectiles) {
     shot.ttl -= dt;
-    shot.angle += dt * 12;
+    // The cast's devices spin in flight; a shot aimed by an enemy keeps its
+    // heading, or it would read as tumbling instead of flying at you.
+    if (shot.team !== 'enemy') shot.angle += dt * 12;
     if (shot.vx !== undefined && shot.vy !== undefined) {
       const dx = shot.vx * dt, dy = shot.vy * dt;
       const lengthSquared = dx * dx + dy * dy;
+      if (shot.team === 'enemy') {
+        // Enemy fire targets the player: swept point-to-circle, so a fast slug
+        // cannot tunnel through the body between two frames.
+        const t = lengthSquared ? Math.max(0, Math.min(1,
+          ((p.x - shot.x) * dx + (p.y - shot.y) * dy) / lengthSquared)) : 0;
+        const gap = Math.hypot(p.x - shot.x - dx * t, p.y - shot.y - dy * t);
+        if (gap <= p.hitRadius + (shot.radius ?? 0)) {
+          if (p.immune <= 0) hurtPlayer(run, null, shot.damage, {
+            defenseBonus: def.contactDefenseBonus?.(p) ?? 0, contactFactor,
+          });
+          run.effects.push({ x: p.x, y: p.y - 34 * WORLD_SCALE, text: '✷', ttl: 0.3, kind: 'shot' });
+          shot.ttl = 0;
+        }
+        shot.x += dx;
+        shot.y += dy;
+        continue;
+      }
       // Swept collision avoids tunneling through an enemy between frames.
       const collisions = run.enemies.filter(enemy => enemy.hp > 0).map(enemy => {
         const t = lengthSquared ? Math.max(0, Math.min(1,
