@@ -51,6 +51,14 @@ export function createCatalog(input, { characters = [], effects = {} } = {}) {
   for (const upgrade of data.upgrades) {
     if (upgrade.characters !== 'all' && !characters.includes(upgrade.characters)) fail(upgrade.id, 'characters', 'unknown character');
     if (!positiveInteger(upgrade.minLevel)) fail(upgrade.id, 'minLevel', 'expected a positive integer');
+    if (upgrade.chance !== undefined && (!Number.isFinite(upgrade.chance) || upgrade.chance <= 0 || upgrade.chance > 1)) {
+      fail(upgrade.id, 'chance', 'expected a probability above 0 and at most 1');
+    }
+    if (upgrade.guaranteedAt !== undefined) {
+      if (!Array.isArray(upgrade.guaranteedAt) || !upgrade.guaranteedAt.every(positiveInteger)) {
+        fail(upgrade.id, 'guaranteedAt', 'expected an array of positive levels');
+      }
+    }
     if (!Array.isArray(upgrade.ranks) || !upgrade.ranks.length) fail(upgrade.id, 'ranks', 'expected at least one rank');
     for (const rank of upgrade.ranks) validateReward(upgrade.id, rank, effects);
     upgrade.requires ??= [];
@@ -86,15 +94,29 @@ export function sampleEntries(entries, count, random) {
 }
 
 // The caller stores these choices. Rendering must never call this generator.
+// A guaranteed entry ignores its own chance and must appear in that level's
+// selection; the rest of the slots stay random. Everything else passes a
+// per-offer probability roll, so an upgrade can be rare instead of certain.
+function pickWithGuarantee(pool, count, level, random) {
+  if (count <= 0) return [];
+  const forced = pool.filter(entry => (entry.guaranteedAt ?? []).includes(level));
+  const chosen = sampleEntries(forced, Math.min(count, forced.length), random);
+  const rest = pool.filter(entry => !chosen.includes(entry));
+  return [...chosen, ...sampleEntries(rest, count - chosen.length, random)];
+}
+
 export function selectLevelOptions(catalog, { character, level, ranks }, random) {
   const rankOf = id => Object.hasOwn(ranks, id) ? ranks[id] : 0;
   const eligible = catalog.upgrades.filter(entry =>
     (entry.characters === 'all' || entry.characters === character)
     && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length
     && entry.requires.every(requirement => rankOf(requirement.id) >= requirement.rank));
-  const own = eligible.filter(entry => entry.characters === character);
-  const common = eligible.filter(entry => entry.characters === 'all');
-  return [...sampleEntries(own, 1, random), ...sampleEntries(common, own.length ? 2 : 3, random)];
+  const available = entry => (entry.guaranteedAt ?? []).includes(level)
+    || (entry.chance ?? 1) >= random();
+  const own = eligible.filter(entry => entry.characters === character && available(entry));
+  const common = eligible.filter(entry => entry.characters === 'all' && available(entry));
+  const ownPicks = pickWithGuarantee(own, 1, level, random);
+  return [...ownPicks, ...pickWithGuarantee(common, ownPicks.length ? 2 : 3, level, random)];
 }
 
 export function describeReward(reward, effects = {}) {

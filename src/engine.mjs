@@ -143,6 +143,7 @@ export function sellBelonging(run, key) {
     p.sellDefLossTtl = Math.max(p.sellDefLossTtl ?? 0, item.defTtl);
   }
   if (item.visionTtl) p.sellVisionTtl = Math.max(p.sellVisionTtl ?? 0, item.visionTtl);
+  if ((p.rewardBonuses?.saleNext ?? 0) > 0) p.sellNextMult = 1 + p.rewardBonuses.saleNext;
   run.effects.push({ x: p.x, y: p.y - 66 * WORLD_SCALE, text: item.quote, ttl: 1.5, kind: 'sale' });
   return true;
 }
@@ -226,6 +227,11 @@ function shroomBlast(run, shot, impact) {
   }
   run.effects.push({ x: impact.x, y: impact.y, radius,
     ttl: 0.55, duration: 0.55, kind: 'shroomBlast' });
+  const zone = run.player.rewardBonuses.sporeZone ?? 0;
+  if (zone > 0) {
+    run.effects.push({ x: impact.x, y: impact.y, r: radius * 0.8, radius: radius * 0.8,
+      kind: 'sporeZone', damage: 4 + zone * 4, ttl: 3 + zone, tick: 0 });
+  }
 }
 
 function nearest(run, origin, excluded = [], maxDistance = Infinity) {
@@ -242,6 +248,16 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     : kind === 'shroom' ? 'shroom' : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
     damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
+  const extra = kind === 'shroom' ? (run.player.rewardBonuses.extraShroom ?? 0)
+    : kind === 'brick' ? (run.player.rewardBonuses.brickFan ?? 0) : 0;
+  const used = [target.id];
+  for (let index = 0; index < extra; index++) {
+    const alt = nearest(run, source, used, maxDistance);
+    if (!alt) break;
+    used.push(alt.id);
+    run.projectiles.push({ x: source.x, y: source.y, target: alt.id,
+      damage: damage * 0.6, kind, device, hit: [], ttl: 3, angle: 0, attack });
+  }
 }
 
 // Untargeted rings keep their launch direction, even in an empty arena.
@@ -282,6 +298,16 @@ function attackMelee(run) {
   const extra = Math.min(inReach.length - 1, p.rewardBonuses.biteTargets ?? 0);
   hit(run, inReach[0], damage, 'bite');
   for (let index = 1; index <= extra; index++) hit(run, inReach[index], damage * 0.7, 'bite');
+  const second = p.rewardBonuses.secondBite ?? 0;
+  if (second > 0 && inReach[0].hp > 0) hit(run, inReach[0], damage * second, 'bite');
+  const push = p.rewardBonuses.knockback ?? 0;
+  if (push > 0) {
+    for (const enemy of inReach.slice(0, 1 + extra)) {
+      const away = distance(enemy, p) || 1;
+      enemy.x += (enemy.x - p.x) / away * push * WORLD_SCALE;
+      enemy.y += (enemy.y - p.y) / away * push * WORLD_SCALE;
+    }
+  }
   p.attackFlash = 0.22;
   run.effects.push({ x: inReach[0].x, y: inReach[0].y - inReach[0].radius - 12, text: '✦', ttl: 0.35, kind: 'bite' });
 }
@@ -327,6 +353,14 @@ export function step(run, seconds, input = {}) {
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
     p.still = 0;
+    const trail = p.rewardBonuses.smokeTrail ?? 0;
+    if (trail > 0) {
+      p.trailIn = (p.trailIn ?? 0) - dt;
+      if (p.trailIn <= 0) {
+        p.trailIn = 1.4;
+        run.effects.push({ x: p.x, y: p.y, kind: 'smoke', r: (60 + trail * 10) * WORLD_SCALE, ttl: 2.4 });
+      }
+    }
   } else {
     p.still += dt;
     if (p.still >= Math.max(0.5, 2 - (p.rewardBonuses.stillThreshold ?? 0))) {
@@ -350,9 +384,13 @@ export function step(run, seconds, input = {}) {
   run.shotIn -= dt;
   if (run.shotIn <= 0) {
     if (def.attack.type === 'melee') attackMelee(run);
-    else fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
-      * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1),
-      def.attack.device, p.attackRange, def.attack);
+    else {
+      const empowered = p.sellNextMult ?? 1;
+      fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
+        * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1) * empowered,
+        def.attack.device, p.attackRange, def.attack);
+      p.sellNextMult = 1;
+    }
     const combat = def.combat || {};
     run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1)
       * (def.passiveRateMult?.(p) ?? 1)
@@ -412,6 +450,8 @@ export function step(run, seconds, input = {}) {
       }
       p.hp = Math.max(0, p.hp - incoming);
       p.immune = 0.65;
+      const counter = p.rewardBonuses.smileCounter ?? 0;
+      if (counter > 0 && (p.smile ?? 0) > 0) hit(run, enemy, p.damage * counter, 'bite');
       // A confused mind swings slower; otherwise the sheet owns the cadence.
       enemy.attackCd = (enemy.confusionStacks ?? 0) >= 2 ? 0.8 : (enemy.attackInterval ?? 0.65);
     }
@@ -481,6 +521,14 @@ export function step(run, seconds, input = {}) {
     awardCoins(run, bounty);
     awardXP(run, run.rewardBalance.xp.rewards[enemy.kind] ?? 0);
     run.effects.push({ x: enemy.x, y: enemy.y, text: `+${bounty}`, ttl: 0.9, loot: true });
+    const spread = p.rewardBonuses.confusionChain ?? 0;
+    if (spread > 0 && (enemy.confusionStacks ?? 0) >= 3) {
+      for (const other of run.enemies) {
+        if (other === enemy || other.hp <= 0 || distance(other, enemy) > 130 * WORLD_SCALE) continue;
+        applyConfusion(other, 1, 4);
+      }
+      run.effects.push({ x: enemy.x, y: enemy.y - enemy.radius, text: 'CONTAGIO', ttl: 0.8, kind: 'confusion' });
+    }
     if (def.onKill) def.onKill(run, p, enemy, ctx);
     emit('kill', { run, player: p, enemy });
   }
@@ -489,6 +537,19 @@ export function step(run, seconds, input = {}) {
   for (const effect of run.effects) {
     effect.ttl -= dt;
     if (typeof effect.text === 'string') effect.y -= dt * 20;
+    // Warrior's spore zone: a lingering patch that keeps poisoning its area.
+    if (effect.kind === 'sporeZone') {
+      effect.tick = (effect.tick ?? 0) - dt;
+      if (effect.tick <= 0) {
+        effect.tick = 0.45;
+        for (const enemy of run.enemies) {
+          if (enemy.hp > 0 && distance(enemy, effect) <= effect.r) {
+            hit(run, enemy, effect.damage, 'spore');
+            applyConfusion(enemy, 1, 3);
+          }
+        }
+      }
+    }
   }
   run.effects = run.effects.filter(effect => effect.ttl > 0);
   if (p.hp <= 0) {

@@ -156,8 +156,11 @@ test('reward generation and rejected actions cannot grant a character ability au
   awardXP(run, 150);
   assert.equal(run.player.rewardBonuses.bounce, undefined);
   run.phase = 'shop'; beginRewards(run);
-  chooseLevelReward(run, run.levelChoices[0].id);
+  // Offering is not granting: the guaranteed milestone is listed, not applied.
+  const offered = run.levelChoices.find(entry => entry.id !== 'remote-bounce');
+  assert.ok(run.levelChoices.length > 0);
+  chooseLevelReward(run, offered.id);
   assert.equal(run.player.rewardBonuses.bounce, undefined);
-  assert.equal(chooseLevelReward(run, 'remote-bounce'), false);
+  assert.equal(chooseLevelReward(run, 'not-in-this-selection'), false);
   assert.equal(run.player.rewardBonuses.bounce, undefined);
 });

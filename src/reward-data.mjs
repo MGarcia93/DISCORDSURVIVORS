@@ -91,6 +91,26 @@ export const EFFECTS = {
     describe: value => `Ladrillos atraviesan +${value} enemigo` },
   brickFragments: { max: 4, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => `Fragmentos por impacto: ${value}` },
+  secondBite: { max: 1, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Segunda mordida al ${Math.round(value * 100)}%` },
+  knockback: points('Empuje de la mordida', 60, ''),
+  smileCounter: { max: 0.8, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Contraataque riendo: ${Math.round(value * 100)}% del daño` },
+  extraShroom: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Hongos extra: ${value}` },
+  sporeZone: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Zona de esporas al impactar (${value})` },
+  smokeTrail: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Deja humo al moverse (${value})` },
+  confusionChain: { max: 1, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: () => 'Matar confundido contagia confusión' },
+  brickFan: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Ladrillos extra: ${value}` },
+  saleNext: { max: 0.6, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Ataque tras vender +${Math.round(value * 100)}%` },
+  panicExtend: points('Pánico extendido por baja', 2, ' s'),
+  senaBurst: { max: 1.2, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Ráfaga de La seña: ${Math.round(value * 100)}% del daño` },
 };
 
 export const LEVEL_UPGRADES = [
@@ -125,6 +145,22 @@ export const LEVEL_UPGRADES = [
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   ...[
+    ['second-bite', 'Doble paleta', 'solago', 'secondBite', 0.5, 0.6],
+    ['bite-push', 'Mordida que empuja', 'solago', 'knockback', 25, 0.5],
+    ['smile-counter', 'Risa devuelta', 'solago', 'smileCounter', 0.4, 0.5],
+    ['extra-shroom', 'Más hongos', 'warrior', 'extraShroom', 1, 0.6],
+    ['spore-zone', 'Esporas que quedan', 'warrior', 'sporeZone', 1, 0.5],
+    ['smoke-trail', 'Humo a la espalda', 'warrior', 'smokeTrail', 1, 0.5],
+    ['confusion-chain', 'Contagio de hongos', 'warrior', 'confusionChain', 1, 0.45],
+    ['brick-fan', 'Abanico de ladrillos', 'papazito', 'brickFan', 1, 0.6],
+    ['sale-next', 'Ganancia con interés', 'papazito', 'saleNext', 0.3, 0.5],
+    ['panic-extend', 'Pánico que no se corta', 'papazito', 'panicExtend', 1.5, 0.5],
+    ['sena-burst', 'Explota la seña', 'papazito', 'senaBurst', 0.6, 0.45],
+  ].map(([id, name, characters, type, value, chance]) => ({
+    id, name, characters, minLevel: 4, chance, requires: [],
+    ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
+  })),
+  ...[
     ['rest-less', 'Menos paciencia para pararse', 'negro', 'stillThreshold', 0.25],
     ['wider-chair', 'Sillón más generoso', 'negro', 'chairRadius', 20],
     ['otaku-pace', 'Cambia de capítulo rápido', 'negro', 'waifuInterval', 0.03],
@@ -138,11 +174,23 @@ export const LEVEL_UPGRADES = [
     id, name, characters, minLevel: 3, requires: [],
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
-  { id: 'remote-bounce', name: 'Rebote del control', characters: 'negro', minLevel: 3, requires: [],
-    ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
+  { id: 'remote-bounce', name: 'Rebote del control', characters: 'negro', minLevel: 3, chance: 0.5,
+    guaranteedAt: [3], requires: [], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
   { id: 'remote-chain', name: 'Otro salto', characters: 'negro', minLevel: 4,
     requires: [{ id: 'remote-bounce', rank: 1 }], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
 ];
+
+// Milestone levels: at these levels the entry is forced into the selection,
+// independently of its chance. Everything else is rolled.
+// One guaranteed entry per character and level, so a milestone never competes
+// with another guaranteed own upgrade for the single own slot.
+const MILESTONES = {
+  'remote-bounce': [3], 'waifu-pierce': [4],
+  'bite-arc': [3], 'patrona-final': [4],
+  'deeper-confusion': [3], 'extra-shroom': [4],
+  'brick-pierce': [3], 'sena-burst': [4],
+};
+for (const entry of LEVEL_UPGRADES) if (MILESTONES[entry.id]) entry.guaranteedAt = MILESTONES[entry.id];
 
 export const DEFAULT_CATALOG = createCatalog({ items: ITEMS, upgrades: LEVEL_UPGRADES }, {
   characters: Object.keys(CHARACTERS), effects: EFFECTS,

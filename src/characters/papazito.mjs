@@ -60,7 +60,7 @@ const papazito = {
   // Schedule each bill once so the HUD reveals its exact cost and deadline.
   passives: [{
     key: 'sena', kind: 'sena',
-    tick(run, p) {
+    tick(run, p, dt, ctx) {
       if (p.senaCooldown > 1e-9) return;
       const cost = p.senaNextCost;
       const paid = Math.min(run.coins, cost);
@@ -70,6 +70,14 @@ const papazito = {
       p.senaLastPaid = paid;
       p.senaCharges++;
       p.panicTtl = 5;
+      const burst = p.rewardBonuses?.senaBurst ?? 0;
+      if (burst > 0) {
+        for (const enemy of run.enemies) {
+          const away = Math.hypot(enemy.x - p.x, enemy.y - p.y);
+          if (enemy.hp > 0 && away < 150 * WORLD_SCALE) ctx.hit(run, enemy, p.damage * burst, 'brick');
+        }
+        run.effects.push({ x: p.x, y: p.y - 84 * WORLD_SCALE, text: '¡BOMBA DE LA SEÑA!', ttl: 1, kind: 'panic' });
+      }
       run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE,
         text: `LA SEÑA: −${paid} ◈${cost > paid ? ` · DEUDA +${cost - paid} ◈` : ''}`, ttl: 2, kind: 'panic' });
       p.characterDef.scheduleSena(run, p);
@@ -85,6 +93,12 @@ const papazito = {
   onStageStart(run, p) {
     p.senaCharges = p.senaDebt = p.senaLastCost = p.senaLastPaid = p.panicTtl = 0;
     this.scheduleSena(run, p);
+  },
+  // Kills during panic keep the panic alive, up to a hard ceiling.
+  onKill(run, p, enemy) {
+    const extend = p.rewardBonuses?.panicExtend ?? 0;
+    if (extend <= 0 || p.panicTtl <= 0) return;
+    p.panicTtl = Math.min(12, p.panicTtl + extend);
   },
   onSaleIncome(run, p, amount) {
     const paid = Math.min(amount, p.senaDebt);

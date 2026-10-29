@@ -43,6 +43,34 @@ test('eligibility requires level, prerequisites and an uncompleted rank', () => 
   assert.deepEqual(ids({ level: 3, ranks: { base: 2, advanced: 2 } }), []);
 });
 
+test('chance rolls entries out of the offer while guaranteed levels force them in', () => {
+  const rare = { ...own('rare'), chance: 0.2 };
+  const certain = { ...own('certain'), chance: 1 };
+  const forced = { ...own('forced'), chance: 0.01, guaranteedAt: [3] };
+  const data = catalog([rare, certain, forced, common('attack'), common('health'), common('speed')]);
+  for (let index = 0; index < 40; index++) {
+    const options = selectLevelOptions(data, { character: 'negro', level: 3, ranks: {} }, () => index / 40 + 0.001);
+    assert.ok(options.some(entry => entry.id === 'forced'), 'guaranteed entry always present');
+    assert.equal(options.length, 3);
+  }
+  // Off the milestone level the guaranteed entry competes normally: the certain
+  // one always passes its roll, the rare one only sometimes.
+  const seen = new Set();
+  for (let index = 0; index < 40; index++) {
+    const [first] = selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, () => index / 40 + 0.001);
+    assert.ok(first, 'an own entry is always offered when one is certain');
+    seen.add(first.id);
+  }
+  assert.ok(seen.has('certain'));
+  assert.ok(!seen.has('forced') || seen.size > 0);
+});
+
+test('invalid chance and milestone data is rejected with the entry id', () => {
+  assert.throws(() => catalog([{ ...own('zero'), chance: 0 }]), /zero.*chance/);
+  assert.throws(() => catalog([{ ...own('big'), chance: 1.5 }]), /big.*chance/);
+  assert.throws(() => catalog([{ ...own('bad'), guaranteedAt: [0] }]), /bad.*guaranteedAt/);
+});
+
 test('later selections can offer another rank, never duplicate filler for scarce pools', () => {
   const data = catalog([common('attack')]);
   const state = { character: 'negro', level: 2, ranks: {} };

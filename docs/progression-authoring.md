@@ -118,10 +118,43 @@ New mechanics implemented as parameter-driven behavior:
 | `brickPierce` | Bricks continue to the next enemy after a hit. | `src/engine.mjs` |
 | `brickFragments` | A brick impact spawns that many radial fragments at 35% damage. | `src/engine.mjs` |
 
-Still unimplemented, because their geometry or timing is not decided yet:
-second bites, knockback, shielded counterattacks, extra mushroom projectiles,
-spore zones, smoke trails, confusion propagation, fan shots,
-next-attack-after-sale, panic extension and the seña activation burst.
+Second batch, assigned to later levels with their own probability:
+
+| Effect | What it does |
+|---|---|
+| `secondBite` | A weaker follow-up bite on the same target. |
+| `knockback` | Bite targets are pushed away from the player. |
+| `smileCounter` | Hits taken while Sonrisa blindada is up are answered with damage. |
+| `extraShroom` | Fires extra mushrooms at other targets at 60% damage. |
+| `sporeZone` | The blast leaves a lingering patch that keeps poisoning its area. |
+| `smokeTrail` | Moving leaves small smoke clouds behind. |
+| `confusionChain` | Killing a fully confused enemy spreads a stack to nearby ones. |
+| `brickFan` | Fires extra bricks at other targets at 60% damage. |
+| `saleNext` | The first shot after a sale is empowered. |
+| `panicExtend` | Kills during panic extend it, up to a 12-second ceiling. |
+| `senaBurst` | The bill landing also detonates a burst around Papazito. |
+
+## When an upgrade is offered
+
+An upgrade entry may declare two extra fields:
+
+- `chance` (0 < chance ≤ 1): probability that it takes part in a given level
+  selection. Defaults to 1, so existing entries stay certain.
+- `guaranteedAt`: array of levels where the entry is always included,
+  bypassing `chance`.
+
+Selection rolls each eligible entry's chance, draws one own upgrade and two
+common ones (three common when no own option qualifies), and forces the
+milestone entry of that level into its slot. Only one guaranteed own entry may
+exist per character and level, otherwise they would compete for the single own
+slot. The current milestones are: Negro `remote-bounce` (3) and
+`waifu-pierce` (4); Solago `bite-arc` (3) and `patrona-final` (4); Warrior
+`deeper-confusion` (3) and `extra-shroom` (4); Papazito `brick-pierce` (3) and
+`sena-burst` (4). Every other entry keeps a probability, so no run sees
+everything.
+
+Still unimplemented: nothing from the approved path list; new ideas need their
+own reusable effect before they can be authored.
 
 ## Run reward state
 
