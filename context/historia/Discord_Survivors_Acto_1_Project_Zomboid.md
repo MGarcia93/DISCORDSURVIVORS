@@ -190,7 +190,7 @@ Es Jhony.
 
 **Maxi Negro:** ¡Negro, tenés más de dos mil horas en este juego! ¡Ayudame!
 
-**Jhony:** ¡¿Y QUÉ TIENE QUE VER?! ¡ANDÁ, PELOTUDO!
+**Jhony:** ¡¿Y QUÉ TIENE QUE VER?! ¡ANDATE, PELOTUDO!
 
 **Maxi Negro:** Pero escuchame un segundo, boludo...
 
@@ -228,7 +228,7 @@ Mientras Maxi Negro se aleja, vuelve a aparecer la interfaz del Administrador.
 
 **Maxi Negro:** ¡¿Y ESO POR QUÉ, PORQUE NO TOMASTE?!
 
-**Jhony:** ¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO NI SOBRIO!
+**Jhony:** ¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO SOBRIO!
 
 La pantalla se vuelve negra.
 

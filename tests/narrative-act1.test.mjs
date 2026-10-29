@@ -66,7 +66,7 @@ test('the epilogue answers the League announcement with Jhony refusing it', asyn
   assert.deepEqual(spoken.slice(-3), [
     { speaker: 'jhony', expression: 'angry', text: '¡AL LOL NO JUEGO NI EN PEDO!' },
     { speaker: 'maxi-negro', expression: 'surprised', text: '¡¿Y ESO POR QUÉ, PORQUE NO TOMASTE?!' },
-    { speaker: 'jhony', expression: 'angry', text: '¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO NI SOBRIO!' },
+    { speaker: 'jhony', expression: 'angry', text: '¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO SOBRIO!' },
   ]);
 });
 
