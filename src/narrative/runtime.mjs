@@ -3,6 +3,20 @@ const animations = new Set(['idle', 'walk', 'point', 'celebrate']);
 const stageFields = new Set(['points', 'actors', 'props', 'background']);
 const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
+// The stage is exactly the canvas, so the camera is clamped: a centre that lets
+// the visible frame leave the map shows the black base. Zooming out below 1
+// would always show it, which is why the validator refuses it.
+const STAGE_WIDTH = 1144;
+const STAGE_HEIGHT = 748;
+
+function clampCamera({ x, y, zoom }) {
+  const halfWidth = STAGE_WIDTH / (2 * zoom), halfHeight = STAGE_HEIGHT / (2 * zoom);
+  return {
+    zoom,
+    x: Math.min(STAGE_WIDTH - halfWidth, Math.max(halfWidth, x)),
+    y: Math.min(STAGE_HEIGHT - halfHeight, Math.max(halfHeight, y)),
+  };
+}
 const requireValue = (condition, message) => { if (!condition) throw new Error(message); };
 const finite = value => typeof value === 'number' && Number.isFinite(value);
 const text = value => typeof value === 'string' && value.trim().length > 0;
@@ -53,7 +67,7 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
           requireValue(animations.has(step.animation), `Unknown animation: ${step.animation}`);
           resources.push(`actor:${step.actor}`); break;
         case 'camera':
-          requireValue(finite(step.zoom ?? 1) && (step.zoom ?? 1) >= 0.25 && (step.zoom ?? 1) <= 4, 'Invalid camera zoom');
+          requireValue(finite(step.zoom ?? 1) && (step.zoom ?? 1) >= 1 && (step.zoom ?? 1) <= 4, 'Invalid camera zoom');
           resources.push('camera'); break;
         case 'prop':
           requireValue(own(props, step.prop) && text(step.state), `Unknown prop/state: ${step.prop}`);
@@ -151,7 +165,11 @@ export class ScenePlayer {
     if (step.type === 'camera') {
       const from = { ...this.camera }, [x, y] = points[step.to], zoom = step.zoom ?? 1;
       return this._timed(step.duration, t => {
-        this.camera = { x: from.x + (x - from.x) * t, y: from.y + (y - from.y) * t, zoom: from.zoom + (zoom - from.zoom) * t };
+        this.camera = clampCamera({
+          x: from.x + (x - from.x) * t,
+          y: from.y + (y - from.y) * t,
+          zoom: from.zoom + (zoom - from.zoom) * t,
+        });
       });
     }
     if (step.type === 'animate') {

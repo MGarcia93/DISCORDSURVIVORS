@@ -103,7 +103,7 @@ Declare `stage.points` as named `[x,y]` coordinates in the 1144×748 arena, `sta
 | `dialogue` | `lines` | Manual portrait conversation |
 | `move` | `actor`, `to`, `duration` | Walk to a named point |
 | `animate` | `actor`, `animation`, `duration` | `idle`, `walk`, `point` or `celebrate` |
-| `camera` | `to`, optional `zoom`, `duration` | Pan/zoom; zoom range 0.25–4 |
+| `camera` | `to`, optional `zoom`, `duration` | Pan/zoom; zoom range 1–4. The stage is exactly the canvas, so the camera is clamped and never shows black outside the map |
 | `prop` | `prop`, `state` | Change a scene-local prop state |
 | `sound` | `sound` | Play a catalog sound without waiting |
 | `splash` | `speaker`, `text`, `duration` | Timed presentation using a catalog portrait |
