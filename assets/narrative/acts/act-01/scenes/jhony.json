@@ -7,22 +7,17 @@
       "entrance": [300, 470],
       "meet": [600, 470],
       "jhony": [880, 460],
-      "walker-far": [900, 820],
-      "walker-off": [1120, 800],
-      "walker-near": [900, 560],
-      "walker-near-b": [1040, 600],
-      "left": [700, 480],
-      "left-near": [790, 465],
-      "top": [930, 320],
-      "top-near": [890, 410],
-      "right": [1090, 520],
-      "right-near": [1010, 505],
+      "walker-far": [900, 830],
+      "walker-near": [900, 640],
       "corpse-a": [470, 548],
       "corpse-b": [560, 562],
       "corpse-c": [700, 552],
       "corpse-d": [790, 540],
       "corpse-e": [980, 552],
-      "corpse-f": [400, 538]
+      "corpse-f": [400, 538],
+      "corpse-left": [760, 510],
+      "corpse-right": [1010, 498],
+      "corpse-top": [900, 350]
     },
     "actors": {
       "negro": { "character": "maxi-negro", "at": "entrance" },
@@ -33,11 +28,10 @@
       "body-d": { "enemy": "zombie", "at": "corpse-d", "state": "dead" },
       "body-e": { "enemy": "brute", "at": "corpse-e", "state": "dead" },
       "body-f": { "enemy": "zombie", "at": "corpse-f", "state": "dead" },
-      "left": { "enemy": "zombie", "at": "left" },
-      "top": { "enemy": "zombie", "at": "top" },
-      "right": { "enemy": "runner", "at": "right" },
-      "walker-a": { "enemy": "zombie", "at": "walker-far" },
-      "walker-b": { "enemy": "zombie", "at": "walker-off" }
+      "body-left": { "enemy": "zombie", "at": "corpse-left", "state": "dead" },
+      "body-right": { "enemy": "runner", "at": "corpse-right", "state": "dead" },
+      "body-top": { "enemy": "zombie", "at": "corpse-top", "state": "dead" },
+      "walker": { "enemy": "zombie", "at": "walker-far" }
     }
   },
   "steps": [
@@ -51,12 +45,7 @@
       { "speaker": "maxi-negro", "expression": "angry", "text": "¿Cómo que qué quiero? ¡Estamos atrapados en esta mierda!" },
       { "speaker": "jhony", "expression": "neutral", "text": "¿Y?" }
     ] },
-    { "type": "parallel", "steps": [
-      { "type": "move", "actor": "left", "to": "left-near", "duration": 2.6 },
-      { "type": "move", "actor": "top", "to": "top-near", "duration": 3.2 },
-      { "type": "move", "actor": "right", "to": "right-near", "duration": 3 },
-      { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.8 }
-    ] },
+    { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.2 },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "angry", "text": "¡¿CÓMO QUE Y?! ¡TENEMOS QUE SALIR!" },
       { "speaker": "jhony", "expression": "angry", "text": "¡Bueno, salí entonces! ¡No me rompas las pelotas!" },
@@ -66,12 +55,11 @@
       { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!" }
     ] },
     { "type": "parallel", "steps": [
-      { "type": "move", "actor": "walker-a", "to": "walker-near", "duration": 3.6 },
-      { "type": "move", "actor": "walker-b", "to": "walker-near-b", "duration": 3.4 },
-      { "type": "camera", "to": "walker-near", "zoom": 1.35, "duration": 2.4 }
+      { "type": "move", "actor": "walker", "to": "walker-near", "duration": 2.5 },
+      { "type": "camera", "to": "walker-near", "zoom": 1.3, "duration": 2 }
     ] },
     { "type": "sound", "sound": "gunshot" },
-    { "type": "down", "actor": "walker-a" },
+    { "type": "down", "actor": "walker" },
     { "type": "wait", "duration": 0.6 },
     { "type": "camera", "to": "corpse-c", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [

@@ -78,7 +78,7 @@ test('the act stages enemies instead of describing them', async () => {
   assert.equal(enemies.length, 2, 'two zombies walk into the arrival');
   assert.ok(scene('act-01-arrival').steps.some(step => step.type === 'move' && step.actor === 'shambler'), 'and one really walks');
   const corpses = actorsOf('act-01-jhony').filter(actor => actor.state === 'dead');
-  assert.equal(corpses.length, 6, 'the veteran stands on a street full of bodies');
+  assert.equal(corpses.length, 9, 'the veteran stands on a street full of bodies');
   assert.equal(actorsOf('act-01-boss-defeat').find(actor => actor.enemy === 'alarmZombie').state, 'dead');
 });
 
@@ -91,12 +91,9 @@ test('the shot is a noise burst and the zombies enter from outside the frame', a
   const arrivalRight = Math.min(1144, arrival.stage.points.ground[0] + 1144 / (2 * 1.2));
   assert.ok(arrival.stage.points[arrival.stage.actors.shambler.at][0] > arrivalRight, 'the first zombie starts off the right edge');
   const jhony = scene('act-01-jhony');
-  for (const id of ['walker-a', 'walker-b']) {
-    assert.ok(jhony.stage.points[jhony.stage.actors[id].at][1] > 748, `${id} starts below the canvas`);
-  }
+  assert.ok(jhony.stage.points[jhony.stage.actors.walker.at][1] > 748, 'the only living zombie starts below the canvas');
   const alive = Object.entries(jhony.stage.actors).filter(([, actor]) => actor.enemy && actor.state !== 'dead');
-  const around = alive.filter(([, actor]) => jhony.stage.points[actor.at][1] < 620);
-  assert.ok(around.length >= 3, 'the veteran is surrounded, not just approached from below');
+  assert.deepEqual(alive.map(([id]) => id), ['walker'], 'everyone else on that street is already dead');
 });
 
 test('Jhony actually shoots one down in front of the player', async () => {
@@ -104,7 +101,7 @@ test('Jhony actually shoots one down in front of the player', async () => {
   const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
   const shot = steps.findIndex(step => step.type === 'sound' && step.sound === 'gunshot');
   assert.ok(shot > 0, 'the shot is staged');
-  assert.deepEqual(steps[shot + 1], { type: 'down', actor: 'walker-a' }, 'and the zombie drops right after it');
+  assert.deepEqual(steps[shot + 1], { type: 'down', actor: 'walker' }, 'and the zombie drops right after it');
 });
 
 test('a down step kills an enemy and refuses a cast member', () => {
