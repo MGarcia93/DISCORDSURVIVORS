@@ -29,13 +29,13 @@ export function characters() {
   const roster = ROSTER.map(entry => rosterButton(entry, isCharacterUnlocked(entry.id), entry.id === state.selectedCharacter)).join('')
     + ROSTER_PLACEHOLDERS.map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('');
   state.content.innerHTML = `
-    <section class="screen">
+    <section class="screen character-screen">
     <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / 8 DISPONIBLES</span></header>
     <div class="character-layout"><section aria-label="Personajes">
       <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${ficha.previewAria}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${ficha.detailLabel.toUpperCase()}</span></div>
       <div class="roster">${roster}</div>
       <p class="roster-note">${rosterNote}</p>
-    </section><section class="detail-panel" aria-label="Habilidades de ${ficha.detailLabel}">${ficha.profile}</section></div>
+    </section><section class="detail-panel" aria-label="Habilidades de ${ficha.detailLabel}"><div class="detail-body" tabindex="0">${ficha.profile}</div></section></div>
     <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
   for (const entry of ROSTER) {
     const portrait = document.querySelector(`#roster-${entry.id}`);

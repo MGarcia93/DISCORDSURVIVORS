@@ -75,6 +75,28 @@ try {
     await page.waitForFunction(() => !document.querySelector('.overlay'));
     if (mobile) assert.equal(await page.getByRole('button', { name: 'Arriba', exact: true }).isVisible(), true);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    if (!mobile) {
+      await page.evaluate(() => localStorage.setItem('discord-survivors.progress.v1', JSON.stringify({ version: 1, debugUnlockAll: true })));
+      await page.reload();
+      await page.getByRole('button', { name: 'EMPEZAR PARTIDA' }).click();
+      await page.locator('#sprite-preview').waitFor();
+      const layouts = [];
+      for (const id of ['negro', 'solago', 'warrior', 'papazito']) {
+        await page.locator(`.roster-card[data-character="${id}"]`).click();
+        layouts.push(await page.evaluate(() => {
+          const panel = document.querySelector('.detail-panel').getBoundingClientRect();
+          const body = document.querySelector('.detail-body');
+          return {
+            panel: [panel.top, panel.width, panel.height],
+            actions: document.querySelector('.bottom-actions').getBoundingClientRect().top,
+            page: document.documentElement.scrollHeight,
+            scrolls: body.scrollHeight > body.clientHeight,
+          };
+        }));
+      }
+      for (const layout of layouts) assert.deepEqual(layout, layouts[0], 'the selection layout must not move when the profile changes');
+      assert.equal(layouts.some(layout => layout.scrolls), true, 'an overlong profile scrolls inside the panel instead of growing the page');
+    }
     await page.close();
     console.log(`PASS pixel UI and combat: ${mobile ? 'touch mobile' : 'desktop'}`);
   }
