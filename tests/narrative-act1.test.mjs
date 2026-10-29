@@ -180,6 +180,47 @@ test('a delayed step does not move before its delay is over', () => {
   assert.equal(player.actors.guide.x, 300, 'completed after the delay');
 });
 
+test('no two enemies end up drawn on top of each other', async () => {
+  const catalog = await catalogFor();
+  for (const entry of catalog.entries.filter(item => item.id.startsWith('act-01-'))) {
+    const points = entry.scene.stage.points;
+    const ends = {};
+    for (const [id, actor] of Object.entries(entry.scene.stage.actors)) {
+      if (!actor.enemy) continue;
+      let [x, y] = points[actor.at];
+      for (const step of entry.scene.steps) {
+        for (const child of step.type === 'parallel' ? step.steps : [step]) {
+          if (child.type !== 'move' || child.actor !== id) continue;
+          if (child.toward) {
+            const [tx, ty] = points[child.toward];
+            const distance = Math.hypot(tx - x, ty - y) || 1;
+            const travel = Math.min(distance, child.speed * child.duration);
+            x += (tx - x) / distance * travel; y += (ty - y) / distance * travel;
+          } else { [x, y] = points[child.to]; }
+        }
+      }
+      ends[id] = [x, y];
+    }
+    const ids = Object.keys(ends);
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        const gap = Math.hypot(ends[ids[i]][0] - ends[ids[j]][0], ends[ids[i]][1] - ends[ids[j]][1]);
+        assert.ok(gap > 40, `${entry.id}: ${ids[i]} and ${ids[j]} end on the same pixel`);
+      }
+    }
+  }
+});
+
+test('a sound can pulse, so an alarm keeps ringing', () => {
+  const played = [];
+  const player = new ScenePlayer({ id: 'probe', steps: [{ type: 'sound', sound: 'alarm', repeat: 4, interval: 0.5 }] },
+    { sounds: { alarm: {} }, onSound: id => played.push(id) });
+  player.tick(0.6);
+  assert.equal(played.length, 2);
+  player.tick(1.2);
+  assert.equal(played.length, 4, 'it rings four times and stops');
+});
+
 test('the arrival scene owns the first wave and releases it when done', async () => {
   const catalog = await catalogFor();
   const director = new WaveDirector(catalog);

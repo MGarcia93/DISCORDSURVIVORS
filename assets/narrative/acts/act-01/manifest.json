@@ -1,7 +1,7 @@
 {
   "characters": "../../characters.json",
   "sounds": {
-    "alarm": { "frequency": 880, "duration": 0.35 },
+    "alarm": { "frequency": 190, "duration": 0.24, "gain": 0.05 },
     "gunshot": { "noise": true, "duration": 0.18, "cutoff": 1100, "gain": 0.22 }
   },
   "scenes": [

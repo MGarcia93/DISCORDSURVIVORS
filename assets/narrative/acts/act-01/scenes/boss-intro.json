@@ -15,6 +15,10 @@
       "approach": [
         760,
         460
+      ],
+      "add-stop": [
+        690,
+        520
       ]
     },
     "actors": {
@@ -34,22 +38,24 @@
   },
   "steps": [
     {
-      "type": "sound",
-      "sound": "alarm"
-    },
-    {
       "type": "parallel",
       "steps": [
+        {
+          "type": "sound",
+          "sound": "alarm",
+          "repeat": 8,
+          "interval": 0.45
+        },
         {
           "type": "move",
           "actor": "boss",
           "to": "approach",
-          "duration": 2.6
+          "duration": 3.2
         },
         {
           "type": "move",
           "actor": "add",
-          "to": "approach",
+          "to": "add-stop",
           "duration": 2.6
         },
         {

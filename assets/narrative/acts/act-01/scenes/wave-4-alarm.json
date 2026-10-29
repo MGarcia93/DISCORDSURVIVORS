@@ -15,6 +15,14 @@
       "close": [
         800,
         480
+      ],
+      "second-stop": [
+        930,
+        560
+      ],
+      "third-stop": [
+        640,
+        380
       ]
     },
     "actors": {
@@ -47,13 +55,13 @@
         {
           "type": "move",
           "actor": "second",
-          "to": "close",
+          "to": "second-stop",
           "duration": 2
         },
         {
           "type": "move",
           "actor": "third",
-          "to": "close",
+          "to": "third-stop",
           "duration": 2
         },
         {

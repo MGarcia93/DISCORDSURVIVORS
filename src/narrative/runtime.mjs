@@ -96,7 +96,11 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
           requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
           requireValue(Boolean(actors[step.actor].enemy), `Only an enemy actor can go down: ${step.actor}`);
           resources.push(`actor:${step.actor}`); break;
-        case 'sound': requireValue(own(sounds, step.sound), `Unknown sound: ${step.sound}`); break;
+        case 'sound':
+          requireValue(own(sounds, step.sound), `Unknown sound: ${step.sound}`);
+          if (step.repeat !== undefined) requireValue(Number.isInteger(step.repeat) && step.repeat >= 1, 'Invalid sound repeat');
+          if (step.interval !== undefined) requireValue(finite(step.interval) && step.interval >= 0, 'Invalid sound interval');
+          break;
         case 'splash':
           requireValue(!parallel, 'Splash is not allowed inside parallel actions');
           validateLine({ speaker: step.speaker, text: step.text }, characters); break;
@@ -251,8 +255,20 @@ export class ScenePlayer {
       return { tick: () => true, skip() {} };
     }
     if (step.type === 'sound') {
-      if (!this.skipping) this.options.onSound?.(step.sound);
-      return { tick: () => true, skip() {} };
+      const times = Math.max(1, Math.floor(step.repeat ?? 1)), interval = step.interval ?? 0;
+      const fire = () => { if (!this.skipping) this.options.onSound?.(step.sound); };
+      if (times === 1 || interval <= 0) { fire(); return { tick: () => true, skip() {} }; }
+      // A pulsed sound lasts (repeat - 1) * interval: an alarm that keeps ringing.
+      let fired = 1, elapsed = 0;
+      fire();
+      return {
+        tick(dt) {
+          elapsed += dt;
+          while (fired < times && elapsed >= interval) { elapsed -= interval; fire(); fired++; }
+          return fired >= times;
+        },
+        skip() { fired = times; },
+      };
     }
     const task = this.options.actions[step.type].start(step, this);
     requireValue(task && typeof task.tick === 'function' && typeof task.skip === 'function', 'Custom action must return tick/skip');
