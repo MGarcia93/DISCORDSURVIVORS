@@ -60,9 +60,19 @@ export function createPresenter(root, catalog, onError) {
             ctx.fillStyle = '#f3dea4'; ctx.fillRect(actor.x + 16 * actor.facing, actor.y - 45, 35 * actor.facing, 6);
           }
         }
+        if (player.flash) {
+          // Pixel burst: hot core, yellow cross, orange tips.
+          const { x, y } = player.flash;
+          ctx.fillStyle = '#fff6cf'; ctx.fillRect(x - 4, y - 4, 8, 8);
+          ctx.fillStyle = '#ffd166';
+          ctx.fillRect(x - 16, y - 2, 32, 4); ctx.fillRect(x - 2, y - 16, 4, 32);
+          ctx.fillStyle = '#ff9f43';
+          ctx.fillRect(x - 26, y - 1, 8, 2); ctx.fillRect(x + 18, y - 1, 8, 2);
+          ctx.fillRect(x - 1, y - 26, 2, 8); ctx.fillRect(x - 1, y + 18, 2, 8);
+        }
         ctx.restore();
       }
-      const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, player?.notice, banter]);
+      const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, player?.notice, player?.flash, banter]);
       if (signature !== previous) {
         previous = signature;
         const currentRevision = ++revision;

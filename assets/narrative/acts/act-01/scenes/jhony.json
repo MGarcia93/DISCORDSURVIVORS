@@ -10,6 +10,8 @@
       "walker-far": [900, 830],
       "walker-mid": [900, 700],
       "walker-near": [900, 600],
+      "muzzle": [910, 415],
+      "impact": [900, 545],
       "corpse-a": [470, 548],
       "corpse-b": [560, 562],
       "corpse-c": [700, 552],
@@ -64,8 +66,10 @@
       { "type": "move", "actor": "walker", "to": "walker-near", "duration": 1.6 },
       { "type": "camera", "to": "walker-near", "zoom": 1.35, "duration": 1.4 }
     ] },
+    { "type": "flash", "at": "muzzle", "duration": 0.12 },
     { "type": "sound", "sound": "gunshot" },
     { "type": "down", "actor": "walker" },
+    { "type": "flash", "at": "impact", "duration": 0.18 },
     { "type": "wait", "duration": 0.6 },
     { "type": "camera", "to": "corpse-c", "zoom": 1.25, "duration": 1.2 },
     { "type": "dialogue", "lines": [

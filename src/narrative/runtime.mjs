@@ -1,7 +1,7 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
 const animations = new Set(['idle', 'walk', 'point', 'celebrate']);
 const stageFields = new Set(['points', 'actors', 'props', 'background']);
-const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice']);
+const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice', 'flash']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
 // The stage is exactly the canvas, so the camera is clamped: a centre that lets
 // the visible frame leave the map shows the black base. Zooming out below 1
@@ -80,6 +80,10 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
           requireValue(own(props, step.prop) && text(step.state), `Unknown prop/state: ${step.prop}`);
           resources.push(`prop:${step.prop}`); break;
         // An enemy drops where it stands: visible death during a scene.
+        // A muzzle flash or a hit spark: a short bright burst at a point.
+        case 'flash':
+          requireValue(own(points, step.at), `Unknown point: ${step.at}`);
+          break;
         case 'down':
           requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
           requireValue(Boolean(actors[step.actor].enemy), `Only an enemy actor can go down: ${step.actor}`);
@@ -204,6 +208,11 @@ export class ScenePlayer {
       this.props[step.prop].state = step.state;
       return { tick: () => true, skip() {} };
     }
+    if (step.type === 'flash') {
+      const [x, y] = points[step.at];
+      this.flash = { x, y };
+      return this._timed(step.duration, t => { if (t === 1) this.flash = null; });
+    }
     if (step.type === 'down') {
       this.actors[step.actor].dead = true;
       this.actors[step.actor].animation = 'idle';
@@ -255,7 +264,7 @@ export class ScenePlayer {
 
   _finish(status) {
     this.status = status;
-    this.dialogue = null; this.splash = null; this.notice = null;
+    this.dialogue = null; this.splash = null; this.notice = null; this.flash = null;
     this.camera = { x: 572, y: 374, zoom: 1 };
     for (const actor of Object.values(this.actors)) actor.animation = 'idle';
     if (['completed', 'skipped'].includes(status)) {

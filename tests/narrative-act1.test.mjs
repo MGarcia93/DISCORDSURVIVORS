@@ -106,6 +106,8 @@ test('Jhony actually shoots one down in front of the player', async () => {
   const walks = steps.slice(0, shot).filter(step => step.type === 'parallel' && step.steps.some(child => child.type === 'move' && child.actor === 'walker'));
   assert.equal(walks.length, 2, 'one pan to appear, one to close in');
   for (const walk of walks) assert.ok(walk.steps.some(child => child.type === 'camera'), 'each walk is watched by the camera');
+  assert.deepEqual(steps[shot - 1], { type: 'flash', at: 'muzzle', duration: 0.12 }, 'a muzzle flash fires with the shot');
+  assert.deepEqual(steps[shot + 2], { type: 'flash', at: 'impact', duration: 0.18 }, 'and the hit sparks on the zombie');
 });
 
 test('a down step kills an enemy and refuses a cast member', () => {
@@ -116,6 +118,12 @@ test('a down step kills an enemy and refuses a cast member', () => {
   assert.equal(player.actors.z.dead, true);
   assert.throws(() => validateScene({ id: 'probe', stage, steps: [{ type: 'down', actor: 'guide' }] }, { characters, enemies }),
     /Only an enemy actor can go down: guide/);
+});
+
+test('a flash must point at a real stage point', () => {
+  const stage = { points: { a: [10, 10] } };
+  assert.throws(() => validateScene({ id: 'probe', stage, steps: [{ type: 'flash', at: 'nowhere', duration: 0.1 }] }, {}), /Unknown point: nowhere/);
+  assert.doesNotThrow(() => validateScene({ id: 'probe', stage, steps: [{ type: 'flash', at: 'a', duration: 0.1 }] }, {}));
 });
 
 test('an enemy actor must name a real kind and a real state', () => {
