@@ -1,41 +1,159 @@
 {
   "characters": "../../characters.json",
   "sounds": {
-    "rift": { "frequency": 260, "duration": 0.3, "gain": 0.05 },
-    "shovel": { "noise": true, "duration": 0.22, "cutoff": 900, "gain": 0.18 }
+    "rift": {
+      "frequency": 260,
+      "duration": 0.3,
+      "gain": 0.05
+    },
+    "shovel": {
+      "noise": true,
+      "duration": 0.22,
+      "cutoff": 900,
+      "gain": 0.18
+    }
   },
   "scenes": [
-    { "id": "act-02-arrival", "title": "Acto 2: Bienvenido a la Grieta", "file": "scenes/arrival.json" },
-    { "id": "act-02-solago", "title": "Acto 2: El Murganeo Perdido", "file": "scenes/solago.json" },
-    { "id": "act-02-boss-intro", "title": "Acto 2: Yorick, el Enterrador", "file": "scenes/boss-intro.json" },
-    { "id": "act-02-boss-defeat", "title": "Acto 2: El padre abandonado", "file": "scenes/boss-defeat.json" },
-    { "id": "act-02-epilogue", "title": "Acto 2: Epílogo", "file": "scenes/epilogue.json" }
+    {
+      "id": "act-02-arrival",
+      "title": "Acto 2: Bienvenido a la Grieta",
+      "file": "scenes/arrival.json"
+    },
+    {
+      "id": "act-02-solago",
+      "title": "Acto 2: El Murganeo Perdido",
+      "file": "scenes/solago.json"
+    },
+    {
+      "id": "act-02-maiden",
+      "title": "Acto 2: Te vino a buscar tu jermu",
+      "file": "scenes/maiden.json"
+    },
+    {
+      "id": "act-02-boss-intro",
+      "title": "Acto 2: Yorick, el Enterrador",
+      "file": "scenes/boss-intro.json"
+    },
+    {
+      "id": "act-02-boss-defeat",
+      "title": "Acto 2: El padre abandonado",
+      "file": "scenes/boss-defeat.json"
+    },
+    {
+      "id": "act-02-epilogue",
+      "title": "Acto 2: Epílogo",
+      "file": "scenes/epilogue.json"
+    }
   ],
   "bindings": [
-    { "when": "before_wave", "wave": 1, "scene": "act-02-arrival" },
-    { "when": "before_wave", "wave": 3, "scene": "act-02-solago" },
-    { "when": "before_wave", "wave": 6, "scene": "act-02-boss-intro" },
-    { "when": "after_wave", "wave": 6, "scene": "act-02-boss-defeat" },
-    { "when": "after_wave", "wave": 6, "scene": "act-02-epilogue" }
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-02-arrival"
+    },
+    {
+      "when": "before_wave",
+      "wave": 3,
+      "scene": "act-02-solago"
+    },
+    {
+      "when": "before_wave",
+      "wave": 5,
+      "scene": "act-02-maiden"
+    },
+    {
+      "when": "before_wave",
+      "wave": 6,
+      "scene": "act-02-boss-intro"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-02-boss-defeat"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-02-epilogue"
+    }
   ],
   "banter": [
-    { "wave": 1, "at": 6, "speaker": "maxi-negro", "expression": "angry", "text": "¡Eh, pelotudos! ¡Se supone que se pelean entre ustedes!" },
-    { "wave": 1, "at": 14, "speaker": "maxi-negro", "expression": "annoyed", "text": "Ah, bueno. Hermoso balance." },
-    { "wave": 2, "at": 8, "speaker": "maxi-negro", "expression": "annoyed", "text": "¿Ahora también tiran de lejos? Qué juego de mierda." },
-    { "wave": 2, "at": 16, "speaker": "solago", "expression": "angry", "text": "¡QUE TE DIJE QUE NO SOY UNO DE ESOS BICHOS!" },
-    { "wave": 2, "at": 22, "speaker": "maxi-negro", "expression": "surprised", "text": "Pará... esa puteada la conozco." },
-    { "wave": 4, "at": 6, "speaker": "solago", "expression": "angry", "text": "Negro, ¿por qué me siguen estos hijos de puta?" },
-    { "wave": 4, "at": 12, "speaker": "maxi-negro", "expression": "happy", "text": "Porque piensan que sos la mamá." },
-    { "wave": 4, "at": 18, "speaker": "solago", "expression": "angry", "text": "¡TE VOY A CAGAR A TROMPADAS!" },
-    { "wave": 4, "at": 24, "speaker": "maxi-negro", "expression": "neutral", "text": "Bueno, andá a pegarles a ellos, entonces." },
-    { "wave": 4, "at": 32, "speaker": "yorick", "expression": "angry", "text": "¡Regresa, pequeño caminante!" },
-    { "wave": 4, "at": 38, "speaker": "solago", "expression": "angry", "text": "¡NO SOY TU MURGANEO, PELOTUDO!" },
-    { "wave": 5, "at": 6, "speaker": "maxi-negro", "expression": "happy", "text": "¡Mirá, Solago! ¡Te vino a buscar tu jermu!" },
-    { "wave": 5, "at": 12, "speaker": "solago", "expression": "angry", "text": "¡NO ES ELLA, PELOTUDO!" },
-    { "wave": 5, "at": 18, "speaker": "maxi-negro", "expression": "happy", "text": "¿Cómo que no? ¡Si te quiere apuñalar y todo! JAJAJA." },
-    { "wave": 5, "at": 24, "speaker": "solago", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE, NEGRO!" },
-    { "wave": 5, "at": 32, "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡Encima está re caliente con vos!" },
-    { "wave": 5, "at": 38, "speaker": "solago", "expression": "angry", "text": "¡DEJÁ DE ROMPER LAS PELOTAS Y AYUDAME!" },
-    { "wave": 5, "at": 46, "speaker": "maxi-negro", "expression": "annoyed", "text": "Y bueno, arreglen sus problemas de pareja, no me metan a mí." }
+    {
+      "wave": 1,
+      "at": 6,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡Eh, pelotudos! ¡Se supone que se pelean entre ustedes!"
+    },
+    {
+      "wave": 1,
+      "at": 14,
+      "speaker": "maxi-negro",
+      "expression": "annoyed",
+      "text": "Ah, bueno. Hermoso balance."
+    },
+    {
+      "wave": 2,
+      "at": 8,
+      "speaker": "maxi-negro",
+      "expression": "annoyed",
+      "text": "¿Ahora también tiran de lejos? Qué juego de mierda."
+    },
+    {
+      "wave": 2,
+      "at": 16,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡QUE TE DIJE QUE NO SOY UNO DE ESOS BICHOS!"
+    },
+    {
+      "wave": 2,
+      "at": 22,
+      "speaker": "maxi-negro",
+      "expression": "surprised",
+      "text": "Pará... esa puteada la conozco."
+    },
+    {
+      "wave": 4,
+      "at": 6,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "Negro, ¿por qué me siguen estos hijos de puta?"
+    },
+    {
+      "wave": 4,
+      "at": 12,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "Porque piensan que sos la mamá."
+    },
+    {
+      "wave": 4,
+      "at": 18,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡TE VOY A CAGAR A TROMPADAS!"
+    },
+    {
+      "wave": 4,
+      "at": 24,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Bueno, andá a pegarles a ellos, entonces."
+    },
+    {
+      "wave": 4,
+      "at": 32,
+      "speaker": "yorick",
+      "expression": "angry",
+      "text": "¡Regresa, pequeño caminante!"
+    },
+    {
+      "wave": 4,
+      "at": 38,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡NO SOY TU MURGANEO, PELOTUDO!"
+    }
   ]
 }

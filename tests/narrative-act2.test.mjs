@@ -8,14 +8,14 @@ import act02 from '../src/campaign/act-02-rift.mjs';
 // loader, so a broken scene or a paraphrased line fails here and not mid-run.
 const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 const catalogFor = () => loadCatalog({ urls: [manifestURL, actManifestURL(act02)], fetcher });
-const ACT_SCENES = ['act-02-arrival', 'act-02-solago', 'act-02-boss-intro', 'act-02-boss-defeat', 'act-02-epilogue'];
+const ACT_SCENES = ['act-02-arrival', 'act-02-solago', 'act-02-maiden', 'act-02-boss-intro', 'act-02-boss-defeat', 'act-02-epilogue'];
 
-test('the act registers its five cinematics and every scene validates', async () => {
+test('the act registers its six cinematics and every scene validates', async () => {
   const catalog = await catalogFor();
   assert.deepEqual(ACT_SCENES, catalog.entries.filter(entry => entry.id.startsWith('act-02-')).map(entry => entry.id));
   assert.ok(catalog.entries.every(entry => !entry.error), catalog.entries.map(entry => entry.error).filter(Boolean).join('; '));
-  assert.equal(catalog.bindings.length, 5);
-  assert.ok(catalog.banter.length >= 15, 'the walk to the boss carries the act banter');
+  assert.equal(catalog.bindings.length, 6);
+  assert.ok(catalog.banter.length >= 10, 'the walk to the boss carries the act banter');
 });
 
 test('every act two line is quoted from the approved script', async () => {
