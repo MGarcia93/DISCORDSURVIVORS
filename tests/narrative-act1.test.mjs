@@ -91,9 +91,14 @@ test('the shot is a noise burst and the zombies enter from outside the frame', a
   const arrivalRight = Math.min(1144, arrival.stage.points.ground[0] + 1144 / (2 * 1.2));
   assert.ok(arrival.stage.points[arrival.stage.actors.shambler.at][0] > arrivalRight, 'the first zombie starts off the right edge');
   const jhony = scene('act-01-jhony');
-  assert.ok(jhony.stage.points[jhony.stage.actors.walker.at][1] > 748, 'the only living zombie starts below the canvas');
+  // Every living zombie starts outside the canvas and walks in; the street
+  // itself is already a graveyard.
   const alive = Object.entries(jhony.stage.actors).filter(([, actor]) => actor.enemy && actor.state !== 'dead');
-  assert.deepEqual(alive.map(([id]) => id), ['walker'], 'everyone else on that street is already dead');
+  assert.equal(alive.length, 4, 'one takes the shot and three more arrive');
+  for (const [id, actor] of alive) {
+    const [x, y] = jhony.stage.points[actor.at];
+    assert.ok(x > 1144 || y > 748, `${id} starts off the frame`);
+  }
 });
 
 test('Jhony actually shoots one down in front of the player', async () => {

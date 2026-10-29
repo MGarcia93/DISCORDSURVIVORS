@@ -20,7 +20,13 @@
       "corpse-f": [400, 538],
       "corpse-left": [760, 510],
       "corpse-right": [1010, 498],
-      "corpse-top": [900, 350]
+      "corpse-top": [900, 350],
+      "late-a": [480, 830],
+      "late-a-near": [520, 660],
+      "late-b": [1180, 800],
+      "late-b-near": [1060, 690],
+      "late-c": [240, 820],
+      "late-c-near": [400, 680]
     },
     "actors": {
       "negro": { "character": "maxi-negro", "at": "entrance" },
@@ -34,7 +40,10 @@
       "body-left": { "enemy": "zombie", "at": "corpse-left", "state": "dead" },
       "body-right": { "enemy": "runner", "at": "corpse-right", "state": "dead" },
       "body-top": { "enemy": "zombie", "at": "corpse-top", "state": "dead" },
-      "walker": { "enemy": "zombie", "at": "walker-far" }
+      "walker": { "enemy": "zombie", "at": "walker-far" },
+      "late-a": { "enemy": "zombie", "at": "late-a" },
+      "late-b": { "enemy": "runner", "at": "late-b" },
+      "late-c": { "enemy": "zombie", "at": "late-c" }
     }
   },
   "steps": [
@@ -71,12 +80,19 @@
     { "type": "down", "actor": "walker" },
     { "type": "flash", "at": "impact", "duration": 0.18 },
     { "type": "wait", "duration": 0.6 },
-    { "type": "camera", "to": "corpse-c", "zoom": 1.25, "duration": 1.2 },
+    { "type": "parallel", "steps": [
+      { "type": "camera", "to": "corpse-c", "zoom": 1.25, "duration": 2.2 },
+      { "type": "move", "actor": "late-a", "to": "late-a-near", "duration": 2.2 },
+      { "type": "move", "actor": "late-b", "to": "late-b-near", "duration": 2.2 }
+    ] },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "neutral", "text": "Igual, Jhony, ¿no te parece que ya jugaste bastante a esta mierda?" },
       { "speaker": "jhony", "expression": "angry", "text": "¡Y A VOS QUÉ CARAJO TE IMPORTA!" }
     ] },
-    { "type": "camera", "to": "meet", "zoom": 1.1, "duration": 1.1 },
+    { "type": "parallel", "steps": [
+      { "type": "camera", "to": "meet", "zoom": 1.1, "duration": 2 },
+      { "type": "move", "actor": "late-c", "to": "late-c-near", "duration": 2 }
+    ] },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "annoyed", "text": "Bueno, chupame un huevo. Me voy a buscar a los otros." },
       { "speaker": "jhony", "expression": "angry", "text": "¡BUENO, ANDÁ!" }
