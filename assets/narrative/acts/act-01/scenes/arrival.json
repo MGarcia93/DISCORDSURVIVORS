@@ -15,7 +15,7 @@
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué carajo...?" }
     ] },
-    { "type": "move", "actor": "shambler", "to": "near", "duration": 2.4 },
+    { "type": "move", "actor": "shambler", "to": "near", "duration": 5.2 },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Hola? ¿Jhony? ¿Sos vos?" },
       { "speaker": "maxi-negro", "expression": "scared", "text": "Ah, no. La concha de tu madre." }
@@ -25,7 +25,7 @@
       { "type": "move", "actor": "negro", "to": "escape", "duration": 1.4 },
       { "type": "camera", "to": "escape", "zoom": 1.1, "duration": 1.4 }
     ] },
-    { "type": "move", "actor": "latecomer", "to": "near", "duration": 2 },
+    { "type": "move", "actor": "latecomer", "to": "near", "duration": 4.6 },
     { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": [
       "MUNDO 01 — PROJECT ZOMBOID",
       "Objetivo: Sobrevivir.",

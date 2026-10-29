@@ -94,6 +94,9 @@ test('the shot is a noise burst and the zombies enter from outside the frame', a
   for (const id of ['walker-a', 'walker-b']) {
     assert.ok(jhony.stage.points[jhony.stage.actors[id].at][1] > 748, `${id} starts below the canvas`);
   }
+  const alive = Object.entries(jhony.stage.actors).filter(([, actor]) => actor.enemy && actor.state !== 'dead');
+  const around = alive.filter(([, actor]) => jhony.stage.points[actor.at][1] < 620);
+  assert.ok(around.length >= 3, 'the veteran is surrounded, not just approached from below');
 });
 
 test('Jhony actually shoots one down in front of the player', async () => {

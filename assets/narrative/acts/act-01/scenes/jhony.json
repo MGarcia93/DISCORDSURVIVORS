@@ -9,8 +9,14 @@
       "jhony": [880, 460],
       "walker-far": [900, 820],
       "walker-off": [1120, 800],
-      "walker-near-b": [1040, 500],
-      "walker-near": [960, 480],
+      "walker-near": [900, 560],
+      "walker-near-b": [1040, 600],
+      "left": [700, 480],
+      "left-near": [790, 465],
+      "top": [930, 320],
+      "top-near": [890, 410],
+      "right": [1090, 520],
+      "right-near": [1010, 505],
       "corpse-a": [470, 548],
       "corpse-b": [560, 562],
       "corpse-c": [700, 552],
@@ -27,6 +33,9 @@
       "body-d": { "enemy": "zombie", "at": "corpse-d", "state": "dead" },
       "body-e": { "enemy": "brute", "at": "corpse-e", "state": "dead" },
       "body-f": { "enemy": "zombie", "at": "corpse-f", "state": "dead" },
+      "left": { "enemy": "zombie", "at": "left" },
+      "top": { "enemy": "zombie", "at": "top" },
+      "right": { "enemy": "runner", "at": "right" },
       "walker-a": { "enemy": "zombie", "at": "walker-far" },
       "walker-b": { "enemy": "zombie", "at": "walker-off" }
     }
@@ -43,7 +52,9 @@
       { "speaker": "jhony", "expression": "neutral", "text": "¿Y?" }
     ] },
     { "type": "parallel", "steps": [
-      { "type": "move", "actor": "walker-a", "to": "walker-near", "duration": 1.8 },
+      { "type": "move", "actor": "left", "to": "left-near", "duration": 2.6 },
+      { "type": "move", "actor": "top", "to": "top-near", "duration": 3.2 },
+      { "type": "move", "actor": "right", "to": "right-near", "duration": 3 },
       { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.8 }
     ] },
     { "type": "dialogue", "lines": [
@@ -55,9 +66,9 @@
       { "speaker": "jhony", "expression": "angry", "text": "¡NO! ¡ME ESTÁS TRAYENDO TODOS LOS ZOMBIES, LA CONCHA DE TU MADRE!" }
     ] },
     { "type": "parallel", "steps": [
-      { "type": "move", "actor": "walker-b", "to": "walker-near-b", "duration": 1.6 },
-      { "type": "animate", "actor": "jhony", "animation": "point", "duration": 1.6 },
-      { "type": "camera", "to": "walker-near", "zoom": 1.35, "duration": 1.6 }
+      { "type": "move", "actor": "walker-a", "to": "walker-near", "duration": 3.6 },
+      { "type": "move", "actor": "walker-b", "to": "walker-near-b", "duration": 3.4 },
+      { "type": "camera", "to": "walker-near", "zoom": 1.35, "duration": 2.4 }
     ] },
     { "type": "sound", "sound": "gunshot" },
     { "type": "down", "actor": "walker-a" },
