@@ -31,8 +31,9 @@ export class BanterQueue {
 
 // The shell calls boundaries; the director never advances or mutates combat.
 export class WaveDirector {
-  constructor(catalog, { onSound = () => {} } = {}) {
+  constructor(catalog, { onSound = () => {}, seen = null } = {}) {
     this.catalog = catalog; this.onSound = onSound;
+    this.seenStore = seen;
     this.banter = new BanterQueue(catalog.characters, { sounds: catalog.sounds, onSound });
     this.schedule = catalog.banter ?? [];
     this.detach();
@@ -45,7 +46,8 @@ export class WaveDirector {
   detach() {
     try { this.player?.cancel(); } catch { /* Disposal must always release ownership. */ }
     this.run = null; this.player = null; this.pending = null;
-    this.seen = new Set(); this.handled = new Set(); this.flags = Object.create(null);
+    this.seen = this.seenStore ?? new Set();
+    this.handled = new Set(); this.flags = Object.create(null);
     this.due = new Set();
     this.error = null; this.banter.clear();
   }

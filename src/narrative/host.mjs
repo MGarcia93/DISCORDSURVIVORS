@@ -15,8 +15,8 @@ const defaultLoad = act => {
 
 // Browser ownership and async loading stay here, not in the combat engine.
 export class NarrativeHost {
-  constructor({ load = defaultLoad, makeView = createPresenter, audio = new NarrativeAudio() } = {}) {
-    this.load = load; this.makeView = makeView; this.audio = audio;
+  constructor({ load = defaultLoad, makeView = createPresenter, audio = new NarrativeAudio(), seen = null } = {}) {
+    this.load = load; this.makeView = makeView; this.audio = audio; this.seen = seen;
     this.generation = 0; this.director = null; this.loading = false; this.error = null;
   }
   get blocked() { return this.loading || Boolean(this.director?.blocked); }
@@ -29,7 +29,7 @@ export class NarrativeHost {
       const catalog = await this.load(run?.act ?? DEFAULT_ACT);
       if (this.generation !== generation) return;
       this.catalog = catalog;
-      this.director = new WaveDirector(catalog, { onSound: id => this.audio.play(catalog.sounds[id], message => {
+      this.director = new WaveDirector(catalog, { seen: this.seen, onSound: id => this.audio.play(catalog.sounds[id], message => {
         if (this.generation === generation) this.error = message;
       }) });
       this.view = this.makeView(root, catalog, message => {

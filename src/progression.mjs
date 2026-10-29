@@ -52,6 +52,35 @@ function writeProgressFlag(flag, storage) {
   }
 }
 
+// Scenes already played, so `repeat: once` means once per playthrough and not
+// once per run. It rides the same record and stays additive.
+export function seenScenes(storage) {
+  const list = readProgress(storage)?.seenScenes;
+  return Array.isArray(list) ? list.filter(id => typeof id === 'string') : [];
+}
+
+export function markSceneSeen(scene, storage) {
+  const record = readProgressRecord(storage);
+  if (!record.valid) return false;
+  const seen = new Set(seenScenes(storage));
+  if (seen.has(scene)) return true;
+  seen.add(scene);
+  try {
+    const target = resolveStorage(storage);
+    if (!target) return false;
+    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify({ ...record.progress, seenScenes: [...seen] }));
+    return true;
+  } catch { return false; }
+}
+
+// What the narrative director needs: the same `has`/`add` a Set offers.
+export function sceneSeenStore(storage) {
+  return {
+    has: id => seenScenes(storage).includes(id),
+    add: id => markSceneSeen(id, storage),
+  };
+}
+
 export function isCharacterUnlocked(character, storage) {
   const descriptor = unlockDescriptor(character);
   if (descriptor && descriptor.flag === null) return true;

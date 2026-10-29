@@ -79,7 +79,11 @@ test('real app input and wave transitions honor narrative ownership without chan
   dom.click('home');
   assert.equal(state.run, null);
   assert.equal(narrative.blocked, false);
-  assert.equal(dom.storage.size, 0, 'sample scenes did not persist unlocks');
+  // Playing a scene is remembered so a second run can skip it, but it never
+  // grants an unlock on its own.
+  const record = JSON.parse(dom.storage.get('discord-survivors.progress.v1'));
+  assert.ok(Array.isArray(record.seenScenes) && record.seenScenes.length > 0, 'the played scene is remembered');
+  assert.equal(Object.keys(record).filter(key => !['version', 'seenScenes'].includes(key)).length, 0, 'and nothing else was written');
 
   // A pre-wave scene owns suspension independently of the gameplay pause menu.
   const opening = { id: 'opening', actions: {}, scene: { id: 'opening', steps: [

@@ -166,7 +166,9 @@ Unknown world ids fail validation (`Unknown background: <id>`), and `stage` only
 
 ## Results, repetition and boundaries
 
-- `repeat` is `always` (default) or `once` per live run. No new persisted save format is introduced.
+- `repeat` is `always` (default) or `once` per **saved playthrough**. A played
+  scene is written to the progress record under `seenScenes`, so the second run
+  can skip it; the development viewer keeps its own memory and never writes.
 - `effects` is an array of `{ key, value }` required result flags, with string/boolean/finite-number values. Flags are recorded for the live narrative session; story-specific unlock/save integration is deferred.
 - Finishing or skipping records the result once. Skip fast-forwards stage actions, suppresses queued sounds, applies flags, and restores the camera. Cancellation/failure grants no completion result.
 - Blocking scenes run only **after a wave → before shop**, or **after shop → before the next wave**. A first-wave pre-scene is also supported. Combat, abilities, wave time and cooldowns do not advance during a blocking scene.
