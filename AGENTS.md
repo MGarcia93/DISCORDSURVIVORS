@@ -4,7 +4,7 @@ Vanilla ES modules in the browser: no build step, no package manager, no
 dependencies. Serve the repository over HTTP (`file://` breaks module loading).
 
 ```sh
-python3 -m http.server 5173 --bind 127.0.0.1
+node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
 ```
 
 ## Checks

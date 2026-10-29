@@ -7,7 +7,7 @@ A playable pixel-art browser prototype based on the supplied Discord Survivors c
 From this directory, run:
 
 ```sh
-python3 -m http.server 5173 --bind 127.0.0.1
+node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
 ```
 
 Open **http://localhost:5173** in a current browser. No build, package install, account, or backend is required. Serve the directory over HTTP rather than opening `index.html` directly; the game uses JavaScript modules.
