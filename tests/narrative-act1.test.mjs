@@ -102,6 +102,10 @@ test('Jhony actually shoots one down in front of the player', async () => {
   const shot = steps.findIndex(step => step.type === 'sound' && step.sound === 'gunshot');
   assert.ok(shot > 0, 'the shot is staged');
   assert.deepEqual(steps[shot + 1], { type: 'down', actor: 'walker' }, 'and the zombie drops right after it');
+  // Two pans: it shows up in the first one and closes in on the second.
+  const walks = steps.slice(0, shot).filter(step => step.type === 'parallel' && step.steps.some(child => child.type === 'move' && child.actor === 'walker'));
+  assert.equal(walks.length, 2, 'one pan to appear, one to close in');
+  for (const walk of walks) assert.ok(walk.steps.some(child => child.type === 'camera'), 'each walk is watched by the camera');
 });
 
 test('a down step kills an enemy and refuses a cast member', () => {
