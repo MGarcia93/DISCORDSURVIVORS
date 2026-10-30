@@ -2,7 +2,7 @@
   "id": "act-01-epilogue",
   "repeat": "once",
   "stage": {
-    "background": "zomboid",
+    "background": "zomboid-combat",
     "points": { "ground": [572, 470] },
     "actors": { "negro": { "character": "maxi-negro", "at": "ground" } }
   },

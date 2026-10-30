@@ -12,7 +12,7 @@ export default {
   order: 1,
   title: '2.000 horas al pedo',
   status: 'playable',
-  world: 'zomboid',
+  world: 'zomboid-combat',
   duration: 60,
   // Relative to assets/narrative/manifest.json: the act brings its own cast,
   // scenes, bindings and wave banter, and the viewer plays all of it.

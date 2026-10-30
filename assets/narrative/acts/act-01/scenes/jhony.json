@@ -2,83 +2,88 @@
   "id": "act-01-jhony",
   "repeat": "once",
   "stage": {
-    "background": "zomboid",
+    "background": "jhony-street",
+    "size": [2288, 748],
     "points": {
       "entrance": [
         300,
         470
       ],
       "meet": [
-        600,
+        1300,
         470
       ],
       "jhony": [
-        880,
+        1580,
         460
       ],
       "walker-far": [
-        900,
+        1600,
         830
       ],
       "walker-mid": [
-        900,
+        1600,
         700
       ],
       "walker-near": [
-        900,
+        1600,
         600
       ],
       "muzzle": [
-        910,
+        1610,
         415
       ],
       "impact": [
-        900,
+        1600,
         545
       ],
       "corpse-a": [
-        470,
+        1170,
         548
       ],
       "corpse-b": [
-        560,
+        1260,
         562
       ],
       "corpse-c": [
-        700,
+        1400,
         552
       ],
       "corpse-d": [
-        790,
+        1490,
         540
       ],
       "corpse-e": [
-        980,
+        1680,
         552
       ],
       "corpse-f": [
-        400,
+        1100,
         538
       ],
       "corpse-left": [
-        760,
+        1460,
         510
       ],
       "corpse-right": [
-        1010,
+        1710,
         498
       ],
       "corpse-top": [
-        900,
+        1600,
         350
       ],
       "late-a": [
-        1000,
+        1700,
         900
       ],
       "late-b": [
-        980,
+        1680,
         -200
+      ],
+      "departure-frame": [
+        572,
+        374
       ]
     },
     "actors": {
@@ -151,19 +156,26 @@
   },
   "steps": [
     {
+      "type": "sound",
+      "sound": "gunshot",
+      "repeat": 2,
+      "interval": 0.3
+    },
+    { "type": "wait", "duration": 0.3 },
+    {
       "type": "parallel",
       "steps": [
         {
           "type": "move",
           "actor": "negro",
           "to": "meet",
-          "duration": 1.6
+          "duration": 4.2
         },
         {
           "type": "camera",
           "to": "jhony",
-          "zoom": 1.15,
-          "duration": 1.6
+          "zoom": 1,
+          "duration": 4.2
         }
       ]
     },
@@ -335,10 +347,11 @@
       ]
     },
     {
-      "type": "move",
-      "actor": "negro",
-      "to": "entrance",
-      "duration": 1.5
+      "type": "parallel",
+      "steps": [
+        { "type": "move", "actor": "negro", "to": "entrance", "duration": 3.2 },
+        { "type": "camera", "to": "departure-frame", "zoom": 1, "duration": 3.2 }
+      ]
     },
     {
       "type": "parallel",

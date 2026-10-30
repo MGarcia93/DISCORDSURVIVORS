@@ -1,6 +1,8 @@
 import arena from './arena.mjs';
 import room from './room.mjs';
 import zomboid from './zomboid.mjs';
+import zomboidCombat from './zomboid-combat.mjs';
+import jhonyStreet from './jhony-street.mjs';
 import rift from './rift.mjs';
 import inferno from './inferno.mjs';
 import exiles from './exiles.mjs';
@@ -14,7 +16,7 @@ import discord from './discord.mjs';
 // Each world is painted ONCE into an offscreen canvas and then blitted, so the
 // per-frame cost of any world is a single drawImage no matter how many tiles
 // it paints. Only what a world declares in `animate` runs every frame.
-const WORLDS = Object.freeze({ arena, room, zomboid, rift, inferno, exiles, laboratory, discord });
+const WORLDS = Object.freeze({ arena, room, zomboid, 'zomboid-combat': zomboidCombat, 'jhony-street': jhonyStreet, rift, inferno, exiles, laboratory, discord });
 
 export const worldIds = Object.freeze(Object.keys(WORLDS));
 export const defaultWorld = 'arena';

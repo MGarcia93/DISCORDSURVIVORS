@@ -54,6 +54,20 @@ last wave, and a mini-boss that is unknown, unnamed or not before the boss. A
 Only the act's own boss closes the run: a boss-flagged mini-boss dying on its
 wave does not end the map.
 
+## Act 1 scenery
+
+Act 1 combat uses `zomboid-combat`, a fixed top-down street with houses and
+parked wrecks adapted from the approved Jhony cinematic art. Large scenery
+stays around the perimeter, leaving the central fighting area clear. This is
+visual scenery only: movement bounds, collision, waves and spawning are unchanged.
+Act 1's five fixed-stage cinematics also use this updated street; their dialogue,
+camera targets and actor positions are unchanged. Jhony keeps his separate,
+larger `jhony-street` cinematic map. The older `zomboid` world remains available
+for story pages and explicit previews.
+Preview the combat layout in `?dev=worlds`, selecting **Act 1 — Knox County
+combat street**, or start Act 1 to see it with combat effects and enemies.
+Reload the whole page after adding a world to refresh the JavaScript registry.
+
 ## Act 3
 
 Act 3 runs in the `inferno` dungeon with the seven kinds its script asks for:

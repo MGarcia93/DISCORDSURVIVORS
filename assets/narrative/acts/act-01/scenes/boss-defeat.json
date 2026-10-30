@@ -2,7 +2,7 @@
   "id": "act-01-boss-defeat",
   "repeat": "once",
   "stage": {
-    "background": "zomboid",
+    "background": "zomboid-combat",
     "points": { "ground": [572, 470], "street": [880, 480], "corpse-a": [700, 545], "corpse-b": [980, 545] },
     "actors": {
       "negro": { "character": "maxi-negro", "at": "ground" },

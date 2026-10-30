@@ -2,7 +2,7 @@
   "id": "act-01-arrival",
   "repeat": "once",
   "stage": {
-    "background": "zomboid",
+    "background": "zomboid-combat",
     "points": {
       "ground": [
         520,

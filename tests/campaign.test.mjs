@@ -40,7 +40,7 @@ test('act four is the Conan Exiles chapter with the lotus alchemist and the task
 });
 
 test('act one is the approved Project Zomboid chapter the script describes', () => {
-  assert.equal(act01.world, 'zomboid');
+  assert.equal(act01.world, 'zomboid-combat');
   assert.equal(act01.title, '2.000 horas al pedo');
   assert.equal(act01.duration, 60);
   assert.equal(act01.waves.length, 6);

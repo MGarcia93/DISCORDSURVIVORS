@@ -104,7 +104,7 @@ test('the shot is a noise burst and the zombies enter from outside the frame', a
 test('Jhony actually shoots one down in front of the player', async () => {
   const catalog = await catalogFor();
   const steps = catalog.entries.find(entry => entry.id === 'act-01-jhony').scene.steps;
-  const shot = steps.findIndex(step => step.type === 'sound' && step.sound === 'gunshot');
+  const shot = steps.findIndex((step, index) => step.type === 'sound' && step.sound === 'gunshot' && steps[index + 1]?.type === 'down');
   assert.ok(shot > 0, 'the shot is staged');
   assert.deepEqual(steps[shot + 1], { type: 'down', actor: 'walker' }, 'and the zombie drops right after it');
   // Two pans: it shows up in the first one and closes in on the second.
