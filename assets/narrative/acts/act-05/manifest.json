@@ -1,0 +1,167 @@
+{
+  "characters": "../../characters.json",
+  "sounds": {
+    "glitch": {
+      "noise": true,
+      "duration": 0.25,
+      "cutoff": 700,
+      "gain": 0.12
+    },
+    "portal": {
+      "frequency": 180,
+      "duration": 0.6,
+      "gain": 0.08
+    },
+    "alert": {
+      "frequency": 620,
+      "duration": 0.12,
+      "gain": 0.12
+    },
+    "alarm": {
+      "frequency": 880,
+      "duration": 0.18,
+      "gain": 0.1
+    },
+    "error": {
+      "frequency": 220,
+      "duration": 0.3,
+      "gain": 0.1
+    },
+    "disconnect": {
+      "frequency": 90,
+      "duration": 0.9,
+      "gain": 0.08
+    }
+  },
+  "scenes": [
+    {
+      "id": "act-05-prologue",
+      "title": "Acto 5: La última conexión",
+      "file": "scenes/prologue.json"
+    },
+    {
+      "id": "act-05-reconnect",
+      "title": "Acto 5: Reconectando...",
+      "file": "scenes/reconnect.json"
+    },
+    {
+      "id": "act-05-files",
+      "title": "Acto 5: Archivos corruptos",
+      "file": "scenes/files.json"
+    },
+    {
+      "id": "act-05-memory",
+      "title": "Acto 5: El servidor recuerda",
+      "file": "scenes/memory.json"
+    },
+    {
+      "id": "act-05-hotfix",
+      "title": "Acto 5: Hotfix en producción",
+      "file": "scenes/hotfix.json"
+    },
+    {
+      "id": "act-05-ghosts",
+      "title": "Acto 5: Los fantasmas del pasado",
+      "file": "scenes/ghosts.json"
+    },
+    {
+      "id": "act-05-administrator",
+      "title": "Acto 5: Jefe final detectado",
+      "file": "scenes/administrator.json"
+    },
+    {
+      "id": "act-05-phases",
+      "title": "Acto 5: Las tres fases del servidor",
+      "file": "scenes/phases.json"
+    },
+    {
+      "id": "act-05-defeat",
+      "title": "Acto 5: Servidor desconectado",
+      "file": "scenes/defeat.json"
+    }
+  ],
+  "bindings": [
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-05-prologue"
+    },
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-05-reconnect"
+    },
+    {
+      "when": "before_wave",
+      "wave": 2,
+      "scene": "act-05-files"
+    },
+    {
+      "when": "before_wave",
+      "wave": 3,
+      "scene": "act-05-memory"
+    },
+    {
+      "when": "before_wave",
+      "wave": 4,
+      "scene": "act-05-hotfix"
+    },
+    {
+      "when": "before_wave",
+      "wave": 5,
+      "scene": "act-05-ghosts"
+    },
+    {
+      "when": "before_wave",
+      "wave": 6,
+      "scene": "act-05-administrator"
+    },
+    {
+      "when": "before_wave",
+      "wave": 6,
+      "scene": "act-05-phases"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-05-defeat"
+    }
+  ],
+  "banter": [
+    {
+      "wave": 2,
+      "at": 1.5,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "Epa, esos demonios están tirando loot."
+    },
+    {
+      "wave": 2,
+      "at": 3.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡PAPASITO, NO EMPIECES!"
+    },
+    {
+      "wave": 2,
+      "at": 5.5,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "Pero mirá nomás lo que cayó."
+    },
+    {
+      "wave": 2,
+      "at": 7.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡NO, PARAGUAYO! ¡NO HAY TIEMPO PARA FARMEAR!"
+    },
+    {
+      "wave": 2,
+      "at": 10,
+      "speaker": "papasito",
+      "expression": "annoyed",
+      "text": "Bueno, bueno. Ni mirar se puede."
+    }
+  ]
+}

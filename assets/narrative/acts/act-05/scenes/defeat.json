@@ -1,0 +1,50 @@
+{
+  "id": "act-05-defeat",
+  "repeat": "once",
+  "stage": {
+    "background": "discord",
+    "points": {
+      "party": [300, 505],
+      "solago": [440, 510],
+      "papasito": [580, 515],
+      "warrior": [720, 508],
+      "fallen": [880, 380],
+      "wide": [572, 400]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" }
+    }
+  },
+  "steps": [
+    { "type": "camera", "to": "fallen", "zoom": 1.3, "duration": 1 },
+    { "type": "sound", "sound": "error" },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Integridad del servidor comprometida.", "Error fatal.", "Finalizando sesión..."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡SÍÍÍ! ¡LA CONCHA DE TU MADRE!" },
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡LO HICIMOS MIERDA!" },
+        { "speaker": "papasito", "expression": "tired", "text": "Al fin, por Dios." },
+        { "speaker": "warrior", "expression": "happy", "text": "¡Ya está! ¡Vámonos!" }
+      ]
+    },
+    { "type": "flash", "at": "fallen", "duration": 0.7 },
+    { "type": "sound", "sound": "disconnect" },
+    { "type": "camera", "to": "wide", "zoom": 1, "duration": 1.2 },
+    { "type": "wait", "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Bueno... ¿ya está?" },
+        { "speaker": "solago", "expression": "neutral", "text": "Parece." },
+        { "speaker": "papasito", "expression": "neutral", "text": "¿Podemos salir?" },
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Y... supongo." }
+      ]
+    },
+    { "type": "sound", "sound": "glitch" },
+    { "type": "wait", "duration": 1.4 }
+  ]
+}

@@ -22,6 +22,7 @@ export default {
   status: 'playable',
   world: 'discord',
   duration: 60,
+  narrative: 'acts/act-05/manifest.json',
   miniboss: [
     { wave: 5, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' },
     { wave: 5, kind: 'yorick', name: 'YORICK' },
@@ -60,7 +61,9 @@ export default {
     },
     // The four corrupted bosses bring their own pressure: the alarm drags a
     // horde, Yorick his walkers, Lilith her summons, the Capataz his guards.
-    { wave: 5, perMinute: 0, mix: {}, life: {} },
+    // Untimed: the wave closes only when the last of the four falls, because
+    // four bosses do not fit in one minute.
+    { wave: 5, perMinute: 0, mix: {}, life: {}, untimed: true },
     // The boss wave is untimed and carries no budget of its own.
     { wave: 6, perMinute: 0, mix: {}, life: {} },
   ],

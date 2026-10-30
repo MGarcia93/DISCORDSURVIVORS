@@ -1,0 +1,70 @@
+{
+  "id": "act-05-files",
+  "repeat": "once",
+  "stage": {
+    "background": "discord",
+    "points": {
+      "party": [280, 505],
+      "solago": [420, 500],
+      "papasito": [560, 505],
+      "warrior": [690, 498],
+      "portal-a": [860, 260],
+      "portal-b": [1000, 400],
+      "portal-c": [820, 560],
+      "slaver": [960, 470],
+      "close-warrior": [700, 460]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" },
+      "bone": { "enemy": "skeleton", "at": "portal-a" },
+      "raider": { "enemy": "barbarian", "at": "portal-b" },
+      "walker": { "enemy": "mistWalker", "at": "portal-c" },
+      "slaver": { "character": "esclavista", "at": "slaver" }
+    }
+  },
+  "steps": [
+    { "type": "sound", "sound": "portal" },
+    { "type": "camera", "to": "portal-b", "zoom": 1.15, "duration": 1.1 },
+    { "type": "flash", "at": "portal-a", "duration": 0.3 },
+    { "type": "flash", "at": "portal-c", "duration": 0.3 },
+    { "type": "sound", "sound": "glitch" },
+    { "type": "camera", "to": "warrior", "zoom": 1.2, "duration": 0.9 },
+    { "type": "sound", "sound": "alert" },
+    { "type": "move", "actor": "slaver", "to": "close-warrior", "duration": 1.2 },
+    { "type": "animate", "actor": "slaver", "animation": "point", "duration": 1.4 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "esclavista", "expression": "angry", "text": "¡AHÍ ESTÁ EL ESCLAVO FUGITIVO!" },
+        { "speaker": "warrior", "expression": "annoyed", "text": "¡Otra vez estos tipos!" },
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡WARRIOR, TODAVÍA TE ESTÁN BUSCANDO!" }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 5,
+      "lines": ["Usuario Warrior identificado. Nacionalidad estimada: Bolivia."]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "warrior", "expression": "angry", "text": "¡QUE SOY DE JUJUY, URA!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Reclamo registrado. Resolución pendiente."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡LE ABRIERON UN RECLAMO PARA VER SI ES ARGENTINO!" }
+      ]
+    },
+    { "type": "animate", "actor": "slaver", "animation": "idle", "duration": 0.6 },
+    { "type": "sound", "sound": "error" },
+    { "type": "camera", "to": "portal-b", "zoom": 1, "duration": 0.8 },
+    { "type": "wait", "duration": 0.4 }
+  ]
+}

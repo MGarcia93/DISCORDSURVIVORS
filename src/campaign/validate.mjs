@@ -29,6 +29,14 @@ function validateWaves(act) {
         throw Error(`${id}: wave ${wave} must declare ${kind} life`);
       }
     }
+    // An untimed wave waits for something that is not the clock: only a wave
+    // that holds a line of mini-bosses can close when that line is cleared.
+    if (config.untimed === true) {
+      const declared = Array.isArray(act.miniboss) ? act.miniboss : act.miniboss ? [act.miniboss] : [];
+      if (!declared.some(entry => entry?.wave === wave)) {
+        throw Error(`${id}: wave ${wave} is untimed but holds no mini-boss`);
+      }
+    }
   });
 }
 

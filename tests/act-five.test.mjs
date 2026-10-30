@@ -31,6 +31,10 @@ test('wave five restores the four bosses one at a time, in script order', () => 
   const run = runAt(5);
   const order = act05.miniboss.map(entry => entry.kind);
   assert.equal(run.enemies.length, 1, 'the first corrupted boss arrives alone');
+  // Four bosses do not fit in one minute: the wave waits for the line.
+  run.time = run.duration + 1;
+  step(run, 0.016, {});
+  assert.equal(run.phase, 'playing', 'the clock never closes the gauntlet');
   for (const [index, kind] of order.entries()) {
     const boss = run.enemies.find(enemy => enemy.gauntlet === index);
     assert.ok(boss, `${kind} is on the field`);
@@ -39,13 +43,21 @@ test('wave five restores the four bosses one at a time, in script order', () => 
     slay(run, boss);
     if (index < order.length - 1) {
       assert.equal(run.enemies.length, 1, 'the next one walks in where the last one fell');
+      run.time = run.duration + 1;
+      step(run, 0.016, {});
+      assert.equal(run.phase, 'playing', 'one fallen boss is not the end of the wave');
     }
   }
-  assert.equal(run.phase, 'playing', 'the gauntlet leaves the run open for wave six');
+  assert.equal(run.phase, 'shop', 'clearing the line closes the wave');
 });
 
 test('the boss wave fields the administrator and only the administrator closes the run', () => {
-  const run = runAt(6);
+  const run = runAt(5);
+  for (let index = 0; index < act05.miniboss.length; index++) {
+    slay(run, run.enemies.find(enemy => enemy.gauntlet !== undefined));
+  }
+  assert.equal(run.phase, 'shop', 'the cleared gauntlet hands over to the shop');
+  assert.equal(startNextWave(run), true);
   const [boss] = run.enemies;
   assert.equal(boss.kind, 'administrator');
   assert.equal(boss.boss, true);

@@ -1,0 +1,52 @@
+{
+  "id": "act-05-administrator",
+  "repeat": "once",
+  "stage": {
+    "background": "discord",
+    "points": {
+      "party": [260, 520],
+      "solago": [400, 525],
+      "papasito": [540, 528],
+      "warrior": [680, 522],
+      "figure": [880, 380],
+      "figure-high": [880, 240],
+      "wide": [572, 420]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" }
+    }
+  },
+  "steps": [
+    { "type": "sound", "sound": "disconnect" },
+    { "type": "camera", "to": "wide", "zoom": 1.05, "duration": 1.2 },
+    { "type": "wait", "duration": 0.5 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Han sobrevivido a todos los mundos."] },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Pero la partida todavía no ha terminado."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡PERO SI YA MATAMOS A TODOS LOS JEFES, PELOTUDO!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": ["Correcto.", "Solo queda uno."] },
+    { "type": "sound", "sound": "portal" },
+    { "type": "flash", "at": "figure", "duration": 0.6 },
+    { "type": "camera", "to": "figure", "zoom": 1.3, "duration": 1.4 },
+    { "type": "notice", "title": "JEFE FINAL DETECTADO", "duration": 5, "lines": ["EL ADMINISTRADOR DEL SERVIDOR"] },
+    { "type": "camera", "to": "figure-high", "zoom": 1.2, "duration": 1.1 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "scared", "text": "¡NOOO! ¡TENEMOS QUE MATAR AL BOT!" },
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡CON GUSTO, LA CONCHA DE SU MADRE!" },
+        { "speaker": "papasito", "expression": "neutral", "text": "Bueno, vamos a terminar esto de una vez." },
+        { "speaker": "warrior", "expression": "angry", "text": "¡Dale, ura! ¡Hay que bajarlo!" }
+      ]
+    },
+    { "type": "sound", "sound": "glitch" },
+    { "type": "camera", "to": "wide", "zoom": 1, "duration": 0.8 }
+  ]
+}

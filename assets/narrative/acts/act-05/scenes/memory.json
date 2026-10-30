@@ -1,0 +1,168 @@
+{
+  "id": "act-05-memory",
+  "repeat": "once",
+  "stage": {
+    "background": "discord",
+    "points": {
+      "party": [260, 500],
+      "solago": [410, 505],
+      "papasito": [560, 505],
+      "warrior": [700, 498],
+      "window-a": [880, 300],
+      "window-b": [980, 470],
+      "window-c": [820, 620],
+      "focus-negro": [300, 460],
+      "focus-solago": [430, 465],
+      "focus-papasito": [580, 465],
+      "focus-warrior": [720, 460]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" }
+    }
+  },
+  "steps": [
+    { "type": "sound", "sound": "error" },
+    { "type": "camera", "to": "window-a", "zoom": 1.15, "duration": 1.2 },
+    { "type": "wait", "duration": 0.3 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Analizando vulnerabilidades de los usuarios."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "¿Qué vulnerabilidades, hijo de puta?" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Iniciando evaluación psicológica del equipo."] },
+
+    { "type": "camera", "to": "focus-negro", "zoom": 1.3, "duration": 0.9 },
+    { "type": "sound", "sound": "alert" },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Usuario Maxi Negro. Nivel de actividad física: cuestionable."] },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Motivación principal: evitar cualquier esfuerzo."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡Y BUENO, BOT! ¡ME DA PAJA!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Debilidad detectada: responsabilidades."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡PONELE UNA PALA ENFRENTE Y SE DESCONECTA SOLO!" },
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡MIRÁ QUIÉN HABLA, SI TE MANDAN A LAVAR UN PLATO Y DESAPARECÉS!" }
+      ]
+    },
+    { "type": "flash", "at": "focus-negro", "duration": 0.35 },
+    { "type": "sound", "sound": "glitch" },
+    { "type": "wait", "duration": 0.4 },
+
+    { "type": "camera", "to": "focus-solago", "zoom": 1.3, "duration": 0.9 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Usuario Solago. Clasificación: caminante de la niebla."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "angry", "text": "¡NO SOY UN MURGANEO, HIJO DE PUTA!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Registro contradictorio. Yorick reclama su propiedad."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡TE ESTÁN RECLAMANDO LA TENENCIA!" }
+      ]
+    },
+    { "type": "flash", "at": "window-b", "duration": 0.3 },
+    { "type": "sound", "sound": "alert" },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Contacto familiar detectado."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡SOLAGO, TE VOLVIÓ A BUSCAR TU JERMU!" },
+        { "speaker": "solago", "expression": "angry", "text": "¡QUE NO ES ELLA, NEGRO!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Contacto autorizado para suspender el acceso a PC y Xbox."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡ESTA SÍ ES TU JERMU!" },
+        { "speaker": "solago", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE!" }
+      ]
+    },
+
+    { "type": "camera", "to": "focus-papasito", "zoom": 1.3, "duration": 0.9 },
+    { "type": "sound", "sound": "error" },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Usuario Papasito. Historial financiero detectado."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "papasito", "expression": "scared", "text": "No..." }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Venta de pertenencias registrada.", "Transferencia anticipada registrada.", "Servicio contratado: no recibido."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡NOOO! ¡OTRA VEZ LA CARIÑOSA!" },
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡EL BOT NO LO DEJA OLVIDAR LA ESTAFA!" },
+        { "speaker": "papasito", "expression": "annoyed", "text": "No, no... ¿para qué vas a mostrar eso ahora?" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Para borrar el historial, deberá abonar una pequeña seña."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJAJA! ¡NOOO! ¡LO QUIERE CAGAR DE NUEVO!" },
+        { "speaker": "papasito", "expression": "angry", "text": "¡UUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA!" }
+      ]
+    },
+    { "type": "flash", "at": "window-b", "duration": 0.4 },
+    { "type": "sound", "sound": "glitch" },
+    { "type": "wait", "duration": 0.5 },
+
+    { "type": "camera", "to": "focus-warrior", "zoom": 1.3, "duration": 0.9 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Usuario Warrior. Procedencia: Jujuy."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "warrior", "expression": "angry", "text": "¡Jujuy es Argentina!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": ["Bolivia."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "warrior", "expression": "angry", "text": "¡Te estoy diciendo que no!" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Error de geolocalización persistente. Bolivia."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡NO LE DISCUTAS AL BOT, WARRIOR!" }
+      ]
+    },
+    { "type": "sound", "sound": "glitch" },
+    { "type": "flash", "at": "focus-warrior", "duration": 0.6 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Advertencia. Visibilidad del servidor comprometida."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡WARRIOR, NO VEO UNA MIERDA CON TU HUMO!" },
+        { "speaker": "warrior", "expression": "angry", "text": "¡Y MOVETE, MANCO!" }
+      ]
+    },
+    { "type": "camera", "to": "party", "zoom": 1, "duration": 0.9 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Evaluación finalizada. Nivel de cooperación del grupo: extremadamente bajo."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "angry", "text": "¡Y SÍ, PELOTUDO! ¡SI NO PARÁS DE BARDEARNOS!" }
+      ]
+    },
+    { "type": "sound", "sound": "portal" },
+    { "type": "wait", "duration": 0.5 }
+  ]
+}

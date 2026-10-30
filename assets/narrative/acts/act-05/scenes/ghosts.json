@@ -1,0 +1,121 @@
+{
+  "id": "act-05-ghosts",
+  "repeat": "once",
+  "stage": {
+    "background": "discord",
+    "points": {
+      "party": [280, 505],
+      "solago": [420, 500],
+      "papasito": [560, 505],
+      "warrior": [700, 498],
+      "run-away": [1000, 480],
+      "portal-1": [860, 240],
+      "portal-2": [980, 380],
+      "portal-3": [880, 560],
+      "portal-4": [1040, 520],
+      "wide": [572, 374],
+      "centre": [620, 420]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" }
+    }
+  },
+  "steps": [
+    { "type": "camera", "to": "centre", "zoom": 1.1, "duration": 1 },
+    { "type": "sound", "sound": "portal" },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Los usuarios han demostrado capacidad para sobrevivir individualmente a los mundos."] },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Iniciando evaluación final de combate."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "Bueno, ¿qué mierda es ahora?" }
+      ]
+    },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Restaurando jefes anteriores."] },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "scared", "text": "No..." },
+        { "speaker": "papasito", "expression": "surprised", "text": "¿Otra vez los jefes?" },
+        { "speaker": "warrior", "expression": "surprised", "text": "Uh, no." }
+      ]
+    },
+
+    { "type": "flash", "at": "portal-1", "duration": 0.4 },
+    { "type": "sound", "sound": "alarm" },
+    { "type": "camera", "to": "portal-1", "zoom": 1.25, "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡NOOO! ¡ESTE HIJO DE PUTA OTRA VEZ!" },
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡MIRÁ, NEGRO! ¡TU AMIGO!" },
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡CHUPAME LA PIJA!" }
+      ]
+    },
+
+    { "type": "flash", "at": "portal-2", "duration": 0.4 },
+    { "type": "sound", "sound": "portal" },
+    { "type": "camera", "to": "portal-2", "zoom": 1.25, "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "yorick", "expression": "neutral", "text": "Mi pequeño caminante... finalmente te encontré." },
+        { "speaker": "solago", "expression": "scared", "text": "¡NOOOOO! ¡LA CONCHA DE TU MADRE!" },
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJAJA! ¡VOLVIÓ TU PAPÁ!" },
+        { "speaker": "yorick", "expression": "neutral", "text": "Ven conmigo, pequeño." },
+        { "speaker": "solago", "expression": "angry", "text": "¡QUE NO SOY TU MURGANEO, PELOTUDO!" }
+      ]
+    },
+
+    { "type": "flash", "at": "portal-3", "duration": 0.4 },
+    { "type": "sound", "sound": "error" },
+    { "type": "camera", "to": "portal-3", "zoom": 1.25, "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "lilith", "expression": "neutral", "text": "El infierno los reclama." },
+        { "speaker": "papasito", "expression": "scared", "text": "...Uh." },
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡NOOO! ¡OTRA VEZ LILITH!" },
+        { "speaker": "solago", "expression": "scared", "text": "¡PAPASITO, HACÉ ALGO!" }
+      ]
+    },
+    { "type": "move", "actor": "papasito", "to": "run-away", "duration": 1.1 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "surprised", "text": "¡NO, PARAGUAYO! ¡NO TE VAYAS!" },
+        { "speaker": "papasito", "expression": "angry", "text": "¡CORRAN, CORRAN!" }
+      ]
+    },
+    { "type": "move", "actor": "papasito", "to": "papasito", "duration": 1.1 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡PAPASITO, DEJÁ EL LOOT, PELOTUDO!" }
+      ]
+    },
+
+    { "type": "flash", "at": "portal-4", "duration": 0.4 },
+    { "type": "sound", "sound": "alert" },
+    { "type": "camera", "to": "portal-4", "zoom": 1.25, "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "taskmaster", "expression": "angry", "text": "¡DEVUÉLVANME A MI ESCLAVO!" },
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡WARRIOR, TE VINIERON A BUSCAR OTRA VEZ!" },
+        { "speaker": "warrior", "expression": "angry", "text": "¡Ni en pedo vuelvo ahí!" },
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡TENÉS QUE TERMINAR LA OBRA, BOLIVIANO!" },
+        { "speaker": "warrior", "expression": "angry", "text": "¡Déjense de joder!" }
+      ]
+    },
+
+    { "type": "camera", "to": "wide", "zoom": 1, "duration": 0.9 },
+    { "type": "sound", "sound": "disconnect" },
+    { "type": "wait", "duration": 1 },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Evaluación completada."] },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Preparando enfrentamiento definitivo."] }
+  ]
+}

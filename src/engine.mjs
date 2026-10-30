@@ -188,6 +188,7 @@ export function startNextWave(run) {
   // A wave may declare a temporary lock: hotfix 1.0.5 cuts the cast's specials
   // for the first seconds of the wave that declares it.
   run.specialsLocked = waveConfig(run.act, run.wave)?.specialLock ?? 0;
+  run.gauntletCleared = false;
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
@@ -218,6 +219,13 @@ function gauntletEnemy(run, index, kind) {
   const enemy = createEnemy(run, kind, WIDTH / 2, 90 * WORLD_SCALE);
   enemy.gauntlet = index;
   return enemy;
+}
+
+// An untimed wave holds its screen until its mini-boss line is cleared.
+function waveOver(run) {
+  const untimed = waveConfig(run.act, run.wave)?.untimed === true;
+  if (untimed) return run.gauntletCleared === true;
+  return run.time >= run.duration;
 }
 
 function spawn(run, kind) {
@@ -713,6 +721,9 @@ export function step(run, seconds, input = {}) {
       if (next) {
         run.minibossLine.index = enemy.gauntlet + 1;
         run.enemies.push(gauntletEnemy(run, enemy.gauntlet + 1, next.kind));
+      } else {
+        // The last one fell: an untimed wave is allowed to close now.
+        run.gauntletCleared = true;
       }
     }
     emit('kill', { run, player: p, enemy });
@@ -745,7 +756,9 @@ export function step(run, seconds, input = {}) {
     run.pendingLevels = [];
     run.levelChoices = run.shopOffers = null;
     emit('waveCleared', { run });
-  } else if (run.wave < run.act.boss.wave && run.time >= run.duration) {
+  // A wave ends on its clock, except one that declares itself untimed and holds
+  // a line of mini-bosses: that one only closes when the last of them falls.
+  } else if (run.wave < run.act.boss.wave && waveOver(run)) {
     run.phase = 'shop';
     awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
     run.enemies = [];
