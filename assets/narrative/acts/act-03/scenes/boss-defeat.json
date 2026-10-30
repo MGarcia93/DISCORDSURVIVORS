@@ -1,0 +1,140 @@
+{
+  "id": "act-03-boss-defeat",
+  "repeat": "once",
+  "stage": {
+    "background": "inferno",
+    "points": {
+      "ground": [
+        400,
+        500
+      ],
+      "solago": [
+        545,
+        505
+      ],
+      "papasito": [
+        690,
+        505
+      ],
+      "lilith": [
+        900,
+        480
+      ],
+      "echo": [
+        1010,
+        600
+      ],
+      "loot": [
+        980,
+        545
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "lilith": {
+        "enemy": "lilith",
+        "at": "lilith",
+        "state": "dead"
+      },
+      "echo": {
+        "enemy": "lilithEcho",
+        "at": "echo",
+        "state": "dead"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "wait",
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "tired",
+          "text": "La concha de su madre... ¿Ya está?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, Papasito, listo. Nos vamos."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Pará."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¿QUÉ?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "El loot."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NO, OTRA VEZ NO!"
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "papasito",
+      "to": "loot",
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papasito",
+          "expression": "happy",
+          "text": "¡SÍ, CARAJO! ¡POR FIN!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿Era eso lo que buscabas?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "No, pero me sirve."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡VENDÉLO Y COMPRATE UN MONITOR, PELOTUDO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡DEJÁ DE JODER CON EL MONITOR!"
+        }
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-03-boss-beaten",
+      "value": true
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "id": "act-03-epilogue",
+  "repeat": "once",
+  "stage": {
+    "background": "inferno",
+    "points": {
+      "ground": [
+        400,
+        500
+      ],
+      "solago": [
+        545,
+        505
+      ],
+      "papasito": [
+        690,
+        505
+      ],
+      "lilith": [
+        900,
+        480
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "lilith": {
+        "enemy": "lilith",
+        "at": "lilith",
+        "state": "dead"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "notice",
+      "title": "OBJETO LEGENDARIO DESCONOCIDO",
+      "duration": 5,
+      "lines": [
+        "Origen: Servidor de Discord",
+        "Estado: Corrupto",
+        "Registro de transacción: Detectado",
+        "Identidad del propietario: Papasito"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papasito",
+          "expression": "surprised",
+          "text": "Che, este objeto es raro."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué tiene?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "No existe en Diablo."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Y qué hace?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "No sé."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Registro de usuario recuperado. Historial de transacciones disponible."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "Uh, negro. ¡Tiene guardada la transferencia de la cariñosa!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA. ¡PAPASITO, EL BOT SABE QUE TE ESTAFARON!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR DEL SERVIDOR",
+      "duration": 5,
+      "lines": [
+        "Mundo 03 completado.",
+        "Jugador Papasito recuperado.",
+        "Integrantes reunidos: 3.",
+        "Anomalía detectada.",
+        "Preparando siguiente entorno..."
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "CONAN EXILES",
+      "duration": 3,
+      "lines": [
+        "CONAN EXILES"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, ¿ahora qué mierda toca?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Conan? ¿Y quién carajo estará ahí?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Capaz Jhony. Lo dejamos en Project, pero por ahí ahora se une el hijo de puta."
+        },
+        {
+          "speaker": "solago",
+          "expression": "annoyed",
+          "text": "¿Jhony? Ese hijo de puta debe seguir matando zombies."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Y bueno, capaz está Maxi."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "O Papafrita."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Alguno de esos pelotudos tiene que estar."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Vos qué decís, Papasito?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PAPASITO, LA CONCHA DE TU MADRE! ¡TE ESTÁ HABLANDO!"
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJA, olvidate."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ESCLAVISTA",
+      "duration": 3,
+      "lines": [
+        "¡Traigan al nuevo esclavo!"
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "OTRO ESCLAVISTA",
+      "duration": 3,
+      "lines": [
+        "¡¿Pero qué está diciendo?!"
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ESCLAVISTA",
+      "duration": 4,
+      "lines": [
+        "¡NO TENGO LA MENOR IDEA!"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-03-epilogue",
+      "value": true
+    }
+  ]
+}

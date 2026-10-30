@@ -1,0 +1,156 @@
+{
+  "id": "act-03-zir",
+  "repeat": "once",
+  "stage": {
+    "background": "inferno",
+    "points": {
+      "ground": [
+        400,
+        500
+      ],
+      "solago": [
+        545,
+        505
+      ],
+      "papasito": [
+        680,
+        505
+      ],
+      "zir-far": [
+        1080,
+        460
+      ],
+      "zir": [
+        880,
+        480
+      ],
+      "coins": [
+        800,
+        600
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "zir": {
+        "enemy": "lordZir",
+        "at": "zir-far"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Che, ¿y todo este oro quién lo dejó?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "No importa. Ahora es mío."
+        },
+        {
+          "speaker": "solago",
+          "expression": "annoyed",
+          "text": "Paraguayo, eso no es oro. Es sangre."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Sangre con oro. Me sirve."
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 0.4
+    },
+    {
+      "type": "move",
+      "actor": "zir",
+      "to": "zir",
+      "duration": 1.4
+    },
+    {
+      "type": "notice",
+      "title": "MINIJEFE DETECTADO",
+      "duration": 4,
+      "lines": [
+        "LORD ZIR"
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "LORD ZIR",
+      "duration": 3,
+      "lines": [
+        "Otro ratón que entra a mi sala."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papasito",
+          "expression": "annoyed",
+          "text": "¿Ratón? Yo soy paraguayo."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "LORD ZIR",
+      "duration": 4,
+      "lines": [
+        "Sangre de paraguayo. Hacía siglos que no probaba una."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "scared",
+          "text": "¡PAPASITO, CORRÉ!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡PRIMERO EL LOOT!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "scared",
+          "text": "¡ES UN VAMPIRO, LA CONCHA DE TU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "LORD ZIR",
+      "duration": 3,
+      "lines": [
+        "Mi corte tiene hambre."
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-03-zir-met",
+      "value": true
+    }
+  ]
+}

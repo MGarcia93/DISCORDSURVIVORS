@@ -550,3 +550,77 @@ Se escuchan cadenas, gritos y golpes contra una jaula.
 - **Conexión con el Acto 4:** Conan Exiles. Los protagonistas desconocen quién está atrapado allí.
 
 **Estado: Versión aprobada del Acto 3.**
+
+---
+
+## Cambios aprobados — Lord Zir y Lilith
+
+Reemplazan al Goblin de las Señas (oleada 5) y al Carnicero (oleada 6). Las líneas
+del Carnicero posteriores al combate se conservan tal cual; las de estas dos
+escenas son nuevas y son las que juega el acto.
+
+### Escena 3 — El señor del castillo
+
+*Oleada 5*
+
+El grupo sigue el rastro de monedas hasta una sala llena de sangre.
+
+**Maxi Negro:** Che, ¿y todo este oro quién lo dejó?
+
+**Papasito:** No importa. Ahora es mío.
+
+**Solago:** Paraguayo, eso no es oro. Es sangre.
+
+**Papasito:** Sangre con oro. Me sirve.
+
+*Las puertas se cierran. Algo enorme se arrastra en la oscuridad.*
+
+**MINIJEFE DETECTADO**
+
+**LORD ZIR**
+
+**Lord Zir:** Otro ratón que entra a mi sala.
+
+**Papasito:** ¿Ratón? Yo soy paraguayo.
+
+**Lord Zir:** Sangre de paraguayo. Hacía siglos que no probaba una.
+
+**Maxi Negro:** ¡PAPASITO, CORRÉ!
+
+**Papasito:** ¡PRIMERO EL LOOT!
+
+**Solago:** ¡ES UN VAMPIRO, LA CONCHA DE TU MADRE!
+
+**Lord Zir:** Mi corte tiene hambre.
+
+### Escena 4 — La madre
+
+*Oleada 6*
+
+Lord Zir cae y el suelo se abre bajo sus pies.
+
+**JEFE DETECTADO**
+
+**LILITH**
+
+**Lilith:** Hijos míos. Llegaron hasta acá.
+
+**Maxi Negro:** ¿Hijos? Yo tengo madre, gracias.
+
+**Lilith:** Ella también me sirvió.
+
+**Solago:** Negro, esa mina no me gusta.
+
+**Maxi Negro:** ¿Qué te hace ruido?
+
+**Solago:** Que tiene cuernos y no está en un cumpleaños.
+
+**Papasito:** Y una espada carísima.
+
+**Maxi Negro:** ¡PAPASITO, POR UNA VEZ EN TU VIDA, NO!
+
+**Lilith:** El infierno los reclama.
+
+**Solago:** ¡NOSOTROS RECLAMAMOS UNA SALIDA, LA CONCHA DE TU MADRE!
+
+**Lilith:** Entonces sáquenla de mi mano.

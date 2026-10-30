@@ -1,0 +1,155 @@
+{
+  "id": "act-03-boss-intro",
+  "repeat": "once",
+  "stage": {
+    "background": "inferno",
+    "points": {
+      "ground": [
+        400,
+        500
+      ],
+      "solago": [
+        545,
+        505
+      ],
+      "papasito": [
+        680,
+        505
+      ],
+      "lilith-far": [
+        1080,
+        460
+      ],
+      "lilith": [
+        880,
+        470
+      ],
+      "echo": [
+        1010,
+        590
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "lilith": {
+        "enemy": "lilith",
+        "at": "lilith-far"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "notice",
+      "title": "JEFE DETECTADO",
+      "duration": 4,
+      "lines": [
+        "LILITH"
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "lilith",
+      "to": "lilith",
+      "duration": 1.6
+    },
+    {
+      "type": "notice",
+      "title": "LILITH",
+      "duration": 3.5,
+      "lines": [
+        "Hijos míos. Llegaron hasta acá."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿Hijos? Yo tengo madre, gracias."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "LILITH",
+      "duration": 3,
+      "lines": [
+        "Ella también me sirvió."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "scared",
+          "text": "Negro, esa mina no me gusta."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué te hace ruido?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "annoyed",
+          "text": "Que tiene cuernos y no está en un cumpleaños."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Y una espada carísima."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PAPASITO, POR UNA VEZ EN TU VIDA, NO!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "LILITH",
+      "duration": 3,
+      "lines": [
+        "El infierno los reclama."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NOSOTROS RECLAMAMOS UNA SALIDA, LA CONCHA DE TU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "LILITH",
+      "duration": 3.5,
+      "lines": [
+        "Entonces sáquenla de mi mano."
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-03-boss-met",
+      "value": true
+    }
+  ]
+}

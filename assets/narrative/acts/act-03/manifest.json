@@ -1,0 +1,162 @@
+{
+  "characters": "../../characters.json",
+  "sounds": {
+    "hell": {
+      "frequency": 92,
+      "duration": 0.5,
+      "gain": 0.05
+    },
+    "blood": {
+      "noise": true,
+      "duration": 0.28,
+      "cutoff": 520,
+      "gain": 0.16
+    }
+  },
+  "scenes": [
+    {
+      "id": "act-03-arrival",
+      "title": "Acto 3: Bienvenidos al infierno",
+      "file": "scenes/arrival.json"
+    },
+    {
+      "id": "act-03-papasito",
+      "title": "Acto 3: El único nombre que escucha",
+      "file": "scenes/papasito.json"
+    },
+    {
+      "id": "act-03-loot",
+      "title": "Acto 3: El fondo para la cariñosa",
+      "file": "scenes/loot.json"
+    },
+    {
+      "id": "act-03-zir",
+      "title": "Acto 3: El señor del castillo",
+      "file": "scenes/zir.json"
+    },
+    {
+      "id": "act-03-boss-intro",
+      "title": "Acto 3: Lilith",
+      "file": "scenes/boss-intro.json"
+    },
+    {
+      "id": "act-03-boss-defeat",
+      "title": "Acto 3: El loot del jefe",
+      "file": "scenes/boss-defeat.json"
+    },
+    {
+      "id": "act-03-epilogue",
+      "title": "Acto 3: El objeto imposible",
+      "file": "scenes/epilogue.json"
+    }
+  ],
+  "bindings": [
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-03-arrival"
+    },
+    {
+      "when": "before_wave",
+      "wave": 3,
+      "scene": "act-03-papasito"
+    },
+    {
+      "when": "before_wave",
+      "wave": 4,
+      "scene": "act-03-loot"
+    },
+    {
+      "when": "before_wave",
+      "wave": 5,
+      "scene": "act-03-zir"
+    },
+    {
+      "when": "before_wave",
+      "wave": 6,
+      "scene": "act-03-boss-intro"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-03-boss-defeat"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-03-epilogue"
+    }
+  ],
+  "banter": [
+    {
+      "wave": 1,
+      "at": 6,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¡Papasito! ¿Me escuchás?"
+    },
+    {
+      "wave": 1,
+      "at": 12,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Preguntale si terminó la obra."
+    },
+    {
+      "wave": 1,
+      "at": 18,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡EH, PARAGUAYO! ¿TERMINASTE DE LEVANTAR LA PARED?"
+    },
+    {
+      "wave": 2,
+      "at": 6,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡QUE NO SOY ALBAÑIL, CARAJO!"
+    },
+    {
+      "wave": 2,
+      "at": 12,
+      "speaker": "maxi-negro",
+      "expression": "surprised",
+      "text": "¡AH, MIRÁ! ¡AHORA SÍ CONTESTA!"
+    },
+    {
+      "wave": 2,
+      "at": 18,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡ANAMENCUÁ!"
+    },
+    {
+      "wave": 2,
+      "at": 24,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡NO SÉ QUÉ MIERDA SIGNIFICA ESO!"
+    },
+    {
+      "wave": 3,
+      "at": 8,
+      "speaker": "maxi-negro",
+      "expression": "surprised",
+      "text": "¿Cómo que no? ¡Paraguayo trucho!"
+    },
+    {
+      "wave": 4,
+      "at": 8,
+      "speaker": "solago",
+      "expression": "happy",
+      "text": "JAJAJA. Se volvió a mutear."
+    },
+    {
+      "wave": 4,
+      "at": 16,
+      "speaker": "maxi-negro",
+      "expression": "tired",
+      "text": "No, si este hijo de puta es increíble."
+    }
+  ]
+}

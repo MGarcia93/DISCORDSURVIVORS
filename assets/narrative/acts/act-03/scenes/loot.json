@@ -1,0 +1,213 @@
+{
+  "id": "act-03-loot",
+  "repeat": "once",
+  "stage": {
+    "background": "inferno",
+    "points": {
+      "ground": [
+        400,
+        500
+      ],
+      "solago": [
+        545,
+        505
+      ],
+      "papasito": [
+        690,
+        505
+      ],
+      "elite-far": [
+        1040,
+        480
+      ],
+      "elite": [
+        880,
+        500
+      ],
+      "coins": [
+        820,
+        590
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "ground"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "elite": {
+        "enemy": "burningElite",
+        "at": "elite-far"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Che, ¿acá los enemigos tiran oro?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Sí, ¿por?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Necesito juntar plata."
+        },
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "¿Para qué?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "annoyed",
+          "text": "Para unas cosas."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¿QUÉ COSAS, PAPASITO?"
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 0.5
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJA, negro, ¿no será para otra cariñosa?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NOOO! ¡LA CONCHA DE TU MADRE! ¿OTRA VEZ?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡NO, CARAJO!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿Y la PSP, Papasito?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡Y EL MONITOR!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA. ¡VENDIÓ MEDIA COMPUTADORA PARA PONERLA!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡NO VENDÍ MEDIA COMPUTADORA, CARAJO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Y al final qué pasó?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡LE SACARON LA SEÑA Y DESPUÉS LO QUISIERON EXTORSIONAR!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡YA ESTÁ, DEJEN DE JODER!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡NO LA PUSO Y SE QUEDÓ SIN MONITOR!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "annoyed",
+          "text": "Se enojó."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "Ya está. Lo perdimos otra vez."
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "elite",
+      "to": "elite",
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PAPASITO, AYUDÁ A MATAR A ESTE HIJO DE PUTA!"
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "annoyed",
+          "text": "Negro, lo rompiste."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale, paraguayo. No te enojes."
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "negro",
+      "to": "coins",
+      "duration": 1.1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "Ah, bueno, por lo menos sigue jugando."
+        }
+      ]
+    }
+  ]
+}
