@@ -6,23 +6,46 @@ import act01 from '../src/campaign/act-01-zomboid.mjs';
 import act02 from '../src/campaign/act-02-rift.mjs';
 import act03 from '../src/campaign/act-03-inferno.mjs';
 import act04 from '../src/campaign/act-04-exiles.mjs';
+import act05 from '../src/campaign/act-05-discord.mjs';
 import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
 
 const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
 const playable = () => structuredClone(act01);
 
-test('the campaign registers five worlds in order and the first four are playable', () => {
+test('the campaign registers five worlds in order and all five are playable', () => {
   assert.equal(ACTS.length, 5);
   assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5]);
   assert.equal(new Set(ACTS.map(act => act.id)).size, 5);
-  assert.equal(PLAYABLE_ACTS.length, 4);
+  assert.equal(PLAYABLE_ACTS.length, 5);
   assert.equal(DEFAULT_ACT.id, 'act-01');
   assert.equal(getAct('act-03').status, 'playable');
   assert.equal(getAct('act-04').status, 'playable');
-  assert.equal(getAct('act-05').status, 'planned');
+  assert.equal(getAct('act-05').status, 'playable');
   assert.equal(getAct('nope'), DEFAULT_ACT);
   // Monster Hunter is a rejected pitch in Act 4, not a world.
   assert.ok(!ACTS.some(act => /monster/i.test(act.id) || /monster/i.test(act.title)));
+});
+
+test('act five is the corrupted Discord with the four old bosses and the administrator', () => {
+  assert.equal(act05.world, 'discord');
+  assert.equal(act05.duration, 60);
+  assert.equal(act05.waves.length, 6);
+  // Wave five restores the four bosses already beaten, in script order.
+  assert.deepEqual(act05.miniboss.map(entry => entry.kind), ['alarmZombie', 'yorick', 'lilith', 'taskmaster']);
+  assert.ok(act05.miniboss.every(entry => entry.wave === 5));
+  assert.deepEqual(act05.boss, { wave: 6, kind: 'administrator', name: 'EL ADMINISTRADOR DEL SERVIDOR' });
+  // No new common kind: every wave before the gauntlet mixes shipped enemies.
+  const shipped = new Set(['zombie', 'runner', 'brute', 'alarmZombie', 'meleeMinion', 'mageMinion', 'siegeMinion',
+    'mistWalker', 'maiden', 'yorick', 'skeleton', 'lesserDemon', 'shaman', 'burningElite', 'batSwarm', 'lordZir',
+    'lilith', 'barbarian', 'slaver', 'archer', 'alchemist', 'lotusAlchemist', 'taskmaster']);
+  for (const row of act05.waves) {
+    for (const kind of Object.keys(row.mix)) assert.ok(shipped.has(kind), `${kind} ships before act five`);
+  }
+  // The hotfix wave is faster and mutes the cast for a moment.
+  assert.ok(act05.waves[3].speedBoost > 1);
+  assert.ok(act05.waves[3].specialLock > 0);
+  assert.equal(act05.waves[4].perMinute, 0, 'the gauntlet brings its own pressure');
+  assert.equal(act05.waves[5].perMinute, 0, 'the boss wave fields the boss, not a clock budget');
 });
 
 test('act four is the Conan Exiles chapter with the lotus alchemist and the taskmaster', () => {

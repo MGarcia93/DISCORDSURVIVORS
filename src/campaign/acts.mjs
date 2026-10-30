@@ -2,6 +2,7 @@ import act01 from './act-01-zomboid.mjs';
 import act02 from './act-02-rift.mjs';
 import act03 from './act-03-inferno.mjs';
 import act04 from './act-04-exiles.mjs';
+import act05 from './act-05-discord.mjs';
 import { validateCampaign } from './validate.mjs';
 
 // The campaign map. This is the ONLY module that knows how many worlds exist,
@@ -16,7 +17,7 @@ export const ACTS = [
   act02,
   act03,
   act04,
-  { id: 'act-05', order: 5, title: 'Discord Corrupto', status: 'planned', world: 'discord' },
+  act05,
 ];
 
 // Loading the module validates the whole map, so a half-authored act fails at

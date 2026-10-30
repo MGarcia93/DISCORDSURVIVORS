@@ -12,6 +12,7 @@ its boss. The campaign is not one continuous run, so progress is per act.
 | `src/campaign/act-02-rift.mjs` | the second act: six waves, the Maiden, Yorick |
 | `src/campaign/act-03-inferno.mjs` | the third act: six waves, Lord Zir, Lilith |
 | `src/campaign/act-04-exiles.mjs` | the fourth act: six waves, the Lotus Alchemist, the Taskmaster |
+| `src/campaign/act-05-discord.mjs` | the fifth act: six waves, four restored bosses, the Administrator |
 | `src/campaign/validate.mjs` | the contract an act must satisfy |
 | `src/waves.mjs` | interpretation only: budget, life and the spawn roll |
 
@@ -39,8 +40,14 @@ export default {
   // Optional: one mini-boss, always before the boss wave. It is flagged
   // `boss: true` for its art and health bar, but killing it never ends the run.
   miniboss: { wave: 5, kind: 'maiden', name: 'LA MINIJEFA' },
+  // A line of them is also allowed: same wave, spawned one at a time, and the
+  // next one walks in when the previous one dies. Act 5 restores four that way.
+  // miniboss: [{ wave: 5, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' }, ...],
   waves: [                   // one row per wave, numbered from 1
-    { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46 } },
+    // Optional per-wave modifiers: `speedBoost` multiplies the speed of that
+    // wave's enemies, `specialLock` mutes the cast's specials for its first
+    // seconds. Act 5's hotfix wave uses both.
+    { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46 }, speedBoost: 1.3, specialLock: 10 },
     // ...
   ],
 };
@@ -48,8 +55,8 @@ export default {
 
 The validator rejects an unknown world, an unknown enemy kind, a wave whose mix
 does not share one roll, a kind with no declared life, a boss that is not on the
-last wave, and a mini-boss that is unknown, unnamed or not before the boss. A
-`planned` act only needs its slot.
+last wave, and a mini-boss (or any entry of a mini-boss line) that is unknown,
+unnamed or not before the boss. A `planned` act only needs its slot.
 
 Only the act's own boss closes the run: a boss-flagged mini-boss dying on its
 wave does not end the map.
@@ -97,6 +104,20 @@ dialogue like the Act 2 and Act 3 bosses. The laboratory scenes use their own
 `laboratory` world so the room reads apart from the camp. The script also names
 hyenas on wave 1; this act ships the four kinds the roster needs, so the dunes
 field raiders instead of a separate hyena ficha.
+
+## Act 5
+
+Act 5 runs in the `discord` corrupted server and authors **no new common enemy**:
+the Administrator recycles the four worlds, so the six waves mix shipped kinds —
+zombies and minions, then skeletons, barbarians, walkers and slavers. Wave 4 is
+the hotfix: its raiders are 30% faster and the cast's specials are cut for the
+first ten seconds. Wave 5 restores the four bosses the group already beat
+(`alarmZombie`, `yorick`, `lilith`, `taskmaster`) through the mini-boss line, one
+at a time. El Administrador del Servidor (`administrator`) closes the run on wave
+6 with three phases: `/mute` and `/timeout` with recycled copies, dangerous
+ground plus one `rollback`, then the breakdown that gives the specials back and
+attacks without pause. Its cinematics live in
+`assets/narrative/acts/act-05/manifest.json`.
 
 ## Wave length
 
