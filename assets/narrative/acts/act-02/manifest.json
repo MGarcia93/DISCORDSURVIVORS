@@ -27,7 +27,8 @@
     {
       "id": "act-02-maiden",
       "title": "Acto 2: Te vino a buscar tu jermu",
-      "file": "scenes/maiden.json"
+      "file": "scenes/maiden.json",
+      "module": "scenes/maiden.mjs"
     },
     {
       "id": "act-02-boss-intro",

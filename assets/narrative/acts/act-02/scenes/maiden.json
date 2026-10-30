@@ -3,12 +3,15 @@
   "repeat": "once",
   "stage": {
     "background": "rift",
+    "size": [3432, 748],
     "points": {
-      "ground": [430, 500],
-      "solago": [620, 510],
-      "mist": [1080, 470],
-      "maiden": [860, 470],
-      "walker": [980, 620]
+      "ground": [970, 260],
+      "solago": [820, 310],
+      "mist": [100, 285],
+      "maiden": [620, 285],
+      "walker": [220, 500],
+      "route-left": [620, 260],
+      "route-right": [2812, 300]
     },
     "actors": {
       "negro": { "character": "maxi-negro", "at": "ground" },
@@ -23,29 +26,24 @@
       "type": "parallel",
       "steps": [
         { "type": "move", "actor": "maiden", "to": "maiden", "duration": 2.2 },
-        { "type": "camera", "to": "maiden", "zoom": 1.15, "duration": 2.2 }
+        { "type": "camera", "to": "ground", "zoom": 1, "duration": 2.2 }
       ]
     },
     {
       "type": "dialogue",
+      "layout": "stage",
+      "staging": "pursuit",
       "lines": [
         { "speaker": "maxi-negro", "expression": "happy", "text": "¡Mirá, Solago! ¡Te vino a buscar tu jermu!" },
         { "speaker": "solago", "expression": "angry", "text": "¡NO ES ELLA, PELOTUDO!" },
         { "speaker": "maxi-negro", "expression": "happy", "text": "¿Cómo que no? ¡Si te quiere apuñalar y todo! JAJAJA." },
-        { "speaker": "solago", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE, NEGRO!" }
-      ]
-    },
-    { "type": "flash", "at": "solago", "duration": 0.4 },
-    { "type": "animate", "actor": "solago", "animation": "walk", "duration": 0.6 },
-    {
-      "type": "dialogue",
-      "lines": [
+        { "speaker": "solago", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE, NEGRO!" },
         { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡Encima está re caliente con vos!" },
         { "speaker": "solago", "expression": "angry", "text": "¡DEJÁ DE ROMPER LAS PELOTAS Y AYUDAME!" },
         { "speaker": "maxi-negro", "expression": "annoyed", "text": "Y bueno, arreglen sus problemas de pareja, no me metan a mí." }
       ]
     },
-    { "type": "camera", "to": "maiden", "zoom": 1.25, "duration": 1.2 }
+    { "type": "wait", "duration": 0.5 }
   ],
   "effects": [{ "key": "act-02-met-maiden", "value": true }]
 }

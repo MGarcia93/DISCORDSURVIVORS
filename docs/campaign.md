@@ -68,6 +68,15 @@ Preview the combat layout in `?dev=worlds`, selecting **Act 1 — Knox County
 combat street**, or start Act 1 to see it with combat effects and enemies.
 Reload the whole page after adding a world to refresh the JavaScript registry.
 
+## Act 4 rescue scenery
+
+The Warrior rescue (`act-04-warrior`) runs on its own `warrior-camp` world: a
+2744×748 strip with the Wheel of Pain near the entrance, the prisoner pen and
+its cells deeper inside and the smoking building at the far end. The group walks
+in, walks to the cell and the camera follows; dialogue, the wave-3 binding, the
+cell prop and the unlock are unchanged. Preview it in `?dev=narrative` →
+**Acto 4: El boliviano equivocado**.
+
 ## Act 3
 
 Act 3 runs in the `inferno` dungeon with the seven kinds its script asks for:

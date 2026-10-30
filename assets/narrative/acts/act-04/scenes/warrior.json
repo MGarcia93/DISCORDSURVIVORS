@@ -2,52 +2,27 @@
   "id": "act-04-warrior",
   "repeat": "once",
   "stage": {
-    "background": "exiles",
+    "background": "warrior-camp",
+    "size": [2744, 748],
     "points": {
-      "entrance": [
-        250,
-        440
-      ],
-      "release": [
-        560,
-        440
-      ],
-      "cell": [
-        760,
-        470
-      ],
-      "lab": [
-        1010,
-        210
-      ],
-      "companion": [
-        420,
-        510
-      ],
-      "papasito": [
-        540,
-        505
-      ],
-      "guard": [
-        940,
-        420
-      ],
-      "bowman": [
-        1020,
-        470
-      ],
-      "focus": [
-        640,
-        430
-      ],
-      "overview": [
-        620,
-        450
-      ],
-      "party": [
-        650,
-        512
-      ]
+      "entrance": [140, 470],
+      "companion": [230, 520],
+      "papasito": [260, 420],
+      "approach": [760, 470],
+      "approach-solago": [850, 540],
+      "approach-papasito": [690, 360],
+      "wheel": [521, 374],
+      "wheel-left": [330, 470],
+      "wheel-right": [600, 470],
+      "cell": [1920, 470],
+      "cell-side": [1640, 520],
+      "cell-side-solago": [1600, 540],
+      "cell-side-papasito": [1610, 360],
+      "guard": [1780, 420],
+      "bowman": [1870, 350],
+      "party": [1990, 540],
+      "lab": [2140, 320],
+      "overview": [1500, 470]
     },
     "actors": {
       "negro": {
@@ -73,6 +48,14 @@
       "arquero": {
         "enemy": "archer",
         "at": "bowman"
+      },
+      "prisoner-a": {
+        "enemy": "barbarian",
+        "at": "wheel-left"
+      },
+      "prisoner-b": {
+        "enemy": "barbarian",
+        "at": "wheel-right"
       }
     },
     "props": {
@@ -80,6 +63,10 @@
         "at": "cell",
         "state": "locked",
         "front": true
+      },
+      "chains": {
+        "at": "wheel-left",
+        "state": "bound"
       }
     }
   },
@@ -94,19 +81,32 @@
         {
           "type": "move",
           "actor": "negro",
-          "to": "release",
-          "duration": 1.2
+          "to": "approach",
+          "duration": 3.2
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "approach-solago",
+          "duration": 3.2
+        },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "approach-papasito",
+          "duration": 3.2
         },
         {
           "type": "camera",
-          "to": "focus",
-          "zoom": 1.1,
-          "duration": 1.2
+          "to": "approach",
+          "zoom": 1,
+          "duration": 3.2
         }
       ]
     },
     {
       "type": "dialogue",
+      "layout": "stage",
       "lines": [
         {
           "speaker": "maxi-negro",
@@ -126,10 +126,33 @@
       ]
     },
     {
-      "type": "camera",
-      "to": "cell",
-      "zoom": 1.45,
-      "duration": 0.8
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "cell-side",
+          "duration": 3
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "cell-side-solago",
+          "duration": 3
+        },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "cell-side-papasito",
+          "duration": 3
+        },
+        {
+          "type": "camera",
+          "to": "cell",
+          "zoom": 1.3,
+          "duration": 3
+        }
+      ]
     },
     {
       "type": "animate",
@@ -465,7 +488,13 @@
       "type": "move",
       "actor": "warrior",
       "to": "party",
-      "duration": 1.2
+      "duration": 1.6
+    },
+    {
+      "type": "animate",
+      "actor": "warrior",
+      "animation": "point",
+      "duration": 2.4
     },
     {
       "type": "dialogue",
@@ -481,7 +510,7 @@
       "type": "camera",
       "to": "lab",
       "zoom": 1.5,
-      "duration": 1.2
+      "duration": 2.2
     },
     {
       "type": "dialogue",
