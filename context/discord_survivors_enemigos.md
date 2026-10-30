@@ -181,9 +181,6 @@ pendientes: son catálogo de patrones, no ficha.
   jefe del acto.
 - El balance de las dos habilidades del jefe: cuántos zombis por invocación y
   cuánto daña la onda.
-- Umbral a partir del cual un enemigo se considera "a distancia" y cómo golpea a
-  esa distancia.
-
 ## Implementado
 
 - **Selector de acciones**: cuando el reloj de ataque se abre, el motor tira
@@ -218,5 +215,16 @@ pendientes: son catálogo de patrones, no ficha.
   vida `120 + 12 × ola`, defensa 60%, ataque 300%, una velocidad de ataque de una
   por segundo, distancia de ataque 0 y velocidad `400 + 30 × ola`. Radio 22,
   recompensa 5. Aparece en la oleada 3 con un peso de 0.2 en el mix.
-- Umbral a partir del cual un enemigo se considera "a distancia" y cómo golpea a
-  esa distancia.
+### Acto 3 — Diablo
+
+- **Siete fichas nuevas:** `skeleton` y `lesserDemon` (comunes),
+  `shaman` (a distancia, proyectil `hex`), `burningElite` (común con una habilidad
+  propia: `swipe` y `flames`), `batSwarm` (la corte de Lord Zir), `lordZir`
+  (minijefe: `swipe`, `rise` y `wings`) y `lilith` (jefe: `swipe`, `claw`,
+  `tether`, `echo` y `enrage`), más `lilithEcho` (la copia, sin flag de jefe).
+  Ningún jefe del acto comparte habilidad con otro.
+- **Primitivas nuevas del motor**, pedidas por el guion y no por un enemigo:
+  `ctx.pull` (arrastra al jugador hacia un punto durante un momento), la carga
+  (`enemy.chargeTtl` + `enemy.chargeBoost`: multiplicador temporal que el motor
+  expira solo) y el daño propio de una acción melee (`damage` en la acción, que
+  reemplaza al daño de contacto de la ficha).

@@ -10,6 +10,7 @@ its boss. The campaign is not one continuous run, so progress is per act.
 | `src/campaign/acts.mjs` | the campaign map: every world, its order and its status |
 | `src/campaign/act-01-zomboid.mjs` | one act: waves, boss, world, real wave length |
 | `src/campaign/act-02-rift.mjs` | the second act: six waves, the Maiden, Yorick |
+| `src/campaign/act-03-inferno.mjs` | the third act: six waves, Lord Zir, Lilith |
 | `src/campaign/validate.mjs` | the contract an act must satisfy |
 | `src/waves.mjs` | interpretation only: budget, life and the spawn roll |
 
@@ -51,6 +52,14 @@ last wave, and a mini-boss that is unknown, unnamed or not before the boss. A
 
 Only the act's own boss closes the run: a boss-flagged mini-boss dying on its
 wave does not end the map.
+
+## Act 3
+
+Act 3 runs in the `inferno` dungeon with the seven kinds its script asks for:
+skeletons, lesser demons, the ranged shaman, the burning elite, Lord Zir's bat
+swarm, Lord Zir himself as the mini-boss and Lilith as the boss. Its cinematics
+live in `assets/narrative/acts/act-03/manifest.json`; the dialogue for the two
+bosses is the addendum at the end of the act script.
 
 ## Wave length
 
