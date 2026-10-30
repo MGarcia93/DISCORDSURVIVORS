@@ -307,13 +307,6 @@ function prison(run, { x, y, radius, ttl = 4 }) {
   run.prison = { x, y, radius, ttl };
 }
 
-// A chain that drags the player toward a point for a moment: the Butcher's hook.
-// It is a movement primitive the fichas receive, like the prison and the ring,
-// so a new enemy that pulls does not add a branch to the engine.
-function pull(run, { x, y, fromX, fromY, speed = 420 * WORLD_SCALE, ttl = 0.6 }) {
-  run.pull = { x, y, fromX, fromY, speed, ttl };
-}
-
 function shockwave(run, { x, y, damage, speed = 320 * WORLD_SCALE, maxRadius = 340 * WORLD_SCALE }) {
   run.shockwaves = run.shockwaves ?? [];
   run.shockwaves.push({ x, y, damage, speed, maxRadius, radius: 0, hit: false });
@@ -419,8 +412,7 @@ export function step(run, seconds, input = {}) {
    const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input,
      spawnEnemy: (kind, x, y) => { const enemy = createEnemy(run, kind, x, y); run.enemies.push(enemy); return enemy; },
      shockwave: options => shockwave(run, options),
-     prison: options => prison(run, options),
-     pull: options => pull(run, options) };
+     prison: options => prison(run, options) };
   run.time += dt;
   run.elapsed += dt;
   const decayKeys = [
@@ -587,21 +579,6 @@ export function step(run, seconds, input = {}) {
       wave.hit = true;
       p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)));
       p.immune = 0.65;
-    }
-  }
-  // A hook drags before the prison clamps, so a trapped player is pulled first
-  // and held after, never the other way round.
-  if (run.pull) {
-    const { x, y, speed } = run.pull;
-    run.pull.ttl -= dt;
-    const dx = x - p.x;
-    const dy = y - p.y;
-    const gap = Math.hypot(dx, dy);
-    if (run.pull.ttl <= 0 || gap <= p.hitRadius) run.pull = null;
-    else {
-      const travel = Math.min(gap, speed * dt);
-      p.x += dx / gap * travel;
-      p.y += dy / gap * travel;
     }
   }
   if (run.prison) {

@@ -28,7 +28,7 @@ test('the act 3 roster authors its own sheets, reach and roles', () => {
   assert.equal(ENEMY_KINDS.lordZir.boss, true);
   assert.equal(ENEMY_KINDS.lilith.boss, true);
   assert.deepEqual(ENEMY_KINDS.lilith.actions.map(action => action.key),
-    ['swipe', 'claw', 'tether', 'dive', 'enrage']);
+    ['swipe', 'claw', 'nova', 'dive', 'enrage']);
   assert.ok(enemyHp('lilith') > enemyHp('lordZir'), 'the boss outlasts the mini-boss');
 });
 

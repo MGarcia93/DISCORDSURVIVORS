@@ -220,27 +220,14 @@ test('a melee action may carry its own damage instead of the contact swing', () 
   assert.equal(enemy.attackCd, 2, 'and it still waits its own interval');
 });
 
-test("Lilith's tether drags the player toward her", () => {
-  const run = quietRun();
-  run.random = () => 0; // the first ready action wins: at range that is the tether
-  const lilith = place(run, { kind: 'lilith', x: run.player.x + 320, attackRange: 0,
-    actions: [{ key: 'tether', chance: 1, cooldown: 9, range: 640,
-      run: (r, enemy, ctx) => ctx.pull({ x: enemy.x, y: enemy.y, fromX: enemy.x, fromY: enemy.y, ttl: 0.7 }) }] });
-  const before = Math.abs(lilith.x - run.player.x);
-  step(run, 0.05, {});
-  assert.ok(Math.abs(lilith.x - run.player.x) < before, 'the player was pulled in');
-  assert.equal(run.pull.ttl > 0, true, 'the chain lasts a moment, not a frame');
-});
-
-test('the hook releases the player instead of holding them for good', () => {
-  const run = quietRun();
-  run.random = () => 0;
-  const lilith = place(run, { kind: 'lilith', x: run.player.x + 320, attackRange: 0,
-    actions: [{ key: 'tether', chance: 1, cooldown: 9, range: 640,
-      run: (r, enemy, ctx) => ctx.pull({ x: enemy.x, y: enemy.y, fromX: enemy.x, fromY: enemy.y, ttl: 0.3 }) }] });
-  for (let tick = 0; tick < 30; tick++) step(run, 0.05, {});
-  assert.equal(run.pull, null, 'the pull expires on its own');
-  assert.ok(run.player.hp > 0, 'and never drags the player into the floor');
+test("Lilith's blood nova bursts out of her as a ring", async () => {
+  const { default: lilith } = await import('../src/enemies/lilith.mjs');
+  const nova = lilith.actions.find(action => action.key === 'nova');
+  const cast = [];
+  nova.run({ effects: [] }, { x: 10, y: 20 }, { shockwave: options => cast.push(options) });
+  assert.equal(cast.length, 1);
+  assert.equal(cast[0].damage, 26);
+  assert.ok(cast[0].maxRadius > 300, 'it reaches past the claws');
 });
 
 test('a charge is a temporary burst, not a permanent speed change', () => {

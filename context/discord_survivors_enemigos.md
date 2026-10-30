@@ -221,10 +221,9 @@ pendientes: son catálogo de patrones, no ficha.
   `shaman` (a distancia, proyectil `hex`), `burningElite` (común con una habilidad
   propia: `swipe` y `flames`), `batSwarm` (la corte de Lord Zir), `lordZir`
   (minijefe: `swipe`, `rise` y `wings`) y `lilith` (jefe: `swipe`, `claw`,
-  `tether`, `echo` y `enrage`), más `lilithEcho` (la copia, sin flag de jefe).
+  `nova`, `dive` y `enrage`).
   Ningún jefe del acto comparte habilidad con otro.
-- **Primitivas nuevas del motor**, pedidas por el guion y no por un enemigo:
-  `ctx.pull` (arrastra al jugador hacia un punto durante un momento), la carga
-  (`enemy.chargeTtl` + `enemy.chargeBoost`: multiplicador temporal que el motor
-  expira solo) y el daño propio de una acción melee (`damage` en la acción, que
-  reemplaza al daño de contacto de la ficha).
+- **Primitivas nuevas del motor**, pedidas por el guion y no por un enemigo: la
+  carga (`enemy.chargeTtl` + `enemy.chargeBoost`: multiplicador temporal que el
+  motor expira solo) y el daño propio de una acción melee (`damage` en la acción,
+  que reemplaza al daño de contacto de la ficha).

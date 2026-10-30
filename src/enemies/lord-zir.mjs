@@ -2,8 +2,8 @@ import { drawLordZir } from '../sprites.mjs';
 
 // Act 3 — Diablo, wave 5. Lord Zir, the act's mini-boss: the vampire lord of the
 // dungeon. Two tricks of his own, and neither is borrowed: he calls his court of
-// bats out of the dark and sweeps the arena with his wings. The pull belongs to
-// the act's boss — the script's gancho — so this ficha never drags the player.
+// bats out of the dark and sweeps the arena with his wings. The act's boss has
+// her own kit, so this ficha never drags the player.
 //
 // He is slower than the player, so both tricks have a range and fire while he is
 // still walking: a lord that only claws never touches a player who kites.

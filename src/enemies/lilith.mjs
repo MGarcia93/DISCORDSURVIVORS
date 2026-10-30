@@ -1,12 +1,12 @@
 import { drawLilith } from '../sprites.mjs';
 
 // Act 3 — Diablo, wave 6. Lilith, the act's boss: the Mother of Sanctuary, and
-// the reason the dungeon was never the point. Her four mechanics are her own and
-// none of them is Zir's: claws, a blood tether that drags the player to her, a
-// dive across the room and her second phase.
+// the reason the dungeon was never the point. Her three attacks are her own:
+// claws, the blood nova that bursts out of her, and the dive across the room.
+// Her second phase is the fourth beat.
 //
-// There is only ever one Lilith on screen: her "echo" is a mechanic, never a
-// second body, so the player always knows which silhouette is the boss.
+// Nothing here is inherited from the boss the script used to have: the hook that
+// dragged the player belonged to the Carnicero, and it is gone with him.
 //
 // She is slower than the player on purpose, so the tether, the dive and the
 // enrage all fire while she is still walking: a boss that only claws never
@@ -35,14 +35,15 @@ const lilith = {
       damage: 34,
     },
     {
-      key: 'tether',
+      key: 'nova',
       chance: 2,
-      cooldown: 9,
-      range: 640,
-      // Blood tether: the chain drags the player to her before the claws land.
+      cooldown: 7,
+      range: 520,
+      // "Oleada de sangre": blood bursts out of her in a ring. It reaches further
+      // than the claws, so the answer is to move, not to trade hits.
       run(run, enemy, ctx) {
-        ctx.pull({ x: enemy.x, y: enemy.y, fromX: enemy.x, fromY: enemy.y - 40, ttl: 0.7 });
-        run.effects.push({ x: enemy.x, y: enemy.y - 150, text: 'LIGADURA', ttl: 0.9, kind: 'summon' });
+        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 26, speed: 380, maxRadius: 380 });
+        run.effects.push({ x: enemy.x, y: enemy.y - 150, text: 'OLEADA DE SANGRE', ttl: 0.9, kind: 'summon' });
       },
     },
     {
