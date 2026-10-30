@@ -1,0 +1,44 @@
+{
+  "name": "Lord Zir",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {},
+    "angry": {
+      "brows": [
+        { "fill": "#1c1214", "d": "M58 82H76V86H70V90H58ZM84 82H102V86H90V90H84Z" },
+        { "fill": "#3a2520", "d": "M60 86H72V88H60ZM88 86H100V88H88Z" }
+      ],
+      "eyes": [
+        { "fill": "#1c1214", "d": "M58 92H78V100H58ZM82 92H102V100H82Z" },
+        { "fill": "#c41420", "d": "M61 94H75V99H61ZM85 94H99V99H85Z" },
+        { "fill": "#ff5a4a", "d": "M63 94H74V97H63ZM86 94H97V97H86Z" },
+        { "fill": "#2a0a0c", "d": "M67 94H71V99H67ZM90 94H94V99H90Z" }
+      ],
+      "mouth": [
+        { "fill": "#1c1214", "d": "M60 112H108V130H60Z" },
+        { "fill": "#3a1014", "d": "M62 114H106V128H62Z" },
+        { "fill": "#e8dcc0", "d": "M64 114H72V124H64ZM76 114H86V126H76ZM90 114H102V124H90Z" },
+        { "fill": "#8a0c16", "d": "M64 124H102V128H64Z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#1c1214", "d": "M58 76H76V80H58ZM84 76H102V80H84Z" },
+        { "fill": "#3a2520", "d": "M60 80H74V82H60ZM86 80H100V82H86Z" }
+      ],
+      "eyes": [
+        { "fill": "#1c1214", "d": "M58 88H78V104H58ZM82 88H102V104H82Z" },
+        { "fill": "#c41420", "d": "M61 90H75V102H61ZM85 90H99V102H85Z" },
+        { "fill": "#ff5a4a", "d": "M63 91H74V99H63ZM86 91H97V99H86Z" },
+        { "fill": "#2a0a0c", "d": "M67 91H71V101H67ZM90 91H94V101H90Z" },
+        { "fill": "#ffd0c4", "d": "M64 92H66V95H64ZM87 92H89V95H87Z" }
+      ],
+      "mouth": [
+        { "fill": "#1c1214", "d": "M68 112H100V132H68Z" },
+        { "fill": "#3a1014", "d": "M70 114H98V130H70Z" },
+        { "fill": "#e8dcc0", "d": "M70 114H78V120H70ZM88 114H96V120H88Z" },
+        { "fill": "#8a0c16", "d": "M72 122H96V129H72Z" }
+      ]
+    }
+  }
+}

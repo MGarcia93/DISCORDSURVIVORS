@@ -108,5 +108,23 @@
       "surprised": "portraits/yorick/surprised.svg",
       "tired": "portraits/yorick/tired.svg"
     }
+  },
+  "lord-zir": {
+    "name": "Lord Zir",
+    "sprite": "lordZir",
+    "expressions": {
+      "neutral": "portraits/lord-zir/neutral.svg",
+      "angry": "portraits/lord-zir/angry.svg",
+      "surprised": "portraits/lord-zir/surprised.svg"
+    }
+  },
+  "lilith": {
+    "name": "Lilith",
+    "sprite": "lilith",
+    "expressions": {
+      "neutral": "portraits/lilith/neutral.svg",
+      "angry": "portraits/lilith/angry.svg",
+      "surprised": "portraits/lilith/surprised.svg"
+    }
   }
 }

@@ -14,6 +14,65 @@ const build = (args, scratch) => spawnSync('python3', ['tools/build_portraits.py
 });
 const snapshot = async out => Object.fromEntries(await Promise.all((await readdir(out)).sort().map(async file => [file, hash(await readFile(join(out, file)))])));
 
+test('Yorick expressions preserve the approved spectral gravedigger and match generated assets', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'yorick-build-'));
+  try {
+    const source = resolve('art/characters/yorick/portrait-neutral.svg');
+    const original = hash(await readFile(source));
+    const out = join(scratch, 'portraits');
+    const result = build(['--recipe', resolve('art/characters/yorick/expressions.json'), '--out', out], scratch);
+    assert.equal(result.status, 0, result.stderr);
+    const names = ['angry', 'neutral', 'surprised', 'tired'];
+    assert.deepEqual((await readdir(out)).sort(), names.map(name => `${name}.svg`));
+    const neutral = await readFile(join(out, 'neutral.svg'), 'utf8');
+    const identity = svg => svg.replace(/<g id="expression-(?:brows|eyes|mouth)">[\s\S]*?<\/g>/g, '').replace(/<title>[\s\S]*?<\/title>/, '').replace(/ data-expression="[^"]*"/, '');
+    for (const name of names) {
+      const svg = await readFile(join(out, `${name}.svg`), 'utf8');
+      assert.equal(svg, await readFile(resolve(`assets/narrative/portraits/yorick/${name}.svg`), 'utf8'), `${name} output is up to date`);
+      assert.equal(identity(svg), identity(neutral), `${name} preserves every non-expression layer`);
+      for (const id of ['arm', 'pauldron', 'hood', 'face', 'beard', 'spectral-pendant', 'shovel', 'hand']) {
+        assert.ok(svg.includes(`<g id="${id}">`), `${id} exists`);
+      }
+      if (name !== 'neutral') assert.notEqual(svg.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0], neutral.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0]);
+    }
+    assert.equal(hash(await readFile(source)), original);
+    const before = await snapshot(out);
+    assert.equal(build(['--recipe', resolve('art/characters/yorick/expressions.json'), '--out', out], scratch).status, 0);
+    assert.deepEqual(await snapshot(out), before);
+  } finally { await rm(scratch, { recursive: true, force: true }); }
+});
+
+test('Lilith cinematic portraits use the approved swept horns and black and gold costume', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'lilith-build-'));
+  try {
+    const source = resolve('art/characters/lilith/portrait-neutral.svg');
+    const original = hash(await readFile(source));
+    const out = join(scratch, 'portraits');
+    const args = ['--recipe', resolve('art/characters/lilith/expressions.json'), '--out', out];
+    const result = build(args, scratch);
+    assert.equal(result.status, 0, result.stderr);
+    const names = ['angry', 'neutral', 'surprised'];
+    assert.deepEqual((await readdir(out)).sort(), names.map(name => `${name}.svg`));
+    const neutral = await readFile(join(out, 'neutral.svg'), 'utf8');
+    const identity = svg => svg.replace(/<g id="expression-(?:brows|eyes|mouth)">[\s\S]*?<\/g>/g, '').replace(/<title>[\s\S]*?<\/title>/, '').replace(/ data-expression="[^"]*"/, '');
+    const catalog = JSON.parse(await readFile(resolve('assets/narrative/characters.json'), 'utf8'));
+    for (const name of names) {
+      const svg = await readFile(join(out, `${name}.svg`), 'utf8');
+      const registered = resolve('assets/narrative', catalog.lilith.expressions[name]);
+      assert.equal(svg, await readFile(registered, 'utf8'), `${name} catalog portrait is up to date`);
+      assert.equal(identity(svg), identity(neutral), `${name} preserves every non-expression layer`);
+      for (const id of ['horn-crown', 'head', 'hair', 'body', 'corset', 'gorget', 'pauldrons', 'wings']) {
+        assert.ok(svg.includes(`<g id="${id}">`), `${name} retains ${id}`);
+      }
+      if (name !== 'neutral') assert.notEqual(svg.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0], neutral.match(/<g id="expression-eyes">[\s\S]*?<\/g>/)?.[0]);
+    }
+    assert.equal(hash(await readFile(source)), original, 'the supplied neutral design is unchanged');
+    const before = await snapshot(out);
+    assert.equal(build(args, scratch).status, 0);
+    assert.deepEqual(await snapshot(out), before);
+  } finally { await rm(scratch, { recursive: true, force: true }); }
+});
+
 test('portrait command reuses approved identity for eight facial expressions, deterministically', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'portrait-build-'));
   try {

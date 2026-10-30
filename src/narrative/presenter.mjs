@@ -4,9 +4,11 @@ import { drawEnemyFigure } from '../game/figures.mjs';
 import jhony from '../npcs/jhony.mjs';
 import yorick from '../npcs/yorick.mjs';
 import papafrita from '../npcs/papafrita.mjs';
+import lordZir from '../npcs/lord-zir.mjs';
+import lilith from '../npcs/lilith.mjs';
 
 // Narrative actors may be NPCs without entering the playable roster.
-const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita, yorick };
+const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita, yorick, lordZir, lilith };
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 

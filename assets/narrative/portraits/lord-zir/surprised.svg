@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges" data-expression="surprised">
+  <title>Lord Zir — surprised</title>
+  <desc>Bust of the vampire lord: long pointed ears, the silver three-spike crown with its bloodstone, a heavy pale face under dark veins, deep red eyes, a hooked nose and a wide grin of fangs over the silver collar and the red cape.</desc>
+  <g id="cape">
+    <path fill="#26070c" d="M0 200V162H12V146H30V136H130V146H148V162H160V200Z" />
+    <path fill="#3d0d14" d="M6 200V170H20V154H36V144H124V154H140V170H154V200Z" />
+    <path fill="#5e1820" d="M12 166H22V152H34V142H56V150H40V158H26V174H18V200H10V178H12Z" />
+    <path fill="#4a1219" d="M124 144H140V158H146V176H142V200H132V170H124Z" />
+  </g>
+  <g id="ears">
+    <path fill="#1c1214" d="M56 90L46 52L10 8L42 64Z" />
+    <path fill="#b58a7c" d="M52 84L46 58L22 24L42 64Z" />
+    <path fill="#d8c0b4" d="M50 78L46 62L30 36L42 62Z" />
+    <path fill="#8d5f52" d="M47 68L44 58L34 40L41 60Z" />
+    <path fill="#1c1214" d="M104 90L114 52L150 8L118 64Z" />
+    <path fill="#b58a7c" d="M108 84L114 58L138 24L118 64Z" />
+    <path fill="#d8c0b4" d="M110 78L114 62L130 36L118 62Z" />
+    <path fill="#8d5f52" d="M113 68L116 58L126 40L119 60Z" />
+  </g>
+  <g id="shoulders">
+    <path fill="#1c1214" d="M14 200V178H26V166H42V156H62V172H46V182H36V194H28V200Z" />
+    <path fill="#b58a7c" d="M18 200V182H28V170H44V160H60V174H48V184H38V196H32V200Z" />
+    <path fill="#d8c0b4" d="M26 178H38V168H48V162H56V170H44V180H32V190H26Z" />
+    <path fill="#8d5f52" d="M36 196H44V184H54V176H60V184H50V194H44V200H36Z" />
+    <path fill="#1c1214" d="M146 200V178H134V166H118V156H98V172H114V182H124V194H132V200Z" />
+    <path fill="#b58a7c" d="M142 200V182H132V170H116V160H100V174H112V184H122V196H128V200Z" />
+    <path fill="#d8c0b4" d="M134 178H122V168H112V162H104V170H116V180H128V190H134Z" />
+    <path fill="#8d5f52" d="M124 196H116V184H106V176H100V184H110V194H116V200H124Z" />
+    <path fill="#7a1d22" d="M48 168H54V182H50V196H44V182H42V172H48Z" />
+    <path fill="#5e1218" d="M58 176H64V190H60V200H54V188H56Z" />
+    <path fill="#7a1d22" d="M114 170H120V184H116V196H110V184H108V174H114Z" />
+  </g>
+  <g id="neck">
+    <path fill="#1c1214" d="M66 132H94V160H66Z" />
+    <path fill="#8d5f52" d="M68 134H92V158H68Z" />
+    <path fill="#b58a7c" d="M68 134H80V152H68Z" />
+    <path fill="#5f3a33" d="M68 152H92V158H68Z" />
+    <path fill="#7a1d22" d="M72 136H74V150H72ZM86 140H88V154H86Z" />
+  </g>
+  <g id="collar">
+    <path fill="#5f5a4e" d="M50 156H110V168H50Z" />
+    <path fill="#b9b2a0" d="M50 156H110V161H50Z" />
+    <path fill="#e8e2d2" d="M52 156H108V157H52Z" />
+    <path fill="#8d8676" d="M50 164H110V168H50Z" />
+    <path fill="#5f5a4e" d="M71 166H89V188H71Z" />
+    <path fill="#b9b2a0" d="M72 167H88V186H72Z" />
+    <path fill="#8a0c16" d="M75 169H85V184H75Z" />
+    <path fill="#c41420" d="M76 170H84V182H76Z" />
+    <path fill="#ff8a7a" d="M77 171H81V175H77Z" />
+  </g>
+  <g id="head">
+    <path fill="#1c1214" d="M46 62H114V70H122V112H118V132H108V144H94V150H66V144H52V132H42V112H38V70H46Z" />
+    <path fill="#b58a7c" d="M50 66H110V74H118V112H114V130H104V142H82V146H74V140H62V128H48V112H42V74H50Z" />
+    <path fill="#d8c0b4" d="M54 70H98V80H108V96H98V86H80V84H54Z" />
+    <path fill="#c9a99a" d="M54 84H66V92H54ZM56 96H64V104H56Z" />
+    <path fill="#8d5f52" d="M100 92H118V112H114V130H102V120H108V104H100Z" />
+    <path fill="#5f3a33" d="M60 128H102V136H94V142H70V136H60Z" />
+    <path fill="#7a1d22" d="M60 96H63V114H60ZM104 90H107V106H104ZM68 78H71V88H68ZM94 76H97V84H94ZM78 138H82V144H78ZM58 110H60V120H58Z" />
+  </g>
+  <g id="crown">
+    <path fill="#5f5a4e" d="M46 58H114V50H46Z" />
+    <path fill="#b9b2a0" d="M46 51H114V48H46Z" />
+    <path fill="#e8e2d2" d="M48 48H112V51H48Z" />
+    <path fill="#5f5a4e" d="M50 50L56 18L63 50Z" />
+    <path fill="#b9b2a0" d="M52 49L56 22L61 49Z" />
+    <path fill="#e8e2d2" d="M54 40L55 24L57 40Z" />
+    <path fill="#5f5a4e" d="M68 50L80 6L92 50Z" />
+    <path fill="#b9b2a0" d="M70 49L80 10L90 49Z" />
+    <path fill="#e8e2d2" d="M75 40L78 14L81 40Z" />
+    <path fill="#5f5a4e" d="M97 50L104 18L110 50Z" />
+    <path fill="#b9b2a0" d="M99 49L104 22L108 49Z" />
+    <path fill="#e8e2d2" d="M102 40L103 24L105 40Z" />
+    <path fill="#8a0c16" d="M72 32H88V46H72Z" />
+    <path fill="#c41420" d="M73 33H87V45H73Z" />
+    <path fill="#ff8a7a" d="M75 34H81V40H75Z" />
+  </g>
+  <g id="expression-brows">
+    <path fill="#1c1214" d="M58 76H76V80H58ZM84 76H102V80H84Z" />
+    <path fill="#3a2520" d="M60 80H74V82H60ZM86 80H100V82H86Z" />
+  </g>
+  <g id="expression-eyes">
+    <path fill="#1c1214" d="M58 88H78V104H58ZM82 88H102V104H82Z" />
+    <path fill="#c41420" d="M61 90H75V102H61ZM85 90H99V102H85Z" />
+    <path fill="#ff5a4a" d="M63 91H74V99H63ZM86 91H97V99H86Z" />
+    <path fill="#2a0a0c" d="M67 91H71V101H67ZM90 91H94V101H90Z" />
+    <path fill="#ffd0c4" d="M64 92H66V95H64ZM87 92H89V95H87Z" />
+  </g>
+  <g id="expression-mouth">
+    <path fill="#1c1214" d="M68 112H100V132H68Z" />
+    <path fill="#3a1014" d="M70 114H98V130H70Z" />
+    <path fill="#e8dcc0" d="M70 114H78V120H70ZM88 114H96V120H88Z" />
+    <path fill="#8a0c16" d="M72 122H96V129H72Z" />
+  </g>
+</svg>

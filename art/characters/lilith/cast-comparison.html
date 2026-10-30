@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Cinematic portrait comparison</title>
+<style>
+body { margin:20px; background:#17191e; color:#dce1e7; font:16px monospace; }
+main { display:grid; grid-template-columns:repeat(auto-fit,240px); gap:12px; }
+figure { margin:0; text-align:center; background:#202127; }
+img { display:block; width:240px; height:300px; object-fit:contain; image-rendering:pixelated; }
+figcaption { padding:6px; }
+</style>
+<h1>Cinematic portraits — same display size</h1>
+<p>Yorick, Lord Zir and Lilith show editable neutral studies. All other entries show their current catalog portraits. Sample placeholders are omitted.</p>
+<main></main>
+<script type="module">
+const catalog = await (await fetch('/assets/narrative/characters.json')).json();
+for (const [id, character] of Object.entries(catalog)) {
+  if (['guide', 'guest'].includes(id)) continue;
+  const figure = document.createElement('figure');
+  const image = document.createElement('img');
+  const study = ['yorick', 'lord-zir', 'lilith'].includes(id);
+  image.src = study ? `/art/characters/${id}/portrait-neutral.svg` : `/assets/narrative/${character.expressions.neutral}`;
+  image.alt = `${character.name} neutral portrait`;
+  const label = document.createElement('figcaption');
+  label.textContent = character.name + (study ? ' — study' : '');
+  figure.append(image, label);
+  document.querySelector('main').append(figure);
+}
+</script>
+</html>

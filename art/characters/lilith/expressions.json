@@ -1,0 +1,49 @@
+{
+  "name": "Lilith",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {},
+    "angry": {
+      "brows": [
+        { "fill": "#30303c", "d": "M56 78H62V81H68V84H74V87H68V85H62V83H56ZM104 78H98V81H92V84H86V87H92V85H98V83H104Z" },
+        { "fill": "#e7eae6", "d": "M56 75H62V78H68V81H62V79H56ZM104 75H98V78H92V81H98V79H104Z" }
+      ],
+      "eyes": [
+        { "fill": "#5b5266", "d": "M56 84H62V87H74V93H68V96H59V93H56ZM104 84H98V87H86V93H92V96H101V93H104Z" },
+        { "fill": "#1c2838", "d": "M59 86H65V88H72V92H65V93H59ZM101 86H95V88H88V92H95V93H101Z" },
+        { "fill": "#c9d8df", "d": "M59 88H65V91H59ZM95 88H101V91H95Z" },
+        { "fill": "#42658a", "d": "M65 88H69V93H65ZM91 88H95V93H91Z" },
+        { "fill": "#eaf1ed", "d": "M65 88H67V90H65ZM91 88H93V90H91Z" }
+      ],
+      "mouth": [
+        { "fill": "#8795a5", "d": "M77 87H81V96H85V99H81V102H75V99H72V96H77Z" },
+        { "fill": "#e7eae6", "d": "M77 90H80V96H77Z" },
+        { "fill": "#394655", "d": "M74 99H77V101H74ZM81 99H84V101H81Z" },
+        { "fill": "#322738", "d": "M71 106H77V104H83V106H89V110H83V112H77V110H71Z" },
+        { "fill": "#66505e", "d": "M74 107H86V110H77V111H74Z" },
+        { "fill": "#aebac3", "d": "M74 113H86V115H77V114H74Z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#30303c", "d": "M56 75H62V72H68V75H74V78H68V77H62V78H56ZM104 75H98V72H92V75H86V78H92V77H98V78H104Z" },
+        { "fill": "#e7eae6", "d": "M59 72H62V69H68V72H65V74H59ZM101 72H98V69H92V72H95V74H101Z" }
+      ],
+      "eyes": [
+        { "fill": "#5b5266", "d": "M56 82H68V84H74V94H68V97H59V94H56ZM104 82H92V84H86V94H92V97H101V94H104Z" },
+        { "fill": "#1c2838", "d": "M59 84H68V86H72V93H65V94H59ZM101 84H92V86H88V93H95V94H101Z" },
+        { "fill": "#c9d8df", "d": "M59 85H65V92H59ZM95 85H101V92H95Z" },
+        { "fill": "#42658a", "d": "M65 84H69V94H65ZM91 84H95V94H91Z" },
+        { "fill": "#eaf1ed", "d": "M65 85H67V88H65ZM91 85H93V88H91Z" }
+      ],
+      "mouth": [
+        { "fill": "#8795a5", "d": "M77 87H81V96H85V99H81V102H75V99H72V96H77Z" },
+        { "fill": "#e7eae6", "d": "M77 90H80V96H77Z" },
+        { "fill": "#394655", "d": "M74 99H77V101H74ZM81 99H84V101H81Z" },
+        { "fill": "#322738", "d": "M77 103H83V105H86V112H83V114H77V112H74V105H77Z" },
+        { "fill": "#66505e", "d": "M77 106H83V111H77Z" },
+        { "fill": "#aebac3", "d": "M77 115H83V117H77Z" }
+      ]
+    }
+  }
+}
