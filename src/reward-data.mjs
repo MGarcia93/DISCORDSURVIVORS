@@ -18,7 +18,7 @@ export const BALANCE = {
       // Act 3 keeps the same playtest rate: the elite pays like a milestone and
       // the mini-boss like Act 2's Maiden.
       skeleton: 8, lesserDemon: 12, shaman: 10, burningElite: 25, batSwarm: 4,
-      lordZir: 60, lilithEcho: 20,
+      lordZir: 60,
     },
   },
   gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },

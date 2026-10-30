@@ -257,14 +257,6 @@ test('a charge is a temporary burst, not a permanent speed change', () => {
   assert.equal(enemy.chargeTtl, 0, 'and the engine expires it');
 });
 
-test('Lilith summons one echo at a time', async () => {
-  const { default: lilith } = await import('../src/enemies/lilith.mjs');
-  const echo = lilith.actions.find(action => action.key === 'echo');
-  const empty = { enemies: [] };
-  assert.equal(echo.when(empty), true);
-  assert.equal(echo.when({ enemies: [{ kind: 'lilithEcho', hp: 10 }] }), false);
-});
-
 test("Lilith's second phase fires once, when she is half beaten", async () => {
   const { default: lilith } = await import('../src/enemies/lilith.mjs');
   const enrage = lilith.actions.find(action => action.key === 'enrage');

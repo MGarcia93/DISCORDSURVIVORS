@@ -2,8 +2,11 @@ import { drawLilith } from '../sprites.mjs';
 
 // Act 3 — Diablo, wave 6. Lilith, the act's boss: the Mother of Sanctuary, and
 // the reason the dungeon was never the point. Her four mechanics are her own and
-// none of them is Zir's: claws, a blood tether that drags the player to her, the
-// echo she tears out of herself, and her second phase.
+// none of them is Zir's: claws, a blood tether that drags the player to her, a
+// dive across the room and her second phase.
+//
+// There is only ever one Lilith on screen: her "echo" is a mechanic, never a
+// second body, so the player always knows which silhouette is the boss.
 //
 // She is slower than the player on purpose, so the tether, the dive and the
 // enrage all fire while she is still walking: a boss that only claws never
@@ -43,16 +46,15 @@ const lilith = {
       },
     },
     {
-      key: 'echo',
+      key: 'dive',
       chance: 2,
-      cooldown: 14,
+      cooldown: 10,
       range: 1200,
-      // "Eco de Lilith": she tears a copy out of herself. One alive at a time,
-      // so the fight never turns into a wall of copies.
-      when: run => !run.enemies.some(other => other.kind === 'lilithEcho' && other.hp > 0),
-      run(run, enemy, ctx) {
-        ctx.spawnEnemy('lilithEcho', enemy.x + 80, enemy.y - 20);
-        run.effects.push({ x: enemy.x, y: enemy.y - 150, text: 'ECO DE LILITH', ttl: 1.2, kind: 'summon' });
+      // She dives across the room: a burst of speed the engine expires on its own.
+      run(run, enemy) {
+        enemy.chargeBoost = 2.2;
+        enemy.chargeTtl = 1.6;
+        run.effects.push({ x: enemy.x, y: enemy.y - 150, text: 'SE ABALANZA', ttl: 0.9, kind: 'summon' });
       },
     },
     {

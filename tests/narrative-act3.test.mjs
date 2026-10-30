@@ -72,12 +72,12 @@ test('the mini-boss and the boss each get their own scene before their wave', as
   assert.equal(bossScene.stage.actors.lilith.enemy, 'lilith');
 });
 
-test('Lilith lies dead with her echo in the scene after the fight', async () => {
+test('Lilith lies dead alone in the scene after the fight', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-03-boss-defeat').scene;
   assert.equal(scene.stage.actors.lilith.state, 'dead');
-  assert.equal(scene.stage.actors.echo.enemy, 'lilithEcho');
-  assert.equal(scene.stage.actors.echo.state, 'dead');
+  assert.equal(Object.keys(scene.stage.actors).filter(id => scene.stage.actors[id].enemy === 'lilith').length, 1,
+    'there is only ever one Lilith on screen');
 });
 
 test('no two actors finish a scene on the same spot', async () => {

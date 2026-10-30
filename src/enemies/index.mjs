@@ -19,7 +19,6 @@ import burningElite from './burning-elite.mjs';
 import batSwarm from './bat-swarm.mjs';
 import lordZir from './lord-zir.mjs';
 import lilith from './lilith.mjs';
-import lilithEcho from './lilith-echo.mjs';
 
 // Enemy registry, built from one module per kind exactly like src/characters/.
 // Each ficha owns its sheet and its drawing; this file only resolves percentages
@@ -30,13 +29,13 @@ import lilithEcho from './lilith-echo.mjs';
 // attackSpeed, attackDistance, moveSpeed). `radius` and `bounty` are body and
 // economy, so they stay as raw fields outside the sheet.
 export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
-  skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith, lilithEcho };
+  skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
 export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,
   meleeMinion.id, mageMinion.id, siegeMinion.id, mistWalker.id, maiden.id, yorick.id,
   skeleton.id, lesserDemon.id, shaman.id, burningElite.id, batSwarm.id,
-  lordZir.id, lilith.id, lilithEcho.id];
+  lordZir.id, lilith.id];
 
 export function getEnemyKind(id) {
   return ENEMY_KINDS[id] ?? ENEMY_KINDS.zombie;

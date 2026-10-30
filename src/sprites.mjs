@@ -1544,16 +1544,6 @@ export function drawLilith(ctx, x, y, options = {}) {
 }
 
 
-// Lilith's echo: the same drawing, dimmer and smaller, so the copy reads as a
-// copy at a glance and never as a second boss on the arena.
-export function drawLilithEcho(ctx, x, y, options = {}) {
-  const { time = 0, scale = 1.5 } = options;
-  ctx.save();
-  ctx.globalAlpha *= 0.82;
-  drawLilith(ctx, x, y, { time, scale });
-  ctx.restore();
-}
-
 export function drawAdministrator(ctx, x, y, options = {}) {
   pose(ctx, x, y, options.scale || 4);
   const hover = Math.floor(Math.sin((options.time || 0) * 2) * 2);

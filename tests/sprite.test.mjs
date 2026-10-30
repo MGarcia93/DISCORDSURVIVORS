@@ -81,11 +81,6 @@ test('the act 3 bosses carry boss density and tower over the player', () => {
     assert.ok(boss.rects.length > 120, `${kind} carries cast-level detail`);
     assert.ok(boss.height > player.height, `${kind} towers over the player`);
   }
-  // The echo is her own drawing at a smaller scale, never a duplicate body.
-  const lilith = enemyShape('lilith');
-  const echo = enemyShape('lilithEcho');
-  assert.ok(echo.height < lilith.height, 'the echo reads smaller than the mother');
-  assert.notDeepEqual(echo.rects, lilith.rects);
 });
 
 test('the runner reads lean and tall, and the brute reads wide but never bigger than the player', () => {

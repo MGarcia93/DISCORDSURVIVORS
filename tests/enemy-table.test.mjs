@@ -24,10 +24,11 @@ test('the act 3 roster authors its own sheets, reach and roles', () => {
   assert.equal(ENEMY_KINDS.shaman.projectile, 'hex');
   // The burning elite is the only common kind that carries an ability.
   assert.deepEqual(ENEMY_KINDS.burningElite.actions.map(action => action.key), ['swipe', 'flames']);
-  // Lord Zir is the mini-boss, Lilith the boss, and the echo is neither.
+  // Lord Zir is the mini-boss and Lilith is the boss.
   assert.equal(ENEMY_KINDS.lordZir.boss, true);
   assert.equal(ENEMY_KINDS.lilith.boss, true);
-  assert.equal(ENEMY_KINDS.lilithEcho.boss, undefined);
+  assert.deepEqual(ENEMY_KINDS.lilith.actions.map(action => action.key),
+    ['swipe', 'claw', 'tether', 'dive', 'enrage']);
   assert.ok(enemyHp('lilith') > enemyHp('lordZir'), 'the boss outlasts the mini-boss');
 });
 

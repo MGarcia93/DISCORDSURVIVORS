@@ -20,10 +20,6 @@
         900,
         480
       ],
-      "echo": [
-        1010,
-        600
-      ],
       "loot": [
         980,
         545
@@ -45,11 +41,6 @@
       "lilith": {
         "enemy": "lilith",
         "at": "lilith",
-        "state": "dead"
-      },
-      "echo": {
-        "enemy": "lilithEcho",
-        "at": "echo",
         "state": "dead"
       }
     }
