@@ -25,6 +25,7 @@ import archer from './archer.mjs';
 import alchemist from './alchemist.mjs';
 import lotusAlchemist from './lotus-alchemist.mjs';
 import taskmaster from './taskmaster.mjs';
+import administrator from './administrator.mjs';
 
 // Enemy registry, built from one module per kind exactly like src/characters/.
 // Each ficha owns its sheet and its drawing; this file only resolves percentages
@@ -36,7 +37,7 @@ import taskmaster from './taskmaster.mjs';
 // economy, so they stay as raw fields outside the sheet.
 export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
   skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith,
-  barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster };
+  barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster, administrator };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
 export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,

@@ -2706,3 +2706,83 @@ export function drawGamerProjectile(ctx, device) {
     pixel(ctx, -1, 11, 2, 1, '#eee5cc');
   }
 }
+
+// Act 5 — El Administrador del Servidor. Not a body: a rack of screens, cable
+// and hanging code that hovers, held together by a Discord frame. The eyes are
+// the plate's two holes, so the only friendly shape it owns reads as a logo.
+const ADMIN = Object.freeze({
+  ink: '#100d1a', frame: '#2b2d31', frameLight: '#41444c',
+  blurple: '#5865f2', screen: '#1a1726', glass: '#2a2540',
+  glow: '#b9d884', glowDim: '#6d8a4c',
+  error: '#ed4245', errorDark: '#a32c2f',
+  cable: '#191624', cableLight: '#2b2740',
+});
+
+export function drawServerAdministrator(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const hover = Math.floor(Math.sin(time * 2.2) * 2);
+  const flicker = Math.floor(time * 9) % 7 === 0;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -32, 0, 64, 3, '#0c0914');
+  ctx.translate(0, hover);
+  // The cables that keep it tethered to the floor of the server.
+  for (const side of [-1, 1]) {
+    for (let step = 0; step < 6; step++) {
+      const cx = side * (16 + step * 5);
+      const cy = -4 - step * 4 + (step % 2);
+      pixel(ctx, cx, cy, 7, 3, ADMIN.cable);
+      pixel(ctx, cx, cy, 7, 1, ADMIN.cableLight);
+    }
+  }
+  // Shoulder monitors, floating apart from the rack.
+  for (const side of [-1, 1]) {
+    const sx = side < 0 ? -44 : 24;
+    pixel(ctx, sx, -74, 20, 26, ADMIN.ink);
+    pixel(ctx, sx + 1, -73, 18, 24, ADMIN.frame);
+    pixel(ctx, sx + 3, -71, 14, 16, ADMIN.screen);
+    pixel(ctx, sx + 4, -70, 12, 3, ADMIN.blurple);
+    pixel(ctx, sx + 4, -65, 9, 2, ADMIN.glowDim);
+    pixel(ctx, sx + 4, -61, 11, 2, ADMIN.glowDim);
+    pixel(ctx, sx + 4, -57, 7, 2, flicker ? ADMIN.error : ADMIN.errorDark);
+    pixel(ctx, sx + 8, -48, 4, 10, ADMIN.cable);
+  }
+  // The rack: frame, glass, the blue title bar and lines of broken text.
+  pixel(ctx, -20, -74, 40, 62, ADMIN.ink);
+  pixel(ctx, -19, -73, 38, 60, ADMIN.frame);
+  pixel(ctx, -19, -73, 38, 2, ADMIN.frameLight);
+  pixel(ctx, -16, -70, 32, 44, ADMIN.screen);
+  pixel(ctx, -15, -69, 30, 8, ADMIN.glass);
+  pixel(ctx, -13, -67, 26, 3, ADMIN.blurple);
+  pixel(ctx, -13, -62, 12, 2, ADMIN.glow);
+  pixel(ctx, -13, -58, 20, 2, ADMIN.glowDim);
+  pixel(ctx, -13, -54, 16, 2, ADMIN.glowDim);
+  // The plate with the two eyes: the only familiar shape in the mass.
+  pixel(ctx, -9, -46, 7, 6, ADMIN.blurple);
+  pixel(ctx, -8, -45, 5, 4, ADMIN.ink);
+  pixel(ctx, 2, -46, 7, 6, ADMIN.blurple);
+  pixel(ctx, 3, -45, 5, 4, ADMIN.ink);
+  pixel(ctx, -13, -34, 26, 2, ADMIN.frameLight);
+  pixel(ctx, -13, -30, 8, 2, flicker ? ADMIN.error : ADMIN.errorDark);
+  pixel(ctx, -3, -30, 16, 2, ADMIN.glowDim);
+  // Head: one small monitor with the cursor eyes, crowned by hanging code.
+  pixel(ctx, -13, -92, 26, 20, ADMIN.ink);
+  pixel(ctx, -12, -91, 24, 18, ADMIN.frame);
+  pixel(ctx, -10, -89, 20, 12, ADMIN.screen);
+  pixel(ctx, -7, -85, 5, 4, ADMIN.glow);
+  pixel(ctx, 2, -85, 5, 4, ADMIN.glow);
+  pixel(ctx, -4, -78, 8, 2, ADMIN.error);
+  for (let i = 0; i < 5; i++) {
+    const cx = -12 + i * 5;
+    const rise = 5 + (i % 3) * 3 + (flicker ? 1 : 0);
+    pixel(ctx, cx, -92 - rise, 2, rise, i % 2 ? ADMIN.glowDim : ADMIN.glow);
+  }
+  // Two error windows hanging around it, the server's own noise.
+  pixel(ctx, -56, -96, 18, 12, ADMIN.ink);
+  pixel(ctx, -55, -95, 16, 10, ADMIN.errorDark);
+  pixel(ctx, -53, -93, 12, 2, ADMIN.error);
+  pixel(ctx, -53, -89, 8, 2, ADMIN.error);
+  pixel(ctx, 38, -34, 16, 10, ADMIN.ink);
+  pixel(ctx, 39, -33, 14, 8, ADMIN.errorDark);
+  pixel(ctx, 41, -31, 10, 2, ADMIN.error);
+  ctx.restore();
+}
