@@ -141,6 +141,7 @@ A world is one module in `src/backgrounds/` that paints the scenery of a place. 
 | `rift` | Act 2 — Summoner's Rift |
 | `inferno` | Act 3 — the dungeon |
 | `exiles` | Act 4 — the Exiled Lands; the shipped Act 4 preview |
+| `laboratory` | Act 4 — the Lotus Alchemist's laboratory (waves 5) |
 | `discord` | Act 5 — the corrupted server |
 
 Each world exports `{ id, title, draw, animate? }`:

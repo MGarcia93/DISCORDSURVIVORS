@@ -4,6 +4,7 @@ import zomboid from './zomboid.mjs';
 import rift from './rift.mjs';
 import inferno from './inferno.mjs';
 import exiles from './exiles.mjs';
+import laboratory from './laboratory.mjs';
 import discord from './discord.mjs';
 
 // World backgrounds live as one module per world. A scene picks one by id
@@ -13,7 +14,7 @@ import discord from './discord.mjs';
 // Each world is painted ONCE into an offscreen canvas and then blitted, so the
 // per-frame cost of any world is a single drawImage no matter how many tiles
 // it paints. Only what a world declares in `animate` runs every frame.
-const WORLDS = Object.freeze({ arena, room, zomboid, rift, inferno, exiles, discord });
+const WORLDS = Object.freeze({ arena, room, zomboid, rift, inferno, exiles, laboratory, discord });
 
 export const worldIds = Object.freeze(Object.keys(WORLDS));
 export const defaultWorld = 'arena';
