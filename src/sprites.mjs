@@ -1243,54 +1243,314 @@ export function drawBurningElite(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
-const GOBLIN = { light: '#a8cc63', base: '#7da641', mid: '#63863a', dark: '#4a652c' };
-const GOBLIN_INK = '#1c2118';
-const GOBLIN_SACK = { light: '#c9a86a', base: '#a5864d', dark: '#7a6136' };
+const BAT_FUR = { light: '#6b5a6e', base: '#4a3d4e', mid: '#332a38', dark: '#211b26' };
+const BAT_WING = { light: '#5a2430', base: '#3d141d', mid: '#2a0c13' };
 
-// The Goblin de las Señas' fodder. Small, fast, greedy: a sack over one shoulder
-// and a knife in the other hand, so a summoned pack reads as looters.
-export function drawLootGoblin(ctx, x, y, options = {}) {
+// Act 3 — Diablo, Lord Zir's court. The bat swarm: small, dark and fast, with
+// the wings attached at the shoulders so the whole body flood-fills as one
+// figure. The flap is two poses, not a smooth animation: at this size a swarm is
+// read as movement, and two states are enough.
+export function drawBatSwarm(ctx, x, y, options = {}) {
   const { time = 0, seed = 0, scale = 2 } = options;
-  const stride = Math.floor(time * 7 + seed) % 2;
+  const flap = Math.floor(time * 10 + seed) % 2;
   pose(ctx, x, y, scale);
   pixel(ctx, -7, 0, 15, 2, '#131a20');
-  pixel(ctx, -5, -2, 5, 2, GOBLIN_INK);
-  pixel(ctx, 1, -2, 5, 2, GOBLIN_INK);
-  pixel(ctx, -5, -10 + stride, 4, 8 - stride, GOBLIN.mid);
-  pixel(ctx, 1, -10 - stride, 4, 8 + stride, GOBLIN.base);
-  pixel(ctx, -6, -18, 13, 9, GOBLIN_INK);
-  pixel(ctx, -5, -17, 11, 7, GOBLIN.base);
-  pixel(ctx, -5, -17, 11, 1, GOBLIN.light);
-  pixel(ctx, 3, -16, 3, 6, GOBLIN.mid);
-  // Sack on the back, tied at the shoulder, with coins showing at the mouth.
-  pixel(ctx, -11, -22, 6, 12, GOBLIN_INK);
-  pixel(ctx, -10, -21, 4, 10, GOBLIN_SACK.base);
-  pixel(ctx, -10, -21, 4, 2, GOBLIN_SACK.light);
-  pixel(ctx, -10, -13, 4, 2, GOBLIN_SACK.dark);
-  pixel(ctx, -9, -24, 3, 3, GOBLIN_INK);
-  pixel(ctx, -9, -23, 2, 2, '#e6c35a');
-  pixel(ctx, -6, -19, 2, 2, GOBLIN_SACK.dark);
-  // Arms: one holding the sack rope, one with the knife.
-  pixel(ctx, 5, -17, 3, 8, GOBLIN.dark);
-  pixel(ctx, 6, -10, 4, 3, GOBLIN.base);
-  pixel(ctx, 8, -15, 2, 7, '#8d8c96');
-  pixel(ctx, 7, -16, 4, 2, '#6a4a2c');
-  // Head: pointed ears, a long nose, two gold eyes and a grin of teeth.
-  roundedMass(ctx, -6, -28, 13, 11, GOBLIN_INK);
-  roundedMass(ctx, -5, -27, 11, 9, GOBLIN.base);
-  pixel(ctx, -5, -27, 8, 2, GOBLIN.light);
-  pixel(ctx, -10, -26, 5, 3, GOBLIN_INK);
-  pixel(ctx, -9, -26, 4, 2, GOBLIN.base);
-  pixel(ctx, -10, -25, 2, 2, GOBLIN.light);
-  pixel(ctx, 6, -26, 5, 3, GOBLIN_INK);
-  pixel(ctx, 6, -26, 3, 2, GOBLIN.mid);
-  pixel(ctx, 8, -25, 2, 2, GOBLIN.light);
-  pixel(ctx, -5, -23, 3, 2, '#ffe08a');
-  pixel(ctx, 2, -23, 3, 2, '#ffe08a');
-  pixel(ctx, -1, -21, 3, 2, GOBLIN.dark);
-  pixel(ctx, -4, -19, 9, 2, GOBLIN_INK);
-  pixel(ctx, -2, -19, 2, 1, '#efe9d2');
-  pixel(ctx, 2, -19, 2, 1, '#efe9d2');
+  for (let row = 0; row < 3; row++) {
+    const yy = -14 + row * 3 + (flap ? row : -row);
+    const reach = 6 + row * 4;
+    pixel(ctx, -5 - reach, yy, reach, 3, BAT_WING.base);
+    pixel(ctx, -5 - reach, yy, 2, 3, BAT_WING.light);
+    pixel(ctx, 5, yy, reach, 3, BAT_WING.base);
+    pixel(ctx, 3 + reach, yy, 2, 3, BAT_WING.light);
+  }
+  // Body and head: one furry mass, ears, two red eyes and a pair of fangs.
+  roundedMass(ctx, -5, -16, 11, 14, '#1a1620');
+  roundedMass(ctx, -4, -15, 9, 12, BAT_FUR.base);
+  pixel(ctx, -4, -15, 6, 2, BAT_FUR.light);
+  pixel(ctx, -4, -8, 9, 2, BAT_FUR.dark);
+  pixel(ctx, -7, -21, 3, 8, BAT_FUR.dark);
+  pixel(ctx, 5, -21, 3, 8, BAT_FUR.dark);
+  pixel(ctx, -6, -23, 2, 3, BAT_FUR.mid);
+  pixel(ctx, 5, -23, 2, 3, BAT_FUR.mid);
+  pixel(ctx, -3, -11, 2, 2, '#ff5a4a');
+  pixel(ctx, 2, -11, 2, 2, '#ff5a4a');
+  pixel(ctx, -2, -7, 5, 2, '#2a1014');
+  pixel(ctx, -2, -6, 1, 2, '#e4e0d2');
+  pixel(ctx, 2, -6, 1, 2, '#e4e0d2');
+  pixel(ctx, -3, -3, 2, 3, BAT_FUR.dark);
+  pixel(ctx, 1, -3, 2, 3, BAT_FUR.dark);
+  ctx.restore();
+}
+
+const ZIR_SKIN = { light: '#d8c0b4', base: '#b58a7c', mid: '#8d5f52', dark: '#5f3a33' };
+const ZIR_VEIN = '#7a1d22';
+const ZIR_WING = { light: '#8e2f38', base: '#5e1820', mid: '#3d0d14', dark: '#26070c' };
+const ZIR_METAL = { light: '#e8e2d2', base: '#b9b2a0', mid: '#8d8676', dark: '#5f5a4e' };
+const ZIR_GEM = { light: '#ff8a7a', base: '#c41420', mid: '#8a0c16' };
+const ZIR_EYE = '#ff5a4a';
+
+// Act 3 — Diablo, wave 5. Lord Zir, the act's mini-boss: the vampire lord of the
+// dungeon, on all fours. The reference is the Diablo IV lord: a crouched body
+// with the arms planted forward, a cape of red membrane hanging off the
+// shoulders, a long-jawed head with fangs, the three-spike crown with its red
+// gem, the silver collar with the bloodstone, and veins running under the skin.
+export function drawLordZir(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const breath = Math.floor(time * 2) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -30, 0, 61, 3, '#131a20');
+  // The cape: red membrane falling off both shoulders to the floor, drawn first
+  // so the body covers where it is stitched on. Each row reaches further out as
+  // it falls, and the trailing edge is torn.
+  for (let row = 0; row < 11; row++) {
+    const yy = -40 + row * 3;
+    const reach = 14 + row * 3 + (breath ? 1 : 0);
+    pixel(ctx, -21 - reach, yy, reach, 3, ZIR_WING.base);
+    pixel(ctx, -21 - reach, yy, 2, 3, ZIR_WING.light);
+    pixel(ctx, -23 - reach, yy, 2, 3, ZIR_WING.dark);
+    pixel(ctx, 21, yy, reach, 3, ZIR_WING.base);
+    pixel(ctx, 19 + reach, yy, 2, 3, ZIR_WING.light);
+    pixel(ctx, 21 + reach, yy, 2, 3, ZIR_WING.dark);
+    if (row % 3 === 2) {
+      pixel(ctx, -21 - reach, yy + 1, 3, 2, ZIR_WING.dark);
+      pixel(ctx, 18 + reach, yy + 1, 3, 2, ZIR_WING.dark);
+    }
+  }
+  // Haunches folded under the body, then the long torso between them.
+  roundedMass(ctx, -27, -28, 15, 27, '#1a1013');
+  roundedMass(ctx, -26, -27, 13, 25, ZIR_SKIN.mid);
+  pixel(ctx, -26, -27, 5, 3, ZIR_SKIN.base);
+  roundedMass(ctx, 11, -28, 15, 27, '#1a1013');
+  roundedMass(ctx, 12, -27, 13, 25, ZIR_SKIN.mid);
+  pixel(ctx, 12, -27, 5, 3, ZIR_SKIN.base);
+  roundedMass(ctx, -21, -42, 43, 29, '#1a1013');
+  roundedMass(ctx, -20, -41, 41, 27, ZIR_SKIN.base);
+  pixel(ctx, -20, -41, 16, 3, ZIR_SKIN.light);
+  pixel(ctx, -20, -16, 41, 3, ZIR_SKIN.dark);
+  // Veins under the skin and the blood down the belly.
+  for (let vein = 0; vein < 5; vein++) {
+    pixel(ctx, -17 + vein * 8, -37 + (vein % 3) * 2, 2, 9 + (vein % 3) * 4, ZIR_VEIN);
+  }
+  pixel(ctx, -4, -30, 9, 12, ZIR_VEIN);
+  pixel(ctx, 6, -36, 3, 10, ZIR_VEIN);
+  // Arms planted forward: upper arm, forearm and a hand of four claws.
+  for (const side of [-1, 1]) {
+    const ax = side < 0 ? -34 : 25;
+    pixel(ctx, ax, -40, 9, 22, '#1a1013');
+    pixel(ctx, ax + 1, -39, 7, 20, side < 0 ? ZIR_SKIN.base : ZIR_SKIN.mid);
+    pixel(ctx, ax + 1, -39, 2, 20, ZIR_SKIN.light);
+    pixel(ctx, ax - 2, -20, 13, 18, '#1a1013');
+    pixel(ctx, ax - 1, -19, 11, 16, side < 0 ? ZIR_SKIN.mid : ZIR_SKIN.base);
+    pixel(ctx, ax - 3, -4, 15, 4, '#1a1013');
+    pixel(ctx, ax - 2, -3, 13, 3, ZIR_SKIN.dark);
+    for (let claw = 0; claw < 4; claw++) {
+      pixel(ctx, ax - 2 + claw * 4, -1, 2, 3, ZIR_METAL.base);
+      pixel(ctx, ax - 1 + claw * 4, -1, 1, 2, ZIR_METAL.light);
+    }
+  }
+  // Silver collar with the bloodstone, sitting on the chest.
+  pixel(ctx, -9, -38, 19, 3, ZIR_METAL.mid);
+  pixel(ctx, -9, -38, 19, 1, ZIR_METAL.light);
+  pixel(ctx, -10, -36, 3, 4, ZIR_METAL.base);
+  pixel(ctx, 8, -36, 3, 4, ZIR_METAL.base);
+  pixel(ctx, -4, -35, 9, 8, ZIR_METAL.mid);
+  pixel(ctx, -3, -34, 7, 6, ZIR_GEM.base);
+  pixel(ctx, -2, -33, 4, 3, ZIR_GEM.light);
+  pixel(ctx, 2, -31, 2, 2, ZIR_GEM.mid);
+  // Head: long jaw, red eyes, fangs, and the crown on top.
+  roundedMass(ctx, -11, -57, 23, 22, '#1a1013');
+  roundedMass(ctx, -10, -56, 21, 20, ZIR_SKIN.base);
+  pixel(ctx, -10, -56, 14, 3, ZIR_SKIN.light);
+  pixel(ctx, -10, -39, 21, 3, ZIR_SKIN.dark);
+  pixel(ctx, -9, -51, 6, 3, ZIR_EYE);
+  pixel(ctx, 3, -51, 6, 3, ZIR_EYE);
+  pixel(ctx, -8, -50, 3, 2, '#2a0a0c');
+  pixel(ctx, 4, -50, 3, 2, '#2a0a0c');
+  pixel(ctx, -8, -47, 2, 4, ZIR_VEIN);
+  pixel(ctx, 6, -47, 2, 4, ZIR_VEIN);
+  // The grin: a wide mouth of fangs across the whole face.
+  pixel(ctx, -9, -45, 19, 5, '#1a1013');
+  pixel(ctx, -8, -45, 17, 3, '#3a1014');
+  for (let fang = 0; fang < 6; fang++) pixel(ctx, -8 + fang * 3, -45, 2, 3, ZIR_METAL.light);
+  for (let fang = 0; fang < 5; fang++) pixel(ctx, -7 + fang * 3, -42, 1, 2, ZIR_METAL.base);
+  pixel(ctx, -8, -40, 17, 1, ZIR_SKIN.mid);
+  // Ears: two long blades swept back and up from the temples.
+  const blade = (bx, by, w, h, tone) => {
+    const half = Math.ceil(w / 2);
+    for (let i = 0; i < w; i++) {
+      const column = Math.min(i, w - 1 - i);
+      const height = Math.max(1, Math.round(h * (column + 1) / half));
+      pixel(ctx, bx + i, by - height, 1, height, tone);
+    }
+  };
+  blade(-24, -52, 11, 16, '#1a1013');
+  blade(-23, -52, 9, 13, ZIR_SKIN.base);
+  blade(13, -52, 11, 16, '#1a1013');
+  blade(14, -52, 9, 13, ZIR_SKIN.mid);
+  // Crown: a silver band across the brow carrying three spikes, with the red gem
+  // set in the middle one. It sits in front of the ears on purpose: the ears are
+  // skin, the crown is metal, and the two must not be confused at game scale.
+  pixel(ctx, -13, -58, 27, 3, ZIR_METAL.dark);
+  pixel(ctx, -12, -58, 25, 2, ZIR_METAL.base);
+  pixel(ctx, -12, -58, 25, 1, ZIR_METAL.light);
+  for (const [spikeX, spikeH, tilt] of [[-11, 14, -1], [-3, 19, 0], [6, 14, 1]]) {
+    for (let step = 0; step < spikeH; step++) {
+      const width = Math.max(2, 7 - Math.floor(step / 3));
+      const xx = spikeX + (tilt === 0 ? 0 : Math.round((step / spikeH) * tilt * 3));
+      pixel(ctx, xx, -59 - step, width, 1, ZIR_METAL.base);
+      pixel(ctx, xx, -59 - step, Math.max(1, width - 3), 1, ZIR_METAL.light);
+      pixel(ctx, xx + width - 2, -59 - step, 2, 1, ZIR_METAL.dark);
+    }
+  }
+  pixel(ctx, -4, -57, 9, 6, ZIR_METAL.mid);
+  pixel(ctx, -3, -56, 7, 4, ZIR_GEM.base);
+  pixel(ctx, -2, -55, 3, 2, ZIR_GEM.light);
+  // The red sash under the belly, torn, so the crouch is not one flat slab.
+  pixel(ctx, -15, -16, 31, 9, '#1a1013');
+  pixel(ctx, -14, -15, 29, 7, ZIR_WING.base);
+  pixel(ctx, -14, -15, 29, 1, ZIR_WING.light);
+  pixel(ctx, -9, -8, 5, 4, ZIR_WING.base);
+  pixel(ctx, 2, -8, 7, 5, ZIR_WING.base);
+  pixel(ctx, 10, -8, 3, 3, ZIR_WING.base);
+  ctx.restore();
+}
+
+const LILITH_SKIN = { light: '#eef2f6', base: '#cdd5de', mid: '#a3adb9', dark: '#6d7885' };
+const LILITH_HORN = { light: '#928aa0', base: '#5e5468', mid: '#3b3346', dark: '#221c2c' };
+const LILITH_DRESS = { light: '#4a4553', base: '#2e2a36', mid: '#1d1a24', dark: '#100e15' };
+const LILITH_WING = { light: '#6a4450', base: '#3e2733', mid: '#281722', dark: '#150c12' };
+const LILITH_WING_IN = { light: '#8a4436', base: '#5e2a25', mid: '#3d1a18' };
+const LILITH_METAL = { light: '#d8d4cc', base: '#a09a90', mid: '#736e66', dark: '#4a463f' };
+const LILITH_RED = { light: '#c42436', base: '#8e1222', mid: '#5f0a15' };
+
+// Act 3 — Diablo, wave 6. Lilith, the act's boss. The reference is her standing
+// portrait: huge black wings spread behind her, a crown of horns over a pale
+// face, a long dark gown with a steel bodice and a red sash down the front.
+// The wings are the silhouette, so they reach the furthest and are drawn first.
+export function drawLilith(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const sway = Math.floor(time * 2) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -28, 0, 57, 3, '#131a20');
+  // Wings: black membrane over red-brown inner skin, each row reaching further
+  // out as it falls, with the bone spars on top and a claw at the shoulder.
+  for (let row = 0; row < 12; row++) {
+    const yy = -68 + row * 4;
+    const reach = 18 + row * 3 + (sway ? row % 2 : 0);
+    pixel(ctx, -13 - reach, yy, reach, 4, LILITH_WING.base);
+    pixel(ctx, -13 - reach, yy, 2, 4, LILITH_WING.light);
+    pixel(ctx, -15 - reach, yy, 2, 4, LILITH_WING.dark);
+    pixel(ctx, 13, yy, reach, 4, LILITH_WING.base);
+    pixel(ctx, 11 + reach, yy, 2, 4, LILITH_WING.light);
+    pixel(ctx, 13 + reach, yy, 2, 4, LILITH_WING.dark);
+    // The inner membrane is the reddish one: two rows nearest the body.
+    if (row < 7) {
+      pixel(ctx, -13 - reach, yy + 1, 10, 2, LILITH_WING_IN.base);
+      pixel(ctx, 3 + reach, yy + 1, 10, 2, LILITH_WING_IN.mid);
+    }
+    if (row % 3 === 2) {
+      pixel(ctx, -13 - reach, yy + 3, 5, 1, LILITH_WING.dark);
+      pixel(ctx, 8 + reach, yy + 3, 5, 1, LILITH_WING.dark);
+    }
+  }
+  // Bone spars: three per wing, drawn over the membrane as diagonals.
+  const spar = (bx, by, dx, dy, steps, tone) => {
+    for (let step = 0; step < steps; step++) {
+      // Steps overlap on both axes, so the spar is a continuous diagonal.
+      pixel(ctx, bx + dx * step, by + dy * step, 4, 4, tone);
+    }
+  };
+  for (const side of [-1, 1]) {
+    const sx = side < 0 ? -12 : 8;
+    spar(sx, -68, side * 3, 2, 14, LILITH_METAL.dark);
+    spar(sx, -62, side * 3, 3, 10, LILITH_METAL.dark);
+    spar(sx, -54, side * 3, 4, 7, LILITH_METAL.dark);
+    // The shoulder claw that opens the wing.
+    pixel(ctx, side < 0 ? -18 : 14, -70, 5, 6, LILITH_WING.dark);
+    pixel(ctx, side < 0 ? -19 : 15, -73, 3, 4, LILITH_METAL.mid);
+  }
+  // Gown: a long flare, torn at the hem, with the red sash down the front.
+  [7, 8, 9, 10, 11, 12, 13, 13, 14].forEach((half, index) => {
+    const yy = -50 + index * 6;
+    pixel(ctx, -half - 1, yy, half * 2 + 2, 6, LILITH_DRESS.dark);
+    pixel(ctx, -half, yy, half * 2, 6, LILITH_DRESS.base);
+    pixel(ctx, -half, yy, 4, 6, LILITH_DRESS.light);
+    pixel(ctx, half - 5, yy, 5, 6, LILITH_DRESS.mid);
+  });
+  const tears = [-14, -9, -4, 1, 6, 11];
+  tears.forEach((tear, index) => {
+    pixel(ctx, tear, -3 - (index % 2), 4, 4 + (index % 3), LILITH_DRESS.base);
+  });
+  pixel(ctx, -4, -48, 8, 24, LILITH_RED.base);
+  pixel(ctx, -4, -48, 3, 24, LILITH_RED.light);
+  pixel(ctx, -4, -24, 8, 3, LILITH_RED.mid);
+  pixel(ctx, -3, -8, 6, 5, LILITH_RED.base);
+  // Steel bodice with the red stone, then the pale shoulders above it.
+  [10, 9, 8].forEach((half, index) => {
+    const yy = -62 + index * 4;
+    pixel(ctx, -half - 1, yy, half * 2 + 2, 4, LILITH_METAL.dark);
+    pixel(ctx, -half, yy, half * 2, 4, LILITH_METAL.base);
+    pixel(ctx, -half, yy, 3, 4, LILITH_METAL.light);
+    pixel(ctx, half - 3, yy, 3, 4, LILITH_METAL.mid);
+  });
+  pixel(ctx, -3, -60, 7, 7, LILITH_RED.mid);
+  pixel(ctx, -2, -59, 5, 5, LILITH_RED.base);
+  pixel(ctx, -1, -58, 2, 2, LILITH_RED.light);
+  roundedMass(ctx, -11, -68, 23, 10, LILITH_DRESS.dark);
+  roundedMass(ctx, -10, -67, 21, 8, LILITH_SKIN.base);
+  pixel(ctx, -10, -67, 11, 2, LILITH_SKIN.light);
+  // Arms: pale, folded in front, with the long dark sleeves.
+  for (const side of [-1, 1]) {
+    const ax = side < 0 ? -15 : 10;
+    pixel(ctx, ax, -68, 5, 13, LILITH_DRESS.dark);
+    pixel(ctx, ax + 1, -67, 3, 11, LILITH_SKIN.mid);
+    pixel(ctx, ax + (side < 0 ? 2 : -2), -56, 6, 5, LILITH_SKIN.light);
+  }
+  // Face: pale, narrow, with white eyes and dark lips.
+  const face = [13, 13, 12, 11, 10, 9, 8];
+  face.forEach((width, index) => {
+    const yy = -80 + index * 2;
+    const half = Math.floor(width / 2);
+    pixel(ctx, -half - 1, yy, width + 2, 2, LILITH_HORN.dark);
+    pixel(ctx, -half, yy, width, 2, LILITH_SKIN.base);
+    pixel(ctx, -half, yy, 2, 2, LILITH_SKIN.light);
+    pixel(ctx, half - 2, yy, 2, 2, LILITH_SKIN.mid);
+  });
+  pixel(ctx, -4, -76, 3, 2, '#e8fbff');
+  pixel(ctx, 2, -76, 3, 2, '#e8fbff');
+  pixel(ctx, -3, -75, 1, 1, '#1c2a36');
+  pixel(ctx, 3, -75, 1, 1, '#1c2a36');
+  pixel(ctx, -3, -72, 6, 2, '#3a2630');
+  // Horn crown: two big horns curving out and up, plus smaller spikes between,
+  // over a dark band that ties the crown to the brow.
+  pixel(ctx, -9, -82, 19, 3, LILITH_HORN.base);
+  pixel(ctx, -9, -82, 19, 1, LILITH_HORN.light);
+  const bigHorn = [[-9, -82], [-12, -84], [-14, -87], [-15, -90], [-15, -94], [-14, -98]];
+  bigHorn.forEach(([hx, hy], index) => {
+    const width = index < 3 ? 5 : 4;
+    pixel(ctx, hx, hy, width, 3, LILITH_HORN.base);
+    pixel(ctx, hx, hy, width, 1, index < 4 ? LILITH_HORN.light : LILITH_HORN.mid);
+    const rx = 8 - hx;
+    pixel(ctx, rx - width, hy, width, 3, LILITH_HORN.base);
+    pixel(ctx, rx - width, hy, width, 1, index < 4 ? LILITH_HORN.light : LILITH_HORN.mid);
+  });
+  for (const [sx, height] of [[-5, 6], [0, 8], [3, 6]]) {
+    for (let step = 0; step < height; step++) {
+      const width = Math.max(1, 4 - Math.floor(step / 2));
+      pixel(ctx, sx, -83 - step, width, 1, step < 2 ? LILITH_HORN.light : LILITH_HORN.base);
+    }
+  }
+  ctx.restore();
+}
+
+
+// Lilith's echo: the same drawing, dimmer and smaller, so the copy reads as a
+// copy at a glance and never as a second boss on the arena.
+export function drawLilithEcho(ctx, x, y, options = {}) {
+  const { time = 0, scale = 1.5 } = options;
+  ctx.save();
+  ctx.globalAlpha *= 0.82;
+  drawLilith(ctx, x, y, { time, scale });
   ctx.restore();
 }
 

@@ -44,7 +44,8 @@ test('the walker kinds are one connected body, never floating pieces', () => {
   // flood-fill as a single figure from its shadow to its head.
   // The boss is excluded on purpose: its sound rings are separate VFX in the air,
   // so the body is connected but the particle rings are not part of the figure.
-  for (const kind of ['zombie', 'runner', 'brute', 'meleeMinion', 'mageMinion', 'siegeMinion']) {
+  for (const kind of ['zombie', 'runner', 'brute', 'meleeMinion', 'mageMinion', 'siegeMinion',
+    'skeleton', 'lesserDemon', 'shaman', 'burningElite', 'batSwarm']) {
     const cells = new Set();
     for (const rect of enemyShape(kind).rects) {
       for (let y = Math.round(rect.y); y < Math.round(rect.y + rect.h); y++) {
@@ -71,6 +72,20 @@ test('the act 1 boss draws its own alarm zombie at boss density', () => {
   assert.ok(boss.height > player.height * 1.3, 'a boss is allowed to tower over the player');
   assert.ok(boss.rects.length > 120, 'bosses carry cast-level detail, far above the ~30 of a common enemy');
   assert.ok(boss.rects.some(rect => rect.color === '#7a2f2f'), 'the dragged alarm is part of the boss, not borrowed art');
+});
+
+test('the act 3 bosses carry boss density and tower over the player', () => {
+  for (const kind of ['lordZir', 'lilith']) {
+    const boss = enemyShape(kind);
+    const player = characterShape('negro');
+    assert.ok(boss.rects.length > 120, `${kind} carries cast-level detail`);
+    assert.ok(boss.height > player.height, `${kind} towers over the player`);
+  }
+  // The echo is her own drawing at a smaller scale, never a duplicate body.
+  const lilith = enemyShape('lilith');
+  const echo = enemyShape('lilithEcho');
+  assert.ok(echo.height < lilith.height, 'the echo reads smaller than the mother');
+  assert.notDeepEqual(echo.rects, lilith.rects);
 });
 
 test('the runner reads lean and tall, and the brute reads wide but never bigger than the player', () => {

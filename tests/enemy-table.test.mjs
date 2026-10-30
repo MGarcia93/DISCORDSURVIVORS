@@ -15,6 +15,22 @@ test('every enemy kind authors all six combat stats plus its body and bounty', (
   assert.equal(enemyAttackInterval('zombie'), 100 / 154);
 });
 
+test('the act 3 roster authors its own sheets, reach and roles', () => {
+  assert.equal(enemyHp('skeleton', 1), 36);
+  assert.equal(enemyBounty('skeleton'), 2);
+  assert.equal(enemyBounty('batSwarm'), 1);
+  // The shaman is the act's artillery: it keeps its distance and throws a hex.
+  assert.ok(enemyAttackRange('shaman', 2) > 100, 'the shaman fires from range');
+  assert.equal(ENEMY_KINDS.shaman.projectile, 'hex');
+  // The burning elite is the only common kind that carries an ability.
+  assert.deepEqual(ENEMY_KINDS.burningElite.actions.map(action => action.key), ['swipe', 'flames']);
+  // Lord Zir is the mini-boss, Lilith the boss, and the echo is neither.
+  assert.equal(ENEMY_KINDS.lordZir.boss, true);
+  assert.equal(ENEMY_KINDS.lilith.boss, true);
+  assert.equal(ENEMY_KINDS.lilithEcho.boss, undefined);
+  assert.ok(enemyHp('lilith') > enemyHp('lordZir'), 'the boss outlasts the mini-boss');
+});
+
 test('the resistant zombie is a slow wall: more life, mitigation and punch, less speed', () => {
   assert.equal(ENEMY_KINDS.brute.radius, 22);
   assert.equal(enemyHp('brute', 3), 156);
