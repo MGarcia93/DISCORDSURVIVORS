@@ -5,22 +5,38 @@ import { ACTS, DEFAULT_ACT, PLAYABLE_ACTS, getAct } from '../src/campaign/acts.m
 import act01 from '../src/campaign/act-01-zomboid.mjs';
 import act02 from '../src/campaign/act-02-rift.mjs';
 import act03 from '../src/campaign/act-03-inferno.mjs';
+import act04 from '../src/campaign/act-04-exiles.mjs';
 import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
 
 const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
 const playable = () => structuredClone(act01);
 
-test('the campaign registers five worlds in order and the first three are playable', () => {
+test('the campaign registers five worlds in order and the first four are playable', () => {
   assert.equal(ACTS.length, 5);
   assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5]);
   assert.equal(new Set(ACTS.map(act => act.id)).size, 5);
-  assert.equal(PLAYABLE_ACTS.length, 3);
+  assert.equal(PLAYABLE_ACTS.length, 4);
   assert.equal(DEFAULT_ACT.id, 'act-01');
   assert.equal(getAct('act-03').status, 'playable');
-  assert.equal(getAct('act-04').status, 'planned');
+  assert.equal(getAct('act-04').status, 'playable');
+  assert.equal(getAct('act-05').status, 'planned');
   assert.equal(getAct('nope'), DEFAULT_ACT);
   // Monster Hunter is a rejected pitch in Act 4, not a world.
   assert.ok(!ACTS.some(act => /monster/i.test(act.id) || /monster/i.test(act.title)));
+});
+
+test('act four is the Conan Exiles chapter with the lotus alchemist and the taskmaster', () => {
+  assert.equal(act04.world, 'exiles');
+  assert.equal(act04.duration, 60);
+  assert.equal(act04.waves.length, 6);
+  assert.deepEqual(act04.miniboss, { wave: 5, kind: 'lotusAlchemist', name: 'EL ALQUIMISTA DEL LOTO' });
+  assert.deepEqual(act04.boss, { wave: 6, kind: 'taskmaster', name: 'EL CAPATAZ DE LA RUEDA DEL DOLOR' });
+  assert.equal(act04.waves[0].perMinute > 0, true);
+  assert.deepEqual(Object.keys(act04.waves[0].mix), ['barbarian']);
+  assert.ok(Object.hasOwn(act04.waves[1].mix, 'slaver'));
+  assert.ok(Object.hasOwn(act04.waves[1].mix, 'archer'));
+  assert.ok(Object.hasOwn(act04.waves[3].mix, 'alchemist'));
+  assert.equal(act04.waves[5].perMinute, 0, 'the boss wave fields the boss, not a clock budget');
 });
 
 test('act one is the approved Project Zomboid chapter the script describes', () => {

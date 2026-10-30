@@ -11,6 +11,7 @@ its boss. The campaign is not one continuous run, so progress is per act.
 | `src/campaign/act-01-zomboid.mjs` | one act: waves, boss, world, real wave length |
 | `src/campaign/act-02-rift.mjs` | the second act: six waves, the Maiden, Yorick |
 | `src/campaign/act-03-inferno.mjs` | the third act: six waves, Lord Zir, Lilith |
+| `src/campaign/act-04-exiles.mjs` | the fourth act: six waves, the Lotus Alchemist, the Taskmaster |
 | `src/campaign/validate.mjs` | the contract an act must satisfy |
 | `src/waves.mjs` | interpretation only: budget, life and the spawn roll |
 
@@ -60,6 +61,19 @@ skeletons, lesser demons, the ranged shaman, the burning elite, Lord Zir's bat
 swarm, Lord Zir himself as the mini-boss and Lilith as the boss. Its cinematics
 live in `assets/narrative/acts/act-03/manifest.json`; the dialogue for the two
 bosses is the addendum at the end of the act script.
+
+## Act 4
+
+Act 4 runs in the `exiles` slavers' camp with the four common kinds its script
+asks for: barbarians, slavers whose nets pin the player, archers, and alchemists
+who throw lotus flasks and burst spores. El Alquimista del Loto is the mini-boss
+on wave 5 and El Capataz de la Rueda del Dolor closes the run on wave 6. Its
+cinematics live in `assets/narrative/acts/act-04/manifest.json`; the two bosses
+have cinematic stage sprites (`src/npcs/`) and portrait sets, so they speak in
+dialogue like the Act 2 and Act 3 bosses. The laboratory scenes use their own
+`laboratory` world so the room reads apart from the camp. The script also names
+hyenas on wave 1; this act ships the four kinds the roster needs, so the dunes
+field raiders instead of a separate hyena ficha.
 
 ## Wave length
 
