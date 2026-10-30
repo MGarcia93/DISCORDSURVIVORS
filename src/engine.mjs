@@ -69,7 +69,9 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
 }
 
 export function activateSpecial(run, type) {
-  if (run.phase !== 'playing') return false;
+  // A muted player has no specials: the Administrator's `/mute` and the hotfix
+  // waves both land here.
+  if (run.phase !== 'playing' || (run.specialsLocked ?? 0) > 0) return false;
   const player = run.player;
   const spec = player.characterDef.specials.find(special => special.key === type);
   if (!spec || player[`${type}Cooldown`] > 0) return false;
@@ -164,9 +166,12 @@ export function createEnemy(run, kind, x, y) {
   const def = ENEMY_KINDS[kind];
   const percent = waveLife(run.act, run.wave, kind);
   const hp = percent === undefined ? enemyHp(kind, run.wave) : resolveLifePercent(percent);
+  // A wave may declare a speed boost: the Administrator's hotfix makes the wave
+  // it touches faster without any sheet knowing about it.
+  const boost = waveConfig(run.act, run.wave)?.speedBoost ?? 1;
   return { id: ++run.serial, kind, x, y,
     hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
-    radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave),
+    radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) * boost,
     attackRange: enemyAttackRange(kind, run.wave),
     attackInterval: enemyAttackInterval(kind, run.wave),
     projectile: def.projectile,
@@ -180,20 +185,39 @@ export function startNextWave(run) {
   run.time = 0;
   run.spawnBudget = waveBudget(run.act, run.wave, run.duration);
   run.spawnIn = spawnInterval(run.duration, run.spawnBudget);
+  // A wave may declare a temporary lock: hotfix 1.0.5 cuts the cast's specials
+  // for the first seconds of the wave that declares it.
+  run.specialsLocked = waveConfig(run.act, run.wave)?.specialLock ?? 0;
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
   run.player.characterDef.onStageStart?.(run, run.player);
-  // The act may declare one mini-boss before the boss: it arrives once, when
-  // its own wave starts, and killing it does not close the run.
-  if (run.act.miniboss && run.wave === run.act.miniboss.wave) {
-    run.enemies.push(createEnemy(run, run.act.miniboss.kind, WIDTH / 2, 90 * WORLD_SCALE));
+  // The act may declare mini-bosses before the boss: they arrive on their own
+  // wave, one at a time, and killing one never closes the run.
+  const line = minibossLine(run.act);
+  if (line.length && run.wave === line[0].wave) {
+    run.minibossLine = { list: line, index: 0 };
+    run.enemies.push(gauntletEnemy(run, 0, line[0].kind));
   }
   if (run.wave === run.act.boss.wave) {
     run.enemies.push(createEnemy(run, run.act.boss.kind,
       WIDTH / 2, 80 * WORLD_SCALE));
   }
   return true;
+}
+
+// One mini-boss or a line of them. The act decides which shape it uses; the
+// engine only reads it as an ordered list.
+function minibossLine(act) {
+  const declared = act?.miniboss;
+  if (!declared) return [];
+  return Array.isArray(declared) ? declared : [declared];
+}
+
+function gauntletEnemy(run, index, kind) {
+  const enemy = createEnemy(run, kind, WIDTH / 2, 90 * WORLD_SCALE);
+  enemy.gauntlet = index;
+  return enemy;
 }
 
 function spawn(run, kind) {
@@ -412,9 +436,12 @@ export function step(run, seconds, input = {}) {
    const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input,
      spawnEnemy: (kind, x, y) => { const enemy = createEnemy(run, kind, x, y); run.enemies.push(enemy); return enemy; },
      shockwave: options => shockwave(run, options),
-     prison: options => prison(run, options) };
+     prison: options => prison(run, options),
+     // `/mute`: the ficha asks for the lock, the engine owns the clock.
+     lockSpecials: seconds => { run.specialsLocked = Math.max(run.specialsLocked ?? 0, seconds); } };
   run.time += dt;
   run.elapsed += dt;
+  run.specialsLocked = Math.max(0, (run.specialsLocked ?? 0) - dt);
   const decayKeys = [
     'immune', 'attackFlash',
     ...def.specials.flatMap(special => [special.key, `${special.key}Cooldown`]),
@@ -679,6 +706,15 @@ export function step(run, seconds, input = {}) {
       run.effects.push({ x: enemy.x, y: enemy.y - enemy.radius, text: 'CONTAGIO', ttl: 0.8, kind: 'confusion' });
     }
     if (def.onKill) def.onKill(run, p, enemy, ctx);
+    // A line of mini-bosses keeps going: the next one walks in where the last
+    // one fell, so the act can restore four bosses in one wave.
+    if (enemy.gauntlet !== undefined && run.minibossLine) {
+      const next = run.minibossLine.list[enemy.gauntlet + 1];
+      if (next) {
+        run.minibossLine.index = enemy.gauntlet + 1;
+        run.enemies.push(gauntletEnemy(run, enemy.gauntlet + 1, next.kind));
+      }
+    }
     emit('kill', { run, player: p, enemy });
   }
   run.enemies = run.enemies.filter(enemy => enemy.hp > 0);

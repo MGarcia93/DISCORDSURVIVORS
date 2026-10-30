@@ -32,18 +32,22 @@ function validateWaves(act) {
   });
 }
 
-// An act may carry one mini-boss on an earlier wave. It is optional, it never
-// closes the run, and it must sit before the boss.
+// An act may carry one mini-boss, or a line of them, on an earlier wave. They
+// are optional, they never close the run, and they must sit before the boss.
 function validateMiniboss(act) {
   const { id, miniboss, boss } = act;
   if (miniboss === undefined) return;
-  if (!miniboss || typeof miniboss !== 'object' || Array.isArray(miniboss)) {
-    throw Error(`${id}: miniboss must be an object`);
+  const line = Array.isArray(miniboss) ? miniboss : [miniboss];
+  if (line.length === 0) throw Error(`${id}: miniboss line is empty`);
+  for (const entry of line) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+      throw Error(`${id}: miniboss must be an object`);
+    }
+    if (!Number.isInteger(entry.wave) || entry.wave < 1) throw Error(`${id}: invalid miniboss wave`);
+    if (entry.wave >= boss.wave) throw Error(`${id}: miniboss must be before the boss wave`);
+    if (!own(ENEMY_KINDS, entry.kind)) throw Error(`${id}: unknown miniboss kind: ${entry.kind}`);
+    if (!text(entry.name)) throw Error(`${id}: miniboss name is required`);
   }
-  if (!Number.isInteger(miniboss.wave) || miniboss.wave < 1) throw Error(`${id}: invalid miniboss wave`);
-  if (miniboss.wave >= boss.wave) throw Error(`${id}: miniboss must be before the boss wave`);
-  if (!own(ENEMY_KINDS, miniboss.kind)) throw Error(`${id}: unknown miniboss kind: ${miniboss.kind}`);
-  if (!text(miniboss.name)) throw Error(`${id}: miniboss name is required`);
 }
 
 function validateBoss(act) {
