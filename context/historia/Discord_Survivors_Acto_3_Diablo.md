@@ -5,8 +5,8 @@
 **Personaje desbloqueable:** Papasito  
 **Personajes presentes:** Maxi Negro, Solago y Papasito  
 **Oleadas:** 6  
-**Minijefe:** El Goblin de las Señas  
-**Jefe final:** El Carnicero  
+**Minijefe:** Lord Zir  
+**Jefe final:** Lilith  
 **Siguiente mundo:** Conan Exiles
 
 ---
@@ -61,8 +61,8 @@ Comienza la primera oleada.
 | 2 | El paraguayo desaparecido | Llegan chamanes y demonios a distancia. Se escucha a Papasito, pero no contesta. |
 | 3 | El enfermo del farmeo | Solago consigue que aparezca Papasito mencionando a Tomi. |
 | 4 | El fondo para la cariñosa | Enemigos élite y el recuerdo de la estafa. |
-| 5 | El Goblin de las Señas | Un goblin intenta volver a estafar a Papasito. |
-| 6 | Fresh Meat | El Carnicero aparece como jefe final del mundo. |
+| 5 | El señor del castillo | Lord Zir, el señor vampiro, defiende su sala de sangre. |
+| 6 | La madre | Lilith aparece como jefe final del mundo. |
 
 ---
 
@@ -262,160 +262,98 @@ Durante el combate, Papasito comienza a recoger todas las monedas que encuentra.
 
 ---
 
-## Escena 3 — El Goblin de las Señas
+## Escena 3 — El señor del castillo
 
 *Oleada 5*
 
-Un goblin del tesoro aparece corriendo por la mazmorra, dejando monedas por todas partes.
+El grupo sigue el rastro de monedas hasta una sala llena de sangre.
 
-**Papasito:** ¡GOBLIN! ¡MATEN AL GOBLIN!
+**Maxi Negro:** Che, ¿y todo este oro quién lo dejó?
 
-Papasito sale corriendo detrás de él.
+**Papasito:** No importa. Ahora es mío.
 
-**Maxi Negro:** ¡PAPASITO, VOLVÉ, PELOTUDO!
+**Solago:** Paraguayo, eso no es oro. Es sangre.
 
-**Solago:** Dejalo, negro. Está juntando para recuperar el monitor.
+**Papasito:** Sangre con oro. Me sirve.
 
-El goblin llega hasta un portal. En lugar de escapar, se transforma en una versión gigantesca de sí mismo.
+*Las puertas se cierran. Algo enorme se arrastra en la oscuridad.*
 
 **MINIJEFE DETECTADO**
 
-**EL GOBLIN DE LAS SEÑAS**
+**LORD ZIR**
 
-El goblin comienza a ofrecer objetos legendarios a cambio de dinero.
+**Lord Zir:** Otro ratón que entra a mi sala.
 
-**Goblin:** ¡Gran oportunidad! ¡Legendarios exclusivos! ¡Solo hace falta una pequeña seña!
+**Papasito:** ¿Ratón? Yo soy paraguayo.
 
-**Papasito:** ¿Cuánto?
+**Lord Zir:** Sangre de paraguayo. Hacía siglos que no probaba una.
 
-**Maxi Negro:** ¡NOOO, PAPASITO, NO!
+**Maxi Negro:** ¡PAPASITO, CORRÉ!
 
-**Solago:** ¡JAJAJA! ¡VA A CAER OTRA VEZ!
+**Papasito:** ¡PRIMERO EL LOOT!
 
-**Goblin:** ¡Transferencia anticipada! ¡Entrega garantizada!
+**Solago:** ¡ES UN VAMPIRO, LA CONCHA DE TU MADRE!
 
-**Papasito:** Pará, capaz conviene...
+**Lord Zir:** Mi corte tiene hambre.
 
-**Maxi Negro:** ¡PAPASITO, LA CONCHA DE TU MADRE! ¡ES UN GOBLIN EN UNA MAZMORRA!
+### Combate contra Lord Zir
 
-**Solago:** ¡YA TE CAGARON UNA VEZ, PARAGUAYO!
+El minijefe cuenta con tres mecánicas:
 
-*El goblin roba varias monedas y comienza a reírse.*
-
-**Goblin:** ¡Gracias por su compra! ¡Su pedido será entregado próximamente!
-
-**Papasito:** ¡EH! ¡DEVOLVEME LA PLATA!
-
-**Goblin:** ¡Para reclamar, comuníquese con atención al cliente!
-
-*El goblin comienza a lanzar bolsas de oro explosivas.*
-
-**Papasito:** ¡LA CONCHA DE TU MADRE, ME ESTAFARON!
-
-**Maxi Negro:** ¡JAJAJA! ¡DOS VECES, BOLUDO! ¡DOS VECES!
-
-Papasito entra en su estado de furia y empieza a lanzar ladrillos contra todos los enemigos.
-
-**Solago:** ¡MIRÁ CÓMO SE PUSO EL ALBAÑIL!
-
-**Papasito:** ¡QUE NO SOY ALBAÑIL, HIJO DE PUTA!
-
-**Maxi Negro:** ¡JAJAJA! ¡TIRÁLE UN LADRILLO AL GOBLIN, PAPASITO!
-
-Durante el combate, el minijefe invoca goblins menores, arroja bolsas explosivas y deja caer objetos falsos para distraer a los jugadores.
-
-Finalmente, el grupo consigue derrotarlo.
-
-El goblin deja caer una enorme cantidad de oro y un único objeto legendario.
-
-Papasito corre a recogerlo.
-
-**Papasito:** Dale, dale, dale...
-
-*Examina el objeto.*
-
-**Papasito:** Una mierda.
-
-**Maxi Negro:** JAJAJA. ¡TE CAGARON HASTA CON EL LOOT!
+- **Zarpazo:** ataque a corta distancia.
+- **La corte:** invoca murciélagos que pelean a su lado.
+- **Golpe de alas:** un anillo de aire frío que sale de su cuerpo y golpea una vez.
 
 ---
 
-## Escena 4 — Jefe: El Carnicero
+## Escena 4 — Jefe: Lilith
 
 *Oleada 6*
 
-Después de la pelea contra el goblin, los tres llegan a una gran sala.
+Lord Zir cae y el suelo se abre bajo sus pies.
 
 Las puertas se cierran detrás de ellos.
 
 Las antorchas comienzan a apagarse.
 
-Un ruido metálico resuena en la oscuridad.
+**JEFE DETECTADO**
 
-**Solago:** ¿Qué fue eso?
+**LILITH**
 
-**Papasito:** ...Uh.
+**Lilith:** Hijos míos. Llegaron hasta acá.
 
-**Maxi Negro:** ¿Qué pasa?
+**Maxi Negro:** ¿Hijos? Yo tengo madre, gracias.
 
-**Papasito:** Creo que viene el Carnicero.
+**Lilith:** Ella también me sirvió.
 
-**Maxi Negro:** ¿Y ese quién mierda es?
+**Solago:** Negro, esa mina no me gusta.
 
-Una enorme figura aparece desde las sombras, arrastrando una cuchilla ensangrentada.
+**Maxi Negro:** ¿Qué te hace ruido?
 
-**EL CARNICERO:** ¡FRESH MEAT!
+**Solago:** Que tiene cuernos y no está en un cumpleaños.
 
-**Solago:** ¡LA CONCHA DE SU MADRE!
+**Papasito:** Y una espada carísima.
 
-**Maxi Negro:** ¡PAPASITO, QUÉ HACEMOS!
+**Maxi Negro:** ¡PAPASITO, POR UNA VEZ EN TU VIDA, NO!
 
-*Silencio.*
+**Lilith:** El infierno los reclama.
 
-**Maxi Negro:** ¡PAPASITO!
+**Solago:** ¡NOSOTROS RECLAMAMOS UNA SALIDA, LA CONCHA DE TU MADRE!
 
-*Silencio.*
+**Lilith:** Entonces sáquenla de mi mano.
 
-**Solago:** ¡ESTE HIJO DE PUTA NO CONTESTA NI AHORA!
+### Combate contra Lilith
 
-De repente, Papasito empieza a correr en dirección contraria.
+**JEFE DETECTADO: LILITH**
 
-**Maxi Negro:** ¡EH, PARAGUAYO! ¡¿A DÓNDE VAS?!
+Lilith cuenta con tres ataques y una segunda fase:
 
-**Papasito:** ¡CORRAN, CARAJO!
+- **Garra:** ataque cuerpo a cuerpo de gran daño.
+- **Oleada de sangre:** un anillo de sangre que sale de ella y golpea todo lo que toca.
+- **Se abalanza:** vuela hacia los jugadores en línea recta, más rápido que ellos.
+- **Despertar:** al perder suficiente vida, aumenta su velocidad y la frecuencia de sus ataques.
 
-**Solago:** ¡PERO SI VOS SOS EL QUE JUEGA DIABLO!
-
-**Papasito:** ¡POR ESO LES DIGO QUE CORRAN!
-
-**Maxi Negro:** ¡VOLVÉ Y PELEÁ, LA CONCHA DE TU MADRE!
-
-### Combate contra El Carnicero
-
-**JEFE DETECTADO: EL CARNICERO**
-
-El jefe cuenta con cuatro mecánicas:
-
-- **Gancho:** arrastra al jugador hacia él.
-- **Cuchillazo:** ataque frontal de gran daño.
-- **Carga:** corre hacia los jugadores, destruyendo obstáculos.
-- **Furia:** al perder suficiente vida, aumenta su velocidad y frecuencia de ataques.
-
-Durante la pelea, Papasito ayuda al grupo, aunque sigue sin contestar cuando le hablan.
-
-**Maxi Negro:** ¡PAPASITO, PEGÁLE POR ATRÁS!
-
-*Silencio.*
-
-**Solago:** ¡PARAGUAYO, TIRÁLE ALGO!
-
-*Papasito lanza un ladrillo.*
-
-**Maxi Negro:** ¡BIEN, PAPASITO! ¡AL FIN HICISTE ALGO!
-
-**Papasito:** ...
-
-Finalmente consiguen derrotar al Carnicero.
+En pantalla hay una sola Lilith: no invoca copias de sí misma.
 
 ### Después del combate
 
@@ -433,7 +371,7 @@ El jefe cae al suelo.
 
 **Solago:** ¡NO, OTRA VEZ NO!
 
-Papasito se agacha junto al cadáver del Carnicero.
+Papasito se agacha junto al cadáver de Lilith.
 
 Encuentra un legendario.
 
@@ -451,7 +389,7 @@ Encuentra un legendario.
 
 ## Epílogo — El objeto imposible
 
-Mientras Papasito revisa los objetos que dejó el Carnicero, encuentra uno que no pertenece a Diablo.
+Mientras Papasito revisa los objetos que dejó Lilith, encuentra uno que no pertenece a Diablo.
 
 **OBJETO LEGENDARIO DESCONOCIDO**
 
@@ -541,10 +479,10 @@ Se escuchan cadenas, gritos y golpes contra una jaula.
 - **Chiste de Tomi:** Papasito ignora todas las llamadas, pero reacciona en cuanto escucha su nombre. El grupo lo carga diciendo que está enamorado de él.
 - **Personalidad:** habla poco, ignora las preguntas y suele responder únicamente cuando lo provocan o cuando le interesa algo.
 - **Forma de hablar:** Papasito no utiliza «boludo» ni «pelotudo».
-- **Humor interno:** paraguayo trucho, no sabe guaraní, no es albañil, vendió pertenencias para una cariñosa y terminó estafado.
+- **Humor interno:** paraguayo trucho, no sabe guaraní, no es albañil, vendió pertenencias para una cariñosa y terminó estafado. La estafa y la «seña» quedan como historia previa, no como jefe: Lord Zir reemplaza al Goblin de las Señas y Lilith al Carnicero.
 - **Habilidades:** conserva ladrillazos, economía mediante venta de pertenencias y el estado de furia provocado por «La seña».
-- **Minijefe:** El Goblin de las Señas.
-- **Jefe final:** El Carnicero.
+- **Minijefe:** Lord Zir.
+- **Jefe final:** Lilith.
 - **Misterio:** el objeto corrupto conecta al Administrador con información de los integrantes del Discord.
 - **Rejugabilidad:** los diálogos completos se muestran la primera vez y pueden omitirse en partidas posteriores.
 - **Conexión con el Acto 4:** Conan Exiles. Los protagonistas desconocen quién está atrapado allí.
@@ -553,74 +491,10 @@ Se escuchan cadenas, gritos y golpes contra una jaula.
 
 ---
 
-## Cambios aprobados — Lord Zir y Lilith
+## Registro de cambios
 
-Reemplazan al Goblin de las Señas (oleada 5) y al Carnicero (oleada 6). Las líneas
-del Carnicero posteriores al combate se conservan tal cual; las de estas dos
-escenas son nuevas y son las que juega el acto.
-
-### Escena 3 — El señor del castillo
-
-*Oleada 5*
-
-El grupo sigue el rastro de monedas hasta una sala llena de sangre.
-
-**Maxi Negro:** Che, ¿y todo este oro quién lo dejó?
-
-**Papasito:** No importa. Ahora es mío.
-
-**Solago:** Paraguayo, eso no es oro. Es sangre.
-
-**Papasito:** Sangre con oro. Me sirve.
-
-*Las puertas se cierran. Algo enorme se arrastra en la oscuridad.*
-
-**MINIJEFE DETECTADO**
-
-**LORD ZIR**
-
-**Lord Zir:** Otro ratón que entra a mi sala.
-
-**Papasito:** ¿Ratón? Yo soy paraguayo.
-
-**Lord Zir:** Sangre de paraguayo. Hacía siglos que no probaba una.
-
-**Maxi Negro:** ¡PAPASITO, CORRÉ!
-
-**Papasito:** ¡PRIMERO EL LOOT!
-
-**Solago:** ¡ES UN VAMPIRO, LA CONCHA DE TU MADRE!
-
-**Lord Zir:** Mi corte tiene hambre.
-
-### Escena 4 — La madre
-
-*Oleada 6*
-
-Lord Zir cae y el suelo se abre bajo sus pies.
-
-**JEFE DETECTADO**
-
-**LILITH**
-
-**Lilith:** Hijos míos. Llegaron hasta acá.
-
-**Maxi Negro:** ¿Hijos? Yo tengo madre, gracias.
-
-**Lilith:** Ella también me sirvió.
-
-**Solago:** Negro, esa mina no me gusta.
-
-**Maxi Negro:** ¿Qué te hace ruido?
-
-**Solago:** Que tiene cuernos y no está en un cumpleaños.
-
-**Papasito:** Y una espada carísima.
-
-**Maxi Negro:** ¡PAPASITO, POR UNA VEZ EN TU VIDA, NO!
-
-**Lilith:** El infierno los reclama.
-
-**Solago:** ¡NOSOTROS RECLAMAMOS UNA SALIDA, LA CONCHA DE TU MADRE!
-
-**Lilith:** Entonces sáquenla de mi mano.
+El guion original cerraba el acto con el Goblin de las Señas (oleada 5) y el
+Carnicero (oleada 6). Por decisión de la campaña, la oleada 5 es **Lord Zir** y
+la 6 es **Lilith**; las escenas, los ataques y las notas de arriba ya reflejan
+esos dos jefes. Las líneas del Carnicero posteriores al combate y todo el epílogo
+se conservan tal cual.
