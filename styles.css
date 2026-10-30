@@ -270,6 +270,9 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-text strong, .narrative-banter strong { color: #d7f779; }
 .narrative-text p { min-height: 3em; font: 16px/1.6 monospace; color: #f4e9dc; overflow-wrap: anywhere; max-height: 28vh; overflow-y: auto; }
 .narrative-text .actions { justify-content: flex-end; }
+.narrative-stage-dialog { inset: auto 12px 12px; background: transparent; }
+.narrative-stage-dialog .narrative-text { padding: 10px 14px; }
+.narrative-stage-dialog .narrative-text p { min-height: 0; margin: 6px 0; }
 .narrative-skip { position: absolute; top: 10px; right: 10px; pointer-events: auto; }
 .narrative-splash { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #151320d9; }
 .narrative-splash img { width: 35%; }

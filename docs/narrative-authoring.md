@@ -112,10 +112,10 @@ An actor is either a member of the cast or an enemy:
 
 | Step | Fields | Meaning |
 | --- | --- | --- |
-| `dialogue` | `lines` | Manual portrait conversation |
+| `dialogue` | `lines`, optional `layout`, `staging` | Manual conversation; defaults to portraits. `layout: "stage"` keeps actors visible above a compact text panel; `staging` names a scene-local action that ticks while the reader advances lines |
 | `move` | `actor`, `to`, `duration` | Walk to a named point |
 | `animate` | `actor`, `animation`, `duration` | `idle`, `walk`, `point` or `celebrate` |
-| `camera` | `to`, optional `zoom`, `duration` | Pan/zoom; zoom range 1–4. The stage is exactly the canvas, so the camera is clamped and never shows black outside the map |
+| `camera` | `to`, optional `zoom`, `duration` | Pan/zoom; zoom range 1–4. The camera stays inside the stage, including larger maps |
 | `prop` | `prop`, `state` | Change a scene-local prop state |
 | `down` | `actor` | Drop an enemy where it stands; a dead enemy never animates |
 | `flash` | `at`, `duration` | A short burst at a point: muzzle flash, hit spark |
@@ -127,6 +127,35 @@ An actor is either a member of the cast or an enemy:
 
 Durations are nonnegative seconds. Parallel actions cannot write the same actor, camera or prop, and cannot contain dialogue, splash or custom actions. Sequential actions appear in the top-level `steps` array. The sample arrival shows movement and camera in parallel, followed by conversation and splash.
 
+### Larger cinematic maps
+
+Open **`?dev=narrative` → Sample: large cinematic map and moving camera**
+for an isolated horizontal and vertical scrolling example. It has no gameplay
+binding and changes no campaign scenes or progress.
+
+Add optional `stage.size: [2288, 1496]` to give a scene a world larger than the
+fixed **1144×748 viewport**. Both values must be integers: width 1144–4096,
+height 748–4096. The limit bounds the background canvas allocation.
+Omitting `size` preserves the original 1144×748 world and existing staging.
+
+Points, actors, props and camera targets use **world coordinates**, not screen
+coordinates. The background is painted once at the world size; the camera
+reveals a portion without stretching actor or prop sprites. Existing background
+art scales to the larger dimensions; this does not automatically add new art.
+
+Use a `move` and a `camera` step in `parallel`, with matching destination and
+duration, to accompany a walking actor. This is scripted camera movement, not
+automatic player-controlled exploration or persistent actor tracking. The camera
+starts at `[572, 374]`, zoom 1, and clamps at the world's edges so no outside
+area is exposed. Completion, skip, cancellation and failure restore that camera.
+Existing scene-local props can be placed anywhere in the larger world.
+
+The Act 1 **Jhony encounter** (`act-01-jhony`) is the first campaign staging
+preview using this size: a 2288×748 `jhony-street` map, distant gunshots,
+an approach/reveal, and a camera-accompanied departure. Select the encounter in
+`?dev=narrative` to review it without replaying the act. Dialogue and campaign
+bindings are unchanged; this composition is pending visual approval.
+
 The initial renderer uses the existing arena and character sprite drawers plus labeled placeholder props. New maps are separate worlds (see [World backgrounds](#world-backgrounds)); detailed prop art and new sprite animation capabilities remain separate art/presentation work, not automatically supplied by a scene JSON. Existing named animations are simple staging poses.
 
 ## World backgrounds
@@ -137,7 +166,10 @@ A world is one module in `src/backgrounds/` that paints the scenery of a place. 
 | --- | --- |
 | `arena` (default) | the combat arena; scenes that do not name a world |
 | `room` | home screen; story page 1 (El Negro's room) |
-| `zomboid` | Act 1 — Knox County; story page 2 |
+| `zomboid` | Legacy Knox County scenery; story page 2 |
+| `zomboid-combat` | Act 1 combat and fixed-stage cinematics; houses and wrecks frame the street |
+| `jhony-street` | Act 1 Jhony encounter; larger cinematic street |
+| `warrior-camp` | Act 4 Warrior rescue; wide slavers' camp with the Wheel of Pain, the prisoner pen and the smoking building |
 | `rift` | Act 2 — Summoner's Rift |
 | `inferno` | Act 3 — the dungeon |
 | `exiles` | Act 4 — the Exiled Lands; the shipped Act 4 preview |
@@ -163,7 +195,7 @@ Add a world:
 
 Every world must paint a full-canvas base (`pixel(ctx, 0, 0, width, height, color)`) before its details: the baked canvas is opaque, so any transparent pixel would show the stage behind the background. That invariant is tested for every registered world at the narrative and story sizes.
 
-Unknown world ids fail validation (`Unknown background: <id>`), and `stage` only accepts `points`, `actors`, `props` and `background`, so a misspelled field is reported instead of silently painting the default arena.
+Unknown world ids fail validation (`Unknown background: <id>`), and `stage` only accepts `points`, `actors`, `props`, `background` and `size`, so a misspelled field is reported instead of silently painting the default arena.
 
 ## Results, repetition and boundaries
 
@@ -177,6 +209,26 @@ Unknown world ids fail validation (`Unknown background: <id>`), and `stage` only
 - Narration does not clear combat entities or directly manipulate stored unlocks. Never put irreversible gameplay effects in a presentation action.
 
 ## Scene-local JavaScript
+
+### Moving dialogue
+
+The Act 2 Maiden encounter (`act-02-maiden`) uses a 3432×748 stage and a
+scene-local `pursuit` action while the original conversation remains manually
+advanced. Open **Acto 2: Te vino a buscar tu jermu** in `?dev=narrative` to
+preview both friends running with the Maiden behind them and a tracking camera.
+The runners turn back along the lane if a reader waits; they never teleport or
+freeze at the map edge. Attack flashes are presentation-only near misses.
+
+A dialogue may declare `staging: "action-name"` from its manifest's scene
+module. The action uses the existing `validate`/`start` contract. Its `tick(dt)`
+runs while the line is open, but does not decide when dialogue completes;
+Continue still owns advancement. `skip()` cleans up a skipped conversation;
+optional `cancel()` cleans up both a normally finished conversation and a
+cancelled/failed scene. Use `layout: "stage"` for a compact subtitle panel with
+visible sprites, or omit it to preserve the standard portrait conversation.
+Keep these actions synchronous and presentation-only, as with other extensions.
+
+### Custom actions
 
 For a genuinely special action, add a sibling `.mjs` and reference it through that scene's manifest `module`. It exports `actions`, whose entries expose `validate(step, scene)` and `start(step, presentation)`. `start` returns `tick(dt)` (true when complete), `skip()` (apply final presentation state), and optional `cancel()` (release resources). See `sample-extension.mjs`.
 

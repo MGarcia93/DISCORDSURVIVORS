@@ -1,20 +1,19 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
 const animations = new Set(['idle', 'walk', 'point', 'celebrate', 'kneel']);
-const stageFields = new Set(['points', 'actors', 'props', 'background']);
+const stageFields = new Set(['points', 'actors', 'props', 'background', 'size']);
 const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice', 'flash']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
-// The stage is exactly the canvas, so the camera is clamped: a centre that lets
-// the visible frame leave the map shows the black base. Zooming out below 1
-// would always show it, which is why the validator refuses it.
+// The viewport stays fixed; a scene may provide a larger world behind it.
+// Clamp the visible frame to that world, including during zoom interpolation.
 const STAGE_WIDTH = 1144;
 const STAGE_HEIGHT = 748;
 
-function clampCamera({ x, y, zoom }) {
+function clampCamera({ x, y, zoom }, { width, height }) {
   const halfWidth = STAGE_WIDTH / (2 * zoom), halfHeight = STAGE_HEIGHT / (2 * zoom);
   return {
     zoom,
-    x: Math.min(STAGE_WIDTH - halfWidth, Math.max(halfWidth, x)),
-    y: Math.min(STAGE_HEIGHT - halfHeight, Math.max(halfHeight, y)),
+    x: Math.min(width - halfWidth, Math.max(halfWidth, x)),
+    y: Math.min(height - halfHeight, Math.max(halfHeight, y)),
   };
 }
 const requireValue = (condition, message) => { if (!condition) throw new Error(message); };
@@ -36,6 +35,12 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
   // the default world. Known fields only, and a world that really exists.
   for (const key of Object.keys(stage)) requireValue(stageFields.has(key), `Unknown stage field: ${key}`);
   if (stage.background !== undefined) requireValue(own(backgrounds, stage.background), `Unknown background: ${stage.background}`);
+  if (stage.size !== undefined) {
+    // Bound the baked canvas allocation; old scenes keep their exact dimensions.
+    requireValue(Array.isArray(stage.size) && stage.size.length === 2
+      && stage.size.every((value, axis) => Number.isInteger(value)
+        && value >= [STAGE_WIDTH, STAGE_HEIGHT][axis] && value <= 4096), 'Invalid stage size');
+  }
   const points = stage.points ?? {}, actors = stage.actors ?? {}, props = stage.props ?? {};
   for (const [id, point] of Object.entries(points)) {
     requireValue(Array.isArray(point) && point.length === 2 && point.every(finite), `Invalid point: ${id}`);
@@ -76,6 +81,12 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
           requireValue(!parallel, 'Dialogue is not allowed inside parallel actions');
           requireValue(Array.isArray(step.lines) && step.lines.length > 0, 'Dialogue lines are required');
           step.lines.forEach(line => validateLine(line, characters));
+          requireValue(step.layout === undefined || ['portraits', 'stage'].includes(step.layout), 'Invalid dialogue layout');
+          if (step.staging !== undefined) {
+            requireValue(own(actions, step.staging), `Unknown dialogue staging: ${step.staging}`);
+            requireValue(typeof actions[step.staging].validate === 'function' && typeof actions[step.staging].start === 'function', 'Dialogue staging requires validate/start');
+            actions[step.staging].validate(step, scene);
+          }
           break;
         case 'move': resources.push(`actor:${step.actor}`); break;
         case 'animate':
@@ -145,6 +156,8 @@ export class ScenePlayer {
     this.time = 0;
     this.dialogue = null;
     this.splash = null;
+    const [width, height] = this.scene.stage?.size ?? [STAGE_WIDTH, STAGE_HEIGHT];
+    this.stageSize = { width, height };
     this.camera = { x: 572, y: 374, zoom: 1 };
     this.actors = Object.fromEntries(Object.entries(scene.stage?.actors ?? {}).map(([id, actor]) => {
       const [x, y] = scene.stage.points[actor.at];
@@ -187,9 +200,19 @@ export class ScenePlayer {
     const points = this.scene.stage?.points ?? {};
     if (step.type === 'dialogue') {
       let index = 0;
-      const setLine = () => { this.dialogue = index < step.lines.length ? { expression: 'neutral', ...step.lines[index] } : null; };
+      const staging = step.staging ? this.options.actions[step.staging].start(step, this) : null;
+      if (step.staging) requireValue(staging && typeof staging.tick === 'function' && typeof staging.skip === 'function', 'Dialogue staging must return tick/skip');
+      const setLine = () => {
+        this.dialogue = index < step.lines.length ? { expression: 'neutral', ...step.lines[index] } : null;
+        if (this.dialogue && step.layout) this.dialogue.layout = step.layout;
+      };
       setLine();
-      return { tick: () => index >= step.lines.length, advance: () => { index++; setLine(); }, skip: () => { index = step.lines.length; this.dialogue = null; } };
+      return {
+        tick: dt => { if (index >= step.lines.length) return true; staging?.tick(dt); return false; },
+        advance: () => { index++; setLine(); if (!this.dialogue) staging?.cancel?.(); },
+        skip: () => { index = step.lines.length; this.dialogue = null; staging?.skip(); },
+        cancel: () => staging?.cancel?.(),
+      };
     }
     if (step.type === 'parallel') {
       const tasks = step.steps.map(child => ({ task: this._start(child), done: false }));
@@ -224,7 +247,7 @@ export class ScenePlayer {
           x: from.x + (x - from.x) * t,
           y: from.y + (y - from.y) * t,
           zoom: from.zoom + (zoom - from.zoom) * t,
-        });
+        }, this.stageSize);
       });
     }
     if (step.type === 'animate') {

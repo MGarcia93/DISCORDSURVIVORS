@@ -7,13 +7,14 @@ import { loadPreviewCatalog } from '../src/narrative/viewer.mjs';
 const localFetch = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 test('each sample is independently loaded and validated from its own JSON file', async () => {
   const catalog = await loadCatalog({ fetcher: localFetch });
-  assert.equal(catalog.entries.length, 4);
+  assert.equal(catalog.entries.length, 5);
   assert.deepEqual(catalog.bindings, [], 'examples never run in normal play without explicit author mappings');
   for (const entry of catalog.entries) {
     assert.equal(entry.error, null, entry.id);
     assert.equal(entry.scene.id, entry.id);
   }
   assert.equal(typeof catalog.entries[2].actions.highlight.start, 'function');
+  assert.deepEqual(catalog.entries.find(entry => entry.id === 'sample-scrolling-map').scene.stage.size, [2288, 1496]);
 });
 
 test('an invalid scene is reported by name without hiding valid scenes', async () => {

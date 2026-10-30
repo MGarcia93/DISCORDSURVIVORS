@@ -14,6 +14,12 @@ node --test tests/*.test.mjs
 node --check <every file you touched>
 ```
 
+Visual cinematic staging has its own order: implement the scene first, show it in
+`?dev=narrative`, wait for the user's explicit approval, and only then write its
+regression tests. Read `.opencode/skills/discord-survivors-dialogos/SKILL.md`
+(movement in cinematics, long maps) and `docs/narrative-authoring.md#moving-dialogue`
+before changing a scene that needs travel, pursuit or a camera move.
+
 ## Layout
 
 | Path | What lives there |

@@ -141,7 +141,7 @@ export function createPresenter(root, catalog, onError) {
         ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
         ctx.fillStyle = '#151320'; ctx.fillRect(0, 0, 1144, 748);
         ctx.translate(572, 374); ctx.scale(camera.zoom, camera.zoom); ctx.translate(-camera.x, -camera.y);
-        drawBackground(ctx, player.scene.stage?.background ?? 'arena', { width: 1144, height: 748, time: player.time });
+        drawBackground(ctx, player.scene.stage?.background ?? 'arena', { ...player.stageSize, time: player.time });
         const frontProps = [];
         const paintProp = (id, prop) => {
           const [x, y] = player.scene.stage.points[prop.at];
@@ -168,7 +168,7 @@ export function createPresenter(root, catalog, onError) {
             ctx.restore();
             continue;
           }
-          if (inConversation && speakingCast.has(actor.character)) continue;
+          if (inConversation && player.dialogue.layout !== 'stage' && speakingCast.has(actor.character)) continue;
           const def = STAGE_SPRITES[catalog.characters[actor.character].sprite];
           const lift = actor.animation === 'celebrate' ? Math.abs(Math.sin(player.time * 7)) * 12 : 0;
           def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {}, kneeling: actor.animation === 'kneel' });
@@ -199,7 +199,11 @@ export function createPresenter(root, catalog, onError) {
         // No stale line: a beat between two conversations (a move, a camera
         // push) shows the stage, not the sentence the player already read.
         const spoken = line ?? null;
-        if (spoken) {
+        if (spoken?.layout === 'stage') {
+          // Keep moving sprites visible; a compact subtitle panel replaces the
+          // large portraits only for dialogue that explicitly opts into it.
+          content.innerHTML = `<div class="narrative-dialog narrative-stage-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
+        } else if (spoken) {
           // The cast keeps the same slots for the whole scene, ordered by where
           // each actor stands, and faces the centre of the conversation.
           const sceneSpeakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))];

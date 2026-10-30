@@ -1,0 +1,31 @@
+{
+  "id": "sample-scrolling-map",
+  "stage": {
+    "background": "zomboid",
+    "size": [2288, 1496],
+    "points": {
+      "start": [420, 480],
+      "first-frame": [572, 374],
+      "street-end": [1580, 480],
+      "corner": [1580, 1080],
+      "gate": [1780, 1080]
+    },
+    "actors": { "visitor": { "character": "jhony", "at": "start" } },
+    "props": { "gate": { "at": "gate", "state": "closed" } }
+  },
+  "steps": [
+    { "type": "wait", "duration": 1 },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "visitor", "to": "street-end", "duration": 5 },
+      { "type": "camera", "to": "street-end", "duration": 5 }
+    ] },
+    { "type": "parallel", "steps": [
+      { "type": "move", "actor": "visitor", "to": "corner", "duration": 3 },
+      { "type": "camera", "to": "corner", "duration": 3 }
+    ] },
+    { "type": "prop", "prop": "gate", "state": "open" },
+    { "type": "wait", "duration": 2 },
+    { "type": "camera", "to": "first-frame", "duration": 3 },
+    { "type": "wait", "duration": 1 }
+  ]
+}
