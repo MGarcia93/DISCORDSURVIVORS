@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges">
+  <title>Maxi Blanco — neutral cinematic portrait draft</title>
+  <desc>Creator cameo with a long oval face, short dark hair, brown eyes, light moustache and short sparse chin stubble. No glasses. Raised gray hood and gray sleeves around a navy hoodie with cream chest lettering.</desc>
+  <g id="hood-back">
+    <path fill="#191923" d="M53 15h48v5h15v8h10v14h7v24h3v35h-5v21h-10v14H39v-10H28v-18h-5V66h4V44h7V30h8v-9h11z"/>
+    <path fill="#888b99" d="M54 20h45v5h15v8h9v14h6v23h3v28h-5v21h-10v10H43v-8H32v-17h-5V68h4V47h7V34h9v-9h7z"/>
+    <path fill="#b4b3bb" d="M51 28h11v-5h33v5h-35v7H48v13h-7v24h-5v31h5v17h-7v-16h-4V70h5V48h7V35h9z"/>
+    <path fill="#6c7182" d="M104 29h10v9h8v14h5v46h-5v19h-9v8h-10v-13h10V91h5V54h-5V41h-9z"/>
+    <path fill="#373945" d="M58 31h43v7h12v16h5v43h-5v22h-12v11H59v-9H46v-19h-5V58h5V43h12z"/>
+  </g>
+  <g id="body-outline">
+    <path fill="#191923" d="M47 119h20v-7h30v8h18v7h15v10h12v15h9v19h5v29H4v-28h5v-21h9v-15h12v-9h17z"/>
+  </g>
+  <g id="sleeves">
+    <path fill="#9c9da8" d="M34 130h18v15H42v55H9v-29h5v-19h9v-13h11zM108 130h18v10h12v15h9v19h5v26h-35v-43h-9z"/>
+    <path fill="#bfbdc4" d="M31 141h9v16h-7v21h-6v22H14v-27h6v-18h6v-10h5zM126 144h7v13h7v17h-7v-12h-7z"/>
+    <path fill="#747b8a" d="M43 148h7v52H30v-17h6v-21h7zM115 145h9v18h7v22h7v15h-21v-31h-2z"/>
+    <path fill="#d0cbd0" d="M20 169h4v18h-4zM135 177h4v17h-4z"/>
+  </g>
+  <g id="hoodie-body">
+    <path fill="#303d60" d="M54 129h51v10h12v61H42v-53h12z"/>
+    <path fill="#405075" d="M53 147h8v53H46v-40h7zM69 151h30v5H69z"/>
+    <path fill="#222c49" d="M105 144h9v56H99v-28h6zM62 191h36v9H62z"/>
+    <path fill="#202b46" d="M63 183h36v4h6v13H57v-13h6z"/>
+    <path fill="#495875" d="M65 184h31v3H65zM59 190h3v10h-3zM101 190h3v10h-3z"/>
+  </g>
+  <g id="neck">
+    <path fill="#b48d79" d="M65 107h33v20H65z"/>
+    <path fill="#d6ae94" d="M70 116h21v11H70z"/>
+    <path fill="#edc6a8" d="M73 125h13v2H73z"/>
+  </g>
+  <g id="hood-collar">
+    <path fill="#191923" d="M39 109h14v12h13v9h14v9H60v-5H47v-9h-8zM105 112h17v14h-10v9H99v6H80v-10h15v-8h10z"/>
+    <path fill="#b4b3bb" d="M42 111h8v13h14v9h12v3H61v-5H49v-9h-7z"/>
+    <path fill="#9496a3" d="M109 115h9v9h-9v9H97v5H84v-5h13v-9h12z"/>
+    <path fill="#d0cbd0" d="M47 122h4v5h11v4H50v-4h-3zM62 138h3v29h-3zM97 139h3v30h-3z"/>
+    <path fill="#737a8b" d="M62 164h3v5h-3zM97 166h3v5h-3z"/>
+  </g>
+  <g id="hoodie-lettering">
+    <path fill="#dfd7bc" d="M69 160h5v3h-5zM79 158h9v3h-9zM93 160h4v3h-4zM64 172h7v3h-4v5h-3zM72 168h6v3h-3v8h-3zM78 176h5v3h-5zM83 170h5v3h-3v7h-3v-4h1zM89 174h5v3h-5zM94 170h5v3h-2v7h-3z"/>
+    <path fill="#bcbba9" d="M70 181h23v2H70zM75 185h15v2H75z"/>
+  </g>
+  <g id="head">
+    <path fill="#191923" d="M62 28h33v4h12v9h7v18h3v34h-5v16h-8v10H93v7H72v-5H62v-9h-9V96h-6V62h3V44h5V34h7z"/>
+    <path fill="#b48d79" d="M63 33h30v4h12v9h5v18h3v27h-5v16h-8v10H91v5H74v-5H64v-9h-7V94h-6V64h3V46h5V37h4z"/>
+    <path fill="#d6ae94" d="M65 36h27v4h10v9h5v42h-5v15h-8v10H75v-5H66v-11h-7V85h-4V61h4V45h6z"/>
+    <path fill="#edc6a8" d="M68 38h22v5h10v13h4v27h-6v17H87v10H76v-6h-8V89h-7V60h4V46h3z"/>
+    <path fill="#f2d2b5" d="M69 46h23v6h8v6H65v-6h4zM63 82h13v6h7v7H70v-6h-7zM96 82h8v8h-8z"/>
+    <path fill="#c49e86" d="M59 86h4v14h7v8h7v6h-6v-5h-7V99h-5zM101 93h6v10h-6v8h-8v-5h8z"/>
+  </g>
+  <g id="ears">
+    <path fill="#b48d79" d="M46 68h8v7h4v18h-6v4h-6v-7h-4V76h4zM109 70h7v5h3v15h-4v5h-6z"/>
+    <path fill="#d6ae94" d="M46 74h5v5h4v10h-5v4h-4zM111 77h4v12h-4z"/>
+    <path fill="#edc6a8" d="M46 76h3v8h-3zM49 88h3v3h-3z"/>
+  </g>
+  <g id="hair-front">
+    <path fill="#22232b" d="M55 35h7v-7h11v-3h17v3h11v5h7v9h4v25h-6V51h-5v-9H89v-4H73v3H62v11h-5v15h-6V49h4z"/>
+    <path fill="#34323a" d="M61 35h12v-5h16v3h10v5H86v-3H75v4H63v5h-6v-4h4zM105 47h3v12h-3z"/>
+    <path fill="#454149" d="M67 33h7v-2h10v2H74v3h-7zM56 48h3v9h-3z"/>
+    <path fill="#22232b" d="M71 38h8v3h-3v3h-5v3h-5v-3h5z"/>
+  </g>
+  <g id="expression-brows">
+    <path fill="#3b302e" d="M58 65h6v-3h13v2h5v4H64v2h-6zM92 63h13v2h5v5h-6v-3H92z"/>
+    <path fill="#c49e86" d="M62 70h17v2H62zM94 70h13v2H94z"/>
+  </g>
+  <g id="expression-eyes">
+    <path fill="#b48d79" d="M58 75h6v-2h13v2h5v8H58zM92 75h5v-2h8v2h6v8H92z"/>
+    <path fill="#e9d5bd" d="M60 77h5v-2h11v2h4v5H60zM94 77h4v-2h7v2h4v5H94z"/>
+    <path fill="#624331" d="M69 75h7v7h-7zM100 75h6v7h-6z"/>
+    <path fill="#242129" d="M71 76h4v6h-4zM101 76h4v6h-4z"/>
+    <path fill="#f0e1ca" d="M70 76h2v2h-2zM100 76h2v2h-2z"/>
+    <path fill="#514039" d="M60 74h5v-1h12v2H65v1h-5zM94 74h4v-1h7v2h4v1h-4v-1H94z"/>
+    <path fill="#d6ae94" d="M63 85h15v2H63zM96 85h11v2H96z"/>
+  </g>
+  <g id="nose">
+    <path fill="#d6b093" d="M84 72h5v13h4v6h5v5h-6v3H81v-3h-5v-5h5v-8h3z"/>
+    <path fill="#f2d2b5" d="M85 83h3v7h6v4H82v-4h3z"/>
+    <path fill="#b48d79" d="M77 93h5v3h-5zM92 93h5v3h-5zM83 98h8v2h-8z"/>
+  </g>
+  <g id="facial-hair">
+    <path fill="#755645" d="M59 95h2v6h-2zM62 102h2v5h-2zM67 108h2v3h-2zM105 96h2v6h-2zM101 105h2v4h-2zM97 111h2v3h-2z"/>
+    <path fill="#514039" d="M69 101h6v-2h7v2h3v3H73v2h-4zM89 101h7v2h5v3h-6v-2h-6z"/>
+    <path fill="#80604e" d="M65 111h2v5h6v4h18v-3h8v-5h3v7h-8v4H74v-3h-6v-4h-3z"/>
+    <path fill="#695044" d="M76 120h4v2h9v-2h4v3h-5v1H77v-1h-1z"/>
+    <path fill="#755645" d="M81 115h4v2h-4zM71 117h2v2h-2zM96 115h2v2h-2z"/>
+  </g>
+  <g id="expression-mouth">
+    <path fill="#a56e5b" d="M72 107h8v-2h9v2h9v3H72z"/>
+    <path fill="#775047" d="M72 109h26v2H72z"/>
+    <path fill="#c58d75" d="M76 111h18v3H76z"/>
+    <path fill="#edc6a8" d="M79 111h12v1H79z"/>
+  </g>
+</svg>
