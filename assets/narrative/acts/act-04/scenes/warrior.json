@@ -1,0 +1,539 @@
+{
+  "id": "act-04-warrior",
+  "repeat": "once",
+  "stage": {
+    "background": "exiles",
+    "points": {
+      "entrance": [
+        250,
+        440
+      ],
+      "release": [
+        560,
+        440
+      ],
+      "cell": [
+        760,
+        470
+      ],
+      "lab": [
+        1010,
+        210
+      ],
+      "companion": [
+        420,
+        510
+      ],
+      "papasito": [
+        540,
+        505
+      ],
+      "guard": [
+        940,
+        420
+      ],
+      "bowman": [
+        1020,
+        470
+      ],
+      "focus": [
+        640,
+        430
+      ],
+      "overview": [
+        620,
+        450
+      ],
+      "party": [
+        650,
+        512
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "entrance"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "companion"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "cell"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "esclavista": {
+        "at": "guard",
+        "character": "esclavista"
+      },
+      "arquero": {
+        "enemy": "archer",
+        "at": "bowman"
+      }
+    },
+    "props": {
+      "cell": {
+        "at": "cell",
+        "state": "locked",
+        "front": true
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "sound",
+      "sound": "desert"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "release",
+          "duration": 1.2
+        },
+        {
+          "type": "camera",
+          "to": "focus",
+          "zoom": 1.1,
+          "duration": 1.2
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Pará... ¿qué?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "No..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡¿WARRIOR?!"
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "cell",
+      "zoom": 1.45,
+      "duration": 0.8
+    },
+    {
+      "type": "animate",
+      "actor": "warrior",
+      "animation": "idle",
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡NOOO! ¡¿QUÉ HACE ESTE PELOTUDO ACÁ?!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡PERO SI VOS NO JUGASTE CONAN EN TU PUTA VIDA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡NEGRO, NO SE TE ENTIENDE UNA MIERDA!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Pará, dejá que explique."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "No, bueno. Tampoco entendí."
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1.1,
+      "duration": 0.7
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR DEL SERVIDOR",
+      "duration": 6,
+      "lines": [
+        "Usuario: Warrior",
+        "Nacionalidad declarada: Argentina",
+        "Procedencia: Jujuy",
+        "Nacionalidad estimada: Bolivia",
+        "ERROR: DATOS CONTRADICTORIOS",
+        "Juego compatible no encontrado.",
+        "Destino asignado aleatoriamente: CONAN EXILES."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡NOOO! ¡EL BOT TAMPOCO TE CREE QUE SOS ARGENTINO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡TE DEPORTÓ A CONAN, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡QUE SOY ARGENTINO, LA CONCHA DE SU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 3,
+      "lines": [
+        "Reclamo rechazado. Nacionalidad no verificada."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡PERO SI JUJUY ESTÁ EN ARGENTINA, BOT PELOTUDO!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 3,
+      "lines": [
+        "Error geográfico reconocido. Corrección pospuesta."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡LO MANDARON A CUALQUIER LADO POR BOLIVIANO!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡SOY DE JUJUY, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "Sí, sí, ya sabemos, Warrior."
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "guard",
+      "zoom": 1.3,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "esclavista",
+          "expression": "neutral",
+          "text": "¡APÁRTENSE DE MI PRISIONERO!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "Pará, flaco. ¿Por qué carajo lo tienen encerrado?"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "esclavista",
+          "expression": "angry",
+          "text": "Lo encontramos vagando por el desierto. Pensamos que era un esclavo fugitivo."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Y por qué?"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "esclavista",
+          "expression": "neutral",
+          "text": "¡PORQUE NO ENTENDÍAMOS NADA DE LO QUE DECÍA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡NOOO! ¡LO METIERON A LABURAR PORQUE NO SE LE ENTIENDE!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡SÁQUENME DE ACÁ, LA PUTA MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "esclavista",
+          "expression": "angry",
+          "text": "¡¿VEN?! ¡SIGUE HABLANDO EN UNA LENGUA DESCONOCIDA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "No, flaco. Habla así."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJA. ¡Y ENCIMA ES BOLIVIANO!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡QUE NO SOY BOLIVIANO!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 3,
+      "lines": [
+        "Nacionalidad declarada no verificada."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡CERRÁ EL ORTO, BOT DE MIERDA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "esclavista",
+          "expression": "angry",
+          "text": "¡CAPTÚRENLOS! ¡TENEMOS TRES ESCLAVOS MÁS!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "scared",
+          "text": "¡NOOO! ¡LA CONCHA DE TU MADRE! ¡YA SUELTEN AL BOLIVIANO Y NOS VAMOS!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡ARGENTINO, HIJO DE PUTA!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alert",
+      "repeat": 3,
+      "interval": 0.2
+    },
+    {
+      "type": "sound",
+      "sound": "net"
+    },
+    {
+      "type": "flash",
+      "at": "guard",
+      "duration": 0.3
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1,
+      "duration": 0.5
+    },
+    {
+      "type": "down",
+      "actor": "arquero"
+    },
+    {
+      "type": "prop",
+      "prop": "cell",
+      "state": "open"
+    },
+    {
+      "type": "flash",
+      "at": "cell",
+      "duration": 0.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "Bueno, listo. Sos libre."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJA. ¡Mirá qué lindo! ¡Liberamos un boliviano!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡VÁYANSE A LA MIERDA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale, vení con nosotros, que tenemos que salir de este juego."
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "warrior",
+      "to": "party",
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿Qué? ¿Dejaste algo?"
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "lab",
+      "zoom": 1.5,
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "Uh, negro... Me parece que encontró algo."
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1.1,
+      "duration": 0.8
+    },
+    {
+      "type": "sound",
+      "sound": "chime"
+    },
+    {
+      "type": "splash",
+      "speaker": "warrior",
+      "text": "¡WARRIOR DESBLOQUEADO!\nDisponible para seleccionar en las próximas partidas.",
+      "duration": 4
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-04-warrior-met",
+      "value": true
+    }
+  ]
+}

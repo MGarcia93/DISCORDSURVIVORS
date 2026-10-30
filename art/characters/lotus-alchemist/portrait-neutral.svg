@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges">
+<title>El Alquimista del Loto — neutral cast-style study</title>
+<desc>A hooded desert alchemist with a yellow lotus mask, a mantle of vials and a censer smouldering over one shoulder.</desc>
+<g id="censer">
+<path fill="#1a160f" d="M20 108H36V112H32V140H28V112H20Z"/>
+<path fill="#3f3d44" d="M16 104H40V110H16Z"/>
+<path fill="#9a969e" d="M18 104H34V106H18Z"/>
+<path fill="#1a160f" d="M20 96H36V104H20Z"/>
+<path fill="#f0c24e" d="M24 98H32V102H24Z"/>
+<path fill="#ffe9a0" d="M26 98H30V101H26Z"/>
+<path fill="#d8cda8" d="M24 88H32V94H24Z"/>
+<path fill="#d8cda8" d="M28 78H34V86H28Z"/>
+<path fill="#d8cda8" d="M22 70H28V76H22Z"/>
+</g>
+<g id="shoulders">
+<path fill="#1a160f" d="M40 120H120V126H134V200H26V126H40Z"/>
+<path fill="#b7a678" d="M42 124H118V130H130V200H30V130H42Z"/>
+<path fill="#c4b48d" d="M42 124H74V200H30V130H42Z"/>
+<path fill="#8d7f57" d="M118 130H130V200H106V130Z"/>
+<path fill="#62573a" d="M30 130H44V200H30Z"/>
+<path fill="#1a160f" d="M32 148H128V154H32Z"/>
+<path fill="#5e3a1f" d="M34 149H126V152H34Z"/>
+</g>
+<g id="mantle">
+<path fill="#1a160f" d="M34 118H126V138H34Z"/>
+<path fill="#b7a678" d="M36 120H124V134H36Z"/>
+<path fill="#c4b48d" d="M36 120H80V134H36Z"/>
+<path fill="#62573a" d="M110 120H124V134H110Z"/>
+<path fill="#1a160f" d="M36 132H124V138H36Z"/>
+<path fill="#8d7f57" d="M36 132H124V134H36Z"/>
+</g>
+<g id="vials">
+<path fill="#1a160f" d="M44 154H52V166H44Z"/>
+<path fill="#6f9a4a" d="M45 156H51V164H45Z"/>
+<path fill="#1a160f" d="M58 154H66V168H58Z"/>
+<path fill="#f0c24e" d="M59 156H65V166H59Z"/>
+<path fill="#ffe9a0" d="M60 156H62V161H60Z"/>
+<path fill="#1a160f" d="M72 154H80V164H72Z"/>
+<path fill="#7a5aa8" d="M73 156H79V162H73Z"/>
+<path fill="#1a160f" d="M86 154H94V168H86Z"/>
+<path fill="#6f9a4a" d="M87 156H93V166H87Z"/>
+<path fill="#1a160f" d="M100 154H108V164H100Z"/>
+<path fill="#f0c24e" d="M101 156H107V162H101Z"/>
+</g>
+<g id="hood">
+<path fill="#1a160f" d="M50 44H110V50H120V118H40V50H50Z"/>
+<path fill="#b7a678" d="M52 48H108V54H116V114H44V54H52Z"/>
+<path fill="#c4b48d" d="M52 48H82V114H44V54H52Z"/>
+<path fill="#8d7f57" d="M110 56H116V114H98V56Z"/>
+<path fill="#62573a" d="M44 54H52V114H44Z"/>
+<path fill="#62573a" d="M44 110H116V118H44Z"/>
+</g>
+<g id="mask">
+<path fill="#1a160f" d="M62 66H98V72H106V102H98V110H62V102H54V72H62Z"/>
+<path fill="#3a3020" d="M64 68H96V74H102V100H96V106H64V100H58V74H64Z"/>
+<path fill="#f0c24e" d="M72 46H88V66H72Z"/>
+<path fill="#ffe9a0" d="M76 48H84V60H76Z"/>
+<path fill="#c4912a" d="M72 62H88V66H72Z"/>
+<path fill="#f0c24e" d="M50 68H68V94H50Z"/>
+<path fill="#ffe9a0" d="M52 72H64V88H52Z"/>
+<path fill="#c4912a" d="M50 90H68V94H50Z"/>
+<path fill="#f0c24e" d="M92 68H110V94H92Z"/>
+<path fill="#ffe9a0" d="M96 72H108V88H96Z"/>
+<path fill="#c4912a" d="M92 90H110V94H92Z"/>
+<path fill="#c4912a" d="M64 104H96V118H64Z"/>
+<path fill="#f0c24e" d="M68 104H92V114H68Z"/>
+<path fill="#ffe9a0" d="M72 106H88V110H72Z"/>
+<path fill="#1a160f" d="M76 112H84V118H76Z"/>
+</g>
+<g id="expression-brows">
+<path fill="#1a160f" d="M62 72H76V76H62Z"/>
+<path fill="#1a160f" d="M84 72H98V76H84Z"/>
+<path fill="#8a5f18" d="M62 76H76V78H62Z"/>
+<path fill="#8a5f18" d="M84 76H98V78H84Z"/>
+</g>
+<g id="expression-eyes">
+<path fill="#1a160f" d="M62 78H78V88H62Z"/>
+<path fill="#1a160f" d="M82 78H98V88H82Z"/>
+<path fill="#ffe9a0" d="M64 80H76V86H64Z"/>
+<path fill="#ffe9a0" d="M84 80H96V86H84Z"/>
+<path fill="#fff6cf" d="M66 80H72V84H66Z"/>
+<path fill="#fff6cf" d="M86 80H92V84H86Z"/>
+</g>
+<g id="expression-mouth">
+<path fill="#8a5f18" d="M76 96H84V104H76Z"/>
+<path fill="#ffe9a0" d="M78 98H82V102H78Z"/>
+<path fill="#1a160f" d="M76 104H84V106H76Z"/>
+</g>
+</svg>

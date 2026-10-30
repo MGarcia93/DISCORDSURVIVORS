@@ -1,0 +1,155 @@
+{
+  "id": "act-04-alchemist",
+  "repeat": "once",
+  "stage": {
+    "background": "laboratory",
+    "points": {
+      "party": [
+        280,
+        470
+      ],
+      "solago": [
+        400,
+        510
+      ],
+      "papasito": [
+        520,
+        500
+      ],
+      "warrior": [
+        640,
+        470
+      ],
+      "boss": [
+        960,
+        430
+      ],
+      "focus": [
+        820,
+        430
+      ],
+      "overview": [
+        600,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "party"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "alquimista": {
+        "at": "boss",
+        "character": "lotus-alchemist"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "sound",
+      "sound": "desert"
+    },
+    {
+      "type": "camera",
+      "to": "focus",
+      "zoom": 1.15,
+      "duration": 0.9
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "lotus-alchemist",
+          "expression": "surprised",
+          "text": "¡INTRUSOS! ¡NO DEBERÍAN ESTAR AQUÍ!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Pará, flaco. Estamos buscando la salida."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "lotus-alchemist",
+          "expression": "angry",
+          "text": "¡NADIE ABANDONA MI LABORATORIO!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "Negro, mirá. Encontramos al dealer del boliviano."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "lotus-alchemist",
+          "expression": "angry",
+          "text": "¡PROBARÁN EL PODER DE MIS CREACIONES!"
+        }
+      ]
+    },
+    {
+      "type": "flash",
+      "at": "boss",
+      "duration": 0.3
+    },
+    {
+      "type": "notice",
+      "title": "MINIJEFE DETECTADO",
+      "duration": 4,
+      "lines": [
+        "EL ALQUIMISTA DEL LOTO"
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1,
+      "duration": 0.6
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-04-alchemist-met",
+      "value": true
+    }
+  ]
+}

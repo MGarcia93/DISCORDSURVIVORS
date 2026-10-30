@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges" data-expression="angry">
+  <title>Esclavista — angry</title>
+  <desc>The camp's crew boss: shaved head with a leather brow band, short beard, open indigo vest over a bronze chest, a rope net over one shoulder and a short blade.</desc>
+  <g id="shoulders">
+    <path fill="#171310" d="M26 118H134V126H146V200H14V126H26Z" />
+    <path fill="#2c4952" d="M28 122H132V130H142V200H18V130H28Z" />
+    <path fill="#436875" d="M28 122H64V200H18V130H28Z" />
+    <path fill="#1d343b" d="M132 130H142V200H108V130Z" />
+    <path fill="#171310" d="M18 130H30V200H18Z" />
+    <path fill="#c0854e" d="M64 126H108V200H64Z" />
+    <path fill="#e6b07a" d="M64 126H78V200H64Z" />
+    <path fill="#9c6636" d="M64 150H108V156H64Z" />
+    <path fill="#171310" d="M18 148H142V156H18Z" />
+    <path fill="#5e3a1f" d="M20 150H140V154H20Z" />
+    <path fill="#9a969e" d="M74 150H86V156H74Z" />
+  </g>
+  <g id="net">
+    <path fill="#c9b383" d="M96 120H140V124H96Z" />
+    <path fill="#c9b383" d="M100 120H104V172H100Z" />
+    <path fill="#c9b383" d="M120 120H124V168H120Z" />
+    <path fill="#a9926a" d="M96 140H140V144H96Z" />
+    <path fill="#a9926a" d="M96 158H140V162H96Z" />
+    <path fill="#e6d6ac" d="M96 120H140V122H96Z" />
+  </g>
+  <g id="vials">
+    <path fill="#171310" d="M22 160H32V176H22Z" />
+    <path fill="#c9b383" d="M23 162H31V174H23Z" />
+    <path fill="#c9b383" d="M26 156H29V162H26Z" />
+  </g>
+  <g id="head">
+    <path fill="#171310" d="M50 42H110V48H120V112H40V48H50Z" />
+    <path fill="#c0854e" d="M54 46H106V52H114V108H46V52H54Z" />
+    <path fill="#e6b07a" d="M54 46H84V108H46V52H54Z" />
+    <path fill="#9c6636" d="M100 52H114V108H94V52Z" />
+    <path fill="#171310" d="M46 62H114V70H46Z" />
+    <path fill="#5e3a1f" d="M48 63H112V68H48Z" />
+    <path fill="#7d5731" d="M48 63H112V65H48Z" />
+    <path fill="#171310" d="M40 54H50V70H40Z" />
+    <path fill="#171310" d="M110 54H120V70H110Z" />
+    <path fill="#a9713f" d="M40 54H46V70H40Z" />
+    <path fill="#a9713f" d="M114 54H120V70H114Z" />
+    <path fill="#171310" d="M52 100H108V116H52Z" />
+    <path fill="#4a3418" d="M54 100H106V112H54Z" />
+    <path fill="#6b4a24" d="M56 102H104V106H56Z" />
+  </g>
+  <g id="blade">
+    <path fill="#171310" d="M136 108H144V118H136Z" />
+    <path fill="#5e3a1f" d="M137 110H143V116H137Z" />
+    <path fill="#171310" d="M146 120H152V174H146Z" />
+    <path fill="#9a969e" d="M147 122H151V170H147Z" />
+    <path fill="#d8d4d6" d="M147 122H149V168H147Z" />
+    <path fill="#3f3d44" d="M146 116H152V122H146Z" />
+  </g>
+  <g id="expression-brows">
+    <path fill="#3a2410" d="M54 68H78V72H70V76H54ZM82 68H106V72H90V76H82Z" />
+  </g>
+  <g id="expression-eyes">
+    <path fill="#171310" d="M56 76H78V86H56ZM82 76H104V86H82Z" />
+    <path fill="#d8d4d6" d="M58 78H74V84H58ZM86 78H102V84H86Z" />
+    <path fill="#2b1a0c" d="M64 78H68V84H64ZM92 78H96V84H92Z" />
+  </g>
+  <g id="expression-mouth">
+    <path fill="#171310" d="M66 92H94V106H66Z" />
+    <path fill="#4a3418" d="M68 94H92V102H68Z" />
+    <path fill="#d8c79b" d="M70 94H74V100H70ZM80 94H84V100H80ZM90 94H92V100H90Z" />
+  </g>
+</svg>

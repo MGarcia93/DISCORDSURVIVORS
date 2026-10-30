@@ -1,0 +1,37 @@
+{
+  "name": "Esclavista",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {},
+    "angry": {
+      "brows": [
+        { "fill": "#3a2410", "d": "M54 68H78V72H70V76H54ZM82 68H106V72H90V76H82Z" }
+      ],
+      "eyes": [
+        { "fill": "#171310", "d": "M56 76H78V86H56ZM82 76H104V86H82Z" },
+        { "fill": "#d8d4d6", "d": "M58 78H74V84H58ZM86 78H102V84H86Z" },
+        { "fill": "#2b1a0c", "d": "M64 78H68V84H64ZM92 78H96V84H92Z" }
+      ],
+      "mouth": [
+        { "fill": "#171310", "d": "M66 92H94V106H66Z" },
+        { "fill": "#4a3418", "d": "M68 94H92V102H68Z" },
+        { "fill": "#d8c79b", "d": "M70 94H74V100H70ZM80 94H84V100H80ZM90 94H92V100H90Z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#3a2410", "d": "M56 66H78V70H56ZM82 66H104V70H82Z" }
+      ],
+      "eyes": [
+        { "fill": "#171310", "d": "M54 74H80V90H54ZM80 74H106V90H80Z" },
+        { "fill": "#d8d4d6", "d": "M56 76H78V88H56ZM82 76H104V88H82Z" },
+        { "fill": "#2b1a0c", "d": "M62 78H68V86H62ZM92 78H98V86H92Z" }
+      ],
+      "mouth": [
+        { "fill": "#171310", "d": "M68 90H92V108H68Z" },
+        { "fill": "#4a3418", "d": "M70 92H90V106H70Z" },
+        { "fill": "#d8c79b", "d": "M70 92H76V98H70ZM84 92H90V98H84Z" }
+      ]
+    }
+  }
+}

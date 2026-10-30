@@ -1,0 +1,37 @@
+{
+  "name": "El Capataz de la Rueda del Dolor",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {},
+    "angry": {
+      "brows": [
+        { "fill": "#1a160f", "d": "M54 62H78V66H70V70H54ZM82 62H106V66H90V70H82Z" }
+      ],
+      "eyes": [
+        { "fill": "#ffb03e", "d": "M58 74H76V82H58ZM84 74H102V82H84Z" },
+        { "fill": "#ffe9a0", "d": "M60 76H70V79H60ZM86 76H96V79H86Z" },
+        { "fill": "#1a160f", "d": "M64 74H68V82H64ZM90 74H94V82H90Z" }
+      ],
+      "mouth": [
+        { "fill": "#0b0a0d", "d": "M64 88H96V104H64Z" },
+        { "fill": "#3f3d44", "d": "M66 90H94V96H66Z" },
+        { "fill": "#cfcbcd", "d": "M68 90H72V102H68ZM76 90H80V102H76ZM84 90H88V102H84Z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#1a160f", "d": "M54 58H78V62H54ZM82 58H106V62H82Z" }
+      ],
+      "eyes": [
+        { "fill": "#ffd34e", "d": "M56 70H78V86H56ZM82 70H104V86H82Z" },
+        { "fill": "#fff2b8", "d": "M58 72H72V80H58ZM86 72H100V80H86Z" },
+        { "fill": "#1a160f", "d": "M62 72H68V84H62ZM90 72H96V84H90Z" }
+      ],
+      "mouth": [
+        { "fill": "#0b0a0d", "d": "M66 86H94V106H66Z" },
+        { "fill": "#3f3d44", "d": "M68 88H92V92H68Z" },
+        { "fill": "#cfcbcd", "d": "M70 88H74V104H70ZM78 88H82V104H78ZM86 88H90V104H86Z" }
+      ]
+    }
+  }
+}

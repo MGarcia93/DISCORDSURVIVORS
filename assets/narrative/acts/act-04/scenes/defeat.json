@@ -1,0 +1,56 @@
+{
+  "id": "act-04-defeat",
+  "repeat": "once",
+  "stage": {
+    "background": "exiles",
+    "points": {
+      "party": [320, 500],
+      "solago": [460, 510],
+      "papasito": [600, 505],
+      "warrior": [740, 480],
+      "wheel": [990, 360],
+      "focus": [940, 380],
+      "overview": [600, 450]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" },
+      "capataz": { "enemy": "taskmaster", "at": "wheel", "state": "dead" }
+    }
+  },
+  "steps": [
+    { "type": "sound", "sound": "alert", "repeat": 2, "interval": 0.3 },
+    { "type": "camera", "to": "focus", "zoom": 1.35, "duration": 1 },
+    { "type": "flash", "at": "wheel", "duration": 0.4 },
+    {
+      "type": "notice",
+      "title": "CAPATAZ",
+      "duration": 4,
+      "lines": ["Mi... prisionero..."]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "warrior", "expression": "angry", "text": "¡METETE TU RUEDA EN EL ORTO!" }
+      ]
+    },
+    { "type": "camera", "to": "overview", "zoom": 1, "duration": 0.7 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "Bueno, listo. ¡Ganó el boliviano!" },
+        { "speaker": "warrior", "expression": "angry", "text": "¡ARGENTINO, HIJO DE PUTA!" },
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡GANÓ LA INDEPENDENCIA DE BOLIVIA!" },
+        { "speaker": "papasito", "expression": "neutral", "text": "..." },
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Bueno, Papasito, por lo menos vos no rompiste las pelotas en esta pelea." },
+        { "speaker": "papasito", "expression": "neutral", "text": "..." },
+        { "speaker": "maxi-negro", "expression": "tired", "text": "Ah, mirá. Me ignora otra vez." }
+      ]
+    }
+  ],
+  "effects": [
+    { "key": "act-04-defeat", "value": true }
+  ]
+}

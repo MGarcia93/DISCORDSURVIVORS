@@ -1,0 +1,85 @@
+{
+  "id": "act-04-lotus",
+  "repeat": "once",
+  "stage": {
+    "background": "exiles",
+    "points": {
+      "party": [300, 470],
+      "solago": [420, 505],
+      "papasito": [540, 500],
+      "warrior": [700, 460],
+      "plot": [860, 380],
+      "plot-far": [1040, 320],
+      "focus": [720, 420],
+      "overview": [600, 450]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "party" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "warrior": { "character": "warrior", "at": "warrior" },
+      "killer": { "enemy": "alchemist", "at": "plot" },
+      "grower": { "enemy": "alchemist", "at": "plot-far" }
+    }
+  },
+  "steps": [
+    { "type": "sound", "sound": "desert" },
+    { "type": "camera", "to": "focus", "zoom": 1.2, "duration": 1 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "Pará... ¿y esto qué mierda es?" },
+        { "speaker": "papasito", "expression": "neutral", "text": "Un laboratorio." },
+        { "speaker": "solago", "expression": "neutral", "text": "¿Y este por qué nos trajo acá?" }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 6,
+      "lines": ["Elemento identificado: Loto Amarillo. Sustancia utilizada para inducir visiones y estados alterados de conciencia."]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "surprised", "text": "Pará, pará..." }
+      ]
+    },
+    { "type": "camera", "to": "warrior", "zoom": 1.4, "duration": 0.7 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡NOOO! ¡EL HIJO DE PUTA ENCONTRÓ LA FALOPA!" },
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡LO MANDARON A CUALQUIER JUEGO Y LO PRIMERO QUE ENCUENTRA ES DÓNDE PEGAR!" },
+        { "speaker": "warrior", "expression": "angry", "text": "¡NO ESTABA BUSCANDO ESO!" }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Sí, sí, Warrior, seguro. ¿Y cómo sabías que estaba acá?" }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué?" }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡NEGRO, DEJALO! ¡MIRÁ LA CARA DE FELICIDAD QUE TIENE!" },
+        { "speaker": "papasito", "expression": "neutral", "text": "..." },
+        { "speaker": "maxi-negro", "expression": "surprised", "text": "¡PAPASITO! ¡¿VOS TAMBIÉN QUERÉS?!" },
+        { "speaker": "papasito", "expression": "neutral", "text": "No." },
+        { "speaker": "maxi-negro", "expression": "tired", "text": "Ah, mirá. Al fin contestó." }
+      ]
+    },
+    { "type": "sound", "sound": "net" },
+    { "type": "camera", "to": "overview", "zoom": 1, "duration": 0.6 }
+  ],
+  "effects": [
+    { "key": "act-04-lotus", "value": true }
+  ]
+}

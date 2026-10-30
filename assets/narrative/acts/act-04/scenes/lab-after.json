@@ -1,0 +1,172 @@
+{
+  "id": "act-04-lab-after",
+  "repeat": "once",
+  "stage": {
+    "background": "laboratory",
+    "points": {
+      "party": [
+        300,
+        470
+      ],
+      "solago": [
+        420,
+        505
+      ],
+      "papasito": [
+        540,
+        500
+      ],
+      "warrior": [
+        700,
+        470
+      ],
+      "flask": [
+        880,
+        545
+      ],
+      "corpse": [
+        1050,
+        590
+      ],
+      "focus": [
+        760,
+        480
+      ],
+      "overview": [
+        600,
+        450
+      ],
+      "pickup": [
+        790,
+        520
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "party"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "alquimista": {
+        "enemy": "lotusAlchemist",
+        "at": "corpse",
+        "state": "dead"
+      }
+    },
+    "props": {
+      "flask": {
+        "at": "flask",
+        "state": "full",
+        "front": true
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "sound",
+      "sound": "net",
+      "repeat": 2,
+      "interval": 0.35
+    },
+    {
+      "type": "camera",
+      "to": "focus",
+      "zoom": 1.2,
+      "duration": 0.9
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "scared",
+          "text": "¡BUENO, LISTO! ¡VÁMONOS DE ACÁ!"
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "flask",
+          "duration": 0.8
+        },
+        {
+          "type": "camera",
+          "to": "flask",
+          "zoom": 1.5,
+          "duration": 0.9
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "chime"
+    },
+    {
+      "type": "prop",
+      "prop": "flask",
+      "state": "taken"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡NOOO! ¡GUARDÁ ESO, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡SE LLEVA UN RECUERDO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "¡PAPASITO! ¡¿VOS QUÉ MIRÁS?!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Nada."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "Por lo menos uno no está drogado."
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1,
+      "duration": 0.6
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-04-lab-after",
+      "value": true
+    }
+  ]
+}

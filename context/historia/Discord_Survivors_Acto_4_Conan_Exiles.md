@@ -17,9 +17,9 @@ Después de escapar de Diablo, Maxi Negro, Solago y Papasito aparecen en medio d
 
 El sol es insoportable. A su alrededor hay ruinas, animales salvajes y cadáveres colgados de estructuras de madera.
 
-**Maxi Negro:** No, bueno. Ahora nos cagamos de calor.
+**Solago:** No, bueno. Ahora nos cagamos de calor.
 
-**Solago:** ¿Esto es Conan?
+**Maxi Negro:** ¿Esto es Conan?
 
 **ADMINISTRADOR:** Mundo 04. Conan Exiles.
 

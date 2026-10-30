@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 160 200" shape-rendering="crispEdges">
+<title>El Capataz de la Rueda del Dolor — neutral cast-style study</title>
+<desc>A broad taskmaster in riveted iron, horned helm, chains coiled over both shoulders and the wheel's ring on his chest.</desc>
+<g id="pauldrons">
+<path fill="#1a160f" d="M6 110H46V148H6Z"/>
+<path fill="#69666e" d="M10 112H42V144H10Z"/>
+<path fill="#9a969e" d="M10 112H42V118H10Z"/>
+<path fill="#3f3d44" d="M10 138H42V144H10Z"/>
+<path fill="#9a969e" d="M14 104H26V112H14Z"/>
+<path fill="#3f3d44" d="M16 100H24V106H16Z"/>
+<path fill="#1a160f" d="M114 110H154V148H114Z"/>
+<path fill="#69666e" d="M118 112H150V144H118Z"/>
+<path fill="#9a969e" d="M118 112H150V118H118Z"/>
+<path fill="#3f3d44" d="M118 138H150V144H118Z"/>
+<path fill="#9a969e" d="M134 104H146V112H134Z"/>
+<path fill="#3f3d44" d="M136 100H144V106H136Z"/>
+</g>
+<g id="chest">
+<path fill="#1a160f" d="M20 120H140V200H20Z"/>
+<path fill="#9a969e" d="M24 124H136V200H24Z"/>
+<path fill="#cfcbcd" d="M24 124H136V130H24Z"/>
+<path fill="#69666e" d="M24 176H136V200H24Z"/>
+<path fill="#3f3d44" d="M24 190H136V200H24Z"/>
+<path fill="#3a2a1a" d="M30 196H130V200H30Z"/>
+<path fill="#3f3d44" d="M45 138H55V146H45Z"/>
+<path fill="#3f3d44" d="M105 138H115V146H105Z"/>
+<path fill="#3f3d44" d="M45 164H55V172H45Z"/>
+<path fill="#3f3d44" d="M105 164H115V172H105Z"/>
+<path fill="#a03225" d="M66 168H94V172H66Z"/>
+<path fill="#a03225" d="M78 152H82V168H78Z"/>
+<path fill="#762219" d="M70 176H90V180H70Z"/>
+</g>
+<g id="chains">
+<path fill="#1a160f" d="M18 148H142V156H18Z"/>
+<path fill="#69666e" d="M20 150H138V154H20Z"/>
+<path fill="#cfcbcd" d="M24 150H44V152H24ZM64 150H84V152H64ZM104 150H124V152H104Z"/>
+<path fill="#5e3a24" d="M44 150H64V152H44ZM84 150H104V152H84ZM124 150H138V152H124Z"/>
+<path fill="#1a160f" d="M18 158H142V166H18Z"/>
+<path fill="#69666e" d="M20 160H138V164H20Z"/>
+<path fill="#cfcbcd" d="M22 160H42V162H22ZM62 160H82V162H62ZM102 160H122V162H102Z"/>
+<path fill="#5e3a24" d="M42 160H62V162H42ZM82 160H102V162H82ZM122 160H138V162H122Z"/>
+<path fill="#1a160f" d="M18 168H142V176H18Z"/>
+<path fill="#69666e" d="M20 170H138V174H20Z"/>
+<path fill="#cfcbcd" d="M24 170H44V172H24ZM64 170H84V172H64ZM104 170H124V172H104Z"/>
+<path fill="#5e3a24" d="M44 170H64V172H44ZM84 170H104V172H84ZM124 170H138V172H124Z"/>
+</g>
+<g id="neck">
+<path fill="#1a160f" d="M64 108H96V124H64Z"/>
+<path fill="#c0854e" d="M66 110H94V124H66Z"/>
+<path fill="#a03225" d="M64 116H96V124H64Z"/>
+<path fill="#762219" d="M64 120H96V124H64Z"/>
+</g>
+<g id="helm">
+<path fill="#1a160f" d="M48 36H112V44H120V104H40V44H48Z"/>
+<path fill="#9a969e" d="M52 40H108V48H116V100H44V48H52Z"/>
+<path fill="#cfcbcd" d="M52 40H108V46H52Z"/>
+<path fill="#69666e" d="M44 88H116V100H44Z"/>
+<path fill="#3f3d44" d="M44 96H116V100H44Z"/>
+<path fill="#a03225" d="M44 54H116V64H44Z"/>
+<path fill="#c94f3b" d="M44 54H116V58H44Z"/>
+<path fill="#762219" d="M44 62H116V64H44Z"/>
+<path fill="#1a160f" d="M52 70H108V88H52Z"/>
+<path fill="#0b0a0d" d="M54 72H106V86H54Z"/>
+<path fill="#3f3d44" d="M78 96H82V104H78Z"/>
+</g>
+<g id="horns">
+<path fill="#1a160f" d="M44 40H36V34H28V26H18V14H28V22H36V30H44V40Z"/>
+<path fill="#9a969e" d="M46 38H40V32H34V26H26V18H30V24H38V30H46V38Z"/>
+<path fill="#cfcbcd" d="M28 18H32V22H28Z"/>
+<path fill="#1a160f" d="M116 40H124V34H132V26H142V14H132V22H124V30H116V40Z"/>
+<path fill="#9a969e" d="M114 38H120V32H126V26H134V18H130V24H122V30H114V38Z"/>
+<path fill="#cfcbcd" d="M132 18H136V22H132Z"/>
+</g>
+<g id="expression-brows">
+<path fill="#3f3d44" d="M52 66H108V70H52Z"/>
+<path fill="#1a160f" d="M54 66H76V68H54ZM84 66H106V68H84Z"/>
+</g>
+<g id="expression-eyes">
+<path fill="#ffd34e" d="M58 74H76V82H58Z"/>
+<path fill="#ffd34e" d="M84 74H102V82H84Z"/>
+<path fill="#fff2b8" d="M60 76H70V79H60Z"/>
+<path fill="#fff2b8" d="M86 76H96V79H86Z"/>
+<path fill="#1a160f" d="M64 74H68V82H64Z"/>
+<path fill="#1a160f" d="M90 74H94V82H90Z"/>
+</g>
+<g id="expression-mouth">
+<path fill="#0b0a0d" d="M66 88H94V100H66Z"/>
+<path fill="#3f3d44" d="M68 90H92V94H68Z"/>
+<path fill="#cfcbcd" d="M70 90H74V98H70ZM78 90H82V98H78ZM86 90H90V98H86Z"/>
+</g>
+</svg>

@@ -1,0 +1,103 @@
+{
+  "id": "act-04-arrival",
+  "repeat": "once",
+  "stage": {
+    "background": "exiles",
+    "points": {
+      "camp": [300, 470],
+      "solago": [430, 505],
+      "papasito": [560, 500],
+      "far": [1080, 430],
+      "far-bow": [1040, 370],
+      "guard": [860, 470],
+      "bowman": [920, 420],
+      "focus": [900, 430],
+      "overview": [620, 450]
+    },
+    "actors": {
+      "negro": { "character": "maxi-negro", "at": "camp" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito" },
+      "guardia": { "enemy": "slaver", "at": "far" },
+      "arquero": { "enemy": "archer", "at": "far-bow" }
+    }
+  },
+  "steps": [
+    { "type": "sound", "sound": "desert" },
+    { "type": "camera", "to": "overview", "zoom": 1.05, "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "tired", "text": "No, bueno. Ahora nos cagamos de calor." },
+        { "speaker": "maxi-negro", "expression": "surprised", "text": "¿Esto es Conan?" }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 3,
+      "lines": ["Mundo 04. Conan Exiles."]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Ah, bueno. Acá seguro hay otro de los pelotudos." },
+        { "speaker": "solago", "expression": "neutral", "text": "¿Será Jhony?" },
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "Capaz. Aunque ese hijo de puta debe seguir matando zombies." },
+        { "speaker": "solago", "expression": "neutral", "text": "¿Y si está Maxi?" },
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "O Papafrita. Alguno tiene que estar." },
+        { "speaker": "solago", "expression": "neutral", "text": "¿Vos qué decís, Papasito?" }
+      ]
+    },
+    { "type": "wait", "duration": 0.8 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "angry", "text": "¡PAPASITO! ¡TE ESTÁ HABLANDO!" },
+        { "speaker": "papasito", "expression": "annoyed", "text": "¿Qué quieren ahora?" }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "¿Sabés quién puede estar acá?" },
+        { "speaker": "papasito", "expression": "neutral", "text": "No." },
+        { "speaker": "maxi-negro", "expression": "annoyed", "text": "Qué hijo de puta." }
+      ]
+    },
+    { "type": "camera", "to": "focus", "zoom": 1.2, "duration": 1 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "solago", "expression": "surprised", "text": "Che, negro, ¿esos son amigos?" },
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Ni idea. Preguntales." }
+      ]
+    },
+    { "type": "sound", "sound": "alert" },
+    {
+      "type": "notice",
+      "title": "GUERRERO",
+      "duration": 3,
+      "lines": ["¡INTRUSOS! ¡CAPTÚRENLOS!"]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        { "type": "move", "actor": "guardia", "to": "guard", "duration": 2.2 },
+        { "type": "move", "actor": "arquero", "to": "bowman", "duration": 2.4 },
+        { "type": "camera", "to": "focus", "zoom": 1.1, "duration": 2.2 }
+      ]
+    },
+    { "type": "flash", "at": "guard", "duration": 0.25 },
+    {
+      "type": "dialogue",
+      "lines": [
+        { "speaker": "maxi-negro", "expression": "tired", "text": "Bueno, listo. Son argentinos." }
+      ]
+    },
+    { "type": "camera", "to": "overview", "zoom": 1, "duration": 0.6 }
+  ],
+  "effects": [
+    { "key": "act-04-arrival", "value": true }
+  ]
+}

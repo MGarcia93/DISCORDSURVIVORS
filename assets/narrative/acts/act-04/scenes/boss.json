@@ -1,0 +1,233 @@
+{
+  "id": "act-04-boss",
+  "repeat": "once",
+  "stage": {
+    "background": "exiles",
+    "points": {
+      "gate": [
+        300,
+        520
+      ],
+      "solago": [
+        420,
+        505
+      ],
+      "papasito": [
+        540,
+        500
+      ],
+      "warrior": [
+        660,
+        480
+      ],
+      "boss-far": [
+        1060,
+        330
+      ],
+      "boss": [
+        950,
+        400
+      ],
+      "focus": [
+        900,
+        400
+      ],
+      "overview": [
+        600,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "gate"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "capataz": {
+        "at": "boss-far",
+        "character": "taskmaster"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "sound",
+      "sound": "alert",
+      "repeat": 2,
+      "interval": 0.25
+    },
+    {
+      "type": "camera",
+      "to": "focus",
+      "zoom": 1.2,
+      "duration": 1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "taskmaster",
+          "expression": "angry",
+          "text": "¡NADIE ROBA MIS ESCLAVOS!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE! ¡OTRO MÁS!"
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "capataz",
+      "to": "boss",
+      "duration": 1.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "taskmaster",
+          "expression": "angry",
+          "text": "¡DEVUÉLVANME AL PRISIONERO!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Cuál de todos?"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "taskmaster",
+          "expression": "angry",
+          "text": "¡EL PEQUEÑO EXTRANJERO QUE NO DEJA DE HABLAR!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡WARRIOR, TE VINIERON A BUSCAR!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡NO VUELVO A ESA MIERDA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "taskmaster",
+          "expression": "angry",
+          "text": "¡PERTENECE A MI CAMPAMENTO!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡DEVOLVÉLO, NEGRO! ¡TODAVÍA TIENE QUE TERMINAR LA OBRA!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡PARÁ! ¡EL ALBAÑIL ES PAPASITO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡QUE NO SOY ALBAÑIL, CARAJO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJA. ¡TENEMOS DOS ESCLAVOS Y NINGUNO QUIERE LABURAR!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "taskmaster",
+          "expression": "angry",
+          "text": "¡LOS CUATRO TRABAJARÁN PARA MÍ!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NO, FLACO! ¡YO ESTOY DE VACACIONES!"
+        }
+      ]
+    },
+    {
+      "type": "flash",
+      "at": "boss",
+      "duration": 0.3
+    },
+    {
+      "type": "notice",
+      "title": "JEFE DETECTADO",
+      "duration": 4,
+      "lines": [
+        "EL CAPATAZ DE LA RUEDA DEL DOLOR"
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1,
+      "duration": 0.7
+    }
+  ],
+  "effects": [
+    {
+      "key": "act-04-boss-met",
+      "value": true
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "El Alquimista del Loto",
+  "base": "portrait-neutral.svg",
+  "expressions": {
+    "neutral": {},
+    "angry": {
+      "brows": [
+        { "fill": "#1a160f", "d": "M60 70H78V74H72V78H60ZM82 70H100V74H90V78H82Z" },
+        { "fill": "#8a5f18", "d": "M62 78H74V80H62ZM86 78H98V80H86Z" }
+      ],
+      "eyes": [
+        { "fill": "#1a160f", "d": "M62 80H78V88H62ZM82 80H98V88H82Z" },
+        { "fill": "#ffe9a0", "d": "M64 82H76V87H64ZM84 82H96V87H84Z" },
+        { "fill": "#fff6cf", "d": "M66 82H72V85H66ZM86 82H92V85H86Z" }
+      ],
+      "mouth": [
+        { "fill": "#1a160f", "d": "M72 96H88V108H72Z" },
+        { "fill": "#8a5f18", "d": "M74 98H86V106H74Z" },
+        { "fill": "#ffe9a0", "d": "M76 100H84V102H76Z" }
+      ]
+    },
+    "surprised": {
+      "brows": [
+        { "fill": "#1a160f", "d": "M60 64H78V68H60ZM82 64H100V68H82Z" },
+        { "fill": "#8a5f18", "d": "M62 68H76V70H62ZM84 68H98V70H84Z" }
+      ],
+      "eyes": [
+        { "fill": "#1a160f", "d": "M60 76H80V92H60ZM80 76H100V92H80Z" },
+        { "fill": "#ffe9a0", "d": "M62 78H78V90H62ZM82 78H98V90H82Z" },
+        { "fill": "#fff6cf", "d": "M64 78H72V84H64ZM84 78H92V84H84Z" }
+      ],
+      "mouth": [
+        { "fill": "#1a160f", "d": "M74 94H86V112H74Z" },
+        { "fill": "#8a5f18", "d": "M76 96H84V110H76Z" },
+        { "fill": "#ffe9a0", "d": "M78 98H82V104H78Z" }
+      ]
+    }
+  }
+}

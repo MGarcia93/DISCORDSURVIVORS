@@ -126,5 +126,32 @@
       "angry": "portraits/lilith/angry.svg",
       "surprised": "portraits/lilith/surprised.svg"
     }
+  },
+  "lotus-alchemist": {
+    "name": "El Alquimista del Loto",
+    "sprite": "lotusAlchemist",
+    "expressions": {
+      "neutral": "portraits/lotus-alchemist/neutral.svg",
+      "angry": "portraits/lotus-alchemist/angry.svg",
+      "surprised": "portraits/lotus-alchemist/surprised.svg"
+    }
+  },
+  "taskmaster": {
+    "name": "El Capataz de la Rueda del Dolor",
+    "sprite": "taskmaster",
+    "expressions": {
+      "neutral": "portraits/taskmaster/neutral.svg",
+      "angry": "portraits/taskmaster/angry.svg",
+      "surprised": "portraits/taskmaster/surprised.svg"
+    }
+  },
+  "esclavista": {
+    "name": "Esclavista",
+    "sprite": "esclavista",
+    "expressions": {
+      "neutral": "portraits/esclavista/neutral.svg",
+      "angry": "portraits/esclavista/angry.svg",
+      "surprised": "portraits/esclavista/surprised.svg"
+    }
   }
 }
