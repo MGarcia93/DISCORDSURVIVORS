@@ -84,6 +84,20 @@ export function drawRunScene(ctx, run, {
   for (const wave of run.shockwaves ?? []) {
     pixelRing(ctx, wave.x, wave.y, wave.radius, '#ffb3c4', 1 - wave.radius / wave.maxRadius);
   }
+  // The Butcher's hook: a taut chain from the boss to the player while it drags.
+  if (run.pull) {
+    const { fromX, fromY } = run.pull;
+    const dx = p.x - fromX;
+    const dy = p.y - fromY;
+    const length = Math.hypot(dx, dy) || 1;
+    const links = Math.max(3, Math.round(length / 26));
+    for (let link = 0; link <= links; link++) {
+      const t = link / links;
+      const lx = Math.round((fromX + dx * t) / 3) * 3;
+      const ly = Math.round((fromY + dy * t) / 3) * 3;
+      rounded(ctx, lx - 2, ly - 2, 4, 4, link % 2 ? '#6d6a78' : '#2a2730');
+    }
+  }
   if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time, scale: 1 });
   if (p.smile > 0) {
     // Solago's aura hugs his half-width, shorter frame instead of the tank-sized ring.

@@ -204,3 +204,87 @@ test('a contact kind still lands its hit on the same step', () => {
   assert.equal(run.projectiles.length, 0, 'no shot for a body that has to touch');
   assert.ok(run.player.hp < 1000);
 });
+
+// Act 3 — Diablo. The dungeon's bosses are both slower than the player, so the
+// things that reach them at range are the ones worth pinning down.
+test('a melee action may carry its own damage instead of the contact swing', () => {
+  const run = quietRun();
+  const enemy = place(run, { x: run.player.x + 10, attackInterval: 2,
+    actions: [{ key: 'claw', chance: 1, kind: 'melee', damage: 40 }] });
+  step(run, 0.05, {});
+  // The player's own defence still applies; what changed is the number the
+  // ficha carried, not the mitigation in front of it.
+  const mitigation = Math.min(0.75, run.player.defense);
+  assert.equal(run.player.hp, 1000 - 40 * (1 - mitigation), 'the ficha owns the number, not the sheet');
+  assert.ok(1000 - run.player.hp > 12 * (1 - mitigation), 'a cleave is not a contact swing');
+  assert.equal(enemy.attackCd, 2, 'and it still waits its own interval');
+});
+
+test("Lilith's tether drags the player toward her", () => {
+  const run = quietRun();
+  run.random = () => 0; // the first ready action wins: at range that is the tether
+  const lilith = place(run, { kind: 'lilith', x: run.player.x + 320, attackRange: 0,
+    actions: [{ key: 'tether', chance: 1, cooldown: 9, range: 640,
+      run: (r, enemy, ctx) => ctx.pull({ x: enemy.x, y: enemy.y, fromX: enemy.x, fromY: enemy.y, ttl: 0.7 }) }] });
+  const before = Math.abs(lilith.x - run.player.x);
+  step(run, 0.05, {});
+  assert.ok(Math.abs(lilith.x - run.player.x) < before, 'the player was pulled in');
+  assert.equal(run.pull.ttl > 0, true, 'the chain lasts a moment, not a frame');
+});
+
+test('the hook releases the player instead of holding them for good', () => {
+  const run = quietRun();
+  run.random = () => 0;
+  const lilith = place(run, { kind: 'lilith', x: run.player.x + 320, attackRange: 0,
+    actions: [{ key: 'tether', chance: 1, cooldown: 9, range: 640,
+      run: (r, enemy, ctx) => ctx.pull({ x: enemy.x, y: enemy.y, fromX: enemy.x, fromY: enemy.y, ttl: 0.3 }) }] });
+  for (let tick = 0; tick < 30; tick++) step(run, 0.05, {});
+  assert.equal(run.pull, null, 'the pull expires on its own');
+  assert.ok(run.player.hp > 0, 'and never drags the player into the floor');
+});
+
+test('a charge is a temporary burst, not a permanent speed change', () => {
+  const run = quietRun();
+  const enemy = place(run, { x: run.player.x + 600, speed: 10, chargeBoost: 4, chargeTtl: 0.1 });
+  const start = enemy.x;
+  step(run, 0.05, {});
+  const charged = start - enemy.x;
+  enemy.chargeTtl = 0;
+  const middle = enemy.x;
+  step(run, 0.05, {});
+  const normal = middle - enemy.x;
+  assert.ok(charged > normal * 3, 'the burst really moves');
+  assert.equal(enemy.chargeTtl, 0, 'and the engine expires it');
+});
+
+test('Lilith summons one echo at a time', async () => {
+  const { default: lilith } = await import('../src/enemies/lilith.mjs');
+  const echo = lilith.actions.find(action => action.key === 'echo');
+  const empty = { enemies: [] };
+  assert.equal(echo.when(empty), true);
+  assert.equal(echo.when({ enemies: [{ kind: 'lilithEcho', hp: 10 }] }), false);
+});
+
+test("Lilith's second phase fires once, when she is half beaten", async () => {
+  const { default: lilith } = await import('../src/enemies/lilith.mjs');
+  const enrage = lilith.actions.find(action => action.key === 'enrage');
+  const enemy = { hp: 2000, maxHp: 2200, speed: 100, attackInterval: 1, enraged: false };
+  const run = { effects: [] };
+  assert.equal(enrage.when(run, enemy), false, 'not while she is healthy');
+  enemy.hp = 1000;
+  assert.equal(enrage.when(run, enemy), true);
+  enrage.run(run, enemy);
+  assert.equal(enemy.speed, 125);
+  assert.equal(enemy.attackInterval, 0.65);
+  assert.equal(enrage.when(run, enemy), false, 'the phase never repeats');
+});
+
+test('Lord Zir calls bats, never skeletons', async () => {
+  const { default: zir } = await import('../src/enemies/lord-zir.mjs');
+  const rise = zir.actions.find(action => action.key === 'rise');
+  const spawned = [];
+  rise.run({ effects: [] }, { x: 0, y: 0 }, {
+    spawnEnemy: (kind, x, y) => { spawned.push(kind); return { kind, x, y }; },
+  });
+  assert.deepEqual(spawned, ['batSwarm', 'batSwarm', 'batSwarm', 'batSwarm']);
+});
