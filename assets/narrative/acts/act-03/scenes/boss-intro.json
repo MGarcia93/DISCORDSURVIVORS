@@ -24,10 +24,8 @@
         880,
         470
       ],
-      "echo": [
-        1010,
-        590
-      ]
+      "zir-corpse": [930, 620],
+      "arrival": [950, 450]
     },
     "actors": {
       "negro": {
@@ -42,13 +40,19 @@
         "character": "papasito",
         "at": "papasito"
       },
+      "zir": { "enemy": "lordZir", "at": "zir-corpse", "state": "dead" },
       "lilith": {
-        "enemy": "lilith",
+        "character": "lilith",
         "at": "lilith-far"
       }
     }
   },
   "steps": [
+    { "type": "camera", "to": "zir-corpse", "zoom": 1.3, "duration": 1 },
+    { "type": "sound", "sound": "blood" },
+    { "type": "flash", "at": "arrival", "duration": 0.3 },
+    { "type": "sound", "sound": "hell", "repeat": 3, "interval": 0.4 },
+    { "type": "camera", "to": "arrival", "zoom": 1.5, "duration": 1 },
     {
       "type": "notice",
       "title": "JEFE DETECTADO",
@@ -63,12 +67,15 @@
       "to": "lilith",
       "duration": 1.6
     },
+    { "type": "camera", "to": "papasito", "zoom": 1.1, "duration": 0.9 },
     {
-      "type": "notice",
-      "title": "LILITH",
-      "duration": 3.5,
+      "type": "dialogue",
       "lines": [
-        "Hijos míos. Llegaron hasta acá."
+        {
+          "speaker": "lilith",
+          "expression": "neutral",
+          "text": "Hijos míos. Llegaron hasta acá."
+        }
       ]
     },
     {
@@ -82,11 +89,13 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "LILITH",
-      "duration": 3,
+      "type": "dialogue",
       "lines": [
-        "Ella también me sirvió."
+        {
+          "speaker": "lilith",
+          "expression": "neutral",
+          "text": "Ella también me sirvió."
+        }
       ]
     },
     {
@@ -120,11 +129,13 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "LILITH",
-      "duration": 3,
+      "type": "dialogue",
       "lines": [
-        "El infierno los reclama."
+        {
+          "speaker": "lilith",
+          "expression": "angry",
+          "text": "El infierno los reclama."
+        }
       ]
     },
     {
@@ -138,11 +149,13 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "LILITH",
-      "duration": 3.5,
+      "type": "dialogue",
       "lines": [
-        "Entonces sáquenla de mi mano."
+        {
+          "speaker": "lilith",
+          "expression": "angry",
+          "text": "Entonces sáquenla de mi mano."
+        }
       ]
     }
   ],

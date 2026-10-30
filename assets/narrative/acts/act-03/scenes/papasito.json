@@ -4,241 +4,83 @@
   "stage": {
     "background": "inferno",
     "points": {
-      "ground": [
-        400,
-        500
-      ],
-      "solago": [
-        545,
-        505
-      ],
-      "papasito-far": [
-        1080,
-        470
-      ],
-      "papasito": [
-        690,
-        505
-      ],
-      "corpse-a": [
-        820,
-        620
-      ],
-      "corpse-b": [
-        930,
-        640
-      ],
-      "loot": [
-        980,
-        560
-      ]
+      "ground": [400, 500], "solago": [545, 505], "group": [540, 470],
+      "papasito-far": [1220, 470], "papasito": [690, 505],
+      "corpse-a": [820, 620], "corpse-b": [930, 640], "loot": [980, 560]
     },
     "actors": {
-      "negro": {
-        "character": "maxi-negro",
-        "at": "ground"
-      },
-      "solago": {
-        "character": "solago",
-        "at": "solago"
-      },
-      "papasito": {
-        "character": "papasito",
-        "at": "papasito-far"
-      },
-      "dead-a": {
-        "enemy": "skeleton",
-        "at": "corpse-a",
-        "state": "dead"
-      },
-      "dead-b": {
-        "enemy": "lesserDemon",
-        "at": "corpse-b",
-        "state": "dead"
-      }
+      "negro": { "character": "maxi-negro", "at": "ground" },
+      "solago": { "character": "solago", "at": "solago" },
+      "papasito": { "character": "papasito", "at": "papasito-far" },
+      "dead-a": { "enemy": "skeleton", "at": "corpse-a", "state": "dead" },
+      "dead-b": { "enemy": "lesserDemon", "at": "corpse-b", "state": "dead" }
     }
   },
   "steps": [
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "neutral",
-          "text": "¡PAPASITO!"
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "angry",
-          "text": "¡PAPASITO, BOLUDO! ¡TE ESTOY HABLANDO!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "annoyed",
-          "text": "Che, negro, dejá. Este hijo de puta no va a contestar."
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "angry",
-          "text": "¡EH, PARAGUAYO! ¡TENEMOS QUE SALIR DE ACÁ!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "Pará, ya sé cómo hacerlo venir."
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡PAPASITO! ¡ESTAMOS CON TOMI!"
-        }
-      ]
-    },
-    {
-      "type": "move",
-      "actor": "papasito",
-      "to": "papasito",
-      "duration": 1.1
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "papasito",
-          "expression": "surprised",
-          "text": "¿Tomi? ¿Dónde?"
-        }
-      ]
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "happy",
-          "text": "JAJAJA. ¡MIRÁ CÓMO APARECIÓ EL HIJO DE PUTA!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡A VER SI AHORA VENÍS, QUE SE TE MOJA LA TANGA CADA VEZ QUE HABLAMOS DE TU MACHO!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "angry",
-          "text": "¡DEJEN DE JODER! ¿DÓNDE ESTÁ TOMI?"
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "happy",
-          "text": "¡JAJAJA! ¡NO ESTÁ, PARAGUAYO! ¡TE HICIMOS VENIR!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "angry",
-          "text": "¡LA PUTA MADRE!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡JAJAJA! ¡TE ESTAMOS LLAMANDO HACE MEDIA HORA Y APENAS NOMBRAMOS A TU MACHO APARECÉS!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "angry",
-          "text": "¡YO VINE POR EL LOOT, CARAJO!"
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "happy",
-          "text": "Sí, sí, el loot de Tomi, JAJAJA."
-        },
-        {
-          "speaker": "papasito",
-          "expression": "angry",
-          "text": "¡DEJEN DE ROMPER LAS PELOTAS!"
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "neutral",
-          "text": "Bueno, escuchame. ¡Estamos atrapados en los juegos y tenemos que encontrar la salida!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "neutral",
-          "text": "Ah, sí."
-        },
-        {
-          "speaker": "solago",
-          "expression": "annoyed",
-          "text": "¿Cómo que ah, sí?"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "neutral",
-          "text": "Ya sé."
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "angry",
-          "text": "¿Y QUÉ HACÉS ACÁ?"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "neutral",
-          "text": "Farmeando."
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "tired",
-          "text": "La concha de tu madre..."
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "neutral",
-          "text": "Bueno, dale, vení con nosotros."
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡CHE, QUE TOMI NOS ESTÁ ESPERANDO!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "angry",
-          "text": "¡YA VOY, CARAJO!"
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "happy",
-          "text": "JAJAJA. No puede ser, boludo."
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡JAJAJA! ¡QUÉ ENAMORADO ESTÁ EL PARAGUAYO!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "angry",
-          "text": "¡CALLATE, CARAJO!"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "DISCORD SURVIVORS",
-      "duration": 4,
-      "lines": [
-        "¡PAPASITO DESBLOQUEADO!",
-        "Disponible para seleccionar en las próximas partidas."
-      ]
-    }
+    { "type": "camera", "to": "loot", "zoom": 1.3, "duration": 1.1 },
+    { "type": "sound", "sound": "blood", "repeat": 3, "interval": 0.3 },
+    { "type": "camera", "to": "group", "zoom": 1.4, "duration": 1.1 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "¡PAPASITO!" }
+    ] },
+    { "type": "wait", "duration": 0.7 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡PAPASITO, BOLUDO! ¡TE ESTOY HABLANDO!" }
+    ] },
+    { "type": "wait", "duration": 0.7 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "solago", "expression": "annoyed", "text": "Che, negro, dejá. Este hijo de puta no va a contestar." },
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡EH, PARAGUAYO! ¡TENEMOS QUE SALIR DE ACÁ!" }
+    ] },
+    { "type": "wait", "duration": 0.8 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "solago", "expression": "happy", "text": "Pará, ya sé cómo hacerlo venir." },
+      { "speaker": "solago", "expression": "happy", "text": "¡PAPASITO! ¡ESTAMOS CON TOMI!" }
+    ] },
+    { "type": "sound", "sound": "chime" },
+    { "type": "dialogue", "lines": [
+      { "speaker": "papasito", "expression": "surprised", "text": "¿Tomi? ¿Dónde?" }
+    ] },
+    { "type": "move", "actor": "papasito", "to": "papasito", "duration": 1.4 },
+    { "type": "camera", "to": "group", "zoom": 1.15, "duration": 0.5 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "happy", "text": "JAJAJA. ¡MIRÁ CÓMO APARECIÓ EL HIJO DE PUTA!" },
+      { "speaker": "solago", "expression": "happy", "text": "¡A VER SI AHORA VENÍS, QUE SE TE MOJA LA TANGA CADA VEZ QUE HABLAMOS DE TU MACHO!" },
+      { "speaker": "papasito", "expression": "angry", "text": "¡DEJEN DE JODER! ¿DÓNDE ESTÁ TOMI?" },
+      { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡NO ESTÁ, PARAGUAYO! ¡TE HICIMOS VENIR!" },
+      { "speaker": "papasito", "expression": "angry", "text": "¡LA PUTA MADRE!" },
+      { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡TE ESTAMOS LLAMANDO HACE MEDIA HORA Y APENAS NOMBRAMOS A TU MACHO APARECÉS!" },
+      { "speaker": "papasito", "expression": "angry", "text": "¡YO VINE POR EL LOOT, CARAJO!" },
+      { "speaker": "maxi-negro", "expression": "happy", "text": "Sí, sí, el loot de Tomi, JAJAJA." },
+      { "speaker": "papasito", "expression": "angry", "text": "¡DEJEN DE ROMPER LAS PELOTAS!" },
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "Bueno, escuchame. ¡Estamos atrapados en los juegos y tenemos que encontrar la salida!" },
+      { "speaker": "papasito", "expression": "neutral", "text": "Ah, sí." },
+      { "speaker": "solago", "expression": "annoyed", "text": "¿Cómo que ah, sí?" },
+      { "speaker": "papasito", "expression": "neutral", "text": "Ya sé." },
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¿Y QUÉ HACÉS ACÁ?" },
+      { "speaker": "papasito", "expression": "neutral", "text": "Farmeando." },
+      { "speaker": "maxi-negro", "expression": "tired", "text": "La concha de tu madre..." }
+    ] },
+    { "type": "move", "actor": "papasito", "to": "loot", "duration": 1.1 },
+    { "type": "animate", "actor": "papasito", "animation": "kneel", "duration": 0.8 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "Bueno, dale, vení con nosotros." }
+    ] },
+    { "type": "wait", "duration": 0.7 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡PAPASITO!" },
+      { "speaker": "solago", "expression": "happy", "text": "¡CHE, QUE TOMI NOS ESTÁ ESPERANDO!" },
+      { "speaker": "papasito", "expression": "angry", "text": "¡YA VOY, CARAJO!" },
+      { "speaker": "maxi-negro", "expression": "happy", "text": "JAJAJA. No puede ser, boludo." }
+    ] },
+    { "type": "move", "actor": "papasito", "to": "papasito", "duration": 1.1 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "papasito", "expression": "neutral", "text": "Bueno, vamos." },
+      { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡QUÉ ENAMORADO ESTÁ EL PARAGUAYO!" },
+      { "speaker": "papasito", "expression": "angry", "text": "¡CALLATE, CARAJO!" }
+    ] },
+    { "type": "sound", "sound": "chime" },
+    { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": ["¡PAPASITO DESBLOQUEADO!", "Disponible para seleccionar en las próximas partidas."] }
   ],
-  "effects": [
-    {
-      "key": "act-03-met-papasito",
-      "value": true
-    }
-  ]
+  "effects": [{ "key": "act-03-met-papasito", "value": true }]
 }

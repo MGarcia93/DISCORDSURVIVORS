@@ -13,8 +13,8 @@
         505
       ],
       "papasito": [
-        690,
-        505
+        980,
+        545
       ],
       "lilith": [
         900,
@@ -42,6 +42,10 @@
     }
   },
   "steps": [
+    { "type": "camera", "to": "papasito", "zoom": 1.4, "duration": 0.6 },
+    { "type": "animate", "actor": "papasito", "animation": "kneel", "duration": 0.8 },
+    { "type": "sound", "sound": "chime" },
+    { "type": "flash", "actor": "papasito", "duration": 0.3 },
     {
       "type": "notice",
       "title": "OBJETO LEGENDARIO DESCONOCIDO",
@@ -111,6 +115,9 @@
         }
       ]
     },
+    { "type": "sound", "sound": "hell", "repeat": 3, "interval": 0.15 },
+    { "type": "flash", "actor": "papasito", "duration": 0.15 },
+    { "type": "camera", "to": "ground", "zoom": 1.1, "duration": 0.8 },
     {
       "type": "notice",
       "title": "ADMINISTRADOR DEL SERVIDOR",
@@ -200,6 +207,8 @@
         }
       ]
     },
+    { "type": "camera", "to": "lilith", "zoom": 1.7, "duration": 1.2 },
+    { "type": "sound", "sound": "blood", "repeat": 3, "interval": 0.5 },
     {
       "type": "notice",
       "title": "ESCLAVISTA",

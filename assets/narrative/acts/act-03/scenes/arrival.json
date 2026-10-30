@@ -4,154 +4,59 @@
   "stage": {
     "background": "inferno",
     "points": {
-      "ground": [
-        420,
-        500
-      ],
-      "solago": [
-        560,
-        505
-      ],
-      "bats": [
-        790,
-        615
-      ],
-      "door": [
-        980,
-        470
-      ],
-      "near-door": [
-        860,
-        500
-      ]
+      "entry": [280, 540], "entry-solago": [390, 550],
+      "ground": [420, 500], "solago": [560, 505],
+      "bats": [1040, 400], "bat-pass": [760, 320],
+      "corpse": [730, 600], "door": [980, 470], "group": [520, 470]
     },
     "actors": {
-      "negro": {
-        "character": "maxi-negro",
-        "at": "ground"
-      },
-      "solago": {
-        "character": "solago",
-        "at": "solago"
-      },
-      "bat-a": {
-        "enemy": "batSwarm",
-        "at": "bats"
-      }
+      "negro": { "character": "maxi-negro", "at": "entry" },
+      "solago": { "character": "solago", "at": "entry-solago" },
+      "bat-a": { "enemy": "batSwarm", "at": "bats" },
+      "corpse": { "enemy": "skeleton", "at": "corpse", "state": "dead" }
     }
   },
   "steps": [
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "annoyed",
-          "text": "Bueno, por lo menos salimos de esa mierda de LoL."
-        },
-        {
-          "speaker": "solago",
-          "expression": "neutral",
-          "text": "¿Dónde carajo estamos ahora?"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "ADMINISTRADOR DEL SERVIDOR",
-      "duration": 3,
-      "lines": [
-        "Mundo 03. Diablo."
-      ]
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "neutral",
-          "text": "Ah, bueno. Acá seguro está Papasito."
-        },
-        {
-          "speaker": "solago",
-          "expression": "neutral",
-          "text": "Llamalo."
-        },
-        {
-          "speaker": "maxi-negro",
-          "expression": "neutral",
-          "text": "¡Papasito!"
-        }
-      ]
-    },
-    {
-      "type": "wait",
-      "duration": 0.6
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "angry",
-          "text": "¡PAPASITO!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "annoyed",
-          "text": "¿Está conectado?"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "ADMINISTRADOR",
-      "duration": 3,
-      "lines": [
-        "Usuario Papasito localizado. Estado: En línea."
-      ]
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "angry",
-          "text": "¡PAPASITO, LA CONCHA DE TU MADRE!"
-        }
-      ]
-    },
-    {
-      "type": "wait",
-      "duration": 0.5
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "solago",
-          "expression": "tired",
-          "text": "Dejalo, negro. Este hijo de puta nunca contesta."
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "PAPASITO (A LO LEJOS)",
-      "duration": 4,
-      "lines": [
-        "¡DALE, HIJO DE PUTA! ¡TIRAME EL LEGENDARIO!"
-      ]
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "happy",
-          "text": "Ah, mirá. ¡Para putear al juego sí tiene micrófono!"
-        }
-      ]
-    }
+    { "type": "sound", "sound": "hell" },
+    { "type": "flash", "actor": "negro", "duration": 0.2 },
+    { "type": "parallel", "steps": [
+      { "type": "camera", "to": "group", "zoom": 1.25, "duration": 1.4 },
+      { "type": "move", "actor": "negro", "to": "ground", "duration": 1.2 },
+      { "type": "move", "actor": "solago", "to": "solago", "duration": 1.2, "delay": 0.2 },
+      { "type": "move", "actor": "bat-a", "toward": "bat-pass", "speed": 170, "duration": 1.4 }
+    ] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "annoyed", "text": "Bueno, por lo menos salimos de esa mierda de LoL." },
+      { "speaker": "solago", "expression": "neutral", "text": "¿Dónde carajo estamos ahora?" }
+    ] },
+    { "type": "notice", "title": "ADMINISTRADOR DEL SERVIDOR", "duration": 3, "lines": ["Mundo 03. Diablo."] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "Ah, bueno. Acá seguro está Papasito." },
+      { "speaker": "solago", "expression": "neutral", "text": "Llamalo." },
+      { "speaker": "maxi-negro", "expression": "neutral", "text": "¡Papasito!" }
+    ] },
+    { "type": "animate", "actor": "negro", "animation": "point", "duration": 0.7 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡PAPASITO!" }
+    ] },
+    { "type": "wait", "duration": 0.8 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "solago", "expression": "annoyed", "text": "¿Está conectado?" }
+    ] },
+    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": ["Usuario Papasito localizado. Estado: En línea."] },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "angry", "text": "¡PAPASITO, LA CONCHA DE TU MADRE!" }
+    ] },
+    { "type": "wait", "duration": 0.8 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "solago", "expression": "tired", "text": "Dejalo, negro. Este hijo de puta nunca contesta." }
+    ] },
+    { "type": "camera", "to": "door", "zoom": 1.5, "duration": 1 },
+    { "type": "sound", "sound": "blood" },
+    { "type": "notice", "title": "PAPASITO (A LO LEJOS)", "duration": 4, "lines": ["¡DALE, HIJO DE PUTA! ¡TIRAME EL LEGENDARIO!"] },
+    { "type": "camera", "to": "group", "zoom": 1.25, "duration": 0.8 },
+    { "type": "dialogue", "lines": [
+      { "speaker": "maxi-negro", "expression": "happy", "text": "Ah, mirá. ¡Para putear al juego sí tiene micrófono!" }
+    ] }
   ]
 }

@@ -5,29 +5,30 @@
     "background": "inferno",
     "points": {
       "ground": [
-        400,
+        180,
         500
       ],
       "solago": [
-        545,
+        310,
         505
       ],
       "papasito": [
-        680,
+        440,
         505
       ],
       "zir-far": [
-        1080,
+        1240,
         460
       ],
       "zir": [
-        880,
+        960,
         480
       ],
       "coins": [
-        800,
-        600
-      ]
+        480,
+        560
+      ],
+      "overview": [572, 470]
     },
     "actors": {
       "negro": {
@@ -43,12 +44,18 @@
         "at": "papasito"
       },
       "zir": {
-        "enemy": "lordZir",
+        "character": "lord-zir",
         "at": "zir-far"
       }
     }
   },
   "steps": [
+    { "type": "sound", "sound": "hell" },
+    { "type": "parallel", "steps": [
+      { "type": "camera", "to": "coins", "zoom": 1.35, "duration": 1 },
+      { "type": "move", "actor": "papasito", "to": "coins", "duration": 1 }
+    ] },
+    { "type": "animate", "actor": "papasito", "animation": "kneel", "duration": 0.6 },
     {
       "type": "dialogue",
       "lines": [
@@ -74,10 +81,8 @@
         }
       ]
     },
-    {
-      "type": "wait",
-      "duration": 0.4
-    },
+    { "type": "sound", "sound": "blood", "repeat": 2, "interval": 0.3 },
+    { "type": "camera", "to": "zir", "zoom": 1.4, "duration": 1 },
     {
       "type": "move",
       "actor": "zir",
@@ -92,12 +97,15 @@
         "LORD ZIR"
       ]
     },
+    { "type": "camera", "to": "overview", "zoom": 1, "duration": 0.7 },
     {
-      "type": "notice",
-      "title": "LORD ZIR",
-      "duration": 3,
+      "type": "dialogue",
       "lines": [
-        "Otro ratón que entra a mi sala."
+        {
+          "speaker": "lord-zir",
+          "expression": "neutral",
+          "text": "Otro ratón que entra a mi sala."
+        }
       ]
     },
     {
@@ -111,11 +119,13 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "LORD ZIR",
-      "duration": 4,
+      "type": "dialogue",
       "lines": [
-        "Sangre de paraguayo. Hacía siglos que no probaba una."
+        {
+          "speaker": "lord-zir",
+          "expression": "neutral",
+          "text": "Sangre de paraguayo. Hacía siglos que no probaba una."
+        }
       ]
     },
     {
@@ -139,11 +149,13 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "LORD ZIR",
-      "duration": 3,
+      "type": "dialogue",
       "lines": [
-        "Mi corte tiene hambre."
+        {
+          "speaker": "lord-zir",
+          "expression": "angry",
+          "text": "Mi corte tiene hambre."
+        }
       ]
     }
   ],

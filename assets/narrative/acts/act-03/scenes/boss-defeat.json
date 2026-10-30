@@ -46,6 +46,8 @@
     }
   },
   "steps": [
+    { "type": "sound", "sound": "blood" },
+    { "type": "camera", "to": "lilith", "zoom": 1.3, "duration": 1 },
     {
       "type": "wait",
       "duration": 0.6
@@ -91,6 +93,10 @@
       "to": "loot",
       "duration": 1.2
     },
+    { "type": "animate", "actor": "papasito", "animation": "kneel", "duration": 0.9 },
+    { "type": "sound", "sound": "chime" },
+    { "type": "flash", "actor": "papasito", "duration": 0.3 },
+    { "type": "camera", "to": "loot", "zoom": 1.4, "duration": 0.6 },
     {
       "type": "dialogue",
       "lines": [

@@ -90,34 +90,34 @@
   "banter": [
     {
       "wave": 1,
-      "at": 6,
+      "at": 0.5,
       "speaker": "maxi-negro",
       "expression": "neutral",
       "text": "¡Papasito! ¿Me escuchás?"
     },
     {
       "wave": 1,
-      "at": 12,
+      "at": 3,
       "speaker": "solago",
       "expression": "neutral",
       "text": "Preguntale si terminó la obra."
     },
     {
       "wave": 1,
-      "at": 18,
+      "at": 5.5,
       "speaker": "maxi-negro",
       "expression": "angry",
       "text": "¡EH, PARAGUAYO! ¿TERMINASTE DE LEVANTAR LA PARED?"
     },
     {
-      "wave": 2,
-      "at": 6,
+      "wave": 1,
+      "at": 9.4,
       "speaker": "papasito",
       "expression": "angry",
       "text": "¡QUE NO SOY ALBAÑIL, CARAJO!"
     },
     {
-      "wave": 2,
+      "wave": 1,
       "at": 12,
       "speaker": "maxi-negro",
       "expression": "surprised",
@@ -125,35 +125,35 @@
     },
     {
       "wave": 2,
-      "at": 18,
+      "at": 0.5,
       "speaker": "solago",
       "expression": "angry",
       "text": "¡ANAMENCUÁ!"
     },
     {
       "wave": 2,
-      "at": 24,
+      "at": 3,
       "speaker": "papasito",
       "expression": "angry",
       "text": "¡NO SÉ QUÉ MIERDA SIGNIFICA ESO!"
     },
     {
-      "wave": 3,
-      "at": 8,
+      "wave": 2,
+      "at": 6,
       "speaker": "maxi-negro",
       "expression": "surprised",
       "text": "¿Cómo que no? ¡Paraguayo trucho!"
     },
     {
-      "wave": 4,
-      "at": 8,
+      "wave": 2,
+      "at": 8.5,
       "speaker": "solago",
       "expression": "happy",
       "text": "JAJAJA. Se volvió a mutear."
     },
     {
-      "wave": 4,
-      "at": 16,
+      "wave": 2,
+      "at": 11,
       "speaker": "maxi-negro",
       "expression": "tired",
       "text": "No, si este hijo de puta es increíble."
