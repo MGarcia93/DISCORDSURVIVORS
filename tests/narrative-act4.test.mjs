@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { actManifestURL, loadCatalog, manifestURL } from '../src/narrative/catalog.mjs';
+import { actManifestURL, campaignCatalogURLs, loadCatalog, manifestURL } from '../src/narrative/catalog.mjs';
 import act04 from '../src/campaign/act-04-exiles.mjs';
 import { ScenePlayer } from '../src/narrative/runtime.mjs';
 
@@ -77,6 +77,41 @@ test('the act four speakers and expressions exist in the catalog', async () => {
     assert.ok(catalog.characters[line.speaker].expressions[line.expression],
       `${line.speaker} has no ${line.expression} portrait`);
   }
+});
+
+test('Warrior gets one volume request and is captured for red eyes and herb smell, not speech', async () => {
+  const catalog = await loadCatalog({ urls: campaignCatalogURLs(), fetcher });
+  const entries = catalog.entries.filter(entry => /^act-0[34]-/.test(entry.id));
+  for (const entry of entries) assert.equal(entry.error, null, entry.id);
+  const spoken = entries.flatMap(entry => entry.scene.steps)
+    .filter(step => step.type === 'dialogue').flatMap(step => step.lines);
+  const requests = spoken.filter(line => /hablá más fuerte/i.test(line.text));
+  assert.deepEqual(requests, [
+    { speaker: 'maxi-negro', expression: 'neutral', text: 'Hablá más fuerte, Warrior.' },
+  ]);
+  const rescue = catalog.entries.find(entry => entry.id === 'act-04-warrior').scene;
+  const lines = rescue.steps.filter(step => step.type === 'dialogue').flatMap(step => step.lines);
+  const start = lines.findIndex(line => line.text === 'Me mandó el bot, ura.');
+  assert.notEqual(start, -1);
+  assert.deepEqual(lines.slice(start, start + 3).map(line => line.speaker), ['warrior', 'maxi-negro', 'warrior']);
+  assert.equal(lines[start + 2].text, '¡QUE ME MANDÓ EL BOT!');
+  const captors = lines.filter(line => line.speaker === 'esclavista').map(line => line.text).join(' ');
+  assert.match(captors, /ojos rojos/i);
+  assert.match(captors, /olor a hierba/i);
+  const notices = entries.flatMap(entry => entry.scene.steps)
+    .filter(step => step.type === 'notice').flatMap(step => step.lines);
+  assert.doesNotMatch([...spoken.map(line => line.text), ...notices].join(' '),
+    /no se (?:le|te) entiende|no entendíamos|tampoco entendí|lengua desconocida|qué está diciendo|menor idea/i);
+});
+
+test('the existing four-copy banter uses el te puse without adding a comeback', async () => {
+  const catalog = await catalogFor();
+  const banter = catalog.banter.filter(line => line.wave === 5);
+  assert.equal(banter.length, 8, 'the accepted exchange gets no extra line');
+  assert.deepEqual(banter.slice(0, 2).map(({ speaker, text }) => ({ speaker, text })), [
+    { speaker: 'solago', text: '¡JAJAJA! ¡NEGRO, AHORA HAY EL TE PUSE!' },
+    { speaker: 'maxi-negro', text: '¡NOOO! ¡LA CONCHA DE TU MADRE!' },
+  ]);
 });
 
 test('Warrior is rescued on wave three and the cell opens before the unlock', async () => {

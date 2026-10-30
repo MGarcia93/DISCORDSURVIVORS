@@ -200,9 +200,9 @@ Es Jhony.
 
 **Maxi Negro:** Igual, Jhony, ¿no te parece que ya jugaste bastante a esta mierda?
 
-**Jhony:** ¡Y A VOS QUÉ CARAJO TE IMPORTA!
+**Jhony:** ¡Y A VOS QUÉ CARAJO TE IMPORTA! ¡VOS CAMBIÁS DE JUEGO CADA DOS DÍAS PORQUE SOS MALO EN TODO!
 
-**Maxi Negro:** Bueno, chupame un huevo. Me voy a buscar a los otros.
+**Maxi Negro:** Bueno, chupame la pija. Me voy a buscar a los otros.
 
 **Jhony:** ¡BUENO, ANDÁ!
 
@@ -250,4 +250,4 @@ Y luego una voz desconocida:
 - **Habilidades de Maxi Negro:** «Modo Otaku» (waifu que ataca automáticamente) y «Me da paja» (se sienta en un sillón, obtiene gran defensa y daña en área).
 - **Conexión con el acto 2:** la voz de Yorick anticipa el encuentro con Solago, a quien Yorick confundió con uno de sus caminantes de la niebla.
 
-**Estado:** Guion del Acto 1 aprobado para la campaña inicial.
+**Estado:** Revisión de diálogo de campaña: se amplía la respuesta de Jhony a la crítica del Negro por sus horas de juego y se ajusta la réplica del Negro. El guion anterior se conserva en el checkout original.

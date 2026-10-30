@@ -57,13 +57,14 @@
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "neutral", "text": "Sí, sí, Warrior, seguro. ¿Y cómo sabías que estaba acá?" }
+        { "speaker": "maxi-negro", "expression": "neutral", "text": "Sí, sí, Warrior, seguro. ¿Y cómo sabías que estaba acá?" },
+        { "speaker": "warrior", "expression": "neutral", "text": "Seguí el humo, ura." }
       ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "tired", "text": "¿Qué?" }
+        { "speaker": "maxi-negro", "expression": "happy", "text": "Ah, para esto sí encontrás el camino, hijo de puta." }
       ]
     },
     {

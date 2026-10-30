@@ -19,7 +19,7 @@ const warrior = {
   previewAria: 'Pixel art de Warrior: banda roja, remera blanca estampada y buzo rosa de los 80',
   profile: `
       <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
-      <p class="character-desc">Chamán del norte que jura ser argentino, aunque nadie descifra su acento. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
+      <p class="character-desc">Chamán de Jujuy: argentino, aunque el grupo insista con Bolivia. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
       <p class="character-quote">«Yo soy argentino, boludo».</p>
       <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b>+350%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,6</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>

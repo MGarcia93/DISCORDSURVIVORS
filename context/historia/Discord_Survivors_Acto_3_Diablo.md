@@ -138,7 +138,7 @@ Desde una habitación cercana se escuchan enemigos muriendo y objetos cayendo al
 
 **Solago:** ¡A VER SI AHORA VENÍS, QUE SE TE MOJA LA TANGA CADA VEZ QUE HABLAMOS DE TU MACHO!
 
-**Papasito:** ¡DEJEN DE JODER! ¿DÓNDE ESTÁ TOMI?
+**Papasito:** ¿Pero dónde está Tomi?
 
 **Maxi Negro:** ¡JAJAJA! ¡NO ESTÁ, PARAGUAYO! ¡TE HICIMOS VENIR!
 
@@ -146,7 +146,7 @@ Desde una habitación cercana se escuchan enemigos muriendo y objetos cayendo al
 
 **Solago:** ¡JAJAJA! ¡TE ESTAMOS LLAMANDO HACE MEDIA HORA Y APENAS NOMBRAMOS A TU MACHO APARECÉS!
 
-**Papasito:** ¡YO VINE POR EL LOOT, CARAJO!
+**Papasito:** Yo estaba juntando loot.
 
 **Maxi Negro:** Sí, sí, el loot de Tomi, JAJAJA.
 
@@ -186,7 +186,7 @@ Desde una habitación cercana se escuchan enemigos muriendo y objetos cayendo al
 
 **Solago:** ¡JAJAJA! ¡QUÉ ENAMORADO ESTÁ EL PARAGUAYO!
 
-**Papasito:** ¡CALLATE, CARAJO!
+**Papasito:** ¡CALLATE LA BOCA!
 
 **DISCORD SURVIVORS**
 
@@ -222,7 +222,7 @@ Durante el combate, Papasito comienza a recoger todas las monedas que encuentra.
 
 **Maxi Negro:** ¡NOOO! ¡LA CONCHA DE TU MADRE! ¿OTRA VEZ?
 
-**Papasito:** ¡NO, CARAJO!
+**Papasito:** No, nada que ver.
 
 **Maxi Negro:** ¿Y la PSP, Papasito?
 
@@ -236,7 +236,7 @@ Durante el combate, Papasito comienza a recoger todas las monedas que encuentra.
 
 **Maxi Negro:** ¡LE SACARON LA SEÑA Y DESPUÉS LO QUISIERON EXTORSIONAR!
 
-**Papasito:** ¡YA ESTÁ, DEJEN DE JODER!
+**Papasito:** ¡UUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA!
 
 **Maxi Negro:** ¡JAJAJA! ¡NO LA PUSO Y SE QUEDÓ SIN MONITOR!
 
@@ -288,7 +288,7 @@ El grupo sigue el rastro de monedas hasta una sala llena de sangre.
 
 **Lord Zir:** Sangre de paraguayo. Hacía siglos que no probaba una.
 
-**Maxi Negro:** ¡PAPASITO, CORRÉ!
+**Maxi Negro:** ¡PAPASITO, CORRÉ! ¡NI SE TE OCURRA COBRARLE POR LITRO!
 
 **Papasito:** ¡PRIMERO EL LOOT!
 
@@ -464,9 +464,9 @@ Se escuchan cadenas, gritos y golpes contra una jaula.
 
 **Esclavista:** ¡Traigan al nuevo esclavo!
 
-**Otro esclavista:** ¡¿Pero qué está diciendo?!
+**Otro esclavista:** ¡No lo dejen salir!
 
-**Esclavista:** ¡NO TENGO LA MENOR IDEA!
+**Esclavista:** ¡CIERREN LA JAULA!
 
 **FIN DEL ACTO 3.**
 
@@ -487,7 +487,7 @@ Se escuchan cadenas, gritos y golpes contra una jaula.
 - **Rejugabilidad:** los diálogos completos se muestran la primera vez y pueden omitirse en partidas posteriores.
 - **Conexión con el Acto 4:** Conan Exiles. Los protagonistas desconocen quién está atrapado allí.
 
-**Estado: Versión aprobada del Acto 3.**
+**Estado: Revisión de diálogos de campaña.** Se ajustan cinco respuestas de Papasito, la advertencia del Negro ante Lord Zir y el cierre de los esclavistas para enlazar con el nuevo rescate del Acto 4. El guion anterior se conserva en el checkout original.
 
 ---
 

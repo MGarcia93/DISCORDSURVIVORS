@@ -7,7 +7,7 @@
 
 ## 1. Descripción y lore
 
-Procedente de unas tierras lejanas donde se habla de una manera que nadie en el Discord logra descifrar, Warrior asegura ser argentino, aunque todos sabemos que es boliviano.
+Warrior es de Jujuy y es argentino. El grupo lo carga diciéndole boliviano, y el Administrador confunde su procedencia al enviarlo a Conan Exiles. Las cargadas no se basan en su pronunciación: en el rescate solo se le pide una vez que hable más fuerte.
 
 Nadie sabe por qué siempre tiene los ojos rojos ni de dónde sale el humo que lo rodea constantemente. Algunos sospechan que tiene algo que ver con los hongos que lleva encima.
 

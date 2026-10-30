@@ -156,29 +156,19 @@
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "maxi-negro",
+          "speaker": "warrior",
           "expression": "neutral",
-          "text": "¿Qué?"
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡JAJAJA! ¡NEGRO, NO SE TE ENTIENDE UNA MIERDA!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "neutral",
-          "text": "..."
+          "text": "Me mandó el bot, ura."
         },
         {
           "speaker": "maxi-negro",
           "expression": "neutral",
-          "text": "Pará, dejá que explique."
+          "text": "Hablá más fuerte, Warrior."
         },
         {
-          "speaker": "maxi-negro",
-          "expression": "tired",
-          "text": "No, bueno. Tampoco entendí."
+          "speaker": "warrior",
+          "expression": "annoyed",
+          "text": "¡QUE ME MANDÓ EL BOT!"
         }
       ]
     },
@@ -304,7 +294,7 @@
         {
           "speaker": "esclavista",
           "expression": "angry",
-          "text": "Lo encontramos vagando por el desierto. Pensamos que era un esclavo fugitivo."
+          "text": "Lo encontramos vagando por el desierto y lo trajimos al campamento."
         }
       ]
     },
@@ -324,7 +314,7 @@
         {
           "speaker": "esclavista",
           "expression": "neutral",
-          "text": "¡PORQUE NO ENTENDÍAMOS NADA DE LO QUE DECÍA!"
+          "text": "¡POR LOS OJOS ROJOS Y EL OLOR A HIERBA! ¡APESTABA TODO EL CAMPAMENTO!"
         }
       ]
     },
@@ -334,12 +324,7 @@
         {
           "speaker": "maxi-negro",
           "expression": "happy",
-          "text": "¡JAJAJA! ¡LA CONCHA DE TU MADRE!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "happy",
-          "text": "¡JAJAJA! ¡NOOO! ¡LO METIERON A LABURAR PORQUE NO SE LE ENTIENDE!"
+          "text": "¡JAJAJA! ¡TE RASTREARON POR EL OLOR, HIJO DE PUTA!"
         },
         {
           "speaker": "warrior",
@@ -354,18 +339,13 @@
         {
           "speaker": "esclavista",
           "expression": "angry",
-          "text": "¡¿VEN?! ¡SIGUE HABLANDO EN UNA LENGUA DESCONOCIDA!"
+          "text": "¡NO LO SOLTAREMOS!"
         }
       ]
     },
     {
       "type": "dialogue",
       "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "tired",
-          "text": "No, flaco. Habla así."
-        },
         {
           "speaker": "solago",
           "expression": "happy",

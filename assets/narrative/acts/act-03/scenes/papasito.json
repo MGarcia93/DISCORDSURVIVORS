@@ -46,11 +46,11 @@
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "happy", "text": "JAJAJA. ¡MIRÁ CÓMO APARECIÓ EL HIJO DE PUTA!" },
       { "speaker": "solago", "expression": "happy", "text": "¡A VER SI AHORA VENÍS, QUE SE TE MOJA LA TANGA CADA VEZ QUE HABLAMOS DE TU MACHO!" },
-      { "speaker": "papasito", "expression": "angry", "text": "¡DEJEN DE JODER! ¿DÓNDE ESTÁ TOMI?" },
+      { "speaker": "papasito", "expression": "surprised", "text": "¿Pero dónde está Tomi?" },
       { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡NO ESTÁ, PARAGUAYO! ¡TE HICIMOS VENIR!" },
       { "speaker": "papasito", "expression": "angry", "text": "¡LA PUTA MADRE!" },
       { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡TE ESTAMOS LLAMANDO HACE MEDIA HORA Y APENAS NOMBRAMOS A TU MACHO APARECÉS!" },
-      { "speaker": "papasito", "expression": "angry", "text": "¡YO VINE POR EL LOOT, CARAJO!" },
+      { "speaker": "papasito", "expression": "annoyed", "text": "Yo estaba juntando loot." },
       { "speaker": "maxi-negro", "expression": "happy", "text": "Sí, sí, el loot de Tomi, JAJAJA." },
       { "speaker": "papasito", "expression": "angry", "text": "¡DEJEN DE ROMPER LAS PELOTAS!" },
       { "speaker": "maxi-negro", "expression": "neutral", "text": "Bueno, escuchame. ¡Estamos atrapados en los juegos y tenemos que encontrar la salida!" },
@@ -77,7 +77,7 @@
     { "type": "dialogue", "lines": [
       { "speaker": "papasito", "expression": "neutral", "text": "Bueno, vamos." },
       { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡QUÉ ENAMORADO ESTÁ EL PARAGUAYO!" },
-      { "speaker": "papasito", "expression": "angry", "text": "¡CALLATE, CARAJO!" }
+      { "speaker": "papasito", "expression": "angry", "text": "¡CALLATE LA BOCA!" }
     ] },
     { "type": "sound", "sound": "chime" },
     { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": ["¡PAPASITO DESBLOQUEADO!", "Disponible para seleccionar en las próximas partidas."] }

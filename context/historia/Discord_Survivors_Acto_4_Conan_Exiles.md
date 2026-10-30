@@ -92,7 +92,7 @@ Durante la segunda oleada aparecen esclavistas que intentan capturarlos con rede
 
 **Solago:** JAJAJA. ¡SE TERMINÓ EL SILLÓN, NEGRO!
 
-**Maxi Negro:** ¡ME CHUPAN BIEN UN HUEVO!
+**Maxi Negro:** ¡QUE ME CHUPEN LA PIJA!
 
 Maxi Negro activa **«Me da paja»**, sentándose en su sillón para resistir a los enemigos y causar daño en área.
 
@@ -102,7 +102,7 @@ Al derrotar a los últimos enemigos, escuchan unos gritos provenientes de un cam
 
 **ESCLAVISTA (a lo lejos):** ¡DEJÁ DE PROTESTAR!
 
-**OTRO ESCLAVISTA:** ¡PERO QUÉ ESTÁ DICIENDO ESTE IDIOTA!
+**OTRO ESCLAVISTA:** ¡VIGILÁ LA ENTRADA!
 
 **Maxi Negro:** Che, parece que tienen a alguien encerrado.
 
@@ -140,21 +140,13 @@ Los tres se acercan para verlo mejor.
 
 **Maxi Negro:** ¡PERO SI VOS NO JUGASTE CONAN EN TU PUTA VIDA!
 
-*Warrior comienza a explicar desesperadamente lo que ocurrió. Le cuesta hacerse entender.*
+*Warrior contesta en voz baja desde la celda.*
 
-**Maxi Negro:** ¿Qué?
+**Warrior:** Me mandó el bot, ura.
 
-*Warrior repite su explicación, cada vez más enojado.*
+**Maxi Negro:** Hablá más fuerte, Warrior.
 
-**Solago:** ¡JAJAJA! ¡NEGRO, NO SE TE ENTIENDE UNA MIERDA!
-
-**Papasito:** ...
-
-**Maxi Negro:** Pará, dejá que explique.
-
-*Warrior vuelve a hablar.*
-
-**Maxi Negro:** No, bueno. Tampoco entendí.
+**Warrior:** ¡QUE ME MANDÓ EL BOT!
 
 De repente aparece una ventana del Administrador.
 
@@ -193,21 +185,17 @@ De repente aparece una ventana del Administrador.
 
 **Maxi Negro:** Pará, flaco. ¿Por qué carajo lo tienen encerrado?
 
-**ESCLAVISTA:** Lo encontramos vagando por el desierto. Pensamos que era un esclavo fugitivo.
+**ESCLAVISTA:** Lo encontramos vagando por el desierto y lo trajimos al campamento.
 
 **Solago:** ¿Y por qué?
 
-**ESCLAVISTA:** ¡PORQUE NO ENTENDÍAMOS NADA DE LO QUE DECÍA!
+**ESCLAVISTA:** ¡POR LOS OJOS ROJOS Y EL OLOR A HIERBA! ¡APESTABA TODO EL CAMPAMENTO!
 
-**Maxi Negro:** ¡JAJAJA! ¡LA CONCHA DE TU MADRE!
-
-**Solago:** ¡JAJAJA! ¡NOOO! ¡LO METIERON A LABURAR PORQUE NO SE LE ENTIENDE!
+**Maxi Negro:** ¡JAJAJA! ¡TE RASTREARON POR EL OLOR, HIJO DE PUTA!
 
 **Warrior:** ¡SÁQUENME DE ACÁ, LA PUTA MADRE!
 
-**ESCLAVISTA:** ¡¿VEN?! ¡SIGUE HABLANDO EN UNA LENGUA DESCONOCIDA!
-
-**Maxi Negro:** No, flaco. Habla así.
+**ESCLAVISTA:** ¡NO LO SOLTAREMOS!
 
 **Solago:** JAJAJA. ¡Y ENCIMA ES BOLIVIANO!
 
@@ -287,11 +275,9 @@ Warrior se queda observando todo con interés.
 
 **Maxi Negro:** Sí, sí, Warrior, seguro. ¿Y cómo sabías que estaba acá?
 
-*Warrior intenta explicarlo.*
+**Warrior:** Seguí el humo, ura.
 
-**Maxi Negro:** ¿Qué?
-
-*Warrior señala otra vez las plantas.*
+**Maxi Negro:** Ah, para esto sí encontrás el camino, hijo de puta.
 
 **Solago:** ¡JAJAJA! ¡NEGRO, DEJALO! ¡MIRÁ LA CARA DE FELICIDAD QUE TIENE!
 
@@ -363,7 +349,7 @@ El alquimista arroja una poción al suelo.
 
 De repente, aparecen tres copias de Maxi Negro.
 
-**Solago:** ¡JAJAJA! ¡NEGRO, AHORA HAY CUATRO!
+**Solago:** ¡JAJAJA! ¡NEGRO, AHORA HAY EL TE PUSE!
 
 **Maxi Negro:** ¡NOOO! ¡LA CONCHA DE TU MADRE!
 
@@ -371,7 +357,7 @@ De repente, aparecen tres copias de Maxi Negro.
 
 **Solago:** ¡EL QUE NO SE LEVANTA DEL SILLÓN!
 
-**Maxi Negro:** ¡CHUPAME UN HUEVO!
+**Maxi Negro:** ¡CHUPAME LA PIJA!
 
 Una segunda poción provoca que varios enemigos parezcan transformarse en versiones gigantes.
 
@@ -429,7 +415,7 @@ Es el responsable de los esclavistas.
 
 **Solago:** ¿Cuál de todos?
 
-**CAPATAZ:** ¡EL PEQUEÑO EXTRANJERO QUE NO DEJA DE HABLAR!
+**CAPATAZ:** ¡EL EXTRANJERO DE LOS OJOS ROJOS!
 
 *Los tres miran a Warrior.*
 
@@ -482,7 +468,7 @@ Warrior lanza una nube de humo que hace perder de vista al jefe.
 
 **Maxi Negro:** ¡BIEN, WARRIOR! ¡AL FIN HICISTE ALGO ÚTIL!
 
-**Warrior:** ¡VAYANSE A LA MIERDA!
+**Warrior:** ¡MANCOS! ¡ENCIMA QUE LOS AYUDO!
 
 **Papasito:** ...
 
@@ -690,7 +676,7 @@ La Rueda del Dolor se detiene.
 - **Continuidad:** comienza inmediatamente después del Acto 3, con Maxi Negro, Solago y Papasito en Conan Exiles.
 - **Sorpresa:** nadie anticipa que Warrior está en Conan. Su identidad se revela recién en la oleada 3; nunca jugó ese juego.
 - **Error geográfico del Administrador:** el bot clasifica erróneamente a Warrior como boliviano por ser de Jujuy. El guion deja explícito que Jujuy **es de Argentina**; la equivocación es del sistema y el chiste interno del grupo.
-- **Esclavistas:** confunden a Warrior con un esclavo fugitivo al encontrarlo en el desierto y no comprender su explicación. Su forma de hablar es un rasgo narrativo, **no una habilidad ni mecánica de combate**.
+- **Esclavistas:** capturan a Warrior por sus ojos rojos y el olor a hierba. No lo capturan por no entenderlo. El Negro solo le pide una vez que hable más fuerte; después Warrior responde con normalidad. No repetir chistes sobre su pronunciación ni convertir su forma de hablar en una mecánica.
 - **Desbloqueo:** Warrior queda disponible al liberarlo en la tercera oleada.
 - **Habilidades de Warrior:** humo, hongos, control de masas, confusión y ataques fallidos de enemigos.
 - **Loto Amarillo:** ambientación y chiste secundario; no es la causa de que Warrior llegue a Conan. Las ilusiones y esporas de los combates son mecánicas originales de Discord Survivors.
@@ -702,4 +688,4 @@ La Rueda del Dolor se detiene.
 - **Rejugabilidad:** escenas completas la primera vez; escenas ya vistas omitibles en partidas posteriores.
 - **Siguiente acto:** Discord Corrupto, enfrentamiento con el Administrador.
 
-**Estado: Acto 4 aprobado.**
+**Estado: Revisión de diálogos del Acto 4.** Se revisa el motivo de captura de Warrior, se elimina la repetición de chistes sobre su habla y se ajustan cargadas ligadas a la escena. El guion anterior se conserva en el checkout original.
