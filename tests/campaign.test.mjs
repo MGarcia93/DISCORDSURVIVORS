@@ -4,18 +4,20 @@ import { readdir, readFile } from 'node:fs/promises';
 import { ACTS, DEFAULT_ACT, PLAYABLE_ACTS, getAct } from '../src/campaign/acts.mjs';
 import act01 from '../src/campaign/act-01-zomboid.mjs';
 import act02 from '../src/campaign/act-02-rift.mjs';
+import act03 from '../src/campaign/act-03-inferno.mjs';
 import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
 
 const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
 const playable = () => structuredClone(act01);
 
-test('the campaign registers five worlds in order and the first two are playable', () => {
+test('the campaign registers five worlds in order and the first three are playable', () => {
   assert.equal(ACTS.length, 5);
   assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5]);
   assert.equal(new Set(ACTS.map(act => act.id)).size, 5);
-  assert.equal(PLAYABLE_ACTS.length, 2);
+  assert.equal(PLAYABLE_ACTS.length, 3);
   assert.equal(DEFAULT_ACT.id, 'act-01');
-  assert.equal(getAct('act-03').status, 'planned');
+  assert.equal(getAct('act-03').status, 'playable');
+  assert.equal(getAct('act-04').status, 'planned');
   assert.equal(getAct('nope'), DEFAULT_ACT);
   // Monster Hunter is a rejected pitch in Act 4, not a world.
   assert.ok(!ACTS.some(act => /monster/i.test(act.id) || /monster/i.test(act.title)));
@@ -28,6 +30,15 @@ test('act one is the approved Project Zomboid chapter the script describes', () 
   assert.equal(act01.waves.length, 6);
   assert.deepEqual(act01.boss, { wave: 6, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' });
   assert.equal(act01.waves[5].perMinute, 0, 'the boss wave fields the boss, not a clock budget');
+});
+
+test('act three is the Diablo chapter with Lord Zir and Lilith', () => {
+  assert.equal(act03.world, 'inferno');
+  assert.equal(act03.duration, 60);
+  assert.equal(act03.waves.length, 6);
+  assert.deepEqual(act03.miniboss, { wave: 5, kind: 'lordZir', name: 'LORD ZIR' });
+  assert.deepEqual(act03.boss, { wave: 6, kind: 'lilith', name: 'LILITH' });
+  assert.equal(act03.waves[5].perMinute, 0, 'the boss wave fields the boss, not a clock budget');
 });
 
 test('a planned world only needs its campaign slot', () => {

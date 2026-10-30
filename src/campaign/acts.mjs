@@ -1,5 +1,6 @@
 import act01 from './act-01-zomboid.mjs';
 import act02 from './act-02-rift.mjs';
+import act03 from './act-03-inferno.mjs';
 import { validateCampaign } from './validate.mjs';
 
 // The campaign map. This is the ONLY module that knows how many worlds exist,
@@ -12,7 +13,7 @@ import { validateCampaign } from './validate.mjs';
 export const ACTS = [
   act01,
   act02,
-  { id: 'act-03', order: 3, title: 'Diablo', status: 'planned', world: 'inferno' },
+  act03,
   { id: 'act-04', order: 4, title: 'Conan Exiles', status: 'planned', world: 'exiles' },
   { id: 'act-05', order: 5, title: 'Discord Corrupto', status: 'planned', world: 'discord' },
 ];
