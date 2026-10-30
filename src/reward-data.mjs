@@ -19,6 +19,9 @@ export const BALANCE = {
       // the mini-boss like Act 2's Maiden.
       skeleton: 8, lesserDemon: 12, shaman: 10, burningElite: 25, batSwarm: 4,
       lordZir: 60,
+      // Act 4 keeps the same playtest rate: the alchemists pay a little more,
+      // the mini-boss like Act 2's Maiden and the act boss closes the run.
+      barbarian: 8, slaver: 10, archer: 10, alchemist: 12, lotusAlchemist: 60,
     },
   },
   gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },

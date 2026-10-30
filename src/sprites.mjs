@@ -666,6 +666,39 @@ export function drawEnemyShot(ctx, device = 'bolt') {
     pixel(ctx, 2, -1, 2, 2, '#f2ffe0');
     return;
   }
+  if (device === 'arrow') {
+    // Act 4 arrow: a light shaft on a dark nock, with an iron head. Long and thin
+    // so it reads as a projectile and not as a bar of light.
+    pixel(ctx, -9, -1, 15, 2, '#3a2a18');
+    pixel(ctx, -9, -1, 15, 1, '#e4d6b0');
+    pixel(ctx, 5, -2, 4, 4, '#2c2a30');
+    pixel(ctx, 6, -1, 2, 2, '#cfcbcd');
+    pixel(ctx, -10, -2, 3, 4, '#a03225');
+    return;
+  }
+  if (device === 'net') {
+    // Act 4 net: a weighted rope square, open in the middle. It is thrown at the
+    // player, so it has to read as mesh even at two pixels a strand.
+    pixel(ctx, -7, -6, 14, 2, '#c9b383');
+    pixel(ctx, -7, 4, 14, 2, '#c9b383');
+    pixel(ctx, -7, -5, 2, 9, '#a9926a');
+    pixel(ctx, 5, -5, 2, 9, '#a9926a');
+    pixel(ctx, -3, -4, 2, 8, '#a9926a');
+    pixel(ctx, 1, -4, 2, 8, '#a9926a');
+    pixel(ctx, -6, -1, 12, 2, '#a9926a');
+    return;
+  }
+  if (device === 'flask') {
+    // Act 4 lotus flask: a spinning vial of yellow lotus with its stopper and a
+    // drop of light at the neck.
+    pixel(ctx, -4, -6, 8, 3, '#3a2a18');
+    roundedMass(ctx, -5, -3, 10, 9, '#2c2010');
+    roundedMass(ctx, -4, -2, 8, 7, '#f0c24e');
+    pixel(ctx, -4, -2, 8, 2, '#ffe9a0');
+    pixel(ctx, -3, 1, 3, 3, '#fff6cf');
+    pixel(ctx, -6, -7, 3, 2, '#c4912a');
+    return;
+  }
   // Mage bolt: a violet dart with a white-hot core.
   pixel(ctx, -6, -1, 12, 2, '#7a5bb8');
   pixel(ctx, -4, -2, 8, 4, '#a98bf0');
@@ -1543,6 +1576,592 @@ export function drawLilith(ctx, x, y, options = {}) {
   ctx.restore();
 }
 
+
+// Act 4 — Conan Exiles. The desert cast: sun-bleached cloth, packed leather,
+// bronze skin and the camp's iron. Same grid and same closed ink contour as the
+// rest of the game, so a wave of them never competes with the player.
+const DESERT_SKIN = { light: '#e6b07a', base: '#c0854e', mid: '#9c6636', dark: '#6d4524' };
+const DESERT_LEATHER = { light: '#8a5a33', base: '#5e3a1f', mid: '#442a15', dark: '#2b1a0c' };
+const DESERT_CLOTH = { light: '#e0d3ae', base: '#b7a678', mid: '#8d7f57', dark: '#62573a' };
+const DESERT_IRON = { light: '#d8d4d6', base: '#9a969e', mid: '#6d6a72', dark: '#3f3d44' };
+const DESERT_FUR = { light: '#efe3c4', base: '#c8b88f', dark: '#94845f' };
+const DESERT_RED = { light: '#c94f3b', base: '#a03225', mid: '#762219', dark: '#4d130d' };
+const DESERT_INK = '#171310';
+const DESERT_WOOD = { light: '#7d5731', base: '#563a1a', dark: '#31200e' };
+const ROPE = { light: '#e6d6ac', base: '#c9b383', dark: '#9c8459' };
+const EXILE_INDIGO = { light: '#436875', base: '#2c4952', mid: '#1d343b', dark: '#112228' };
+const EXILE_OLIVE = { light: '#7f8d4f', base: '#5d6b3a', mid: '#46512a', dark: '#2e3619' };
+const LOTUS = { light: '#ffe9a0', base: '#f0c24e', mid: '#c4912a', dark: '#8a5f18' };
+const SPORE = '#b6e06a';
+
+// Wave 1. Barbarian: the desert raider, bare bronze chest, a harness across the
+// ribs, a dark kilt and the stone axe resting on his shoulder. The read is the
+// wide shoulders, the red band of war paint and the axe; material stays at one
+// shade and one highlight so a crowd still reads.
+export function drawBarbarian(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 4 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -10, 0, 20, 2, '#131a20');
+  // Legs: ink contour, bronze thigh, leather wrap over the shin, strapped boot.
+  pixel(ctx, -8, -15 + stride, 7, 15 - stride, DESERT_INK);
+  pixel(ctx, -7, -14 + stride, 5, 13 - stride, DESERT_SKIN.base);
+  pixel(ctx, -7, -14 + stride, 2, 12 - stride, DESERT_SKIN.light);
+  pixel(ctx, -7, -7 + stride, 5, 3, DESERT_LEATHER.base);
+  pixel(ctx, -8, -4 + stride, 7, 4, DESERT_INK);
+  pixel(ctx, -7, -3 + stride, 5, 2, DESERT_LEATHER.dark);
+  pixel(ctx, -7, -3 + stride, 5, 1, DESERT_LEATHER.mid);
+  pixel(ctx, 1, -15 - stride, 7, 15 + stride, DESERT_INK);
+  pixel(ctx, 2, -14 - stride, 5, 13 + stride, DESERT_SKIN.mid);
+  pixel(ctx, 2, -14 - stride, 2, 12 + stride, DESERT_SKIN.base);
+  pixel(ctx, 2, -7 - stride, 5, 3, DESERT_LEATHER.base);
+  pixel(ctx, 1, -4 - stride, 7, 4, DESERT_INK);
+  pixel(ctx, 2, -3 - stride, 5, 2, DESERT_LEATHER.base);
+  pixel(ctx, 2, -3 - stride, 5, 1, DESERT_LEATHER.mid);
+  // Kilt: dark leather with a red strip over the front leg.
+  pixel(ctx, -9, -24, 19, 10, DESERT_INK);
+  pixel(ctx, -8, -23, 17, 8, DESERT_LEATHER.base);
+  pixel(ctx, -8, -23, 17, 1, DESERT_LEATHER.light);
+  pixel(ctx, -8, -16, 17, 1, DESERT_LEATHER.dark);
+  pixel(ctx, -2, -23, 5, 8, DESERT_RED.base);
+  pixel(ctx, -1, -22, 3, 6, DESERT_RED.light);
+  pixel(ctx, -8, -21, 17, 2, DESERT_LEATHER.dark);
+  pixel(ctx, -1, -21, 3, 2, DESERT_IRON.base);
+  // Torso: bronze chest under a diagonal harness, with the pecs in shadow.
+  pixel(ctx, -10, -38, 21, 19, DESERT_INK);
+  torsoBands(ctx, -8, -37, 17, 17, DESERT_SKIN);
+  pixel(ctx, -8, -37, 17, 1, DESERT_SKIN.light);
+  pixel(ctx, -8, -31, 17, 1, DESERT_SKIN.dark);
+  pixel(ctx, -1, -30, 2, 9, DESERT_SKIN.mid);
+  pixel(ctx, -7, -34, 5, 2, DESERT_SKIN.dark);
+  pixel(ctx, 2, -34, 5, 2, DESERT_SKIN.dark);
+  pixel(ctx, -8, -38, 4, 4, DESERT_LEATHER.base);
+  pixel(ctx, -4, -35, 4, 4, DESERT_LEATHER.base);
+  pixel(ctx, 0, -32, 4, 4, DESERT_LEATHER.base);
+  pixel(ctx, 4, -29, 4, 4, DESERT_LEATHER.base);
+  pixel(ctx, 1, -31, 2, 2, DESERT_IRON.base);
+  pixel(ctx, 1, -31, 1, 1, DESERT_IRON.light);
+  // Fur mantle over one shoulder only, so the silhouette is not symmetric.
+  pixel(ctx, -15, -40, 8, 8, DESERT_INK);
+  roundedMass(ctx, -14, -39, 6, 6, DESERT_FUR.base);
+  pixel(ctx, -14, -39, 4, 2, DESERT_FUR.light);
+  pixel(ctx, -14, -35, 5, 1, DESERT_FUR.dark);
+  pixel(ctx, 9, -40, 6, 5, DESERT_INK);
+  roundedMass(ctx, 10, -39, 4, 4, DESERT_FUR.dark);
+  // Left arm hangs with a fist; the right hand grips the axe on the shoulder.
+  pixel(ctx, -14, -36 + stride, 5, 13, DESERT_INK);
+  pixel(ctx, -13, -35 + stride, 3, 12, DESERT_SKIN.base);
+  pixel(ctx, -13, -35 + stride, 1, 11, DESERT_SKIN.light);
+  pixel(ctx, -15, -24 + stride, 6, 5, DESERT_INK);
+  pixel(ctx, -14, -23 + stride, 4, 3, DESERT_SKIN.light);
+  pixel(ctx, 9, -36 - stride, 5, 11, DESERT_INK);
+  pixel(ctx, 10, -35 - stride, 3, 10, DESERT_SKIN.mid);
+  pixel(ctx, 8, -26 - stride, 6, 5, DESERT_INK);
+  pixel(ctx, 9, -25 - stride, 4, 3, DESERT_SKIN.base);
+  // Stone axe: dark haft, iron head by the shoulder, one lit edge.
+  pixel(ctx, 10, -42, 2, 20, DESERT_WOOD.dark);
+  pixel(ctx, 10, -42, 1, 19, DESERT_WOOD.base);
+  pixel(ctx, 6, -44, 12, 7, DESERT_INK);
+  pixel(ctx, 7, -43, 10, 5, DESERT_IRON.base);
+  pixel(ctx, 7, -43, 8, 1, DESERT_IRON.light);
+  pixel(ctx, 7, -40, 10, 2, DESERT_IRON.dark);
+  pixel(ctx, 15, -43, 2, 5, DESERT_IRON.mid);
+  // Head: shaved sides, short hair, beard and the red band of war paint.
+  roundedMass(ctx, -8, -44, 17, 14, DESERT_INK);
+  roundedMass(ctx, -7, -43, 15, 12, DESERT_SKIN.base);
+  pixel(ctx, -7, -43, 11, 3, DESERT_SKIN.light);
+  pixel(ctx, -8, -41, 2, 5, '#3a2c1c');
+  pixel(ctx, 7, -41, 2, 5, '#3a2c1c');
+  pixel(ctx, -7, -38, 15, 3, DESERT_RED.base);
+  pixel(ctx, -7, -38, 15, 1, DESERT_RED.light);
+  pixel(ctx, -3, -36, 3, 2, DESERT_INK);
+  pixel(ctx, 3, -36, 3, 2, DESERT_INK);
+  pixel(ctx, -1, -33, 3, 2, DESERT_SKIN.mid);
+  pixel(ctx, -5, -31, 11, 2, DESERT_INK);
+  pixel(ctx, -4, -31, 9, 1, '#4a3a26');
+  pixel(ctx, -8, -34, 3, 4, DESERT_SKIN.dark);
+  pixel(ctx, 7, -34, 3, 4, DESERT_SKIN.dark);
+  ctx.restore();
+}
+
+// Wave 2. Archer: the guard on the wall. Olive tunic and a cream head wrap, so
+// it reads as the camp's own against the sand; the bow is the largest shape on
+// the body because a ranged kind has to be legible from across the pen.
+export function drawArcher(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 5 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -9, 0, 18, 2, '#131a20');
+  // Sandals, wrapped shins and the tunic hem.
+  pixel(ctx, -7, -3, 6, 3, DESERT_WOOD.dark);
+  pixel(ctx, 1, -3, 6, 3, DESERT_WOOD.base);
+  pixel(ctx, -6, -13 + stride, 4, 10 - stride, DESERT_INK);
+  pixel(ctx, -6, -12 + stride, 2, 9 - stride, DESERT_SKIN.base);
+  pixel(ctx, -6, -8 + stride, 4, 2, DESERT_CLOTH.mid);
+  pixel(ctx, 2, -13 - stride, 4, 10 + stride, DESERT_INK);
+  pixel(ctx, 2, -12 - stride, 2, 9 + stride, DESERT_SKIN.mid);
+  pixel(ctx, 2, -8 - stride, 4, 2, DESERT_CLOTH.mid);
+  pixel(ctx, -8, -21, 17, 10, DESERT_INK);
+  pixel(ctx, -7, -20, 15, 8, EXILE_OLIVE.base);
+  pixel(ctx, -7, -20, 15, 1, EXILE_OLIVE.light);
+  pixel(ctx, -7, -14, 15, 1, EXILE_OLIVE.dark);
+  pixel(ctx, -2, -20, 4, 8, EXILE_OLIVE.mid);
+  // Torso: olive tunic, leather belt, shoulder strap.
+  pixel(ctx, -9, -34, 19, 14, DESERT_INK);
+  torsoBands(ctx, -8, -33, 17, 12, EXILE_OLIVE);
+  pixel(ctx, -8, -33, 17, 1, EXILE_OLIVE.light);
+  pixel(ctx, -8, -22, 17, 2, DESERT_LEATHER.dark);
+  pixel(ctx, -1, -22, 3, 2, DESERT_IRON.base);
+  pixel(ctx, -3, -33, 3, 9, DESERT_LEATHER.base);
+  pixel(ctx, 1, -26, 3, 3, DESERT_LEATHER.mid);
+  // Arms: the left holds the bow out, the right draws the string.
+  pixel(ctx, -12, -33 + stride, 5, 11, DESERT_INK);
+  pixel(ctx, -11, -32 + stride, 3, 10, DESERT_SKIN.base);
+  pixel(ctx, -11, -32 + stride, 1, 9, DESERT_SKIN.light);
+  pixel(ctx, 8, -33 - stride, 4, 11, DESERT_INK);
+  pixel(ctx, 9, -32 - stride, 2, 10, DESERT_SKIN.mid);
+  // Quiver over the right shoulder with two red fletchings.
+  pixel(ctx, 8, -35, 6, 13, DESERT_INK);
+  pixel(ctx, 9, -34, 4, 11, DESERT_LEATHER.base);
+  pixel(ctx, 9, -34, 1, 10, DESERT_LEATHER.light);
+  pixel(ctx, 9, -38, 3, 3, DESERT_RED.base);
+  pixel(ctx, 12, -38, 2, 3, DESERT_CLOTH.light);
+  // Bow: a dark arc in front of the body, strung, with the arrow nocked.
+  pixel(ctx, -18, -36, 4, 5, DESERT_INK);
+  pixel(ctx, -17, -35, 2, 4, DESERT_WOOD.base);
+  pixel(ctx, -20, -31, 6, 12, DESERT_INK);
+  pixel(ctx, -19, -30, 4, 10, DESERT_WOOD.base);
+  pixel(ctx, -19, -30, 1, 10, DESERT_WOOD.light);
+  pixel(ctx, -18, -18, 5, 5, DESERT_INK);
+  pixel(ctx, -17, -17, 3, 4, DESERT_WOOD.base);
+  pixel(ctx, -16, -31, 1, 13, ROPE.light);
+  pixel(ctx, -14, -26, 18, 2, DESERT_INK);
+  pixel(ctx, -13, -26, 17, 1, DESERT_CLOTH.light);
+  pixel(ctx, 4, -27, 3, 4, DESERT_IRON.base);
+  pixel(ctx, 4, -27, 3, 1, DESERT_IRON.light);
+  pixel(ctx, -13, -27, 3, 3, DESERT_RED.base);
+  // Head: cream wrap, only the eyes and nose showing.
+  roundedMass(ctx, -7, -45, 14, 13, DESERT_INK);
+  roundedMass(ctx, -6, -44, 12, 11, DESERT_CLOTH.base);
+  pixel(ctx, -6, -44, 12, 1, DESERT_CLOTH.light);
+  pixel(ctx, -6, -45, 12, 2, DESERT_CLOTH.dark);
+  pixel(ctx, -6, -39, 12, 3, DESERT_SKIN.base);
+  pixel(ctx, -6, -39, 12, 1, DESERT_SKIN.light);
+  pixel(ctx, -4, -38, 3, 1, DESERT_INK);
+  pixel(ctx, 2, -38, 3, 1, DESERT_INK);
+  pixel(ctx, -1, -36, 3, 2, DESERT_SKIN.mid);
+  pixel(ctx, -6, -34, 12, 2, DESERT_CLOTH.mid);
+  pixel(ctx, 5, -43, 4, 6, DESERT_CLOTH.dark);
+  ctx.restore();
+}
+
+// Wave 2. Slaver: the camp's crew, heavier than a raider. Indigo vest open over
+// the chest, a rope coil and the net he throws slung over one shoulder. The net
+// is a handful of crossed strands, not a texture: at two pixels a strand a grid
+// turns the body grey.
+export function drawSlaver(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 4 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -10, 0, 20, 2, '#131a20');
+  // Heavy boots and wrapped trousers.
+  pixel(ctx, -8, -5, 7, 5, DESERT_INK);
+  pixel(ctx, -7, -4, 5, 4, DESERT_LEATHER.dark);
+  pixel(ctx, 1, -5, 7, 5, DESERT_INK);
+  pixel(ctx, 2, -4, 5, 4, DESERT_LEATHER.base);
+  pixel(ctx, -7, -1, 5, 1, DESERT_LEATHER.mid);
+  pixel(ctx, 2, -1, 5, 1, DESERT_LEATHER.light);
+  pixel(ctx, -7, -15 + stride, 6, 10 - stride, DESERT_INK);
+  pixel(ctx, -6, -14 + stride, 4, 9 - stride, DESERT_CLOTH.base);
+  pixel(ctx, -6, -14 + stride, 1, 8 - stride, DESERT_CLOTH.light);
+  pixel(ctx, 2, -15 - stride, 6, 10 + stride, DESERT_INK);
+  pixel(ctx, 3, -14 - stride, 4, 9 + stride, DESERT_CLOTH.mid);
+  pixel(ctx, 3, -14 - stride, 1, 8 + stride, DESERT_CLOTH.base);
+  pixel(ctx, -6, -8 + stride, 4, 1, DESERT_CLOTH.dark);
+  pixel(ctx, 3, -8 - stride, 4, 1, DESERT_CLOTH.dark);
+  // Hips: the trousers' waist closes the gap between the belt and both legs.
+  pixel(ctx, -8, -23, 17, 10, DESERT_INK);
+  pixel(ctx, -7, -22, 15, 9, DESERT_CLOTH.base);
+  pixel(ctx, -7, -22, 15, 1, DESERT_CLOTH.light);
+  pixel(ctx, -7, -14, 15, 1, DESERT_CLOTH.dark);
+  pixel(ctx, -2, -22, 4, 8, DESERT_CLOTH.mid);
+  // Torso: barrel chest under the open indigo vest.
+  pixel(ctx, -11, -38, 23, 17, DESERT_INK);
+  torsoBands(ctx, -8, -37, 17, 15, DESERT_SKIN);
+  pixel(ctx, -8, -37, 17, 1, DESERT_SKIN.light);
+  pixel(ctx, -1, -32, 2, 9, DESERT_SKIN.dark);
+  pixel(ctx, -10, -38, 6, 17, EXILE_INDIGO.base);
+  pixel(ctx, -10, -38, 2, 16, EXILE_INDIGO.light);
+  pixel(ctx, -5, -38, 1, 17, EXILE_INDIGO.dark);
+  pixel(ctx, 6, -38, 6, 17, EXILE_INDIGO.base);
+  pixel(ctx, 10, -38, 2, 16, EXILE_INDIGO.dark);
+  pixel(ctx, 6, -38, 1, 17, EXILE_INDIGO.mid);
+  pixel(ctx, -4, -31, 2, 2, DESERT_LEATHER.mid);
+  pixel(ctx, 4, -31, 2, 2, DESERT_LEATHER.mid);
+  pixel(ctx, -8, -24, 17, 3, DESERT_LEATHER.dark);
+  pixel(ctx, -1, -24, 3, 3, DESERT_IRON.base);
+  pixel(ctx, -1, -24, 1, 1, DESERT_IRON.light);
+  // Rope coil at the left hip.
+  pixel(ctx, -14, -23, 6, 8, DESERT_INK);
+  roundedMass(ctx, -13, -22, 4, 6, ROPE.base);
+  pixel(ctx, -13, -22, 3, 1, ROPE.light);
+  pixel(ctx, -13, -19, 3, 1, ROPE.dark);
+  // Net over the right shoulder: crossed strands ending on the vest.
+  pixel(ctx, 4, -41, 10, 3, DESERT_INK);
+  pixel(ctx, 5, -40, 8, 1, ROPE.base);
+  pixel(ctx, 5, -40, 8, 1, ROPE.light);
+  pixel(ctx, 6, -39, 1, 14, ROPE.base);
+  pixel(ctx, 11, -39, 1, 12, ROPE.light);
+  pixel(ctx, 5, -33, 8, 1, ROPE.base);
+  pixel(ctx, 5, -27, 8, 1, ROPE.dark);
+  pixel(ctx, 8, -39, 1, 13, ROPE.dark);
+  pixel(ctx, 3, -24, 1, 6, ROPE.base);
+  // Left arm hangs; the right holds the short blade out.
+  pixel(ctx, -15, -36 + stride, 5, 13, DESERT_INK);
+  pixel(ctx, -14, -35 + stride, 3, 12, DESERT_SKIN.base);
+  pixel(ctx, -14, -35 + stride, 1, 11, DESERT_SKIN.light);
+  pixel(ctx, -16, -24 + stride, 6, 5, DESERT_INK);
+  pixel(ctx, -15, -23 + stride, 4, 3, DESERT_SKIN.mid);
+  pixel(ctx, 10, -36 - stride, 5, 12, DESERT_INK);
+  pixel(ctx, 11, -35 - stride, 3, 11, DESERT_SKIN.base);
+  pixel(ctx, 9, -25 - stride, 6, 5, DESERT_INK);
+  pixel(ctx, 10, -24 - stride, 4, 3, DESERT_SKIN.light);
+  // Short blade angled out of the fist: haft, guard, lit edge.
+  pixel(ctx, 13, -24 - stride, 3, 12, DESERT_INK);
+  pixel(ctx, 14, -23 - stride, 2, 10, DESERT_IRON.base);
+  pixel(ctx, 14, -23 - stride, 1, 9, DESERT_IRON.light);
+  pixel(ctx, 12, -27 - stride, 6, 3, DESERT_INK);
+  pixel(ctx, 13, -26 - stride, 4, 1, DESERT_WOOD.base);
+  // Head: shaved, leather band round the brow, short beard.
+  roundedMass(ctx, -8, -44, 16, 14, DESERT_INK);
+  roundedMass(ctx, -7, -43, 14, 12, DESERT_SKIN.base);
+  pixel(ctx, -7, -43, 10, 2, DESERT_SKIN.light);
+  pixel(ctx, -7, -39, 14, 2, DESERT_LEATHER.base);
+  pixel(ctx, -7, -39, 14, 1, DESERT_LEATHER.light);
+  pixel(ctx, -4, -36, 3, 2, DESERT_INK);
+  pixel(ctx, 3, -36, 3, 2, DESERT_INK);
+  pixel(ctx, -1, -33, 3, 2, DESERT_SKIN.mid);
+  pixel(ctx, -6, -31, 12, 3, DESERT_INK);
+  pixel(ctx, -5, -31, 10, 1, '#4a3418');
+  ctx.restore();
+}
+
+// Wave 4. Alchemist: robed, hooded, a flask of Yellow Lotus in each hand and a
+// belt of vials. The mustard robe and the lotus yellow are the act's own trade,
+// and they keep it legible against sand and against the archer's olive.
+export function drawAlchemist(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 5 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -9, 0, 18, 2, '#131a20');
+  // Feet barely show under the robe; the hem moves instead.
+  pixel(ctx, -6, -3, 5, 3, DESERT_LEATHER.dark);
+  pixel(ctx, 1, -3, 5, 3, DESERT_LEATHER.base);
+  pixel(ctx, -7, -5 + stride, 7, 3, DESERT_CLOTH.dark);
+  pixel(ctx, 1, -5 - stride, 7, 3, DESERT_CLOTH.dark);
+  // Robe: ink contour, layered skirt, dark front panel.
+  pixel(ctx, -10, -32, 21, 29, DESERT_INK);
+  roundedMass(ctx, -9, -31, 19, 28, DESERT_CLOTH.base);
+  pixel(ctx, -9, -31, 19, 2, DESERT_CLOTH.light);
+  pixel(ctx, -2, -30, 4, 26, DESERT_CLOTH.dark);
+  pixel(ctx, -9, -9, 19, 2, DESERT_CLOTH.mid);
+  pixel(ctx, -10, -7, 21, 2, DESERT_CLOTH.dark);
+  pixel(ctx, -12, -10, 4, 5, DESERT_CLOTH.dark);
+  pixel(ctx, 9, -10, 4, 5, DESERT_CLOTH.dark);
+  // Apron with the lotus stain.
+  pixel(ctx, -7, -28, 15, 17, DESERT_INK);
+  pixel(ctx, -6, -27, 13, 15, '#9c8a5e');
+  pixel(ctx, -6, -27, 13, 1, '#b8a674');
+  pixel(ctx, -4, -20, 9, 5, LOTUS.dark);
+  pixel(ctx, -3, -19, 7, 3, LOTUS.base);
+  pixel(ctx, -2, -19, 5, 1, LOTUS.light);
+  // Vial belt.
+  pixel(ctx, -9, -13, 19, 2, DESERT_LEATHER.dark);
+  pixel(ctx, -7, -12, 4, 5, DESERT_INK);
+  pixel(ctx, -6, -11, 2, 3, SPORE);
+  pixel(ctx, -1, -12, 4, 6, DESERT_INK);
+  pixel(ctx, 0, -11, 2, 4, LOTUS.base);
+  pixel(ctx, 5, -12, 3, 4, DESERT_INK);
+  pixel(ctx, 6, -11, 1, 2, '#8ade5a');
+  // Sleeves: one hangs, one raises the flask.
+  pixel(ctx, -14, -30 + stride, 6, 13, DESERT_INK);
+  pixel(ctx, -13, -29 + stride, 4, 12, DESERT_CLOTH.base);
+  pixel(ctx, -13, -29 + stride, 1, 11, DESERT_CLOTH.light);
+  pixel(ctx, 8, -32 - stride, 6, 11, DESERT_INK);
+  pixel(ctx, 9, -31 - stride, 4, 10, DESERT_CLOTH.base);
+  pixel(ctx, 9, -31 - stride, 1, 9, DESERT_CLOTH.light);
+  // Raised flask, glowing.
+  pixel(ctx, 9, -39 - stride, 6, 8, DESERT_INK);
+  roundedMass(ctx, 10, -38 - stride, 4, 6, LOTUS.base);
+  pixel(ctx, 10, -38 - stride, 3, 2, LOTUS.light);
+  pixel(ctx, 10, -41 - stride, 3, 2, DESERT_WOOD.dark);
+  // Lower flask.
+  pixel(ctx, -14, -18 + stride, 5, 7, DESERT_INK);
+  pixel(ctx, -13, -17 + stride, 3, 5, LOTUS.mid);
+  pixel(ctx, -13, -17 + stride, 1, 3, LOTUS.light);
+  // Hood over the head, face in shadow, two lit eyes.
+  roundedMass(ctx, -8, -43, 17, 16, DESERT_INK);
+  roundedMass(ctx, -7, -42, 15, 14, DESERT_CLOTH.base);
+  pixel(ctx, -7, -42, 15, 2, DESERT_CLOTH.light);
+  pixel(ctx, -7, -44, 15, 2, DESERT_CLOTH.dark);
+  pixel(ctx, -6, -37, 13, 6, DESERT_INK);
+  pixel(ctx, -4, -36, 3, 2, LOTUS.light);
+  pixel(ctx, 3, -36, 3, 2, LOTUS.base);
+  pixel(ctx, -7, -31, 15, 2, DESERT_CLOTH.mid);
+  pixel(ctx, 6, -41, 3, 7, DESERT_CLOTH.dark);
+  ctx.restore();
+}
+
+// Wave 5. El Alquimista del Loto, the act's mini-boss: tall, hooded, a lotus mask
+// over the face and a censer on a staff. Bosses carry the cast's detail, so the
+// robe gets layers, trim, a full belt of vials and smoke climbing off the censer
+// — but the palette stays the act's yellow and cloth, never the dungeon's red.
+export function drawLotusAlchemist(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const drift = Math.floor(time * 3) % 3;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -19, 0, 39, 3, '#131a20');
+  // Sandals under a long, layered robe.
+  pixel(ctx, -11, -6, 10, 6, DESERT_LEATHER.dark);
+  pixel(ctx, -10, -5, 8, 4, DESERT_LEATHER.base);
+  pixel(ctx, -10, -2, 8, 1, DESERT_LEATHER.mid);
+  pixel(ctx, 2, -6, 10, 6, DESERT_LEATHER.dark);
+  pixel(ctx, 3, -5, 8, 4, DESERT_LEATHER.mid);
+  pixel(ctx, 3, -2, 8, 1, DESERT_LEATHER.base);
+  // Inner robe over the whole body, then the flared skirt over it.
+  pixel(ctx, -15, -58, 31, 53, DESERT_INK);
+  roundedMass(ctx, -14, -57, 29, 52, DESERT_CLOTH.base);
+  pixel(ctx, -14, -57, 29, 3, DESERT_CLOTH.light);
+  pixel(ctx, -3, -55, 7, 47, DESERT_CLOTH.dark);
+  pixel(ctx, -14, -22, 29, 2, DESERT_CLOTH.mid);
+  pixel(ctx, -16, -14, 34, 9, DESERT_INK);
+  roundedMass(ctx, -15, -13, 33, 8, DESERT_CLOTH.base);
+  pixel(ctx, -15, -13, 33, 1, DESERT_CLOTH.light);
+  pixel(ctx, -15, -7, 33, 1, DESERT_CLOTH.dark);
+  pixel(ctx, -21, -11, 6, 6, DESERT_CLOTH.dark);
+  pixel(ctx, 15, -11, 6, 6, DESERT_CLOTH.dark);
+  pixel(ctx, -19, -10, 4, 1, DESERT_CLOTH.mid);
+  pixel(ctx, 15, -10, 4, 1, DESERT_CLOTH.mid);
+  // Apron, lotus stain and embroidered hem.
+  pixel(ctx, -11, -54, 23, 32, DESERT_INK);
+  pixel(ctx, -10, -53, 21, 30, '#9c8a5e');
+  pixel(ctx, -10, -53, 21, 2, '#b8a674');
+  pixel(ctx, -10, -26, 21, 2, LOTUS.mid);
+  pixel(ctx, -5, -44, 12, 9, LOTUS.dark);
+  pixel(ctx, -4, -42, 10, 6, LOTUS.base);
+  pixel(ctx, -3, -41, 8, 4, LOTUS.light);
+  pixel(ctx, -1, -40, 4, 1, '#fff6cf');
+  pixel(ctx, 6, -44, 4, 7, LOTUS.mid);
+  pixel(ctx, -8, -37, 4, 4, LOTUS.mid);
+  // Vial belt across the apron.
+  pixel(ctx, -12, -26, 25, 3, DESERT_LEATHER.dark);
+  for (let index = 0; index < 5; index++) {
+    const bx = -11 + index * 5;
+    pixel(ctx, bx, -24, 4, 7, DESERT_INK);
+    pixel(ctx, bx + 1, -23, 2, 5, [SPORE, LOTUS.base, '#8ade5a', LOTUS.mid, SPORE][index]);
+    pixel(ctx, bx + 1, -23, 1, 3, LOTUS.light);
+  }
+  // Shoulder mantle over both sleeves, wide enough to break the column read.
+  pixel(ctx, -20, -63, 43, 6, DESERT_INK);
+  roundedMass(ctx, -19, -62, 41, 4, DESERT_CLOTH.mid);
+  pixel(ctx, -19, -62, 41, 1, DESERT_CLOTH.light);
+  pixel(ctx, -22, -61, 5, 4, DESERT_CLOTH.dark);
+  pixel(ctx, 17, -61, 5, 4, DESERT_CLOTH.dark);
+  pixel(ctx, -21, -60, 3, 1, DESERT_CLOTH.mid);
+  pixel(ctx, 18, -60, 3, 1, DESERT_CLOTH.mid);
+  // Sleeves and hands: wide cuffs, thin wrists.
+  pixel(ctx, -22, -56, 9, 22, DESERT_INK);
+  roundedMass(ctx, -21, -55, 7, 20, DESERT_CLOTH.base);
+  pixel(ctx, -21, -55, 1, 19, DESERT_CLOTH.light);
+  pixel(ctx, -16, -37, 7, 5, DESERT_CLOTH.dark);
+  pixel(ctx, 13, -56, 9, 20, DESERT_INK);
+  roundedMass(ctx, 14, -55, 7, 18, DESERT_CLOTH.base);
+  pixel(ctx, 20, -55, 1, 17, DESERT_CLOTH.dark);
+  pixel(ctx, 13, -39, 7, 5, DESERT_CLOTH.dark);
+  pixel(ctx, -22, -34, 7, 6, DESERT_INK);
+  pixel(ctx, -21, -33, 5, 4, DESERT_SKIN.mid);
+  pixel(ctx, -21, -33, 5, 1, DESERT_SKIN.base);
+  pixel(ctx, 14, -37, 7, 6, DESERT_INK);
+  pixel(ctx, 15, -36, 5, 4, DESERT_SKIN.base);
+  pixel(ctx, 15, -36, 5, 1, DESERT_SKIN.light);
+  // Censer staff in the right hand: haft, iron bowl, embers and smoke climbing.
+  pixel(ctx, 20, -76, 3, 46, DESERT_WOOD.dark);
+  pixel(ctx, 20, -76, 1, 45, DESERT_WOOD.light);
+  pixel(ctx, 15, -78, 12, 4, DESERT_INK);
+  pixel(ctx, 16, -77, 10, 2, DESERT_IRON.base);
+  pixel(ctx, 17, -82, 8, 4, DESERT_IRON.dark);
+  pixel(ctx, 18, -82, 6, 2, DESERT_IRON.base);
+  pixel(ctx, 18, -82, 4, 1, DESERT_IRON.light);
+  pixel(ctx, 19, -85, 4, 3, LOTUS.base);
+  pixel(ctx, 20, -85, 2, 2, '#fff6cf');
+  pixel(ctx, 23, -93 + drift, 3, 3, '#e0d5b0cc');
+  pixel(ctx, 15, -99 + drift, 3, 3, '#e0d5b0aa');
+  pixel(ctx, 25, -105 + drift, 2, 2, '#e0d5b0aa');
+  // Head: cloth hood, the lotus mask of five petals and two burning eyes.
+  roundedMass(ctx, -13, -70, 27, 17, DESERT_INK);
+  roundedMass(ctx, -12, -69, 25, 15, DESERT_CLOTH.base);
+  pixel(ctx, -12, -69, 25, 2, DESERT_CLOTH.light);
+  pixel(ctx, -9, -76, 19, 5, DESERT_CLOTH.mid);
+  pixel(ctx, -7, -78, 15, 3, DESERT_CLOTH.base);
+  pixel(ctx, -6, -78, 13, 1, DESERT_CLOTH.light);
+  pixel(ctx, -10, -63, 21, 9, DESERT_INK);
+  pixel(ctx, -9, -62, 19, 7, LOTUS.dark);
+  pixel(ctx, 3, -65, 5, 5, LOTUS.base);
+  pixel(ctx, -6, -65, 5, 5, LOTUS.base);
+  pixel(ctx, -2, -68, 5, 4, LOTUS.mid);
+  pixel(ctx, -8, -58, 6, 5, LOTUS.mid);
+  pixel(ctx, 3, -58, 6, 5, LOTUS.mid);
+  pixel(ctx, -1, -58, 5, 4, LOTUS.base);
+  pixel(ctx, -1, -56, 3, 2, LOTUS.light);
+  pixel(ctx, -6, -63, 4, 2, LOTUS.light);
+  pixel(ctx, 3, -63, 4, 2, LOTUS.light);
+  pixel(ctx, -5, -62, 2, 1, '#fff6cf');
+  pixel(ctx, 3, -62, 2, 1, '#fff6cf');
+  pixel(ctx, -1, -54, 3, 3, LOTUS.mid);
+  pixel(ctx, -2, -53, 5, 1, LOTUS.light);
+  pixel(ctx, -18, -76, 5, 2, '#e0d5b066');
+  ctx.restore();
+}
+
+// Wave 6. El Capataz de la Rueda del Dolor, the act's boss: a tower of iron over
+// a red loincloth, chains coiled round both forearms and a whip trailing behind
+// him. The silhouette is read from the shoulders down: horned helm, two spiked
+// pauldrons, chains, and the wheel's iron on his belt.
+export function drawTaskmaster(ctx, x, y, options = {}) {
+  const { time = 0, scale = 2 } = options;
+  const sway = Math.floor(time * 3) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -23, 0, 47, 3, '#131a20');
+  // Armoured boots and greaves.
+  pixel(ctx, -15, -9, 13, 9, DESERT_INK);
+  pixel(ctx, -14, -8, 11, 7, DESERT_IRON.dark);
+  pixel(ctx, -14, -8, 4, 6, DESERT_IRON.base);
+  pixel(ctx, -14, -2, 11, 1, DESERT_IRON.mid);
+  pixel(ctx, -11, -6, 7, 1, '#2c2a30');
+  pixel(ctx, 2, -9, 13, 9, DESERT_INK);
+  pixel(ctx, 3, -8, 11, 7, DESERT_IRON.dark);
+  pixel(ctx, 3, -8, 4, 6, DESERT_IRON.base);
+  pixel(ctx, 3, -2, 11, 1, DESERT_IRON.mid);
+  pixel(ctx, 6, -6, 7, 1, '#2c2a30');
+  // Thighs, knee plates.
+  pixel(ctx, -14, -23 + sway, 12, 15, DESERT_INK);
+  pixel(ctx, -13, -22 + sway, 10, 13, DESERT_SKIN.mid);
+  pixel(ctx, -13, -22 + sway, 3, 12, DESERT_SKIN.base);
+  pixel(ctx, -14, -15 + sway, 12, 4, DESERT_INK);
+  pixel(ctx, -13, -14 + sway, 10, 2, DESERT_IRON.base);
+  pixel(ctx, 2, -23 - sway, 12, 15, DESERT_INK);
+  pixel(ctx, 3, -22 - sway, 10, 13, DESERT_SKIN.base);
+  pixel(ctx, 3, -22 - sway, 3, 12, DESERT_SKIN.light);
+  pixel(ctx, 2, -15 - sway, 12, 4, DESERT_INK);
+  pixel(ctx, 3, -14 - sway, 10, 2, DESERT_IRON.base);
+  // Belt with the wheel's iron ring, and the hang of the red loincloth.
+  pixel(ctx, -17, -39, 35, 6, DESERT_INK);
+  pixel(ctx, -16, -38, 33, 4, DESERT_LEATHER.dark);
+  pixel(ctx, -16, -38, 33, 1, DESERT_LEATHER.base);
+  pixel(ctx, -4, -38, 7, 5, DESERT_IRON.dark);
+  pixel(ctx, -3, -37, 5, 4, DESERT_IRON.base);
+  pixel(ctx, -2, -36, 3, 2, DESERT_IRON.dark);
+  pixel(ctx, -10, -34, 21, 16, DESERT_INK);
+  pixel(ctx, -9, -33, 19, 14, DESERT_RED.base);
+  pixel(ctx, -9, -33, 19, 1, DESERT_RED.light);
+  pixel(ctx, -9, -24, 19, 1, DESERT_RED.dark);
+  pixel(ctx, -2, -33, 3, 14, DESERT_RED.dark);
+  // Torso: armoured chest, plates, rivets and the scar across it.
+  pixel(ctx, -20, -66, 41, 28, DESERT_INK);
+  roundedMass(ctx, -19, -65, 39, 26, DESERT_IRON.base);
+  pixel(ctx, -19, -65, 39, 2, DESERT_IRON.light);
+  pixel(ctx, -19, -49, 39, 9, DESERT_IRON.dark);
+  pixel(ctx, -14, -62, 14, 9, DESERT_IRON.mid);
+  pixel(ctx, 2, -62, 14, 9, DESERT_IRON.mid);
+  pixel(ctx, -13, -61, 12, 1, DESERT_IRON.light);
+  pixel(ctx, 3, -61, 12, 1, DESERT_IRON.light);
+  for (let index = 0; index < 5; index++) {
+    pixel(ctx, -17 + index * 8, -57, 2, 2, '#26242a');
+    pixel(ctx, -17 + index * 8, -45, 2, 2, '#26242a');
+  }
+  // An old whip scar crossing the chest plates, not a painted cross.
+  pixel(ctx, -8, -58, 3, 2, DESERT_RED.dark);
+  pixel(ctx, -6, -56, 3, 2, DESERT_RED.base);
+  pixel(ctx, -4, -54, 4, 2, DESERT_RED.dark);
+  pixel(ctx, -1, -52, 4, 2, DESERT_RED.base);
+  pixel(ctx, 2, -50, 3, 2, DESERT_RED.dark);
+  pixel(ctx, -7, -57, 2, 1, DESERT_RED.light);
+  // Spiked pauldrons: rounded iron with short spikes, no antennae.
+  pixel(ctx, -28, -68, 12, 13, DESERT_INK);
+  roundedMass(ctx, -27, -67, 10, 11, DESERT_IRON.base);
+  pixel(ctx, -27, -67, 10, 2, DESERT_IRON.light);
+  pixel(ctx, -27, -60, 10, 1, DESERT_IRON.mid);
+  pixel(ctx, -29, -72, 5, 5, DESERT_IRON.dark);
+  pixel(ctx, -28, -72, 3, 3, DESERT_IRON.base);
+  pixel(ctx, -30, -70, 3, 4, DESERT_IRON.dark);
+  pixel(ctx, 17, -68, 12, 13, DESERT_INK);
+  roundedMass(ctx, 18, -67, 10, 11, DESERT_IRON.base);
+  pixel(ctx, 18, -67, 10, 2, DESERT_IRON.light);
+  pixel(ctx, 18, -60, 10, 1, DESERT_IRON.mid);
+  pixel(ctx, 25, -72, 5, 5, DESERT_IRON.dark);
+  pixel(ctx, 26, -72, 3, 3, DESERT_IRON.base);
+  pixel(ctx, 28, -70, 3, 4, DESERT_IRON.dark);
+  // Arms wrapped in chains: rows of links over both forearms.
+  pixel(ctx, -28, -56 + sway, 11, 26, DESERT_SKIN.mid);
+  pixel(ctx, -27, -55 + sway, 9, 24, DESERT_SKIN.base);
+  pixel(ctx, -27, -55 + sway, 2, 23, DESERT_SKIN.light);
+  pixel(ctx, 18, -56 - sway, 11, 26, DESERT_SKIN.base);
+  pixel(ctx, 19, -55 - sway, 9, 24, DESERT_SKIN.mid);
+  pixel(ctx, 19, -55 - sway, 2, 23, DESERT_SKIN.light);
+  for (let ring = 0; ring < 8; ring++) {
+    const left = -54 + ring * 3 + sway;
+    const right = -54 + ring * 3 - sway;
+    pixel(ctx, -28, left, 11, 2, DESERT_INK);
+    pixel(ctx, -27, left, 5, 1, DESERT_IRON.base);
+    pixel(ctx, -21, left, 4, 1, DESERT_IRON.mid);
+    pixel(ctx, -27, left + 1, 9, 1, DESERT_IRON.dark);
+    pixel(ctx, 18, right, 11, 2, DESERT_INK);
+    pixel(ctx, 19, right, 5, 1, DESERT_IRON.base);
+    pixel(ctx, 25, right, 4, 1, DESERT_IRON.mid);
+    pixel(ctx, 19, right + 1, 9, 1, DESERT_IRON.dark);
+  }
+  // Hands.
+  pixel(ctx, -29, -32 + sway, 13, 9, DESERT_INK);
+  pixel(ctx, -28, -31 + sway, 11, 7, DESERT_SKIN.mid);
+  pixel(ctx, -28, -31 + sway, 11, 1, DESERT_SKIN.base);
+  pixel(ctx, 17, -32 - sway, 13, 9, DESERT_INK);
+  pixel(ctx, 18, -31 - sway, 11, 7, DESERT_SKIN.base);
+  pixel(ctx, 18, -31 - sway, 11, 1, DESERT_SKIN.light);
+  // Whip in the left hand: a slack line that reaches the ground behind him.
+  pixel(ctx, -31, -26 + sway, 4, 4, DESERT_LEATHER.dark);
+  pixel(ctx, -35, -25 + sway, 5, 2, DESERT_LEATHER.base);
+  pixel(ctx, -40, -26 + sway, 6, 2, DESERT_LEATHER.base);
+  pixel(ctx, -44, -23 + sway, 5, 2, DESERT_LEATHER.dark);
+  pixel(ctx, -46, -19 + sway, 3, 5, DESERT_LEATHER.base);
+  pixel(ctx, -45, -15 + sway, 2, 2, DESERT_LEATHER.dark);
+  pixel(ctx, -25, -27 + sway, 4, 2, DESERT_RED.base);
+  // Helm: horned iron over red cloth, the face in shadow, two lit eyes.
+  roundedMass(ctx, -14, -84, 29, 19, DESERT_INK);
+  roundedMass(ctx, -13, -83, 27, 17, DESERT_IRON.base);
+  pixel(ctx, -13, -83, 27, 2, DESERT_IRON.light);
+  pixel(ctx, -13, -71, 27, 5, DESERT_IRON.mid);
+  pixel(ctx, -13, -71, 27, 1, DESERT_IRON.dark);
+  pixel(ctx, -10, -78, 21, 7, DESERT_INK);
+  pixel(ctx, -6, -76, 4, 2, '#ffd34e');
+  pixel(ctx, 3, -76, 4, 2, '#ffd34e');
+  pixel(ctx, -2, -68, 5, 2, DESERT_IRON.dark);
+  // Horns: short, curved outward from the helm's sides.
+  pixel(ctx, -16, -88, 5, 6, DESERT_IRON.dark);
+  pixel(ctx, -17, -90, 5, 4, DESERT_IRON.dark);
+  pixel(ctx, -20, -92, 5, 3, DESERT_IRON.base);
+  pixel(ctx, -19, -92, 4, 1, DESERT_IRON.light);
+  pixel(ctx, -18, -89, 3, 3, DESERT_IRON.base);
+  pixel(ctx, 12, -88, 5, 6, DESERT_IRON.dark);
+  pixel(ctx, 13, -90, 5, 4, DESERT_IRON.dark);
+  pixel(ctx, 16, -92, 5, 3, DESERT_IRON.base);
+  pixel(ctx, 16, -92, 4, 1, DESERT_IRON.light);
+  pixel(ctx, 16, -89, 3, 3, DESERT_IRON.base);
+  pixel(ctx, -14, -86, 29, 3, DESERT_RED.base);
+  pixel(ctx, -14, -86, 29, 1, DESERT_RED.light);
+  pixel(ctx, -15, -82, 3, 6, DESERT_RED.dark);
+  pixel(ctx, 13, -82, 3, 6, DESERT_RED.dark);
+  ctx.restore();
+}
 
 export function drawAdministrator(ctx, x, y, options = {}) {
   pose(ctx, x, y, options.scale || 4);

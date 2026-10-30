@@ -143,3 +143,30 @@ test('the Rift minions keep the same six-stat sheet, each with its own numbers',
   assert.equal(ENEMY_KINDS.siegeMinion.projectile, 'shell');
   assert.equal(enemyBounty('siegeMinion'), 3);
 });
+
+test('the act 4 roster authors its own sheets, reach and roles', () => {
+  assert.equal(enemyHp('barbarian', 1), 39);
+  assert.equal(enemyBounty('barbarian'), 2);
+  assert.equal(enemyBounty('slaver'), 3);
+  assert.equal(enemyBounty('archer'), 3);
+  assert.equal(enemyBounty('alchemist'), 4);
+  assert.deepEqual(ENEMY_KINDS.slaver.actions.map(action => action.key), ['swipe', 'net']);
+  assert.ok(ENEMY_KINDS.slaver.actions[1].range > 0, 'the net is thrown from a distance');
+  // The archer is the act's artillery: it keeps its distance and looses an arrow.
+  assert.ok(enemyAttackRange('archer', 2) > 100, 'the archer fires from range');
+  assert.equal(ENEMY_KINDS.archer.projectile, 'arrow');
+  assert.equal(ENEMY_KINDS.alchemist.projectile, 'flask');
+  assert.deepEqual(ENEMY_KINDS.alchemist.actions.map(action => action.key), ['throw', 'spores']);
+  // The mini-boss and the boss are flagged, and the boss outlasts the mini-boss.
+  assert.equal(ENEMY_KINDS.lotusAlchemist.boss, true);
+  assert.equal(ENEMY_KINDS.taskmaster.boss, true);
+  assert.deepEqual(ENEMY_KINDS.lotusAlchemist.actions.map(action => action.key),
+    ['swipe', 'lotus', 'visions', 'spores', 'overdose']);
+  assert.deepEqual(ENEMY_KINDS.taskmaster.actions.map(action => action.key),
+    ['swipe', 'chains', 'whip', 'guards', 'wheel', 'rage']);
+  assert.ok(enemyHp('taskmaster') > enemyHp('lotusAlchemist'), 'the boss outlasts the mini-boss');
+  // The two phases are not the same mechanic: one speeds the hands, the other
+  // trades armour for speed.
+  assert.ok(ENEMY_KINDS.lotusAlchemist.actions.some(action => action.key === 'overdose' && action.when));
+  assert.ok(ENEMY_KINDS.taskmaster.actions.some(action => action.key === 'rage' && action.when));
+});

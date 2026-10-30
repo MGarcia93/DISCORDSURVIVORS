@@ -45,7 +45,8 @@ test('the walker kinds are one connected body, never floating pieces', () => {
   // The boss is excluded on purpose: its sound rings are separate VFX in the air,
   // so the body is connected but the particle rings are not part of the figure.
   for (const kind of ['zombie', 'runner', 'brute', 'meleeMinion', 'mageMinion', 'siegeMinion',
-    'skeleton', 'lesserDemon', 'shaman', 'burningElite', 'batSwarm']) {
+    'skeleton', 'lesserDemon', 'shaman', 'burningElite', 'batSwarm',
+    'barbarian', 'slaver', 'archer', 'alchemist']) {
     const cells = new Set();
     for (const rect of enemyShape(kind).rects) {
       for (let y = Math.round(rect.y); y < Math.round(rect.y + rect.h); y++) {
@@ -467,4 +468,21 @@ test('enemy shots are drawn per shooter and the siege shell is not a dot', () =>
   assert.ok(bolt.count >= 3 && shell.count >= 5, 'both shots have their own art');
   assert.ok(shell.width >= 14, `the shell is ${shell.width}px wide and must read as artillery`);
   assert.notDeepEqual(render('shell'), bolt, 'artillery is not a magic dart');
+});
+
+
+test('the act 4 bosses carry boss density and tower over the player', () => {
+  for (const kind of ['lotusAlchemist', 'taskmaster']) {
+    const boss = enemyShape(kind);
+    const player = characterShape('negro');
+    assert.ok(boss.rects.length > 120, `${kind} carries cast-level detail`);
+    assert.ok(boss.height > player.height, `${kind} towers over the player`);
+  }
+});
+
+test('the act 4 commons never tower over the player', () => {
+  const player = characterShape('negro');
+  for (const kind of ['barbarian', 'slaver', 'archer', 'alchemist']) {
+    assert.ok(enemyShape(kind).height <= player.height, `${kind} stays at or below the player's height`);
+  }
 });

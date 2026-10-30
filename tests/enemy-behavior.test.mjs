@@ -267,3 +267,77 @@ test('Lord Zir calls bats, never skeletons', async () => {
   });
   assert.deepEqual(spawned, ['batSwarm', 'batSwarm', 'batSwarm', 'batSwarm']);
 });
+
+test('the slaver throws a net that pins the player where they stand', () => {
+  const run = quietRun();
+  const slaver = createEnemy(run, 'slaver', run.player.x + 260, run.player.y);
+  run.enemies.push(slaver);
+  run.random = () => 0.9; // the net side of the roll
+  step(run, 0.05, {});
+  assert.ok(run.prison, 'the net drops over the player');
+  assert.equal(Number(run.prison.radius.toFixed(2)), 70, 'and holds them in a small ring');
+  assert.equal(slaver.actionCds.net, 7, 'the throw pays its cooldown');
+});
+
+test('the archer looses an arrow that travels before it hurts', () => {
+  const run = quietRun();
+  run.enemies.push(createEnemy(run, 'archer', run.player.x + 150, run.player.y));
+  step(run, 0.02, {});
+  const shot = run.projectiles.find(entry => entry.team === 'enemy');
+  assert.ok(shot, 'it reaches the player without touching');
+  assert.equal(shot.device, 'arrow', 'and carries its own arrow art');
+  assert.equal(run.player.hp, 1000, 'the damage is still in the air');
+});
+
+test('the alchemist throws a lotus flask and bursts spores up close', () => {
+  const throwing = quietRun();
+  const thrower = createEnemy(throwing, 'alchemist', throwing.player.x + 150, throwing.player.y);
+  throwing.enemies.push(thrower);
+  throwing.random = () => 0.1; // the throw band
+  step(throwing, 0.02, {});
+  const shot = throwing.projectiles.find(entry => entry.team === 'enemy');
+  assert.ok(shot, 'the flask leaves the hand');
+  assert.equal(shot.device, 'flask');
+
+  const bursting = quietRun();
+  const burster = createEnemy(bursting, 'alchemist', bursting.player.x + 150, bursting.player.y);
+  bursting.enemies.push(burster);
+  bursting.random = () => 0.9; // the spore band
+  step(bursting, 0.05, {});
+  assert.equal(bursting.shockwaves.length, 1, 'the pod bursts in a ring');
+  assert.equal(burster.actionCds.spores, 8);
+});
+
+test('the lotus alchemist fills the room with visions of his own alchemists', () => {
+  const run = quietRun();
+  const boss = createEnemy(run, 'lotusAlchemist', run.player.x + 300, run.player.y);
+  run.enemies.push(boss);
+  run.random = () => 0.6; // swipe, lotus, visions
+  step(run, 0.05, {});
+  assert.equal(run.enemies.filter(enemy => enemy.kind === 'alchemist').length, 2, 'two copies walk out');
+  assert.equal(boss.actionCds.visions, 11);
+});
+
+test('the taskmaster calls one archer and one slaver from his camp', () => {
+  const run = quietRun();
+  const boss = createEnemy(run, 'taskmaster', run.player.x + 300, run.player.y);
+  run.enemies.push(boss);
+  run.random = () => 0.65; // swipe, chains, whip, guards
+  step(run, 0.05, {});
+  assert.ok(run.enemies.some(enemy => enemy.kind === 'archer'), 'an archer answers');
+  assert.ok(run.enemies.some(enemy => enemy.kind === 'slaver'), 'and a slaver with the net');
+});
+
+test('the taskmaster trades armour for speed once, when he is losing', () => {
+  const run = quietRun();
+  const boss = createEnemy(run, 'taskmaster', run.player.x + 300, run.player.y);
+  boss.hp = boss.maxHp * 0.4;
+  run.enemies.push(boss);
+  const speed = boss.speed, defense = boss.defense;
+  run.random = () => 0.99; // the rage slot
+  step(run, 0.05, {});
+  assert.equal(boss.enraged, true);
+  assert.ok(boss.speed > speed, 'he gets faster');
+  assert.ok(boss.defense < defense, 'and pays for it with armour');
+  assert.equal(boss.actionCds.rage, 999, 'never again');
+});

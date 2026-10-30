@@ -227,3 +227,21 @@ pendientes: son catálogo de patrones, no ficha.
   carga (`enemy.chargeTtl` + `enemy.chargeBoost`: multiplicador temporal que el
   motor expira solo) y el daño propio de una acción melee (`damage` en la acción,
   que reemplaza al daño de contacto de la ficha).
+
+### Acto 4 — Conan Exiles
+
+- **Seis fichas nuevas:** `barbarian` (común genérico del desierto), `slaver`
+  (red: acción propia con `range` que usa `ctx.prison` para sujetar al jugador),
+  `archer` (a distancia, proyectil `arrow`), `alchemist` (proyectil `flask` y
+  `spores` con `ctx.shockwave`), `lotusAlchemist` (minijefe: `swipe`, `lotus`,
+  `visions`, `spores` y `overdose`) y `taskmaster` (jefe: `swipe`, `chains`,
+  `whip`, `guards`, `wheel` y `rage`).
+  Ningún jefe del acto comparte habilidad con otro: la sobredosis del alquimista
+  acelera su cadencia, la furia del capataz cambia armadura por velocidad.
+- **Nada nuevo en el motor.** El acto usa el selector de acciones, `ctx.prison`,
+  `ctx.shockwave` y `ctx.spawnEnemy` que ya existían; lo único que se sumó son
+  tres dibujos de proyectil en `src/sprites.mjs`: `arrow`, `net` y `flask`.
+- **Actor de escena:** los dos jefes tienen actor de cinemática (`src/npcs/`)
+  y retratos, así que hablan en diálogo como los jefes de los actos 2 y 3. El
+  cadáver del Capataz en la escena de derrota sigue siendo un actor `enemy` con
+  `state: "dead"`: un muerto no habla.

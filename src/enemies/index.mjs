@@ -19,6 +19,12 @@ import burningElite from './burning-elite.mjs';
 import batSwarm from './bat-swarm.mjs';
 import lordZir from './lord-zir.mjs';
 import lilith from './lilith.mjs';
+import barbarian from './barbarian.mjs';
+import slaver from './slaver.mjs';
+import archer from './archer.mjs';
+import alchemist from './alchemist.mjs';
+import lotusAlchemist from './lotus-alchemist.mjs';
+import taskmaster from './taskmaster.mjs';
 
 // Enemy registry, built from one module per kind exactly like src/characters/.
 // Each ficha owns its sheet and its drawing; this file only resolves percentages
@@ -29,13 +35,15 @@ import lilith from './lilith.mjs';
 // attackSpeed, attackDistance, moveSpeed). `radius` and `bounty` are body and
 // economy, so they stay as raw fields outside the sheet.
 export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
-  skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith };
+  skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith,
+  barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
 export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,
   meleeMinion.id, mageMinion.id, siegeMinion.id, mistWalker.id, maiden.id, yorick.id,
   skeleton.id, lesserDemon.id, shaman.id, burningElite.id, batSwarm.id,
-  lordZir.id, lilith.id];
+  lordZir.id, lilith.id,
+  barbarian.id, slaver.id, archer.id, alchemist.id, lotusAlchemist.id, taskmaster.id];
 
 export function getEnemyKind(id) {
   return ENEMY_KINDS[id] ?? ENEMY_KINDS.zombie;
