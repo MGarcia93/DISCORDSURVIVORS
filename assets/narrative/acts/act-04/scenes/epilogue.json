@@ -194,12 +194,10 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "PAPAFRITA",
-      "duration": 7,
-      "lines": [
-        "Bueno, antes de jugar Monster Hunter les tengo que explicar unas cosas. Primero hay que entender cómo fueron cambiando las armas entre entregas, porque si arrancamos por Freedom Unite..."
-      ]
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "Bueno, antes de jugar Monster Hunter les tengo que explicar unas cosas. Primero hay que entender cómo fueron cambiando las armas entre entregas, porque si arrancamos por Freedom Unite...",
+      "duration": 7
     },
     {
       "type": "notice",
@@ -276,12 +274,10 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "PAPAFRITA",
-      "duration": 5,
-      "lines": [
-        "...porque después, si quieren, les explico también las diferencias con Portable 3rd..."
-      ]
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...porque después, si quieren, les explico también las diferencias con Portable 3rd...",
+      "duration": 5
     },
     {
       "type": "notice",
@@ -334,12 +330,10 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "PAPAFRITA",
-      "duration": 5,
-      "lines": [
-        "¡Pero esperen, todavía no les expliqué la base del combate!"
-      ]
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "¡Pero esperen, todavía no les expliqué la base del combate!",
+      "duration": 5
     },
     {
       "type": "notice",
