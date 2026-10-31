@@ -123,8 +123,8 @@ export function balance() {
     </div>
   </section>`;
 
-  const bind = (selector, event, run) => state.content.querySelector(selector)
-    ?.addEventListener(event, run);
+  const bind = (selector, event, handler) => state.content.querySelector(selector)
+    ?.addEventListener(event, handler);
   bind('#balance-character', 'change', event => {
     state.balanceCharacter = event.target.value;
     // Own upgrades belong to the character that owns them: a switch starts over.
