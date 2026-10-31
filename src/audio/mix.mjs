@@ -11,7 +11,7 @@
 // The slider's 100% is the level the mix was judged good at, not an absolute
 // gain. These are the real bus gains at 100%; the player can only go down from
 // there. Bumping a ceiling raises what "full" sounds like for everyone.
-export const LEVEL_CEILING = { music: 0.3, sfx: 0.15 };
+export const LEVEL_CEILING = { music: 0.6, sfx: 0.4 };
 
 // The sliders start full, because full is the judged-good level. A player who
 // wants it quieter pulls them down.

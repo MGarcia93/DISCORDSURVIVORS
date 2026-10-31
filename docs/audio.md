@@ -190,7 +190,7 @@ compressors, so they are a listening level, not a re-mix. Turning the bed down
 never changes how it is shaped.
 
 **100% is the judged-good level, not unity gain.** `LEVEL_CEILING` is
-`{ music: 0.3, sfx: 0.15 }`: the bus gains at a full slider. A slider position is
+`{ music: 0.6, sfx: 0.4 }`: the bus gains at a full slider. A slider position is
 multiplied by its ceiling, so 100% sounds exactly like where the mix was judged,
 and a player who wants less only has to pull down. Bumping a ceiling raises what
 "full" means for everyone; the sliders themselves stay 0–100.

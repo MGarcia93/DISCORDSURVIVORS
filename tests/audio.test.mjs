@@ -8,6 +8,10 @@ import {
 import { AudioEngine } from '../src/audio/engine.mjs';
 import { volumeRow } from '../src/audio/controls.mjs';
 
+test('full sliders use the requested music and effects ceilings', () => {
+  assert.deepEqual(LEVEL_CEILING, { music: 0.6, sfx: 0.4 });
+});
+
 // The mix is decided by a pure function so the audio that ships is testable
 // without a browser. What cannot be tested here — how it sounds — is what the
 // dev screen and the ears are for.
