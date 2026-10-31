@@ -581,33 +581,11 @@
       ]
     },
     {
-      "type": "dialogue",
+      "type": "notice",
+      "title": "TODOS",
+      "duration": 4,
       "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "disgusted",
-          "text": "¡PUAAAAAJ!"
-        },
-        {
-          "speaker": "solago",
-          "expression": "disgusted",
-          "text": "¡PUAAAAAJ!"
-        },
-        {
-          "speaker": "papasito",
-          "expression": "disgusted",
-          "text": "¡PUAAAAAJ!"
-        },
-        {
-          "speaker": "warrior",
-          "expression": "disgusted",
-          "text": "¡PUAAAAAJ!"
-        },
-        {
-          "speaker": "maxi",
-          "expression": "neutral",
-          "text": "No, dejá. Le das el micrófono y te explica Monster Hunter hasta mañana."
-        }
+        "¡PUAAAAAJ!"
       ]
     },
     {
