@@ -1,7 +1,7 @@
 {
   "id": "act-04-lotus",
   "stage": {
-    "background": "exiles",
+    "background": "laboratory",
     "points": {
       "party": [300, 470],
       "solago": [420, 505],

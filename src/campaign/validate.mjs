@@ -15,6 +15,9 @@ function validateWaves(act) {
     const wave = index + 1;
     if (!config || typeof config !== 'object') throw Error(`${id}: wave ${wave} must be an object`);
     if (config.wave !== wave) throw Error(`${id}: wave ${wave} must declare wave ${wave}`);
+    if (config.world !== undefined && !worldIds.includes(config.world)) {
+      throw Error(`${id}: wave ${wave} unknown world: ${config.world}`);
+    }
     if (!Number.isInteger(config.perMinute) || config.perMinute < 0) throw Error(`${id}: wave ${wave} invalid perMinute`);
     if (!config.mix || typeof config.mix !== 'object' || Array.isArray(config.mix)) throw Error(`${id}: wave ${wave} needs a mix`);
     const kinds = Object.keys(config.mix);

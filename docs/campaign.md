@@ -105,6 +105,11 @@ bosses is the addendum at the end of the act script.
 
 ## Act 4
 
+Combat waves 4 and 5 use `laboratory`, matching the lotus and alchemist scenes.
+Wave 6 returns to `exiles` for the Wheel of Pain. A wave's optional `world`
+overrides the act's default scenery; explicit dev-sandbox scenery takes priority.
+Wave world IDs must name a registered background.
+
 Act 4 runs in the `exiles` slavers' camp with the four common kinds its script
 asks for: barbarians, slavers whose nets pin the player, archers, and alchemists
 who throw lotus flasks and burst spores. El Alquimista del Loto is the mini-boss

@@ -40,13 +40,14 @@ export default {
     },
     {
       wave: 4,
+      world: 'laboratory',
       perMinute: 90,
       mix: { barbarian: 0.35, archer: 0.35, alchemist: 0.3 },
       life: { barbarian: 52, archer: 40, alchemist: 44 },
     },
     // El Alquimista arrives once at the start of this wave; his own alchemists
     // keep him company and give the wave its pressure.
-    { wave: 5, perMinute: 24, mix: { alchemist: 1 }, life: { alchemist: 52 } },
+    { wave: 5, world: 'laboratory', perMinute: 24, mix: { alchemist: 1 }, life: { alchemist: 52 } },
     // The boss wave is untimed and carries no budget of its own: the Capataz
     // calls his own guards, not a horde.
     { wave: 6, perMinute: 0, mix: {}, life: {} },

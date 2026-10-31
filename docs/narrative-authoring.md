@@ -173,7 +173,7 @@ A world is one module in `src/backgrounds/` that paints the scenery of a place. 
 | `rift` | Act 2 — Summoner's Rift |
 | `inferno` | Act 3 — the dungeon |
 | `exiles` | Act 4 — the Exiled Lands; the shipped Act 4 preview |
-| `laboratory` | Act 4 — the Lotus Alchemist's laboratory (waves 5) |
+| `laboratory` | Act 4 — lotus and Alchemist cinematics and combat (waves 4–5) |
 | `discord` | Act 5 — the corrupted server |
 | `discord-voice` | Act 5 — the Discord they believe they came back to: channel list, conversation and the connected call |
 | `creator-desk` | Act 5 epilogue — the room behind the server, where Maxi is at the machine |

@@ -5,6 +5,7 @@ import { drawEnemyFigure } from './figures.mjs';
 import { pixelText } from '../scenes.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
+import { waveConfig } from '../waves.mjs';
 
 export function rounded(ctx, x, y, width, height, radius, fill) {
   ctx.fillStyle = fill;
@@ -32,7 +33,7 @@ export function drawRunScene(ctx, run, {
 } = {}) {
   if (!run) return;
   const p = run.player;
-  drawBackground(ctx, world ?? run.act?.world ?? 'arena', { width: WIDTH, height: HEIGHT, time });
+  drawBackground(ctx, world ?? waveConfig(run.act, run.wave)?.world ?? run.act?.world ?? 'arena', { width: WIDTH, height: HEIGHT, time });
   // Dev-only decoration (the sandbox's reach ring) sits under the actors, the
   // same place the game draws its ground marks.
   underlay?.(ctx, run);
