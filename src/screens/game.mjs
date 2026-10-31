@@ -4,10 +4,11 @@ import { getAct } from '../campaign/acts.mjs';
 import { state } from '../app/state.mjs';
 import { updateHUD } from '../game/hud.mjs';
 import { audio } from '../audio/index.mjs';
+import { createNextWorldRun } from '../game/campaign-run.mjs';
 
 // Arena DOM builder: built once per run; HUD values update separately.
-export function game() {
-  state.run = createRun(Math.random, state.selectedCharacter, {
+export function game(previousRun = null) {
+  state.run = previousRun ? createNextWorldRun(previousRun) : createRun(Math.random, state.selectedCharacter, {
     balance: balanceFor(globalThis.location?.hostname, globalThis.location?.search),
   }, getAct(state.selectedAct));
   state.facing = 1;

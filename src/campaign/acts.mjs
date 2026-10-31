@@ -30,3 +30,8 @@ export const DEFAULT_ACT = PLAYABLE_ACTS[0];
 export function getAct(id) {
   return ACTS.find(act => act.id === id) ?? DEFAULT_ACT;
 }
+
+export function nextPlayableAct(id) {
+  const index = PLAYABLE_ACTS.findIndex(act => act.id === id);
+  return index < 0 ? null : PLAYABLE_ACTS[index + 1] ?? null;
+}

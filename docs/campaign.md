@@ -3,6 +3,15 @@
 A world is a **run**: the player picks it, plays its waves and the act ends with
 its boss. The campaign is not one continuous run, so progress is per act.
 
+After an act's closing cinematics, **SIGUIENTE MUNDO** starts the next playable
+act with the same character, acquired items, upgrade ranks, permanent statistics,
+reward bonuses, level, XP and coins. Health is restored to the upgraded maximum
+and all abilities are ready, with no cooldown. The battlefield and temporary
+combat effects start fresh. Sold possessions stay sold.
+**OTRA PARTIDA** replays the current world. The last act offers replay and the
+main menu, not a transition back to the first world. Closing scenes must finish
+or be skipped before continuing.
+
 ## Where things live
 
 | Path | What it owns |

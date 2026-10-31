@@ -108,3 +108,52 @@ test('real app input and wave transitions honor narrative ownership without chan
   assert.equal(state.paused, false);
   dom.click('home');
 });
+
+test('campaign continuation advances acts without bypassing their closing scenes', async () => {
+  const dom = browser();
+  await import('../src/app.mjs?campaign-continuation');
+  const { state } = await import('../src/app/state.mjs');
+  const { narrative } = await import('../src/narrative/integration.mjs');
+  const { PLAYABLE_ACTS } = await import('../src/campaign/acts.mjs');
+  const characters = { guide: { expressions: { neutral: 'portrait.svg' } } };
+  const closing = { id: 'closing', actions: {}, scene: { id: 'closing', steps: [
+    { type: 'dialogue', lines: [{ speaker: 'guide', text: 'Not finished yet' }] },
+  ] } };
+  narrative.load = async act => ({ characters, sounds: {}, entries: [closing],
+    bindings: [{ when: 'after_wave', wave: act.boss.wave, scene: 'closing' }] });
+  narrative.makeView = () => ({ render() {}, dispose() {} });
+  state.selectedAct = PLAYABLE_ACTS[0].id;
+  dom.click('play');
+  await Promise.resolve(); await Promise.resolve();
+  const first = state.run;
+  const { applyUpgradeRank } = await import('../src/run-rewards.mjs');
+  assert.equal(applyUpgradeRank(first, first.rewardCatalog.upgrades.find(entry => entry.id === 'stat-attack')), true);
+  const upgradedDamage = first.player.damage;
+  dom.click('next-act');
+  assert.equal(state.run, first, 'playing cannot skip a world');
+  for (const [index, act] of PLAYABLE_ACTS.entries()) {
+    assert.equal(state.run.act.id, act.id);
+    state.run.wave = act.boss.wave;
+    state.run.phase = 'won';
+    narrative.observe();
+    const won = state.run;
+    dom.click('next-act');
+    assert.equal(state.run, won, 'closing scene still owns input');
+    dom.click('narrative-skip');
+    assert.equal(narrative.blocked, false);
+    dom.click('next-act');
+    await Promise.resolve(); await Promise.resolve();
+    if (index < PLAYABLE_ACTS.length - 1) {
+      assert.equal(state.selectedAct, PLAYABLE_ACTS[index + 1].id);
+      assert.equal(state.run.act.id, state.selectedAct);
+      assert.equal(state.run.character, won.character);
+      assert.equal(state.run.wave, 1);
+      assert.equal(state.run.player.damage, upgradedDamage, 'the build carries across worlds');
+      assert.equal(state.run.levelRanks['stat-attack'], 1);
+    } else assert.equal(state.run, won, 'final victory never wraps around');
+  }
+  dom.click('play');
+  assert.equal(state.run.act.id, PLAYABLE_ACTS.at(-1).id, 'replay still repeats the selected world');
+  assert.equal(state.run.levelRanks['stat-attack'], undefined, 'replay starts a new build');
+  dom.click('home');
+});

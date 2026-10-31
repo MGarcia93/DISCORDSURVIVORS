@@ -3,11 +3,11 @@ import { describeReward } from '../reward-catalog.mjs';
 import { EFFECTS } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { formatTime } from './hud.mjs';
-import { getCharacter } from '../characters/index.mjs';
 import { rewardPreviewLines } from './reward-view.mjs';
 import { countOf } from '../run-rewards.mjs';
 import { drawItemIcon } from './item-icons.mjs';
 import { volumeRow, muteRow } from '../audio/controls.mjs';
+import { nextPlayableAct } from '../campaign/acts.mjs';
 
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -88,10 +88,9 @@ export function overlay() {
     body = `<div class="eyebrow">Oleada ${state.run.wave} completada</div><h2>EL BOTÍN ES TUYO</h2><p class="reward-sub"><b class="wallet">${state.run.coins} ◈</b> disponibles · +${state.run.rewardBalance.gold?.survival ?? 20} por sobrevivir</p><div class="reward-grid">${cards || '<p>No quedan objetos elegibles.</p>'}</div><div class="reward-extras"><button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Servicio de curación: recuperás ${HEAL_AMOUNT} de vida.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} ◈`}</small></button></div><div class="shop-footer"><button class="primary" data-action="next-wave">${state.run.wave === state.run.act.boss.wave - 1 ? `ENFRENTAR: ${state.run.act.boss.name}` : 'SIGUIENTE OLEADA'} →</button></div>`;
   }
   if (phase === 'dead' || phase === 'won') {
-    // The run remembers which ficha's chain step lit up on victory; the ficha
-    // itself owns the spoken line, so the outcome never names characters here.
-    const victoryFicha = phase === 'won' && state.run.unlocked ? getCharacter(state.run.unlocked) : null;
-    body = `<div class="eyebrow">${phase === 'won' ? 'Conexión restablecida' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? victoryFicha?.victoryLine ?? 'Derrotaste al Administrador. Ahora falta decidir qué jugar.' : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions"><button class="primary" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
+    const next = phase === 'won' ? nextPlayableAct(state.run.act.id) : null;
+    const continueButton = next ? `<button class="primary" data-action="next-act">SIGUIENTE MUNDO · ${escapeText(next.title)}</button>` : '';
+    body = `<div class="eyebrow">${phase === 'won' ? next ? 'Mundo completado' : 'Campaña completada' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? next ? 'SEGUIMOS CONECTADOS.' : 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? (next ? 'Superaste este mundo. La partida continúa.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.') : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions">${continueButton}<button class="${next ? 'secondary' : 'primary'}" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   }
   box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'levelUp' ? 'Elegir mejora de nivel' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' || phase === 'levelUp' ? 'shop-dialog' : ''}">${body}</div></div>`;
   for (const canvas of box.querySelectorAll?.('canvas[data-art]') ?? []) {

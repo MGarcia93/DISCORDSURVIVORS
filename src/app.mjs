@@ -1,5 +1,6 @@
 import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
 import { handleRewardAction } from './game/reward-actions.mjs';
+import { nextPlayableAct } from './campaign/acts.mjs';
 import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
@@ -19,13 +20,11 @@ import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, na
 import { audio } from './audio/index.mjs';
 import { musicCue, SFX, UI } from './audio/mix.mjs';
 
-// Any map victory passes through the bus: progression records the unlock and
-// app reads it back through the chain to refresh the roster cache and mark
-// which ficha's victory line the outcome overlay should speak.
+// Refresh availability after a world victory. Encounter cinematics own unlock
+// announcements; an unrelated boss victory must not repeat a legacy reward.
 on('waveCleared', ({ run: clearedRun }) => {
   if (clearedRun.phase !== 'won') return;
   for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = isCharacterUnlocked(id);
-  clearedRun.unlocked = UNLOCK_CHAIN.find(id => isCharacterUnlocked(id)) ?? null;
 });
 
 // Gameplay SFX hang off the same post-state events the rest of the shell reads.
@@ -45,7 +44,7 @@ on('specialActivated', ({ run: activatedRun, special }) => {
   state.sellMenuOpen = true;
   state.lastPhase = '';
 });
-function show(name) {
+function show(name, previousRun = null) {
   leaveNarrative();
   state.screen = name;
   state.content.dataset.screen = name;
@@ -59,7 +58,7 @@ function show(name) {
   if (name === 'worlds') worldsScreen();
   if (name === 'enemies') enemiesScreen();
   if (name === 'story') story();
-  if (name === 'game') { game(); narrative.attach(state.run, document.querySelector('#narrative-layer')); }
+  if (name === 'game') { game(previousRun); narrative.attach(state.run, document.querySelector('#narrative-layer')); }
   if (name === 'narrative') showNarrativeViewer(state.content);
   state.content.focus({ preventScroll: true });
   window.scrollTo(0, 0);
@@ -151,6 +150,13 @@ document.addEventListener('click', event => {
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
   if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else show('game'); }
   if (action === 'play') show('game');
+  if (action === 'next-act' && state.run?.phase === 'won') {
+    const next = nextPlayableAct(state.run.act.id);
+    if (next) {
+      state.selectedAct = next.id;
+      show('game', state.run);
+    }
+  }
   if (action === 'pause' && state.run?.phase === 'playing') { state.paused = !state.paused; state.keys.clear(); }
   if (action === 'resume') { state.paused = false; state.keys.clear(); }
   if (action === 'sell-menu-close') { state.sellMenuOpen = false; state.lastPhase = ''; state.keys.clear(); overlay(); updateHUD(); }

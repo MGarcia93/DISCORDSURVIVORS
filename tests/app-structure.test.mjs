@@ -88,7 +88,7 @@ test('the selection screen and victory overlay are fully data-driven', () => {
   }
   assert.doesNotMatch(charactersScreen, /Warrior|Solago|Papazito/, 'characters.mjs renders from the fichas, never from per-character ternaries');
   assert.match(charactersScreen, /getCharacter\(state\.selectedCharacter\)/, 'the selected ficha drives the panel');
-  assert.match(overlays, /victoryLine/, 'the won screen reads the ficha victory line');
+  assert.doesNotMatch(overlays, /victoryLine/, 'the won screen never announces a legacy unlock chain');
 });
 
 test('Papazito contract: merchant menu pauses the run and the sold monitor vignette lives in the draw loop', () => {
