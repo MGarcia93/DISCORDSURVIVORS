@@ -581,11 +581,38 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "TODOS",
-      "duration": 4,
+      "type": "dialogue",
+      "expressions": {
+        "maxi-negro": "disgusted",
+        "solago": "disgusted",
+        "papasito": "disgusted",
+        "warrior": "disgusted"
+      },
       "lines": [
-        "¡PUAAAAAJ!"
+        {
+          "speaker": "maxi-negro",
+          "name": "TODOS",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "solago",
+          "name": "TODOS",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "papasito",
+          "name": "TODOS",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "warrior",
+          "name": "TODOS",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        }
       ]
     },
     {

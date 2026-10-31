@@ -24,6 +24,7 @@ export function validateLine(line, characters) {
   requireValue(line && own(characters, line.speaker), `Unknown speaker: ${line?.speaker}`);
   requireValue(own(characters[line.speaker].expressions, line.expression ?? 'neutral'), `Unknown expression: ${line.expression}`);
   requireValue(text(line.text), 'Dialogue text is required');
+  requireValue(line.name === undefined || text(line.name), 'Dialogue line name must be text');
 }
 
 export function validateScene(scene, { characters = {}, sounds = {}, actions = {}, backgrounds = {}, enemies = {} } = {}) {

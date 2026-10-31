@@ -207,7 +207,7 @@ export function createPresenter(root, catalog, onError) {
         if (spoken?.layout === 'stage') {
           // Keep moving sprites visible; a compact subtitle panel replaces the
           // large portraits only for dialogue that explicitly opts into it.
-          content.innerHTML = `<div class="narrative-dialog narrative-stage-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
+          content.innerHTML = `<div class="narrative-dialog narrative-stage-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-text"><strong>${escape(spoken.name ?? catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
         } else if (spoken) {
           // The cast keeps the same slots for the whole scene, ordered by where
           // each actor stands, and faces the centre of the conversation.
@@ -227,7 +227,7 @@ export function createPresenter(root, catalog, onError) {
           const actions = line
             ? '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>'
             : '';
-          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : (spoken.expressions?.[entry.id] ?? 'neutral'))}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
+          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : (spoken.expressions?.[entry.id] ?? 'neutral'))}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(spoken.name ?? catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
         } else if (player?.notice) {
           content.innerHTML = `<div class="narrative-notice" role="status"><strong>${escape(player.notice.title)}</strong>${player.notice.lines.map(text => `<p>${escape(text)}</p>`).join('')}${heldActions}</div>`;
         } else if (player?.splash) {
