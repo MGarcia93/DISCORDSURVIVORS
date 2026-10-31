@@ -1,4 +1,4 @@
-import { UPGRADES, chooseUpgrade, createRun, seedWave } from '../engine.mjs';
+import { createRun, seedWave } from '../engine.mjs';
 import { applyUpgradeRank, countOf, grantItem } from '../run-rewards.mjs';
 import { BALANCE, playtestBalance } from '../reward-data.mjs';
 import { waveEntryBudget } from './wave-budget.mjs';
@@ -7,8 +7,6 @@ import { waveEntryBudget } from './wave-budget.mjs';
 // in isolation. Everything it spends comes from `waveEntryBudget`: the levels
 // are the ones the campaign already granted, the coins are the ones the waves
 // before it paid. The lab only ever offers choices this module accepts.
-
-export const SHOP_UPGRADES = UPGRADES;
 
 const total = counts => Object.values(counts).reduce((sum, amount) => sum + amount, 0);
 
@@ -33,19 +31,9 @@ export function itemBlocked(item, { coins, items = {} }) {
   return null;
 }
 
-// Why the next level of a coin upgrade cannot be bought now, or null. The
-// engine owns the price list; this only reports what the shop would say.
-export function shopBlocked(upgrade, { coins, shop = {} }) {
-  if (!upgrade) return 'unknown';
-  const level = countOf(shop, upgrade.id);
-  if (level >= upgrade.costs.length) return 'maxed';
-  if (coins < upgrade.costs[level]) return 'coins';
-  return null;
-}
-
 export function seedRun({
   character = 'negro', act, wave, balance = BALANCE,
-  picks = {}, shop = {}, items = {}, random = Math.random,
+  picks = {}, items = {}, random = Math.random,
 } = {}) {
   const entry = waveEntryBudget(act, wave, balance);
   const run = createRun(random, character, { balance }, act);
@@ -74,14 +62,11 @@ export function seedRun({
     }
   }
 
-  // Coins buy the shop's own upgrades and the items: both are what a player
-  // arriving here would have spent. The phase is borrowed because the shop is
-  // the only door the engine's purchase rules open for.
+  // Coins buy the shop's items, which is the only thing the shop sells besides
+  // the heal. The phase is borrowed because the shop is the only door the
+  // engine's purchase rules open for.
   const playing = run.phase;
   run.phase = 'shop';
-  for (const [id, wanted] of Object.entries(shop)) {
-    for (let bought = 0; bought < wanted; bought++) if (!chooseUpgrade(run, id)) break;
-  }
   for (const [id, wanted] of Object.entries(items)) {
     const item = run.rewardCatalog.items.find(candidate => candidate.id === id);
     for (let bought = 0; bought < wanted; bought++) {

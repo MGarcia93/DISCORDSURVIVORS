@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BALANCE, DEFAULT_CATALOG, playtestBalance } from '../src/reward-data.mjs';
 import { getAct } from '../src/campaign/acts.mjs';
-import { itemBlocked, pickBlocked, seedRun, shopBlocked } from '../src/game/balance-seed.mjs';
+import { itemBlocked, pickBlocked, seedRun } from '../src/game/balance-seed.mjs';
 import { waveEntryBudget } from '../src/game/wave-budget.mjs';
 
 const act1 = getAct('act-01');
@@ -47,15 +47,12 @@ test('a pick the level has not unlocked is ignored', () => {
   assert.deepEqual(run.levelRanks, {});
 });
 
-test('coins buy shop upgrades and items, and never go negative', () => {
+test('coins buy items and never go negative', () => {
   const entry = waveEntryBudget(act1, 4, BALANCE);
   const { run } = seedRun({
     character: 'negro', act: act1, wave: 4,
-    shop: { health: 1, armor: 1 },
-    items: { bleach: 3 },
+    items: { bleach: 3, slipper: 3 },
   });
-  assert.equal(run.upgrades.health, 1);
-  assert.equal(run.upgrades.armor, 1);
   assert.ok(run.coins >= 0);
   assert.ok(run.coins < entry.coins, 'something was spent');
   assert.ok(run.items.bleach >= 1);
@@ -96,7 +93,4 @@ test('the gates explain why a choice is refused', () => {
   assert.equal(itemBlocked(item('chicken'), { coins: 999 }), 'disabled');
   assert.equal(itemBlocked(item('bleach'), { coins: 60 }), null);
 
-  assert.equal(shopBlocked({ id: 'health', costs: [20] }, { coins: 10 }), 'coins');
-  assert.equal(shopBlocked({ id: 'health', costs: [20] }, { coins: 20, shop: { health: 1 } }), 'maxed');
-  assert.equal(shopBlocked({ id: 'health', costs: [20] }, { coins: 20 }), null);
 });

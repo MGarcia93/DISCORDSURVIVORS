@@ -161,8 +161,8 @@ environment decides:
 - `?playtest` runs 15-second waves and multiplies XP by ten, the tuning pacing.
 - `?waves=<seconds>` forces only the length, on top of either mode.
 - `?dev=balance` opens the balance lab: pick a character, a world and a wave,
-  spend that wave's entry budget on upgrades and items, and play the wave for
-  real. The budget is projected from the waves before it, so a level-5 build at
+  spend that wave's entry budget on level upgrades and items, and play the
+  wave for real. The budget is projected from the waves before it, so a level-5 build at
   wave 5 is a claim about the campaign and not a number someone typed.
 
 `balanceFor(search)` in `src/reward-data.mjs` resolves both flags; the shipped

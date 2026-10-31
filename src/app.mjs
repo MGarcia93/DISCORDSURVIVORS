@@ -183,7 +183,6 @@ document.addEventListener('click', event => {
       wave: state.balanceWave,
       balance: balanceForMode(state.balanceMode),
       picks: state.balancePicks,
-      shop: state.balanceShop,
       items: state.balanceItems,
     });
     state.selectedAct = state.balanceAct;

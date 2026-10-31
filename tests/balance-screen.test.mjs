@@ -25,13 +25,11 @@ test('the lab renders its three groups without a gap in the template', () => {
   state.balanceAct = PLAYABLE_ACTS[0].id;
   state.balanceWave = 3;
   state.balancePicks = {};
-  state.balanceShop = {};
   state.balanceItems = {};
   balance();
   const html = content.innerHTML;
   assert.match(html, /Balance lab/);
   assert.match(html, /Level choices/);
-  assert.match(html, /Shop upgrades/);
   assert.match(html, /Items/);
   assert.match(html, /PLAY THIS WAVE/);
   assert.match(html, /Entering wave 3/);
@@ -55,7 +53,6 @@ test('a stale build survives the re-render instead of crashing it', () => {
   state.balanceAct = 'act-01';
   state.balanceWave = 1;
   state.balancePicks = { 'stat-attack': 4, 'brick-pierce': 2 };
-  state.balanceShop = { health: 9 };
   state.balanceItems = { chicken: 3 };
   balance();
   assert.equal(content.innerHTML.includes('undefined'), false);

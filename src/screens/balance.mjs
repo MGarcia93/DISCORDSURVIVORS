@@ -4,9 +4,7 @@ import { DEFAULT_CATALOG, EFFECTS } from '../reward-data.mjs';
 import { describeReward } from '../reward-catalog.mjs';
 import { countOf, previewReward } from '../run-rewards.mjs';
 import { state } from '../app/state.mjs';
-import {
-  SHOP_UPGRADES, balanceForMode, itemBlocked, pickBlocked, seedRun, shopBlocked,
-} from '../game/balance-seed.mjs';
+import { balanceForMode, itemBlocked, pickBlocked, seedRun } from '../game/balance-seed.mjs';
 import { drawItemIcon } from '../game/item-icons.mjs';
 
 // Development-only lab. One wave of the campaign, seeded with the build a
@@ -36,7 +34,6 @@ function currentRun() {
     wave: state.balanceWave,
     balance: balanceForMode(state.balanceMode),
     picks: state.balancePicks,
-    shop: state.balanceShop,
     items: state.balanceItems,
   });
 }
@@ -58,19 +55,6 @@ function levelCards(run, entry) {
       <b>${escapeText(upgrade.name)}</b>
       <span>${escapeText(text)}</span>
       <small>${reason ? REASONS[reason] : `RANK ${rank}/${upgrade.ranks.length}`}</small>
-    </button>`;
-  }).join('');
-}
-
-function shopCards(run) {
-  return SHOP_UPGRADES.map(upgrade => {
-    const level = countOf(state.balanceShop, upgrade.id);
-    const blocked = shopBlocked(upgrade, { coins: run.coins, shop: state.balanceShop });
-    const cost = upgrade.costs[level];
-    return `<button class="upgrade" data-shop="${escapeText(upgrade.id)}" ${blocked ? 'disabled' : ''}>
-      <b>${escapeText(upgrade.name)}</b>
-      <span>${escapeText(upgrade.description)}</span>
-      <small>${blocked ? REASONS[blocked] : `${level}/${upgrade.costs.length} · ${cost} ◈`}</small>
     </button>`;
   }).join('');
 }
@@ -115,7 +99,6 @@ export function balance() {
     </div>
     <p id="balance-budget" role="status">${escapeText(budgetLine(entry, run))}</p>
     <section class="balance-group"><h2>Level choices <small>${entry.level - 1} available</small></h2><div class="balance-cards">${levelCards(run, entry)}</div></section>
-    <section class="balance-group"><h2>Shop upgrades <small>${run.coins} ◈ left</small></h2><div class="balance-cards">${shopCards(run)}</div></section>
     <section class="balance-group"><h2>Items <small>${run.coins} ◈ left</small></h2><div class="balance-cards">${itemCards(run)}</div></section>
     <div class="actions">
       <button class="secondary" data-reset>Clear the build</button>
@@ -151,7 +134,6 @@ export function balance() {
   });
   bind('[data-reset]', 'click', () => {
     state.balancePicks = {};
-    state.balanceShop = {};
     state.balanceItems = {};
     balance();
   });
@@ -159,13 +141,6 @@ export function balance() {
     button.addEventListener('click', () => {
       const id = button.dataset.pick;
       state.balancePicks = { ...state.balancePicks, [id]: countOf(state.balancePicks, id) + 1 };
-      balance();
-    });
-  }
-  for (const button of state.content.querySelectorAll('[data-shop]')) {
-    button.addEventListener('click', () => {
-      const id = button.dataset.shop;
-      state.balanceShop = { ...state.balanceShop, [id]: countOf(state.balanceShop, id) + 1 };
       balance();
     });
   }

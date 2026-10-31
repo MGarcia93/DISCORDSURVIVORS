@@ -24,7 +24,6 @@ export const state = {
   balanceWave: 1,
   balanceMode: 'real',
   balancePicks: {},
-  balanceShop: {},
   balanceItems: {},
   pendingRun: null,
   run: null,

@@ -5,7 +5,7 @@ import { ROSTER } from '../src/characters/index.mjs';
 import { DEFAULT_CATALOG, EFFECTS } from '../src/reward-data.mjs';
 import { describeReward } from '../src/reward-catalog.mjs';
 import { countOf, previewReward } from '../src/run-rewards.mjs';
-import { balanceForMode, itemBlocked, pickBlocked, seedRun, shopBlocked } from '../src/game/balance-seed.mjs';
+import { balanceForMode, itemBlocked, pickBlocked, seedRun } from '../src/game/balance-seed.mjs';
 import { waveEntryBudget } from '../src/game/wave-budget.mjs';
 
 // The lab offers the whole matrix, so every cell has to seed without throwing:
@@ -76,5 +76,4 @@ test('a card is only enabled when its preview is a real change', () => {
     if (itemBlocked(item, { coins: 10_000 })) continue;
     assert.ok(previewReward(run, `balance-item:${item.id}`, item), `${item.id} is offered and previews`);
   }
-  assert.equal(shopBlocked({ id: 'x', costs: [1] }, { coins: 2 }), null);
 });
