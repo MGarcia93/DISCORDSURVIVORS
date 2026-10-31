@@ -4,23 +4,61 @@
   "stage": {
     "background": "exiles",
     "points": {
-      "party": [320, 500],
-      "solago": [460, 510],
-      "papasito": [600, 505],
-      "warrior": [740, 480],
-      "sky": [700, 140],
-      "overview": [600, 450]
+      "party": [
+        320,
+        500
+      ],
+      "solago": [
+        460,
+        510
+      ],
+      "papasito": [
+        600,
+        505
+      ],
+      "warrior": [
+        740,
+        480
+      ],
+      "sky": [
+        700,
+        140
+      ],
+      "overview": [
+        600,
+        450
+      ]
     },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "party" },
-      "solago": { "character": "solago", "at": "solago" },
-      "papasito": { "character": "papasito", "at": "papasito" },
-      "warrior": { "character": "warrior", "at": "warrior" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "party"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      }
     }
   },
   "steps": [
-    { "type": "sound", "sound": "alert" },
-    { "type": "camera", "to": "overview", "zoom": 1.05, "duration": 0.8 },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
     {
       "type": "notice",
       "title": "ADMINISTRADOR DEL SERVIDOR",
@@ -45,71 +83,141 @@
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "surprised", "text": "Pará, boludo. ¿Y los otros?" },
-        { "speaker": "solago", "expression": "neutral", "text": "Jhony se quedó matando zombies, el hijo de puta." },
-        { "speaker": "papasito", "expression": "neutral", "text": "¿Y Maxi?" },
-        { "speaker": "maxi-negro", "expression": "neutral", "text": "Ni idea, Papasito. No apareció en ninguno de los juegos." },
-        { "speaker": "warrior", "expression": "surprised", "text": "¿Y PAPAFRITA?" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Pará, boludo. ¿Y los otros?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Jhony se quedó matando zombies, el hijo de puta."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Y Maxi?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Ni idea, Papasito. No apareció en ninguno de los juegos."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "surprised",
+          "text": "¿Y PAPAFRITA?"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Usuario Papafrita localizado.", "Cargando siguiente mundo... MONSTER HUNTER."]
+      "lines": [
+        "Usuario Papafrita localizado.",
+        "Cargando siguiente mundo... MONSTER HUNTER."
+      ]
     },
-    { "type": "sound", "sound": "alert", "repeat": 2, "interval": 0.3 },
-    { "type": "wait", "duration": 0.6 },
+    {
+      "type": "sound",
+      "sound": "alert",
+      "repeat": 2,
+      "interval": 0.3
+    },
+    {
+      "type": "wait",
+      "duration": 0.6
+    },
     {
       "type": "notice",
       "title": "TODOS",
       "duration": 3,
-      "lines": ["¡PUAAAAAJ!"]
+      "lines": [
+        "¡PUAAAAAJ!"
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "disgusted", "text": "¡NO, LA CONCHA DE TU MADRE! ¡PAPAFRITA NO!" },
-        { "speaker": "solago", "expression": "disgusted", "text": "¡NOOO! ¡A ESE NO LO QUIERO ESCUCHAR!" },
-        { "speaker": "papasito", "expression": "disgusted", "text": "¡NI EN PEDO, CARAJO!" }
-      ]
+        {
+          "speaker": "maxi-negro",
+          "expression": "disgusted",
+          "text": "¡NO, LA CONCHA DE TU MADRE! ¡PAPAFRITA NO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "disgusted",
+          "text": "¡NOOO! ¡A ESE NO LO QUIERO ESCUCHAR!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "disgusted",
+          "text": "¡NI EN PEDO, CARAJO!"
+        }
+      ],
+      "expressions": {
+        "maxi-negro": "disgusted",
+        "solago": "disgusted",
+        "papasito": "disgusted"
+      }
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Advertencia. El siguiente usuario es obligatorio para completar la reunión."]
+      "lines": [
+        "Advertencia. El siguiente usuario es obligatorio para completar la reunión."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡ME CHUPA UN HUEVO! ¡NO PIENSO ESCUCHAR A ESE HIJO DE PUTA!" },
-        { "speaker": "solago", "expression": "scared", "text": "¡NEGRO, SI ENTRAMOS AHÍ NO SALIMOS MÁS!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡ME CHUPA UN HUEVO! ¡NO PIENSO ESCUCHAR A ESE HIJO DE PUTA!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "scared",
+          "text": "¡NEGRO, SI ENTRAMOS AHÍ NO SALIMOS MÁS!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 3,
-      "lines": ["Reproduciendo comunicaciones del usuario..."]
+      "lines": [
+        "Reproduciendo comunicaciones del usuario..."
+      ]
     },
     {
       "type": "notice",
       "title": "PAPAFRITA",
       "duration": 7,
-      "lines": ["Bueno, antes de jugar Monster Hunter les tengo que explicar unas cosas. Primero hay que entender cómo fueron cambiando las armas entre entregas, porque si arrancamos por Freedom Unite..."]
+      "lines": [
+        "Bueno, antes de jugar Monster Hunter les tengo que explicar unas cosas. Primero hay que entender cómo fueron cambiando las armas entre entregas, porque si arrancamos por Freedom Unite..."
+      ]
     },
     {
       "type": "notice",
       "title": "TODOS",
       "duration": 3,
-      "lines": ["¡PUAAAAAAAAAJ!"]
+      "lines": [
+        "¡PUAAAAAAAAAJ!"
+      ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Analizando contenido del discurso...", "Analizando duración estimada...", "Analizando posibilidad de interrupción..."]
+      "lines": [
+        "Analizando contenido del discurso...",
+        "Analizando duración estimada...",
+        "Analizando posibilidad de interrupción..."
+      ]
     },
     {
       "type": "notice",
@@ -122,167 +230,283 @@
         "Riesgo de abandono de la partida: extremo"
       ]
     },
-    { "type": "wait", "duration": 0.8 },
+    {
+      "type": "wait",
+      "duration": 0.8
+    },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 3,
-      "lines": ["...Puaj."]
+      "lines": [
+        "...Puaj."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJAJA! ¡NOOOO! ¡HASTA EL BOT!" },
-        { "speaker": "solago", "expression": "happy", "text": "¡LE DIO ASCO AL ADMINISTRADOR, LA CONCHA DE TU MADRE!" },
-        { "speaker": "papasito", "expression": "neutral", "text": "Ya está. Saltalo." },
-        { "speaker": "warrior", "expression": "angry", "text": "¡SACALO A LA MIERDA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJAJA! ¡NOOOO! ¡HASTA EL BOT!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡LE DIO ASCO AL ADMINISTRADOR, LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Ya está. Saltalo."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡SACALO A LA MIERDA!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Confirmado. Usuario insoportable."]
+      "lines": [
+        "Confirmado. Usuario insoportable."
+      ]
     },
     {
       "type": "notice",
       "title": "PAPAFRITA",
       "duration": 5,
-      "lines": ["...porque después, si quieren, les explico también las diferencias con Portable 3rd..."]
+      "lines": [
+        "...porque después, si quieren, les explico también las diferencias con Portable 3rd..."
+      ]
     },
     {
       "type": "notice",
       "title": "TODOS",
       "duration": 3,
-      "lines": ["¡PUAAAAAJ!"]
+      "lines": [
+        "¡PUAAAAAJ!"
+      ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Para omitir un mundo obligatorio se requiere aprobación unánime."]
+      "lines": [
+        "Para omitir un mundo obligatorio se requiere aprobación unánime."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡SÍ, LA CONCHA DE TU MADRE!" },
-        { "speaker": "solago", "expression": "angry", "text": "¡SÍ!" },
-        { "speaker": "papasito", "expression": "neutral", "text": "Sí." },
-        { "speaker": "warrior", "expression": "angry", "text": "¡SÍ!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡SÍ, LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡SÍ!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡SÍ!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 5,
-      "lines": ["Voto a favor de omitir Monster Hunter.", "Decisión unánime. Monster Hunter omitido."]
+      "lines": [
+        "Voto a favor de omitir Monster Hunter.",
+        "Decisión unánime. Monster Hunter omitido."
+      ]
     },
     {
       "type": "notice",
       "title": "PAPAFRITA",
       "duration": 5,
-      "lines": ["¡Pero esperen, todavía no les expliqué la base del combate!"]
+      "lines": [
+        "¡Pero esperen, todavía no les expliqué la base del combate!"
+      ]
     },
     {
       "type": "notice",
       "title": "TODOS",
       "duration": 3,
-      "lines": ["¡PUAAAAAJ!"]
+      "lines": [
+        "¡PUAAAAAJ!"
+      ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Usuario silenciado permanentemente para esta sesión."]
+      "lines": [
+        "Usuario silenciado permanentemente para esta sesión."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡AL FIN UNA DECISIÓN INTELIGENTE DE ESTE BOT DE MIERDA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡AL FIN UNA DECISIÓN INTELIGENTE DE ESTE BOT DE MIERDA!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 3,
-      "lines": ["No vuelva a agradecerme."]
+      "lines": [
+        "No vuelva a agradecerme."
+      ]
     },
-    { "type": "camera", "to": "sky", "zoom": 1.5, "duration": 1.2 },
-    { "type": "sound", "sound": "alert", "repeat": 3, "interval": 0.2 },
+    {
+      "type": "camera",
+      "to": "sky",
+      "zoom": 1.5,
+      "duration": 1.2
+    },
+    {
+      "type": "sound",
+      "sound": "alert",
+      "repeat": 3,
+      "interval": 0.2
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "neutral", "text": "Bueno, ¿ahora nos vamos a casa?" },
-        { "speaker": "maxi-negro", "expression": "tired", "text": "Y... supongo." }
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, ¿ahora nos vamos a casa?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "tired",
+          "text": "Y... supongo."
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 3,
-      "lines": ["Incorrecto."]
+      "lines": [
+        "Incorrecto."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "surprised", "text": "¡LA CONCHA DE TU MADRE! ¡¿AHORA QUÉ?!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡LA CONCHA DE TU MADRE! ¡¿AHORA QUÉ?!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 5,
-      "lines": ["Los usuarios han completado los mundos de prueba.", "Iniciando fase final."]
+      "lines": [
+        "Los usuarios han completado los mundos de prueba.",
+        "Iniciando fase final."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "papasito", "expression": "surprised", "text": "¿Fase final de qué?" }
+        {
+          "speaker": "papasito",
+          "expression": "surprised",
+          "text": "¿Fase final de qué?"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Los cuatro participantes deberán superar una última partida."]
+      "lines": [
+        "Los cuatro participantes deberán superar una última partida."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "warrior", "expression": "surprised", "text": "¡¿Y MAXI?!" }
+        {
+          "speaker": "warrior",
+          "expression": "surprised",
+          "text": "¡¿Y MAXI?!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 3,
-      "lines": ["Usuario Maxi no localizado."]
+      "lines": [
+        "Usuario Maxi no localizado."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "Bueno, después lo buscamos. ¡Primero saquemos a este bot de mierda del medio!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "Bueno, después lo buscamos. ¡Primero saquemos a este bot de mierda del medio!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Advertencia. Se ha detectado comportamiento hostil hacia el sistema."]
+      "lines": [
+        "Advertencia. Se ha detectado comportamiento hostil hacia el sistema."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "annoyed", "text": "Y sí, pelotudo. ¡Nos tenés secuestrados!" }
+        {
+          "speaker": "solago",
+          "expression": "annoyed",
+          "text": "Y sí, pelotudo. ¡Nos tenés secuestrados!"
+        }
       ]
     },
     {
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Preparando enfrentamiento final."]
+      "lines": [
+        "Preparando enfrentamiento final."
+      ]
     },
-    { "type": "camera", "to": "overview", "zoom": 1, "duration": 0.8 },
+    {
+      "type": "camera",
+      "to": "overview",
+      "zoom": 1,
+      "duration": 0.8
+    },
     {
       "type": "notice",
       "title": "MUNDO 05 — DISCORD CORRUPTO",
@@ -297,24 +521,43 @@
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 5,
-      "lines": ["Han jugado suficiente.", "Ahora les toca jugar contra mí."]
+      "lines": [
+        "Han jugado suficiente.",
+        "Ahora les toca jugar contra mí."
+      ]
     },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "Bueno, vengan, pelotudos. Vamos a romperle el orto a este bot." }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "Bueno, vengan, pelotudos. Vamos a romperle el orto a este bot."
+        }
       ]
     },
-    { "type": "sound", "sound": "net" },
-    { "type": "flash", "at": "overview", "duration": 0.6 },
+    {
+      "type": "sound",
+      "sound": "net"
+    },
+    {
+      "type": "flash",
+      "at": "overview",
+      "duration": 0.6
+    },
     {
       "type": "notice",
       "title": "FIN DEL ACTO 4",
       "duration": 4,
-      "lines": ["FIN DEL ACTO 4."]
+      "lines": [
+        "FIN DEL ACTO 4."
+      ]
     }
   ],
   "effects": [
-    { "key": "act-04-epilogue", "value": true }
+    {
+      "key": "act-04-epilogue",
+      "value": true
+    }
   ]
 }
