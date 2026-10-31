@@ -1,6 +1,6 @@
 import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
 import { handleRewardAction } from './game/reward-actions.mjs';
-import { nextPlayableAct, PLAYABLE_ACTS, actForWorld } from './campaign/acts.mjs';
+import { nextPlayableAct, PLAYABLE_ACTS, actForWorld, getAct } from './campaign/acts.mjs';
 import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
@@ -15,6 +15,8 @@ import { story } from './screens/story.mjs';
 import { characters, drawPreview } from './screens/characters.mjs';
 import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
 import { enemiesScreen, drawEnemyPreview, isEnemyDevelopment } from './screens/enemies.mjs';
+import { balance, isBalanceDevelopment } from './screens/balance.mjs';
+import { balanceForMode, seedRun } from './game/balance-seed.mjs';
 import { game } from './screens/game.mjs';
 import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment, activeNarrativeAct } from './narrative/integration.mjs';
 import { audio } from './audio/index.mjs';
@@ -50,7 +52,7 @@ function show(name, previousRun = null) {
   state.screen = name;
   state.content.dataset.screen = name;
   state.keys.clear();
-  if (name !== 'game') state.run = null;
+  if (name !== 'game') { state.run = null; state.pendingRun = null; }
   state.paused = false;
   state.sellMenuOpen = false;
   document.body.classList.toggle('in-game', name === 'game');
@@ -58,6 +60,7 @@ function show(name, previousRun = null) {
   if (name === 'characters') characters();
   if (name === 'worlds') worldsScreen();
   if (name === 'enemies') enemiesScreen();
+  if (name === 'balance') balance();
   if (name === 'story') story();
   if (name === 'game') { game(previousRun); narrative.attach(state.run, document.querySelector('#narrative-layer')); }
   if (name === 'narrative') showNarrativeViewer(state.content);
@@ -80,6 +83,7 @@ function previewAct() {
   if (state.screen === 'narrative') return activeNarrativeAct();
   if (state.screen === 'worlds') return actForWorld(state.worldPreview);
   if (state.screen === 'enemies') return actForWorld(state.enemyPreviewWorld);
+  if (state.screen === 'balance') return actForWorld(getAct(state.balanceAct).world);
   return null;
 }
 
@@ -170,6 +174,23 @@ document.addEventListener('click', event => {
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
   if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else enterWorld(); }
   if (action === 'play') enterWorld();
+  // The lab seeds the run itself: the chosen wave, the build its budget paid
+  // for, and the balance mode it compares with.
+  if (action === 'balance-play') {
+    const { run } = seedRun({
+      character: state.balanceCharacter,
+      act: getAct(state.balanceAct),
+      wave: state.balanceWave,
+      balance: balanceForMode(state.balanceMode),
+      picks: state.balancePicks,
+      shop: state.balanceShop,
+      items: state.balanceItems,
+    });
+    state.selectedAct = state.balanceAct;
+    state.selectedCharacter = state.balanceCharacter;
+    state.pendingRun = run;
+    show('game');
+  }
   if (action === 'next-act' && state.run?.worldCleared) {
     const next = nextPlayableAct(state.run.act.id);
     if (next) {
@@ -296,7 +317,8 @@ function resumeNarrative() { if (!document.hidden) activeNarrativeHost().resume(
 window.addEventListener('blur', suspend);
 window.addEventListener('focus', resumeNarrative);
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); else resumeNarrative(); });
-show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds' : isEnemyDevelopment() ? 'enemies' : 'home');
+show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds'
+  : isEnemyDevelopment() ? 'enemies' : isBalanceDevelopment() ? 'balance' : 'home');
 // ?dev=warp replays the world transfer on the menu, so it can be looked at
 // without winning a world first.
 if (['warp', 'portal'].includes(new URLSearchParams(globalThis.location?.search ?? '').get('dev'))) {

@@ -1,6 +1,6 @@
 import { UPGRADES, chooseUpgrade, createRun, seedWave } from '../engine.mjs';
 import { applyUpgradeRank, countOf, grantItem } from '../run-rewards.mjs';
-import { BALANCE } from '../reward-data.mjs';
+import { BALANCE, playtestBalance } from '../reward-data.mjs';
 import { waveEntryBudget } from './wave-budget.mjs';
 
 // Builds the run a player would bring to a wave, so a single wave can be played
@@ -59,8 +59,9 @@ export function seedRun({
   // for. The catalogue caps the rank and the level gates the entry.
   let left = entry.choices;
   for (const [id, wanted] of Object.entries(picks)) {
-    const upgrade = run.rewardCatalog.upgrades.find(entry => entry.id === id);
-    if (!upgrade || (upgrade.minLevel ?? 1) > entry.level) continue;
+    const upgrade = run.rewardCatalog.upgrades.find(candidate => candidate.id === id);
+    if (!upgrade || (upgrade.characters !== 'all' && upgrade.characters !== character)) continue;
+    if ((upgrade.minLevel ?? 1) > entry.level) continue;
     const rank = countOf(run.levelRanks, id);
     const allowed = Math.min(wanted, upgrade.ranks.length - rank, left);
     for (let taken = 0; taken < allowed; taken++) {
@@ -78,7 +79,7 @@ export function seedRun({
     for (let bought = 0; bought < wanted; bought++) if (!chooseUpgrade(run, id)) break;
   }
   for (const [id, wanted] of Object.entries(items)) {
-    const item = run.rewardCatalog.items.find(entry => entry.id === id);
+    const item = run.rewardCatalog.items.find(candidate => candidate.id === id);
     for (let bought = 0; bought < wanted; bought++) {
       if (!item || run.coins < item.price || !grantItem(run, id)) break;
       run.coins -= item.price;
@@ -90,4 +91,9 @@ export function seedRun({
   // damage accumulated on the way here.
   run.player.hp = run.player.maxHp;
   return { run, entry, remaining: { choices: left, coins: run.coins } };
+}
+
+// The two balances the lab compares: the shipped one and the tuning one.
+export function balanceForMode(mode) {
+  return mode === 'playtest' ? playtestBalance() : BALANCE;
 }

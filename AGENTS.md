@@ -94,8 +94,11 @@ Read `docs/audio.md` before adding a sound. The rules that keep it listenable:
 | `?dev=worlds` | every world at stage size with the cast; pick an actor and walk it with WASD or the arrow keys |
 | `?dev=enemies` | a throwaway run of one enemy kind on a chosen world: it walks in, stops at its own attack distance and swings on its own cadence against a dummy that never moves. Shows the resolved sheet for the chosen wave |
 | `?dev=narrative` | select, play, restart and skip standalone scenes |
+| `?dev=balance` | balance lab: pick a character, a world and a wave, spend that wave's entry budget on level upgrades, shop upgrades and items, then play the wave for real |
 
-All three are isolated: they never write progress or unlocks.
+All four are isolated: they never write progress or unlocks. The balance lab is
+the only place that turns the playtest pacing on from the interface; anywhere
+else it is `?playtest`, and without it the game runs the real balance.
 
 ## Scene JSON
 

@@ -154,10 +154,19 @@ Maxi is waiting, plugged in.
 
 ## Wave length
 
-The act declares the real length. Local playtests shorten every wave to 15
-seconds through `balanceFor(hostname)` in `src/reward-data.mjs`; any other host
-plays `act.duration`. Append `?waves=<seconds>` to force a length anywhere, so
-the real pacing can be exercised on localhost without touching code.
+The act declares the real length, and that is what every build plays: no host
+shortens a wave. The fast pacing is a tool the user turns on, never something the
+environment decides:
+
+- `?playtest` runs 15-second waves and multiplies XP by ten, the tuning pacing.
+- `?waves=<seconds>` forces only the length, on top of either mode.
+- `?dev=balance` opens the balance lab: pick a character, a world and a wave,
+  spend that wave's entry budget on upgrades and items, and play the wave for
+  real. The budget is projected from the waves before it, so a level-5 build at
+  wave 5 is a claim about the campaign and not a number someone typed.
+
+`balanceFor(search)` in `src/reward-data.mjs` resolves both flags; the shipped
+`BALANCE` object is the real one.
 
 ## Monster Hunter
 

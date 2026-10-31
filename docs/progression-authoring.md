@@ -87,9 +87,11 @@ Waves last 60 seconds of real time; change that single number to lengthen or
 shorten every wave. The boss wave has no time limit and ends only when the boss
 dies. HUD labels, boss timing and wave endings all read this configuration, so
 no other file needs editing. Initial
-XP uses the approved `10 * currentLevel ** 2` curve. For playtesting, ordinary
-kills grant 10 XP (brutes 20) so every character reaches the level-3 mechanics
-quickly; set `xp.rewards` back to 1 for real balance. Gold, prices, item caps and upgrade magnitudes are provisional tuning,
+XP uses the approved `10 * currentLevel ** 2` curve and an ordinary kill pays one
+point, so the first level costs ten kills; an elite pays three and a mini-boss
+six. `xp.multiplier` exists for the playtest pacing only (`?playtest` sets it to
+10, which is what the old tuning table granted), and the balance lab prices a
+wave's entry budget from the same numbers. Gold, prices, item caps and upgrade magnitudes are provisional tuning,
 not measured final balance. The first catalog includes all eight lore items.
 
 The engine now pays gold from the run's configured enemy rewards and survival

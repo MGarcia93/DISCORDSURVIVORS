@@ -343,3 +343,12 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 @keyframes world-warp-fill { to { width: 100%; } }
 @keyframes world-warp-card { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
 @keyframes world-warp-out { to { opacity: 0; } }
+
+/* Balance lab: three groups of the same card the shop already uses. */
+.balance-lab .actions { margin: 12px 0; flex-wrap: wrap; }
+.balance-group { margin: 18px 0; }
+.balance-group h2 { font-size: 12px; letter-spacing: 2px; color: var(--paper); margin-bottom: 8px; }
+.balance-group h2 small { color: var(--green); font-size: 10px; letter-spacing: 1px; margin-left: 8px; }
+.balance-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.balance-cards .upgrade.own { border-color: var(--green); }
+.balance-cards canvas[data-art] { width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }

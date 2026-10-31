@@ -17,6 +17,16 @@ export const state = {
   enemyPreviewKind: 'zombie',
   enemyPreviewWave: 3,
   enemyPreviewReach: true,
+  // Balance lab (?dev=balance): the chosen wave and the build spent inside its
+  // budget. `pendingRun` is the seeded run the game screen picks up.
+  balanceCharacter: 'negro',
+  balanceAct: 'act-01',
+  balanceWave: 1,
+  balanceMode: 'real',
+  balancePicks: {},
+  balanceShop: {},
+  balanceItems: {},
+  pendingRun: null,
   run: null,
   paused: false,
   sellMenuOpen: false,
