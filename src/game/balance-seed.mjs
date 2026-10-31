@@ -50,6 +50,10 @@ export function seedRun({
   const entry = waveEntryBudget(act, wave, balance);
   const run = createRun(random, character, { balance }, act);
   seedWave(run, wave);
+  // The campaign reaches this wave with that much survival time behind it, and
+  // some sheets read `elapsed` (the alarm zombie's horde grows with it), so the
+  // seeded wave has to start on the same clock the campaign would.
+  run.elapsed = (wave - 1) * entry.duration;
   run.level = entry.level;
   run.pendingLevels = [];
   run.levelChoices = null;

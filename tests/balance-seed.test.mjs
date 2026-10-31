@@ -20,6 +20,7 @@ test('a seeded run is the wave the campaign would serve', () => {
   assert.equal(run.coins, entry.coins);
   assert.deepEqual(run.pendingLevels, []);
   assert.equal(run.player.hp, run.player.maxHp);
+  assert.equal(run.elapsed, 2 * act1.duration, 'the wave starts on the campaign clock');
 });
 
 test('the first wave is a character sheet with no rewards behind it', () => {
