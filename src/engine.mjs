@@ -179,32 +179,41 @@ export function createEnemy(run, kind, x, y) {
     actions: def.actions, boss: def.boss === true };
 }
 
-export function startNextWave(run) {
-  if (run.phase !== 'shop' || !finishRewards(run)) return false;
-  run.wave++;
+// Loads one wave into a run: clock, budget, locks, mini-boss line and boss. The
+// engine uses it to advance; the balance lab uses it to start at any wave, so a
+// jumped-to wave is the same wave the campaign would serve.
+export function seedWave(run, wave) {
+  run.wave = wave;
   run.duration = run.rewardBalance.waves?.duration ?? run.act.duration;
   run.time = 0;
-  run.spawnBudget = waveBudget(run.act, run.wave, run.duration);
+  run.spawnBudget = waveBudget(run.act, wave, run.duration);
   run.spawnIn = spawnInterval(run.duration, run.spawnBudget);
   // A wave may declare a temporary lock: hotfix 1.0.5 cuts the cast's specials
   // for the first seconds of the wave that declares it.
-  run.specialsLocked = waveConfig(run.act, run.wave)?.specialLock ?? 0;
+  run.specialsLocked = waveConfig(run.act, wave)?.specialLock ?? 0;
   run.gauntletCleared = false;
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
+  delete run.minibossLine;
   run.player.characterDef.onStageStart?.(run, run.player);
   // The act may declare mini-bosses before the boss: they arrive on their own
   // wave, one at a time, and killing one never closes the run.
   const line = minibossLine(run.act);
-  if (line.length && run.wave === line[0].wave) {
+  if (line.length && wave === line[0].wave) {
     run.minibossLine = { list: line, index: 0 };
     run.enemies.push(gauntletEnemy(run, 0, line[0].kind));
   }
-  if (run.wave === run.act.boss.wave) {
+  if (wave === run.act.boss.wave) {
     run.enemies.push(createEnemy(run, run.act.boss.kind,
       WIDTH / 2, 80 * WORLD_SCALE));
   }
+  return run;
+}
+
+export function startNextWave(run) {
+  if (run.phase !== 'shop' || !finishRewards(run)) return false;
+  seedWave(run, run.wave + 1);
   return true;
 }
 

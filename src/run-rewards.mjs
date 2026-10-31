@@ -137,15 +137,25 @@ export function skipEmptyChoice(run) {
   return true;
 }
 
+// One item copy, with no shop around it: the balance lab grants the items a
+// player would already own, and a purchase is the same grant plus its price.
+export function grantItem(run, id) {
+  const item = run.rewardCatalog.items.find(entry => entry.id === id);
+  const count = countOf(run.items, id);
+  if (!item || item.enabled === false || count >= item.maxCopies) return false;
+  if (!applyReward(run, `item:${id}:${count}`, item)) return false;
+  run.items = { ...run.items, [id]: count + 1 };
+  return true;
+}
+
 export function buyItem(run, id) {
   if (run.phase !== 'shop' || run.pendingLevels.length) return false;
   const offer = run.shopOffers?.find(entry => entry.id === id && !entry.bought);
   const item = run.rewardCatalog.items.find(entry => entry.id === id);
   const count = countOf(run.items, id);
   if (!offer || !item || count >= item.maxCopies || run.coins < item.price) return false;
-  if (!applyReward(run, `item:${id}:${count}`, item)) return false;
+  if (!grantItem(run, id)) return false;
   run.coins -= item.price;
-  run.items = { ...run.items, [id]: count + 1 };
   offer.bought = true;
   return true;
 }
