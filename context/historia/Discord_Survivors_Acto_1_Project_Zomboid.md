@@ -156,9 +156,9 @@ Por primera vez desde que despertó, hay silencio.
 Una nueva notificación aparece.
 
 > **ADMINISTRADOR:** Mundo 01 completado.  
-> Preparando transferencia al siguiente entorno.
+> Preparando transferencia al siguiente mundo.
 
-**Maxi Negro:** Pará, pará. ¿Siguiente entorno? ¡Sacame de acá, hijo de puta!
+**Maxi Negro:** Pará, pará. ¿Siguiente mundo? ¡Sacame de acá, hijo de puta!
 
 Pero antes de que el sistema pueda transportarlo, escucha nuevos disparos.
 

@@ -430,7 +430,7 @@ Integrantes reunidos: 3.
 
 Anomalía detectada.
 
-Preparando siguiente entorno...
+Preparando siguiente mundo...
 
 **CONAN EXILES**
 

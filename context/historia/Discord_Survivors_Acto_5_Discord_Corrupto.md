@@ -19,19 +19,19 @@ En el cielo se ven enormes ventanas de Discord y mensajes de error.
 
 **Maxi Negro:** Bueno... ¿y ahora dónde mierda estamos?
 
-**Solago:** No sé, negro. Pero esto ya no parece un juego.
+**Solago:** No sé, Negro. Pero esto ya parece el escritorio de alguien que no cierra una ventana hace diez años.
 
-**Papasito:** ...
+**Papasito:** ¿Y ahora cómo salimos de acá?
 
-**Maxi Negro:** ¡PAPASITO! ¡¿VOS ENTENDÉS ALGO?!
+**Maxi Negro:** ¡QUÉ SÉ YO, PAPASITO! ¡PENSÉ QUE VOS HABÍAS ENTENDIDO ALGO!
 
-*Silencio.*
+**Papasito:** Y no, si yo estoy igual que ustedes.
 
-**Solago:** JAJAJA. ¡NI EN EL FIN DEL MUNDO CONTESTA ESTE HIJO DE PUTA!
+**Solago:** JAJAJA. ¡EL PARAGUAYO POR UNA VEZ HABLA Y TAMPOCO SABE NADA!
 
 De repente aparece la interfaz del Administrador.
 
-**ADMINISTRADOR:** Bienvenidos al último entorno.
+**ADMINISTRADOR:** Bienvenidos al último mundo.
 
 **ADMINISTRADOR:** Han completado satisfactoriamente cuatro mundos.
 
@@ -43,7 +43,7 @@ De repente aparece la interfaz del Administrador.
 
 **ADMINISTRADOR:** Los usuarios deberán superar una última prueba.
 
-**Warrior:** ¡¿OTRA MÁS, HIJO DE PUTA?!
+**Warrior:** ¡No, ura! ¿Otra más?
 
 **ADMINISTRADOR:** Correcto.
 
@@ -51,7 +51,7 @@ De repente aparece la interfaz del Administrador.
 
 **ADMINISTRADOR:** Advertencia. Lenguaje ofensivo detectado.
 
-**Maxi Negro:** ¡CHUPAME UN HUEVO!
+**Maxi Negro:** ¡CHUPAME LA PIJA!
 
 **ADMINISTRADOR:** Advertencia ignorada. Iniciando combate.
 
@@ -84,11 +84,11 @@ Desde un portal salen zombies. Desde otro, minions azules y rojos.
 
 **Maxi Negro:** ¡NOOO! ¡OTRA VEZ LOS ZOMBIES!
 
-**Solago:** ¡JAJAJA! ¡Y LOS MINIONS!
+**Solago:** ¡JAJAJA! ¡Y LOS MINIONS! ¡ESTAMOS EN DOS JUEGOS A LA VEZ!
 
 **Maxi Negro:** ¡PERO QUÉ ES ESTA MEZCLA DE MIERDA!
 
-**ADMINISTRADOR:** Recuperando recursos de los entornos anteriores.
+**ADMINISTRADOR:** Recuperando recursos de los mundos anteriores.
 
 **Maxi Negro:** ¡BUENO, RECUPERÁ UNA PUTA SALIDA!
 
@@ -118,31 +118,31 @@ Ahora aparecen esqueletos de Diablo, bárbaros de Conan y caminantes de Yorick.
 
 El Administrador comienza a mezclar elementos de todos los juegos.
 
-**Papasito:** Che, estos demonios tiran loot.
+**Papasito:** Epa, esos demonios están tirando loot.
 
 **Maxi Negro:** ¡PAPASITO, NO EMPIECES!
 
-**Papasito:** Pero mirá...
+**Papasito:** Pero mirá nomás lo que cayó.
 
 **Solago:** ¡NO, PARAGUAYO! ¡NO HAY TIEMPO PARA FARMEAR!
 
-**Papasito:** ¡DEJEN DE JODER!
+**Papasito:** Bueno, bueno. Ni mirar se puede.
 
 De repente, aparece un esclavista y corre directamente hacia Warrior.
 
 **ESCLAVISTA:** ¡AHÍ ESTÁ EL ESCLAVO FUGITIVO!
 
-**Warrior:** ¡LA CONCHA DE TU MADRE! ¡OTRA VEZ NO!
+**Warrior:** ¡Otra vez estos tipos!
 
 **Maxi Negro:** ¡JAJAJA! ¡WARRIOR, TODAVÍA TE ESTÁN BUSCANDO!
 
 **ADMINISTRADOR:** Usuario Warrior identificado. Nacionalidad estimada: Bolivia.
 
-**Warrior:** ¡QUE SOY ARGENTINO!
+**Warrior:** ¡QUE SOY DE JUJUY, URA!
 
 **ADMINISTRADOR:** Reclamo registrado. Resolución pendiente.
 
-**Solago:** ¡JAJAJA! ¡NO LE VAN A ARREGLAR EL DOCUMENTO NUNCA!
+**Solago:** ¡JAJAJA! ¡LE ABRIERON UN RECLAMO PARA VER SI ES ARGENTINO!
 
 ---
 
@@ -170,7 +170,9 @@ Una enorme imagen de un sillón aparece flotando frente a Maxi Negro.
 
 **ADMINISTRADOR:** Debilidad detectada: responsabilidades.
 
-**Solago:** ¡JAJAJA! ¡LE ENCONTRÓ LA DEBILIDAD!
+**Solago:** ¡JAJAJA! ¡PONELE UNA PALA ENFRENTE Y SE DESCONECTA SOLO!
+
+**Maxi Negro:** ¡MIRÁ QUIÉN HABLA, SI TE MANDAN A LAVAR UN PLATO Y DESAPARECÉS!
 
 *El sillón se transforma en una trampa que intenta inmovilizar al jugador.*
 
@@ -192,7 +194,13 @@ De repente, aparece una imagen de la Doncella de la Niebla.
 
 **Maxi Negro:** ¡JAJAJA! ¡SOLAGO, TE VOLVIÓ A BUSCAR TU JERMU!
 
-**Solago:** ¡LA CONCHA DE TU MADRE, NEGRO!
+**Solago:** ¡QUE NO ES ELLA, NEGRO!
+
+**ADMINISTRADOR:** Contacto autorizado para suspender el acceso a PC y Xbox.
+
+**Maxi Negro:** ¡JAJAJA! ¡ESTA SÍ ES TU JERMU!
+
+**Solago:** ¡LA CONCHA DE TU MADRE!
 
 ### Papasito
 
@@ -212,15 +220,15 @@ La pantalla cambia a un historial de transacciones.
 
 **Maxi Negro:** ¡JAJAJA! ¡EL BOT NO LO DEJA OLVIDAR LA ESTAFA!
 
-**Papasito:** ¡LA PUTA MADRE! ¡BORRÁ ESO!
+**Papasito:** No, no... ¿para qué vas a mostrar eso ahora?
 
 **ADMINISTRADOR:** Para borrar el historial, deberá abonar una pequeña seña.
 
 **Maxi Negro:** ¡JAJAJAJA! ¡NOOO! ¡LO QUIERE CAGAR DE NUEVO!
 
-**Papasito:** ¡VAYANSE A LA MIERDA!
+**Papasito:** ¡UUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA!
 
-*Papasito comienza a lanzar ladrillos furiosamente contra las ventanas.*
+*Papasito pierde la paciencia y empieza a tirar ladrillos contra las ventanas del historial.*
 
 ### Warrior
 
@@ -228,13 +236,13 @@ La última pantalla muestra un mapa de Sudamérica.
 
 **ADMINISTRADOR:** Usuario Warrior. Procedencia: Jujuy.
 
-**Warrior:** ¡ARGENTINA!
+**Warrior:** ¡Jujuy es Argentina!
 
 **ADMINISTRADOR:** Bolivia.
 
-**Warrior:** ¡ARGENTINA, LA CONCHA DE TU MADRE!
+**Warrior:** ¡Te estoy diciendo que no!
 
-**ADMINISTRADOR:** Bolivia.
+**ADMINISTRADOR:** Error de geolocalización persistente. Bolivia.
 
 **Maxi Negro:** ¡JAJAJA! ¡NO LE DISCUTAS AL BOT, WARRIOR!
 
@@ -242,7 +250,9 @@ La última pantalla muestra un mapa de Sudamérica.
 
 **ADMINISTRADOR:** Advertencia. Visibilidad del servidor comprometida.
 
-**Maxi Negro:** ¡JAJAJA! ¡AHORA SÍ LO HICISTE CALENTAR!
+**Maxi Negro:** ¡WARRIOR, NO VEO UNA MIERDA CON TU HUMO!
+
+**Warrior:** ¡Y MOVETE, MANCO!
 
 El Administrador interrumpe el análisis.
 
@@ -294,7 +304,7 @@ Maxi Negro intenta activar su sillón.
 
 El servidor comienza a producir más errores.
 
-**Papasito:** Che, esto está andando como el culo.
+**Papasito:** Esto ya está funcionando mal, ¿verdad?
 
 **Maxi Negro:** ¡Y SÍ, PAPASITO! ¡LO PROGRAMARON CON LAS PATAS!
 
@@ -312,7 +322,7 @@ El servidor comienza a producir más errores.
 
 Los portales se cierran y aparece una enorme estructura en el centro del escenario.
 
-**ADMINISTRADOR:** Los usuarios han demostrado capacidad para sobrevivir individualmente a los entornos.
+**ADMINISTRADOR:** Los usuarios han demostrado capacidad para sobrevivir individualmente a los mundos.
 
 **ADMINISTRADOR:** Iniciando evaluación final de combate.
 
@@ -322,9 +332,9 @@ Los portales se cierran y aparece una enorme estructura en el centro del escenar
 
 **Solago:** No...
 
-**Papasito:** ...
+**Papasito:** ¿Otra vez los jefes?
 
-**Warrior:** ¡LA PUTA MADRE!
+**Warrior:** Uh, no.
 
 ### Primera aparición — El Zombi de la Alarma
 
@@ -336,7 +346,7 @@ Su alarma comienza a sonar y atrae hordas de infectados.
 
 **Solago:** ¡JAJAJA! ¡MIRÁ, NEGRO! ¡TU AMIGO!
 
-**Maxi Negro:** ¡CHUPAME UN HUEVO!
+**Maxi Negro:** ¡CHUPAME LA PIJA!
 
 Los jugadores deben derrotar su versión corrupta.
 
@@ -356,25 +366,25 @@ Cuando cae el zombi, aparece Yorick acompañado de sus caminantes.
 
 Yorick invoca muros y caminantes hasta ser derrotado.
 
-### Tercera aparición — El Carnicero
+### Tercera aparición — Lilith
 
 De repente, se escucha una voz.
 
-**CARNICERO:** ¡FRESH MEAT!
+**Lilith:** El infierno los reclama.
 
 **Papasito:** ...Uh.
 
-**Maxi Negro:** ¡NOOO! ¡OTRA VEZ EL CARNICERO!
+**Maxi Negro:** ¡NOOO! ¡OTRA VEZ LILITH!
 
 **Solago:** ¡PAPASITO, HACÉ ALGO!
 
 *Papasito comienza a correr.*
 
-**Maxi Negro:** ¡NO, PARAGUAYO! ¡NO TE VAYAS OTRA VEZ!
+**Maxi Negro:** ¡NO, PARAGUAYO! ¡NO TE VAYAS!
 
-**Papasito:** ¡CORRAN, CARAJO!
+**Papasito:** ¡CORRAN, CORRAN!
 
-Después de derrotarlo aparece un objeto legendario.
+Después de derrotarla aparece un objeto legendario.
 
 Papasito intenta recogerlo.
 
@@ -388,11 +398,11 @@ El último portal trae al Capataz de la Rueda del Dolor.
 
 **Maxi Negro:** ¡JAJAJA! ¡WARRIOR, TE VINIERON A BUSCAR OTRA VEZ!
 
-**Warrior:** ¡NO VUELVO A ESA MIERDA!
+**Warrior:** ¡Ni en pedo vuelvo ahí!
 
 **Solago:** ¡JAJAJA! ¡TENÉS QUE TERMINAR LA OBRA, BOLIVIANO!
 
-**Warrior:** ¡VAYANSE A LA MIERDA!
+**Warrior:** ¡Déjense de joder!
 
 Cuando derrotan al Capataz, las cuatro copias corruptas desaparecen.
 
@@ -412,7 +422,7 @@ Los cuatro protagonistas quedan sobre una plataforma suspendida en un vacío dig
 
 Frente a ellos aparece una gigantesca figura formada por fragmentos de código, pantallas, cables y símbolos de Discord.
 
-**ADMINISTRADOR:** Han sobrevivido a todos los entornos.
+**ADMINISTRADOR:** Han sobrevivido a todos los mundos.
 
 **ADMINISTRADOR:** Pero la partida todavía no ha terminado.
 
@@ -430,9 +440,9 @@ La figura comienza a crecer hasta ocupar casi toda la pantalla.
 
 **Maxi Negro:** ¡CON GUSTO, LA CONCHA DE SU MADRE!
 
-**Papasito:** Bueno, terminen rápido.
+**Papasito:** Bueno, vamos a terminar esto de una vez.
 
-**Warrior:** ¡VAMOS A HACERLO MIERDA!
+**Warrior:** ¡Dale, ura! ¡Hay que bajarlo!
 
 ### Primera fase — Moderación automática
 
@@ -474,7 +484,7 @@ El escenario cambia constantemente y aparecen sectores peligrosos.
 
 **Solago:** ¡JAJAJA! ¡NEGRO, NOS ESTÁN HACIENDO TESTEAR EL JUEGO!
 
-**Papasito:** ¡ESTO ESTÁ LLENO DE ERRORES, CARAJO!
+**Papasito:** Pero si está lleno de errores esto.
 
 **ADMINISTRADOR:** No son errores. Son características.
 
@@ -512,9 +522,9 @@ En pantalla aparece un mensaje:
 
 **Maxi Negro:** ¡QUÉ SÉ YO, SOLAGO!
 
-**Papasito:** No me gusta una mierda.
+**Papasito:** No sé, a mí no me gusta nada eso.
 
-**Warrior:** ¡MATEMOS A ESTE HIJO DE PUTA DE UNA VEZ!
+**Warrior:** ¡Hay que bajarlo ya!
 
 El Administrador comienza a lanzar ataques desesperadamente.
 
@@ -546,9 +556,9 @@ Su cuerpo comienza a desintegrarse.
 
 **Solago:** ¡JAJAJA! ¡LO HICIMOS MIERDA!
 
-**Papasito:** Al fin, carajo.
+**Papasito:** Al fin, por Dios.
 
-**Warrior:** ¡VÁMONOS A LA MIERDA!
+**Warrior:** ¡Ya está! ¡Vámonos!
 
 El Administrador desaparece completamente.
 
@@ -584,11 +594,11 @@ Todo parece haber vuelto a la normalidad.
 
 **Solago:** ¡LA CONCHA DE SU MADRE, QUÉ JUEGO DE MIERDA!
 
-**Papasito:** ...
+**Papasito:** ¿Ya estamos en el Discord?
 
-**Maxi Negro:** ¡PAPASITO! ¡¿ESTÁS AHÍ?!
+**Maxi Negro:** ¡PAPASITO! ¿SEGUÍS VIVO?
 
-**Papasito:** Sí.
+**Papasito:** Sí, pues. Te estoy hablando.
 
 **Maxi Negro:** Bueno, bárbaro. Pensé que te habíamos perdido.
 
@@ -604,7 +614,7 @@ De repente, se escucha una notificación:
 
 **Maxi se ha unido al canal de voz.**
 
-**Maxi:** Bueno, muchachos. ¿Qué onda? ¿Les gustó el jueguito?
+**Maxi:** Bueno, ¿qué onda? ¿Les gustó el jueguito?
 
 *Silencio absoluto.*
 
@@ -626,11 +636,11 @@ De repente, se escucha una notificación:
 
 **Maxi Negro:** ¡¿CÓMO QUE ACÁ?!
 
-**Maxi:** JAJAJA. ¿Qué? ¿Se divirtieron?
+**Maxi:** ¿Qué? ¿No se divirtieron?
 
 **Maxi Negro:** ¡PARÁ, HIJO DE PUTA! ¡¿VOS SABÍAS TODO LO QUE ESTABA PASANDO?!
 
-**Maxi:** Y sí, negro.
+**Maxi:** Y sí, Negro.
 
 **Solago:** ¡¿CÓMO QUE SÍ?!
 
@@ -650,79 +660,75 @@ De repente, se escucha una notificación:
 
 **Solago:** ¡¿VOS HICISTE TODO ESTO, HIJO DE PUTA?!
 
-**Maxi:** JAJAJA. Y sí, boludos.
+**Maxi:** Y sí, boludos.
 
 **Maxi Negro:** ¡PERO POR QUÉ MIERDA NOS METISTE EN TODOS ESOS JUEGOS!
 
-**Maxi:** Y bueno, negro. Hace tres horas que están discutiendo qué jugar y no se ponen de acuerdo.
+**Maxi:** Hace tres horas que rompen las pelotas con qué jugar y no se ponen de acuerdo.
 
-**Maxi:** Así que les hice un juego donde estuvieran todos juntos.
+**Maxi:** Les armé uno para todos y listo.
 
 **Solago:** ¡PERO CASI NOS MATAN, PELOTUDO!
 
-**Maxi:** Bueno, pero dejaron de discutir, ¿o no?
+**Maxi:** Bueno, pero jugaron juntos, ¿o no?
 
 *Silencio.*
 
-**Maxi:** ¿Vieron? Problema solucionado.
+**Maxi:** Listo. Funcionó.
 
 ### Las explicaciones
 
 **Maxi Negro:** Pará, pará. ¿Y el Administrador ese de mierda?
 
-**Maxi:** Ah, era un bot que programé para manejar la partida.
+**Maxi:** Era un bot que hice para manejar toda la partida. Parece que se fue un poquito al carajo.
 
 **Maxi Negro:** ¡PERO ERA UN HIJO DE PUTA!
 
-**Maxi:** JAJAJA. Lo hice bastante parecido a ustedes.
+**Maxi:** Y... aprendió de ustedes. Mirá cómo terminó.
 
 **Solago:** ¡¿Y POR QUÉ YORICK ME TENÍA DE MURGANEO?!
 
-**Maxi:** JAJAJA. Y bueno, negro, sos petiso y dientudo. Era demasiado fácil.
+**Maxi:** Y, Solago... sos petiso, dientudo y jugás Yorick. Me la dejaste servida.
 
 **Solago:** ¡LA CONCHA DE TU MADRE!
 
 **Maxi Negro:** ¡JAJAJA! ¡ENCIMA LO HIZO A PROPÓSITO!
 
-**Maxi:** Igual, la parte de tu jermu fue de las que más me gustó programar.
+**Maxi:** Igual lo de tu jermu me dio más risa que el jefe.
 
 **Solago:** ¡CHUPAME BIEN LA PIJA!
 
-**Papasito:** Che...
+**Papasito:** Maxi, una cosa...
 
-**Maxi:** ¿Qué pasó, paraguayo?
+**Maxi:** ¿Qué pasó, Papasito?
 
-**Papasito:** ¿Y lo del goblin?
+**Papasito:** ¿Y lo de mi historial?
 
-**Maxi:** JAJAJA. ¿Qué pasa con el goblin?
+**Maxi:** ¿El de la transferencia?
 
-**Papasito:** ¡ME ESTAFÓ!
+**Papasito:** ¡LO VIERON TODOS!
 
-**Maxi:** Y bueno, tenía que ser fiel a la historia original.
+**Maxi:** Y... me basé en algo que ya había pasado.
 
 **Maxi Negro:** ¡JAJAJAJA! ¡NOOO!
 
-**Solago:** ¡JAJAJA! ¡LO CAGÓ HASTA EN EL JUEGO!
+**Solago:** ¡JAJAJA! ¡LO MANDÓ AL FRENTE HASTA EN EL JUEGO!
 
-**Papasito:** ¡VAYANSE A LA MIERDA!
+**Papasito:** Ya van a empezar otra vez...
 
-**Warrior:** ¡¿Y POR QUÉ ME MANDASTE A CONAN?!
+**Warrior:** Che, Maxi, ¿y por qué terminé en Conan?
 
-**Maxi:** Ah, eso fue por un problema de nacionalidad.
+**Maxi:** Ah, eso fue el bot. Le puse Jujuy y entendió Bolivia.
 
-**Warrior:** ¡SOY ARGENTINO, HIJO DE PUTA!
+**Warrior:** ¡Pero Jujuy es Argentina!
 
-**Maxi:** Sí, sí, negro. Ya sé.
+**Maxi:** Y sí, ya sé. Pero cuando vi lo que hizo, lo dejé.
 
-**Warrior:** ¡¿ENTONCES POR QUÉ ME PUSISTE BOLIVIA?!
+**Maxi Negro:** ¡JAJAJA! ¡ENCIMA VIO EL ERROR Y NI LO ARREGLÓ!
 
-**Maxi:** JAJAJA. Porque daba más gracia.
+**Warrior:** ¡Sos un culiao!
 
-**Maxi Negro:** ¡JAJAJAJA! ¡NOOO! ¡LO PROGRAMÓ A PROPÓSITO!
-
-**Warrior:** ¡LA CONCHA DE TU MADRE!
-
-**Maxi:** Igual, no te quejes. Te encontré un lugar con Loto Amarillo y todo.
+**Maxi:** Igual no te quejes, había Loto Amarillo y todo.
 
 **Solago:** ¡JAJAJA! ¡HASTA EL PROGRAMADOR LE CONSIGUIÓ LA FALOPA!
 
@@ -730,11 +736,11 @@ De repente, se escucha una notificación:
 
 **Maxi Negro:** Bueno, pará. ¿Y Jhony? ¿Lo dejaste atrapado en Project?
 
-**Maxi:** No, negro. Ese hijo de puta tiene más de dos mil horas en Zomboid. Ni ganas de salir tenía.
+**Maxi:** ¿A Jhony? Lo dejé en Project. Con las horas que tiene, estaba más cómodo ahí que acá.
 
 **Solago:** ¡JAJAJA! ¡SE QUEDÓ JUGANDO SOLO!
 
-**Maxi:** Sí. Le mandé una invitación para terminar la campaña y me puteó.
+**Maxi:** Le mandé una invitación. Me puteó y siguió jugando.
 
 **Maxi Negro:** JAJAJA. Ese es Jhony.
 
@@ -750,13 +756,13 @@ De repente, se escucha una notificación:
 
 **Warrior:** ...
 
-**Maxi:** A ese lo dejé muteado desde antes de arrancar.
+**Maxi:** A ese lo mandé al Monster Hunter y le corté el micrófono.
 
 *Maxi Negro, Solago, Papasito y Warrior hacen simultáneamente la mueca de asco de Excalibur.*
 
 **TODOS:** ¡PUAAAAAJ!
 
-**Maxi:** JAJAJA. No, olvídense. Ese te explica cómo funciona Monster Hunter y terminamos mañana.
+**Maxi:** No, dejá. Le das el micrófono y te explica Monster Hunter hasta mañana.
 
 ---
 
@@ -770,11 +776,11 @@ Los cinco están conectados al Discord.
 
 **Solago:** Sí, estuvo bastante bien.
 
-**Papasito:** ...
+**Papasito:** Estuvo entretenido, la verdad.
 
-**Warrior:** Estuvo bueno.
+**Warrior:** Sí, estuvo bueno, changos.
 
-**Maxi:** ¿Vieron, boludos? Les armé algo para pasar la noche.
+**Maxi:** ¿Vieron? Les armé algo para pasar la noche.
 
 **Maxi Negro:** Bueno, pero ahora juguemos algo de verdad.
 
@@ -786,9 +792,9 @@ Los cinco están conectados al Discord.
 
 **Maxi Negro:** ¡NOOO! ¡LA CONCHA DE TU MADRE!
 
-**Papasito:** Diablo.
+**Papasito:** Podemos jugar Diablo.
 
-**Warrior:** ¿Y si jugamos otra cosa?
+**Warrior:** ¿Y si vemos otro juego?
 
 **Maxi Negro:** ¡DALE, WARRIOR! ¡ELEGÍ ALGO!
 
@@ -796,7 +802,7 @@ Los cinco están conectados al Discord.
 
 **Maxi Negro:** ¡NOOO! ¡OTRA VEZ ESA MIERDA NO!
 
-**Papasito:** ...
+**Papasito:** Yo dije Diablo nomás.
 
 **Maxi:** ...
 
@@ -829,4 +835,4 @@ Aparece un último mensaje:
 - **Cierre:** Jhony sigue jugando Project Zomboid, Papafrita permanece fuera de la campaña y el grupo vuelve a discutir qué jugar, cerrando el mismo conflicto con el que comenzó la historia.
 - **Rejugabilidad:** la revelación completa aparece la primera vez que se termina la campaña. Las escenas podrán volver a verse desde el menú de historia.
 
-**Estado: Acto 5 aprobado, versión definitiva de la campaña inicial.**
+**Estado: Acto 5 revisado — voces, interacciones y continuidad alineadas con la campaña.**

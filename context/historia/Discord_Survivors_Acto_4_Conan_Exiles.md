@@ -536,7 +536,7 @@ La Rueda del Dolor se detiene.
 
 **ADMINISTRADOR:** Usuario Papafrita localizado.
 
-**ADMINISTRADOR:** Cargando siguiente entorno... **MONSTER HUNTER**.
+**ADMINISTRADOR:** Cargando siguiente mundo... **MONSTER HUNTER**.
 
 *Los cuatro se quedan completamente inmóviles.*
 
@@ -598,7 +598,7 @@ La Rueda del Dolor se detiene.
 
 **TODOS:** ¡PUAAAAAJ!
 
-**ADMINISTRADOR:** Para omitir un entorno obligatorio se requiere aprobación unánime.
+**ADMINISTRADOR:** Para omitir un mundo obligatorio se requiere aprobación unánime.
 
 **Maxi Negro:** ¡SÍ, LA CONCHA DE TU MADRE!
 
@@ -634,7 +634,7 @@ La Rueda del Dolor se detiene.
 
 **Maxi Negro:** ¡LA CONCHA DE TU MADRE! ¡¿AHORA QUÉ?!
 
-**ADMINISTRADOR:** Los usuarios han completado los entornos de prueba.
+**ADMINISTRADOR:** Los usuarios han completado los mundos de prueba.
 
 **ADMINISTRADOR:** Iniciando fase final.
 

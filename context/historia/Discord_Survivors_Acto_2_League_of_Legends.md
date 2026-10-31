@@ -224,7 +224,7 @@ La interfaz del Administrador aparece delante de los dos.
 > Mundo 02 completado.  
 > Jugador Solago recuperado.  
 > Integrantes reunidos: 2.  
-> **Preparando siguiente entorno... DIABLO.**
+> **Preparando siguiente mundo... DIABLO.**
 
 **Maxi Negro:** Bueno, por lo menos salimos de esta mierda.
 
