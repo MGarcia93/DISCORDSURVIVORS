@@ -39,7 +39,8 @@ export default {
       life: { mistWalker: 54, mageMinion: 52, siegeMinion: 92 },
     },
     // The Maiden arrives once at the start of this wave; the walkers keep her company.
-    { wave: 5, perMinute: 30, mix: { mistWalker: 1 }, life: { mistWalker: 62 } },
+    // The Maiden does not run on a clock: the wave closes when she falls.
+    { wave: 5, untimed: true, perMinute: 30, mix: { mistWalker: 1 }, life: { mistWalker: 62 } },
     // The boss wave is untimed and carries no budget of its own: Yorick brings
     // his walkers with him.
     { wave: 6, perMinute: 0, mix: {}, life: { mistWalker: 66 } },

@@ -58,6 +58,11 @@ function validateMiniboss(act) {
     if (entry.wave >= boss.wave) throw Error(`${id}: miniboss must be before the boss wave`);
     if (!own(ENEMY_KINDS, entry.kind)) throw Error(`${id}: unknown miniboss kind: ${entry.kind}`);
     if (!text(entry.name)) throw Error(`${id}: miniboss name is required`);
+    // A mini-boss owns its wave: if the clock could end it, a slow fight would
+    // close the wave with the boss still standing.
+    if (act.waves?.[entry.wave - 1]?.untimed !== true) {
+      throw Error(`${id}: wave ${entry.wave} holds a mini-boss and must be untimed`);
+    }
   }
 }
 

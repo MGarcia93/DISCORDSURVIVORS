@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
-import { ACTS, DEFAULT_ACT, PLAYABLE_ACTS, getAct } from '../src/campaign/acts.mjs';
+import { ACTS, DEFAULT_ACT, PLAYABLE_ACTS, getAct, actForWorld } from '../src/campaign/acts.mjs';
 import act01 from '../src/campaign/act-01-zomboid.mjs';
 import act02 from '../src/campaign/act-02-rift.mjs';
 import act03 from '../src/campaign/act-03-inferno.mjs';
@@ -147,8 +147,9 @@ test('act two is the approved League of Legends chapter the script describes', (
 });
 
 test('a mini-boss is optional, must exist and must sit before the boss', () => {
-  const withoutMiniboss = { ...structuredClone(act02) };
+  const withoutMiniboss = structuredClone(act02);
   delete withoutMiniboss.miniboss;
+  delete withoutMiniboss.waves[act02.miniboss.wave - 1].untimed;
   assert.equal(validateAct(withoutMiniboss).id, 'act-02', 'an act without a mini-boss is valid');
   for (const [label, patch, expected] of [
     ['unknown kind', { kind: 'nope' }, /unknown miniboss kind/],
@@ -157,10 +158,26 @@ test('a mini-boss is optional, must exist and must sit before the boss', () => {
     ['invalid wave', { wave: 0 }, /invalid miniboss wave/],
   ]) {
     const act = structuredClone(act02);
+    // The untimed flag travels with its wave, so each case reaches its own rule.
+    delete act.waves[act02.miniboss.wave - 1].untimed;
+    if (Number.isInteger(patch.wave) && patch.wave > 0 && patch.wave <= act.waves.length) {
+      act.waves[patch.wave - 1].untimed = true;
+    } else if (patch.wave === undefined) act.waves[act02.miniboss.wave - 1].untimed = true;
     act.miniboss = { ...act.miniboss, ...patch };
     assert.throws(() => validateAct(act), expected, label);
   }
   const notAnObject = structuredClone(act02);
+  delete notAnObject.waves[act02.miniboss.wave - 1].untimed;
   notAnObject.miniboss = 'maiden';
   assert.throws(() => validateAct(notAnObject), /miniboss must be an object/);
+});
+
+test('a world resolves to the act that owns it, and a shared one to nothing', () => {
+  for (const act of PLAYABLE_ACTS) {
+    assert.equal(actForWorld(act.world), act, `${act.world} belongs to ${act.id}`);
+  }
+  // 'arena' and 'room' are shared stages, not campaign worlds: the caller falls
+  // back to the default track instead of pretending they belong to Act 1.
+  assert.equal(actForWorld('arena'), null);
+  assert.equal(actForWorld(undefined), null);
 });

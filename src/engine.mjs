@@ -223,6 +223,9 @@ function gauntletEnemy(run, index, kind) {
 
 // An untimed wave holds its screen until its mini-boss line is cleared.
 function waveOver(run) {
+  // A boss owns the screen: no clock, flag or cleared line may close a wave
+  // while one is still standing. Killing it is the only way out of the fight.
+  if (run.enemies.some(enemy => enemy.hp > 0 && enemy.boss)) return false;
   const untimed = waveConfig(run.act, run.wave)?.untimed === true;
   if (untimed) return run.gauntletCleared === true;
   return run.time >= run.duration;
