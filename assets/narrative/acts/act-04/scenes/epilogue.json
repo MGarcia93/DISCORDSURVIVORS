@@ -200,6 +200,36 @@
       "duration": 7
     },
     {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...y después viene el árbol de mejoras, que se ramifica distinto en cada entrega, con materiales raros, partes raras y misiones que sólo aparecen con luna llena...",
+      "duration": 9
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...y ni hablar de la afinidad, el filo, los i-frames del rodillo, los sets mixtos, los talismanes, las decoraciones, la resistencia del arma, el hambre del cazador, el tiempo de carga del gran espadón, etcétera, etcétera, blablablabla...",
+      "duration": 9
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...pero pará, pará, porque antes de eso hay que entender la diferencia entre el daño crudo y el daño elemental, que es un tema, y el daño de estado, que es otro tema, y el daño de impacto contra el daño cortante, que es otro tema distinto...",
+      "duration": 10
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...y las zonas débiles, que cambian según el monstruo, y la parte que se rompe, y la cola que se corta, y el material que sale sólo si le rompés la cabeza, y el otro material que sale sólo si lo capturás en vez de matarlo, y el otro material que no sale nunca y por eso lo terminás comprando...",
+      "duration": 10
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...y ahí está el tema de la tienda, porque con los puntos de investigación comprás cosas que con las monedas no podés, y viceversa, y después están los cupones, los tickets, los pergaminos, las esferas, los adornos, las joyas, los talismanes otra vez, y blablablabla...",
+      "duration": 10
+    },
+    {
       "type": "notice",
       "title": "TODOS",
       "duration": 3,
@@ -280,6 +310,18 @@
       "duration": 5
     },
     {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...y con Freedom 2, y con Tri, y con 3 Ultimate, que cambia todo el tema del agua, y con 4 Ultimate, que agrega el salto, y con Generations, que tiene estilos, y con World, y con Rise, y con Sunbreak, y con Wilds, y blablablabla...",
+      "duration": 9
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...porque comparar Freedom Unite con Portable 3rd es como comparar un Fiat 600 con una bicicleta con cambios, y no es lo mismo, y nunca fue lo mismo, y el que dice que es lo mismo no jugó ninguno de los dos...",
+      "duration": 10
+    },
+    {
       "type": "notice",
       "title": "TODOS",
       "duration": 3,
@@ -334,6 +376,18 @@
       "speaker": "papafrita",
       "text": "¡Pero esperen, todavía no les expliqué la base del combate!",
       "duration": 5
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "¡Y los estados alterados! ¡Y las trampas! ¡Y las bombas! ¡Y los huevos de monstruo! ¡Y el chibi! ¡Y las expediciones! ¡Y los eventos de temporada, que son un tema aparte, porque...",
+      "duration": 9
+    },
+    {
+      "type": "splash",
+      "speaker": "papafrita",
+      "text": "...porque cada temporada trae su armadura, y su armadura trae su set, y su set trae su habilidad, y su habilidad se combina con otra habilidad del mismo set, y ahí ya estamos hablando de otra cosa, ¿me seguís? ¿Me seguís? Bueno, te explico de nuevo desde el principio...",
+      "duration": 10
     },
     {
       "type": "notice",
