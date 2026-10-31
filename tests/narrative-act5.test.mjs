@@ -93,20 +93,23 @@ test('the act five speakers and expressions exist in the catalog', async () => {
   }
 });
 
-test('Maxi never reaches a portrait panel before he joins the call', async () => {
+test('Maxi waits at the machine inside the server instead of a voice channel', async () => {
   const catalog = await catalogFor();
   const epilogue = actEntries(catalog).find(entry => entry.id === 'act-05-epilogue').scene;
-  const noticeIndex = epilogue.steps.findIndex(step => step.type === 'notice' && step.lines.includes('Maxi se ha unido al canal de voz.'));
-  assert.notEqual(noticeIndex, -1, 'the join notice is what reveals him');
-  const before = epilogue.steps.slice(0, noticeIndex).filter(step => step.type === 'dialogue');
-  assert.ok(before.length, 'they talk before he appears');
-  // The portrait strip lists every speaker of the scene, so the beats before the
-  // notice must use the compact panel or Maxi's face shows up early.
-  for (const step of before) assert.equal(step.layout, 'stage', 'early beats have no portrait strip');
-  const speakerSets = epilogue.steps
-    .filter(step => step.type === 'dialogue' && step.layout !== 'stage')
-    .flatMap(step => step.lines.map(line => line.speaker));
-  assert.equal(speakerSets.includes('maxi'), true, 'after the notice he speaks');
+  const texts = epilogue.steps.flatMap(step => step.type === 'dialogue'
+    ? step.lines.map(line => line.text)
+    : step.type === 'notice' ? step.lines : []);
+  // The group has not gone home yet: the reveal happens where Maxi programs.
+  assert.equal(epilogue.stage.background, 'creator-desk');
+  for (const text of texts) assert.doesNotMatch(text, /VOLVIMOS|estamos en el Discord|canal de voz|se ha unido/i, text);
+  const first = epilogue.steps.findIndex(step => step.type === 'dialogue');
+  assert.equal(epilogue.steps[first].layout, 'stage', 'early beats have no portrait strip');
+  // Walking to the desk is what reveals him, so his portrait stays hidden until then.
+  const arrival = epilogue.steps.findIndex(step => step.type === 'parallel');
+  const maxiSpeaks = epilogue.steps.findIndex(step => step.type === 'dialogue'
+    && step.layout !== 'stage' && step.lines.some(line => line.speaker === 'maxi'));
+  assert.ok(arrival > 0 && maxiSpeaks > arrival, 'Maxi speaks only after the group reaches the desk');
+  assert.deepEqual(epilogue.stage.actors.maxi, { character: 'maxi', at: 'maxi' });
 });
 
 test('the corrupted bosses are staged in the ghosts scene and Maxi sits at the machine', async () => {

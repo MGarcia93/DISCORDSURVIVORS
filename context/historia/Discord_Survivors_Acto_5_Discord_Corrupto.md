@@ -578,23 +578,19 @@ Una luz blanca envuelve a los cuatro.
 
 La pantalla se funde a negro.
 
-Se escucha el sonido habitual de Discord al conectarse a un canal de voz.
-
 ---
 
 # Epílogo — El verdadero responsable
 
 La pantalla vuelve a encenderse.
 
-Los cuatro personajes aparecen en el canal de voz original de Discord.
+Los cuatro aparecen en un cuarto que no reconocen: una mesa, monitores y cables por todos lados. Del otro lado, alguien está sentado de espaldas.
 
-Todo parece haber vuelto a la normalidad.
-
-**Maxi Negro:** ¡AL FIN, PELOTUDOS! ¡VOLVIMOS!
+**Maxi Negro:** Pará... esto no es el Discord.
 
 **Solago:** ¡LA CONCHA DE SU MADRE, QUÉ JUEGO DE MIERDA!
 
-**Papasito:** ¿Ya estamos en el Discord?
+**Papasito:** ¿Y esto qué es?
 
 **Maxi Negro:** ¡PAPASITO! ¿SEGUÍS VIVO?
 
@@ -610,9 +606,7 @@ Todo parece haber vuelto a la normalidad.
 
 **Maxi Negro:** Qué sé yo. Capaz ni entró al juego.
 
-De repente, se escucha una notificación:
-
-**Maxi se ha unido al canal de voz.**
+El grupo camina hasta la mesa. Del otro lado, Maxi levanta la vista de la pantalla.
 
 **Maxi:** Bueno, ¿qué onda? ¿Les gustó el jueguito?
 
@@ -768,9 +762,9 @@ De repente, se escucha una notificación:
 
 ## Última escena — ¿Y ahora qué jugamos?
 
-Después de un rato de risas y puteadas, finalmente todo vuelve a la normalidad.
+Después de un rato de risas y puteadas, el cuarto vuelve a quedar en silencio.
 
-Los cinco están conectados al Discord.
+Los cinco están alrededor de la mesa.
 
 **Maxi Negro:** Bueno, Maxi. Igual el jueguito estuvo bueno.
 
