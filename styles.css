@@ -323,3 +323,23 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .narrative-banter img { width: 32px; height: 40px; }
   .narrative-banter .portrait-extended { width: 36.8px; height: 47.6px; }
 }
+
+/* Crossing into another world: the Administrator closes the session and loads
+   the next server, then the destination card opens it. The veil is opaque from
+   the first frame because the next run is already live underneath, and it
+   swallows clicks for its short life. */
+.world-warp { position: fixed; z-index: 40; inset: 0; display: grid; place-items: center; pointer-events: auto; background: #0b0c14; }
+.world-warp::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(#ffffff08 0 1px, transparent 1px 3px); }
+.world-warp-out { animation: world-warp-out 260ms linear forwards; }
+.warp-panel { position: relative; width: min(92vw, 520px); padding: 26px 28px; text-align: center; border: 3px solid #6c5578; background: #171326; box-shadow: inset 0 0 0 3px #2a2140, 6px 6px #07050c; }
+.warp-eyebrow { color: var(--gold); letter-spacing: 3px; font-size: 10px; }
+.warp-title { margin: 10px 0 18px; color: var(--paper); font-size: 16px; letter-spacing: 2px; }
+.warp-track { height: 14px; border: 2px solid #54465c; background: #0d0e16; }
+.warp-fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, #bfd890 0 8px, #8aa76a 8px 12px); animation: world-warp-fill 1100ms steps(24) 120ms forwards; }
+.warp-log { margin: 12px 0 0; color: #9c8fae; font-size: 10px; letter-spacing: 1px; }
+.warp-card { display: grid; gap: 10px; border-color: #bfd890; animation: world-warp-card 300ms steps(8); }
+.warp-number { margin: 0; color: var(--gold); font-size: 12px; letter-spacing: 6px; }
+.warp-card-title { margin: 0; color: var(--green); font-size: clamp(16px, 2.4vw, 22px); letter-spacing: 2px; }
+@keyframes world-warp-fill { to { width: 100%; } }
+@keyframes world-warp-card { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes world-warp-out { to { opacity: 0; } }

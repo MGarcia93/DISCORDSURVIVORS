@@ -38,6 +38,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
   const s = characterDef.stats;
   const run = {
     phase: 'playing', wave: 1, duration: act.duration, time: 0, elapsed: 0, coins: 0, kills: 0,
+    worldCleared: false,
     act, random, character: characterDef.id, serial: 0, shotCount: 0, spawnIn: 0.8, shotIn: 0, shockwaves: [],
     player: {
       character: characterDef.id, characterDef,
@@ -755,9 +756,15 @@ export function step(run, seconds, input = {}) {
     run.phase = 'dead';
     emit('playerDown', { run, player: p });
   } else if (killed.some(enemy => enemy.boss && enemy.kind === run.act.boss?.kind)) {
-    run.phase = 'won';
-    run.pendingLevels = [];
-    run.levelChoices = run.shopOffers = null;
+    // The world boss closes its world the same way every wave closes: the shop
+    // opens so the fight's coins buy something before the next server, and the
+    // outcome only appears when there is no world left to continue to.
+    run.phase = 'shop';
+    run.worldCleared = true;
+    awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
+    run.enemies = [];
+    run.projectiles = [];
+    beginRewards(run);
     emit('waveCleared', { run });
   // A wave ends on its clock, except one that declares itself untimed and holds
   // a line of mini-bosses: that one only closes when the last of them falls.

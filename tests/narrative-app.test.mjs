@@ -134,7 +134,8 @@ test('campaign continuation advances acts without bypassing their closing scenes
   for (const [index, act] of PLAYABLE_ACTS.entries()) {
     assert.equal(state.run.act.id, act.id);
     state.run.wave = act.boss.wave;
-    state.run.phase = 'won';
+    state.run.phase = 'shop';
+    state.run.worldCleared = true;
     narrative.observe();
     const won = state.run;
     dom.click('next-act');

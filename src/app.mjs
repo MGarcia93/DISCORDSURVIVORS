@@ -1,6 +1,6 @@
 import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
 import { handleRewardAction } from './game/reward-actions.mjs';
-import { nextPlayableAct } from './campaign/acts.mjs';
+import { nextPlayableAct, PLAYABLE_ACTS, actForWorld } from './campaign/acts.mjs';
 import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
@@ -16,14 +16,15 @@ import { characters, drawPreview } from './screens/characters.mjs';
 import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
 import { enemiesScreen, drawEnemyPreview, isEnemyDevelopment } from './screens/enemies.mjs';
 import { game } from './screens/game.mjs';
-import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment } from './narrative/integration.mjs';
+import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment, activeNarrativeAct } from './narrative/integration.mjs';
 import { audio } from './audio/index.mjs';
 import { musicCue, SFX, UI } from './audio/mix.mjs';
+import { warpToWorld } from './game/world-transition.mjs';
 
 // Refresh availability after a world victory. Encounter cinematics own unlock
 // announcements; an unrelated boss victory must not repeat a legacy reward.
 on('waveCleared', ({ run: clearedRun }) => {
-  if (clearedRun.phase !== 'won') return;
+  if (clearedRun.phase !== 'won' && !clearedRun.worldCleared) return;
   for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = isCharacterUnlocked(id);
 });
 
@@ -62,6 +63,24 @@ function show(name, previousRun = null) {
   if (name === 'narrative') showNarrativeViewer(state.content);
   state.content.focus({ preventScroll: true });
   window.scrollTo(0, 0);
+}
+
+// Entering a world crosses the server gate, so a jump between worlds reads as a
+// transfer instead of a screen swap.
+function enterWorld(previousRun = null) {
+  show('game', previousRun);
+  warpToWorld(state.content, state.run.act.id, { reducedMotion: state.reducedMotion.matches });
+}
+
+// The dev viewers have no run, but each one does show a world: the narrative
+// viewer the act that owns the scene playing, the world and enemy viewers the
+// world picked in their menu. Resolving it here keeps the bed one call, exactly
+// like every other screen, instead of granting the viewers a bus of their own.
+function previewAct() {
+  if (state.screen === 'narrative') return activeNarrativeAct();
+  if (state.screen === 'worlds') return actForWorld(state.worldPreview);
+  if (state.screen === 'enemies') return actForWorld(state.enemyPreviewWorld);
+  return null;
 }
 
 function frame(timestamp) {
@@ -105,6 +124,7 @@ function frame(timestamp) {
   audio.setCue(musicCue({
     screen: state.screen,
     run: state.screen === 'game' ? state.run : null,
+    act: previewAct(),
     paused: state.paused,
     blocked: narrative.blocked,
   }));
@@ -148,13 +168,18 @@ document.addEventListener('click', event => {
   if (['home', 'characters', 'worlds'].includes(action)) show(action);
   if (action === 'story-start') { state.storyPage = 0; show('story'); }
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
-  if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else show('game'); }
-  if (action === 'play') show('game');
-  if (action === 'next-act' && state.run?.phase === 'won') {
+  if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else enterWorld(); }
+  if (action === 'play') enterWorld();
+  if (action === 'next-act' && state.run?.worldCleared) {
     const next = nextPlayableAct(state.run.act.id);
     if (next) {
       state.selectedAct = next.id;
-      show('game', state.run);
+      enterWorld(state.run);
+    } else {
+      // The last world still owes its ending: the outcome panel is the campaign's.
+      state.run.phase = 'won';
+      state.lastPhase = '';
+      overlay();
     }
   }
   if (action === 'pause' && state.run?.phase === 'playing') { state.paused = !state.paused; state.keys.clear(); }
@@ -272,4 +297,9 @@ window.addEventListener('blur', suspend);
 window.addEventListener('focus', resumeNarrative);
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); else resumeNarrative(); });
 show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds' : isEnemyDevelopment() ? 'enemies' : 'home');
+// ?dev=warp replays the world transfer on the menu, so it can be looked at
+// without winning a world first.
+if (['warp', 'portal'].includes(new URLSearchParams(globalThis.location?.search ?? '').get('dev'))) {
+  warpToWorld(state.content, PLAYABLE_ACTS[1]?.id ?? state.selectedAct);
+}
 requestAnimationFrame(frame);

@@ -114,8 +114,9 @@ test('contact damage and coin rewards read the table at runtime', () => {
   step(killRun, 0.05, {});
   for (let i = 0; i < 40; i++) step(killRun, 0.05, {});
   assert.equal(killRun.kills, 1);
-  assert.equal(killRun.coins, 30);
-  assert.equal(killRun.phase, 'won');
+  assert.equal(killRun.coins, 30 + (killRun.rewardBalance.gold?.survival ?? 20));
+  assert.equal(killRun.phase, 'shop');
+  assert.equal(killRun.worldCleared, true);
 });
 
 test('the Rift minions keep the same six-stat sheet, each with its own numbers', () => {

@@ -26,7 +26,8 @@ test('next world retains real acquisitions without copying the old battlefield',
   old.shockwaves.push({ radius: 4 });
   old.prison = { ttl: 2 };
   old.specialsLocked = 6;
-  old.phase = 'won';
+  old.phase = 'shop';
+  old.worldCleared = true;
   const before = JSON.stringify(old);
   const next = createNextWorldRun(old);
   assert.equal(next.act.id, PLAYABLE_ACTS[1].id);
@@ -66,7 +67,8 @@ test('only a won nonterminal act continues; ordinary new runs keep their default
   run.phase = 'dead';
   assert.equal(createNextWorldRun(run), null);
   const last = createRun(() => 0.5, 'negro', {}, PLAYABLE_ACTS.at(-1));
-  last.phase = 'won';
+  last.phase = 'shop';
+  last.worldCleared = true;
   assert.equal(createNextWorldRun(last), null);
   assert.equal(run.level, 1);
   assert.deepEqual(run.items, {});

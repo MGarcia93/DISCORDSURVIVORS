@@ -37,20 +37,28 @@ function endWave(run) {
 const ids = attribute => [...box.innerHTML.matchAll(new RegExp(`data-${attribute}="([^"]+)"`, 'g'))].map(match => match[1]);
 const activate = (run, dataset) => handleRewardAction(run, dataset, () => render(run));
 
-test('victory offers the next world while death and the final act only offer replay', async () => {
+test('the boss shop continues to the next world and death still only offers replay', async () => {
   const { PLAYABLE_ACTS } = await import('../src/campaign/acts.mjs');
   for (const [index, act] of PLAYABLE_ACTS.entries()) {
     const run = createRun(() => 0.5, 'negro', {}, act);
-    run.phase = 'won';
+    run.phase = 'shop';
+    run.worldCleared = true;
+    run.time = run.duration;
+    step(run, 0, {});
     const html = render(run);
+    assert.match(html, /data-action="next-act"/, 'the shop hands over to the trip');
+    assert.match(html, /EL BOTÍN ES TUYO/);
     if (index < PLAYABLE_ACTS.length - 1) {
-      assert.match(html, /data-action="next-act"/);
       assert.match(html, /SIGUIENTE MUNDO/);
-      assert.ok(html.includes(PLAYABLE_ACTS[index + 1].title));
-    } else assert.doesNotMatch(html, /data-action="next-act"/);
-    assert.match(html, /data-action="play"/);
+      // The destination is announced on arrival, not inside the button.
+      assert.ok(!html.includes(PLAYABLE_ACTS[index + 1].title));
+    } else {
+      assert.match(html, /TERMINAR CAMPAÑA/, 'the last world ends the campaign');
+    }
     run.phase = 'dead';
-    assert.doesNotMatch(render(run), /data-action="next-act"/);
+    const dead = render(run);
+    assert.doesNotMatch(dead, /data-action="next-act"/);
+    assert.match(dead, /data-action="play"/);
   }
 });
 

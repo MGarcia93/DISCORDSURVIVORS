@@ -6,7 +6,7 @@ import { applyStatState } from '../stat-modifiers.mjs';
 // Reuse the permanent stat snapshot rather than reapplying purchases: doing so
 // would charge again, double-stack modifiers or reset acquisition limits.
 export function createNextWorldRun(previous) {
-  const act = previous?.phase === 'won' ? nextPlayableAct(previous.act.id) : null;
+  const act = previous?.worldCleared ? nextPlayableAct(previous.act.id) : null;
   if (!act) return null;
   const run = createRun(previous.random, previous.character, {
     catalog: previous.rewardCatalog, balance: previous.rewardBalance,

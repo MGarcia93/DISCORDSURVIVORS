@@ -3,9 +3,14 @@
 A world is a **run**: the player picks it, plays its waves and the act ends with
 its boss. The campaign is not one continuous run, so progress is per act.
 
-After an act's closing cinematics, **SIGUIENTE MUNDO** starts the next playable
-act with the same character, acquired items, upgrade ranks, permanent statistics,
-reward bonuses, level, XP and coins. Health is restored to the upgraded maximum
+Defeating a world boss closes the world with the same shop every wave opens, so
+the fight's coins and earned levels are spent before moving on. The shop's
+**SIGUIENTE MUNDO** crosses to the next playable act; there is no separate
+victory panel, and the destination is announced by the arrival card. The last
+world offers **TERMINAR CAMPAÑA** and only then shows the campaign ending.
+
+The next act starts with the same character, acquired items, upgrade ranks,
+permanent statistics, reward bonuses, level, XP and coins. Health is restored to the upgraded maximum
 and all abilities are ready, with no cooldown. The battlefield and temporary
 combat effects start fresh. Sold possessions stay sold.
 **OTRA PARTIDA** replays the current world. The last act offers replay and the

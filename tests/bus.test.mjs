@@ -35,7 +35,8 @@ test('engine emits kill, waveCleared, playerDown and specialActivated as post-st
   run.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 1, maxHp: 1, x: run.player.x, y: run.player.y,
     radius: 10 * 1.1, speed: 0 });
   for (let i = 0; i < 40 && run.phase === 'playing'; i++) step(run, 0.05, {});
-  assert.equal(run.phase, 'won');
+  assert.equal(run.phase, 'shop', 'a world boss opens the shop');
+  assert.equal(run.worldCleared, true);
   assert.equal(run.kills, 1);
 
   const deadRun = createRun(() => 0.5);
@@ -53,7 +54,8 @@ test('engine emits kill, waveCleared, playerDown and specialActivated as post-st
   assert.ok(kill.hp <= 0, 'kill event must be post-state: enemy already down');
   const cleared = events.find(e => e.type === 'waveCleared');
   assert.ok(cleared, 'waveCleared event emitted');
-  assert.equal(cleared.run.phase, 'won', 'waveCleared must be post-state');
+  assert.equal(cleared.run.phase, 'shop', 'waveCleared must be post-state');
+  assert.equal(cleared.run.worldCleared, true);
   const down = events.find(e => e.type === 'playerDown');
   assert.ok(down, 'playerDown event emitted');
   assert.equal(down.run.phase, 'dead', 'playerDown must be post-state');

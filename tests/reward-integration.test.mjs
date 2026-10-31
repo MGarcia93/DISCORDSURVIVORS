@@ -41,8 +41,9 @@ test('configured gold rewards control all enemy payouts and survival income inde
   bossRun.wave = 4;
   bossRun.enemies = [{ id: 1, kind: 'alarmZombie', boss: true, hp: 0, x: 0, y: 0 }];
   step(bossRun, 0, {});
-  assert.equal(bossRun.coins, 13);
-  assert.equal(bossRun.phase, 'won');
+  assert.equal(bossRun.coins, 13 + 11, 'the fight bounty and the survival pay');
+  assert.equal(bossRun.phase, 'shop');
+  assert.equal(bossRun.worldCleared, true);
 });
 
 test('configured zero gold rewards remain zero instead of falling back to legacy amounts', () => {
@@ -167,16 +168,15 @@ test('sale upgrades improve proceeds while preserving debt settlement and giving
   assert.equal(run.xp, xp);
 });
 
-test('final boss victory suppresses pending reward screens without losing victory state', () => {
+test('world boss victory pays its rewards into the shop before the next world', () => {
   const run = createRun(() => 0.5);
   kills(run, 10);
   run.wave = 4;
   run.enemies = [{ id: ++run.serial, kind: 'alarmZombie', boss: true, hp: 0, maxHp: 1, radius: 1, speed: 0, x: 0, y: 0 }];
   step(run, 0.01, { x: 1 });
-  assert.equal(run.phase, 'won');
-  assert.deepEqual(run.pendingLevels, []);
-  assert.equal(run.levelChoices, null);
-  assert.equal(run.shopOffers, null);
-  assert.equal(chooseLevelReward(run, 'otaku-time'), false);
-  assert.equal(skipEmptyChoice(run), false);
+  assert.equal(run.phase, 'shop');
+  assert.equal(run.worldCleared, true);
+  assert.ok(run.pendingLevels.length > 0, 'earned levels are not thrown away');
+  assert.ok(run.levelChoices?.length, 'the shop offers them before the next game');
+  assert.equal(chooseLevelReward(run, run.levelChoices[0].id), true);
 });

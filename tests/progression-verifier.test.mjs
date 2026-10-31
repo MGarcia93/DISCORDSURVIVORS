@@ -155,12 +155,12 @@ test('S7: pending choices block the boundary; victory clears them and emits once
     victory.wave = 4; victory.spawnIn = victory.shotIn = 1e6;
     victory.enemies.push({ id: ++victory.serial, kind: 'alarmZombie', boss: true, hp: 0, x: 0, y: 0, radius: 20 });
     step(victory, 0, {});
-    assert.equal(victory.phase, 'won');
-    assert.deepEqual(victory.pendingLevels, []);
-    assert.equal(victory.levelChoices, null);
-    assert.equal(victory.shopOffers, null);
+    assert.equal(victory.phase, 'shop');
+    assert.equal(victory.worldCleared, true);
+    assert.ok(victory.pendingLevels.length > 0, 'the fight levels wait for the boss shop');
+    assert.ok(victory.levelChoices?.length, 'the boss shop offers them');
     assert.equal(events, 2);
-    assert.equal(startNextWave(victory), false);
+    assert.equal(startNextWave(victory), false, 'a cleared world starts no next wave');
   } finally {
     off?.();
   }

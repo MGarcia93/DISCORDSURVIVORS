@@ -90,5 +90,6 @@ test('final wave requires defeating the act boss, not just waiting', () => {
   assert.equal(run.phase, 'playing');
   boss.hp = 0;
   step(run, 0.05, {});
-  assert.equal(run.phase, 'won');
+  assert.equal(run.phase, 'shop', 'the boss hands the coins to the shop');
+  assert.equal(run.worldCleared, true);
 });

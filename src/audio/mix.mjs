@@ -104,6 +104,8 @@ export const SFX = {
     jitter: { rate: 0.12, cutoff: 0.2, gain: 0.15 },
   },
   down: { frequency: 90, duration: 0.7, gain: 0.052 },
+  // The server gate between worlds: a low power-down sweep, not a fanfare.
+  warp: { frequency: 90, duration: 1.1, gain: 0.05, release: true },
 };
 
 // UI feedback: the clicks the player makes, not the world reacting. Same bus as

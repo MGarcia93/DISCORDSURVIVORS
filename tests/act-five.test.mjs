@@ -62,7 +62,8 @@ test('the boss wave fields the administrator and only the administrator closes t
   assert.equal(boss.kind, 'administrator');
   assert.equal(boss.boss, true);
   slay(run, boss);
-  assert.equal(run.phase, 'won');
+  assert.equal(run.phase, 'shop', 'the boss opens the shop instead of ending the run');
+  assert.equal(run.worldCleared, true);
 });
 
 test('the hotfix wave makes its enemies faster and mutes the cast for a moment', () => {
