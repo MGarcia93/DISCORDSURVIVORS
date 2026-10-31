@@ -1,6 +1,5 @@
 {
   "id": "act-04-arrival",
-  "repeat": "once",
   "stage": {
     "background": "exiles",
     "points": {

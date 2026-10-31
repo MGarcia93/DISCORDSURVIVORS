@@ -1,6 +1,5 @@
 {
   "id": "act-03-loot",
-  "repeat": "once",
   "stage": {
     "background": "inferno",
     "points": {

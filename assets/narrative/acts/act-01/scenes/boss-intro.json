@@ -1,6 +1,5 @@
 {
   "id": "act-01-boss-intro",
-  "repeat": "once",
   "stage": {
     "background": "zomboid-combat",
     "points": {

@@ -1,6 +1,5 @@
 {
   "id": "act-04-warrior",
-  "repeat": "once",
   "stage": {
     "background": "warrior-camp",
     "size": [2744, 748],

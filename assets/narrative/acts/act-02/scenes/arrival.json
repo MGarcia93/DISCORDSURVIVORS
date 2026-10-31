@@ -1,6 +1,5 @@
 {
   "id": "act-02-arrival",
-  "repeat": "once",
   "stage": {
     "background": "rift",
     "points": {

@@ -1,6 +1,5 @@
 {
   "id": "act-02-maiden",
-  "repeat": "once",
   "stage": {
     "background": "rift",
     "size": [3432, 748],

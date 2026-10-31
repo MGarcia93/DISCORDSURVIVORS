@@ -1,6 +1,5 @@
 {
   "id": "act-02-boss-defeat",
-  "repeat": "once",
   "stage": {
     "background": "rift",
     "points": {

@@ -1,6 +1,5 @@
 {
   "id": "act-05-phases",
-  "repeat": "once",
   "stage": {
     "background": "discord",
     "points": {

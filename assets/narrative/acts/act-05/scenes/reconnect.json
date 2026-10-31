@@ -1,6 +1,5 @@
 {
   "id": "act-05-reconnect",
-  "repeat": "once",
   "stage": {
     "background": "discord",
     "points": {

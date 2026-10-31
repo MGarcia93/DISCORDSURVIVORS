@@ -1,6 +1,5 @@
 {
   "id": "act-01-epilogue",
-  "repeat": "once",
   "stage": {
     "background": "zomboid-combat",
     "points": { "ground": [572, 470] },

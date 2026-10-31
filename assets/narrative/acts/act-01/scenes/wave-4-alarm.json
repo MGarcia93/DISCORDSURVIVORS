@@ -1,6 +1,5 @@
 {
   "id": "act-01-wave-4-alarm",
-  "repeat": "once",
   "stage": {
     "background": "zomboid-combat",
     "points": {

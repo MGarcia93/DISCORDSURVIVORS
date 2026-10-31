@@ -1,6 +1,5 @@
 {
   "id": "act-05-files",
-  "repeat": "once",
   "stage": {
     "background": "discord",
     "points": {

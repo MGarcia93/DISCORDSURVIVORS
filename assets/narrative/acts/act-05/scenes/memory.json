@@ -1,6 +1,5 @@
 {
   "id": "act-05-memory",
-  "repeat": "once",
   "stage": {
     "background": "discord",
     "points": {

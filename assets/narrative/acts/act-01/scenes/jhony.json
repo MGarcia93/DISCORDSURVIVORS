@@ -1,6 +1,5 @@
 {
   "id": "act-01-jhony",
-  "repeat": "once",
   "stage": {
     "background": "jhony-street",
     "size": [2288, 748],

@@ -1,6 +1,5 @@
 {
   "id": "act-03-boss-defeat",
-  "repeat": "once",
   "stage": {
     "background": "inferno",
     "points": {
