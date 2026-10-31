@@ -31,12 +31,14 @@ const alarmZombie = {
       range: 520,
       // "Cuanto más dura el combate, más zombis aparecen": the count grows with
       // the run, not with the wave.
+      //
+      // They walk in from the edge, like every other spawn, instead of appearing
+      // around the alarm: the player gets the walk-in to thin the horde, and
+      // every kill pays its XP and coins. A ring of bodies around the boss was a
+      // wall, not a fight.
       run(run, enemy, ctx) {
         const count = 2 + Math.floor(run.elapsed / 25);
-        for (let index = 0; index < count; index++) {
-          const angle = index / count * Math.PI * 2;
-          ctx.spawnEnemy('zombie', enemy.x + Math.cos(angle) * 80, enemy.y + Math.sin(angle) * 80);
-        }
+        for (let index = 0; index < count; index++) ctx.spawnAtEdge('zombie');
         run.effects.push({ x: enemy.x, y: enemy.y - 90, text: 'HORDA', ttl: 0.9, kind: 'summon' });
       },
     },

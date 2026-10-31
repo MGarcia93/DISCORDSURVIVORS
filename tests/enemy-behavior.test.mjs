@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createEnemy, createRun, step, WORLD_SCALE } from '../src/engine.mjs';
+import { createEnemy, createRun, step, WIDTH, HEIGHT, WORLD_SCALE } from '../src/engine.mjs';
 
 // A run that never spawns on its own: every test places exactly the enemies it
 // wants to reason about, so nothing else moves.
@@ -113,6 +113,33 @@ test('the alarm boss pulls a horde in with its own summon action', () => {
   assert.equal(run.enemies.length, 3, 'the boss plus the two it dragged in');
   assert.ok(run.enemies.some(enemy => enemy.kind === 'zombie'), 'summoned zombies, not decorations');
   assert.equal(boss.actionCds.summon, 9, 'and the summon pays its cooldown');
+});
+
+test('the alarm boss calls its horde in from the edge, not from its own body', () => {
+  const run = quietRun();
+  run.elapsed = 300;
+  // The summon band, and the first edge for every walker it calls.
+  run.random = () => 0;
+  const boss = createEnemy(run, 'alarmZombie', run.player.x, run.player.y - 200);
+  run.enemies.push(boss);
+  step(run, 0.05, {});
+  const horde = run.enemies.filter(enemy => enemy.kind === 'zombie');
+  assert.equal(horde.length, 2 + Math.floor(300 / 25), 'the horde size still grows with the run');
+  for (const walker of horde) {
+    const outside = walker.x < 0 || walker.x > WIDTH || walker.y < 0 || walker.y > HEIGHT;
+    assert.ok(outside, 'every walker enters from outside the arena, like any wave spawn');
+  }
+});
+
+test('the horde respects the arena population cap', () => {
+  const run = quietRun();
+  run.elapsed = 300;
+  run.random = () => 0;
+  const boss = createEnemy(run, 'alarmZombie', run.player.x, run.player.y - 200);
+  run.enemies.push(boss);
+  while (run.enemies.length < 118) place(run, { x: -500, y: -500, hp: 1 });
+  step(run, 0.05, {});
+  assert.ok(run.enemies.length <= 120, 'the boss cannot flood past the cap the wave spawner keeps');
 });
 
 test('the alarm boss uses its abilities while it is still walking toward the player', () => {

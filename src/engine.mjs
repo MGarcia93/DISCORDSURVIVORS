@@ -456,6 +456,10 @@ export function step(run, seconds, input = {}) {
   const def = p.characterDef;
    const ctx = { hit, distance, nearest, fire, fireRadial, confuse: applyConfusion, movement: input,
      spawnEnemy: (kind, x, y) => { const enemy = createEnemy(run, kind, x, y); run.enemies.push(enemy); return enemy; },
+     // A sheet that calls a crowd asks for walkers, not for positions: they walk
+     // in from the same edges the wave spawner uses, never out of the boss's
+     // body. It also keeps the arena cap, so no boss can flood past it.
+     spawnAtEdge: kind => (run.enemies.length < ALIVE_CAP ? spawn(run, kind) : null),
      shockwave: options => shockwave(run, options),
      prison: options => prison(run, options),
      // `/mute`: the ficha asks for the lock, the engine owns the clock.
