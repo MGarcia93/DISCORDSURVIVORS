@@ -1,6 +1,6 @@
 # Discord Survivors — La última partida
 
-A playable pixel-art browser prototype based on the supplied Discord Survivors concept. Start → select a survivor → three short story scenes → survive three waves → defeat the Administrator in wave four. Solago unlocks after the first map is won.
+A playable pixel-art browser prototype based on the supplied Discord Survivors concept. Start → select a survivor → follow the campaign across five worlds. Characters unlock through their encounters: Solago in Act 2, Papasito in Act 3, and Warrior in Act 4, regardless of the survivor being played.
 
 ## Play locally
 
@@ -39,7 +39,7 @@ Leaving the browser tab automatically pauses combat. Between waves, spend droppe
 
 The title menu supports Up/Down to choose and Enter to confirm. Open **CONTROLES** for the in-game control panel, or **SONIDO** for the music and effects levels and the mute switch; Escape closes either. Menus honour the system reduced-motion preference.
 
-Solago's chore meter fills every eight kills. When full, it grants +30% damage and attack speed for eight seconds. **Alt+Shift+U** on the title screen sets one `debugUnlockAll` flag in the versioned local-storage record. The shared character-unlock check uses that same flag for every implemented character and future characters registered through it. Without the debug flag, normal map-one victory unlocks Solago. This is local browser progress, not account sync. The cheat only changes local storage; it does not edit the run or character data.
+Solago's chore meter fills every eight kills. When full, it grants +30% damage and attack speed for eight seconds. **Alt+Shift+U** on the title screen sets one `debugUnlockAll` flag in the versioned local-storage record. The shared character-unlock check uses that same flag for every implemented character and future characters registered through it. Normal character unlocks follow completed or manually skipped campaign encounters, not victories with different survivors. Existing encounter history and legacy unlock flags remain valid, so previously met characters become available without replaying. This is local browser progress, not account sync. The cheat only changes local storage; it does not edit the run or character data.
 
 Solago plays as a short-range fighter: an animated palette-bite attack, a slightly extended melee reach and narrower hitbox, timed Smile Armor defense, and the E-key Patrona Stand ultimate with a scissors slash. Every eight kills fill the chore-task meter; the temporary buff starts automatically. While the Stand is active Solago crouches and cannot move; when it expires he takes a scissors hit but remains where the player left him.
 
@@ -61,7 +61,7 @@ The two silhouettes stay deliberately distinct at gameplay scale: El Negro is th
 
 ## Prototype boundaries
 
-- El Negro is the starter. Solago is the second playable character and unlocks after beating the first map. Other confirmed members remain unavailable placeholders until their kits are implemented.
+- El Negro is the starter. Solago, Papasito and Warrior become playable after their Act 2, 3 and 4 encounters. Other confirmed members remain unavailable placeholders until their kits are implemented.
 - The three regular waves last 60 seconds each. The final boss wave has no time limit. This is a prototype format, not the proposed 15–20 minute final run.
 - One arena, two normal enemy types, one boss, three attacks/abilities for El Negro and Solago, six stackable upgrades, and a repeatable delivery heal.
 - Only character unlock progress and the audio settings (mute plus a music and an SFX level) are stored; there are no run saves, accounts, multiplayer, or additional worlds yet.

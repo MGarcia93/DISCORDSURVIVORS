@@ -84,6 +84,16 @@ Preview the combat layout in `?dev=worlds`, selecting **Act 1 — Knox County
 combat street**, or start Act 1 to see it with combat effects and enemies.
 Reload the whole page after adding a world to refresh the JavaScript registry.
 
+## Character encounters and unlocks
+
+Completing or manually skipping the Solago encounter in Act 2, Papasito encounter
+in Act 3 or Warrior rescue in Act 4 unlocks that character for future runs, with
+any survivor. Winning a world no longer grants the next played-character reward.
+Character sheets declare the encounter scene in `unlock.scene`; availability is
+derived from the existing `seenScenes` history or a legacy unlock flag. Old
+encounter history therefore restores access without replaying or rewriting saves.
+Cancelled/failed scenes and isolated dev previews do not grant unlocks.
+
 ## Act 4 rescue scenery
 
 The Warrior rescue (`act-04-warrior`) runs on its own `warrior-camp` world: a

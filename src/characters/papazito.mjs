@@ -12,8 +12,8 @@ const papazito = {
   id: 'papazito',
   name: 'PAPAZITO',
   gameNote: 'EL PARAGUAYO TRUCHO · LADRILLOS, LA SEÑA Y LIQUIDACIÓN DE PERTENENCIAS',
-  // Unlock contract: this flag in local storage means the character is playable.
-  unlock: { flag: 'papazitoUnlocked' },
+  // Legacy flags remain valid; the campaign encounter also grants availability.
+  unlock: { flag: 'papazitoUnlocked', scene: 'act-03-papasito' },
   // Selection screen metadata: label, profile block and preview pose belong
   // to the ficha; adding a character never touches screens or app again.
   label: 'Papazito',
@@ -28,12 +28,10 @@ const papazito = {
       <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 8–12 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente al menos 4 fichas y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
       <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 40 segundos.</p></div></div>`,
-  // Locked text never renders: an unlocked Warrior's note always precedes it.
   unlockNote: {
-    locked: '',
-    unlocked: 'PAPAZITO DESBLOQUEADO · CADENA DE MAPAS COMPLETADA',
+    locked: 'PAPAZITO · BLOQUEADO · ENCUENTRO DEL ACTO 3',
+    unlocked: 'PAPAZITO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
   },
-  victoryLine: '¡Papazito desbloqueado! Vino por la seña, se queda por los ladrillos.',
   rosterPose: { x: 30, y: 46 },
   drawRoster(ctx) { drawPapazito(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
   preview(ctx, { time, cycle }) { drawPapazito(ctx, 128, 151, { time, moving: cycle < 3.4, scale: 2 }); },

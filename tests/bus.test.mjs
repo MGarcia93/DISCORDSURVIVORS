@@ -59,14 +59,14 @@ test('engine emits kill, waveCleared, playerDown and specialActivated as post-st
   assert.equal(down.run.phase, 'dead', 'playerDown must be post-state');
 });
 
-test('progression records the unlock chain from waveCleared events', () => {
+test('world victories no longer grant played-character successor unlocks', () => {
   const storage = fakeStorage();
   handleWaveClearedEvent({ run: { character: 'negro', phase: 'won' } }, storage);
-  assert.equal(JSON.parse(storage.getItem('discord-survivors.progress.v1')).solagoUnlocked, true);
+  assert.equal(storage.getItem('discord-survivors.progress.v1'), null);
 
   const storage2 = fakeStorage();
   handleWaveClearedEvent({ run: { character: 'solago', phase: 'won' } }, storage2);
-  assert.equal(JSON.parse(storage2.getItem('discord-survivors.progress.v1')).warriorUnlocked, true);
+  assert.equal(storage2.getItem('discord-survivors.progress.v1'), null);
 
   const storage3 = fakeStorage();
   handleWaveClearedEvent({ run: { character: 'negro', phase: 'shop' } }, storage3);

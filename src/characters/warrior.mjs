@@ -10,8 +10,8 @@ const warrior = {
   id: 'warrior',
   name: 'WARRIOR',
   gameNote: 'CHAMÁN DEL NORTE · CONTROL DE MASAS · SE CREE ARGENTINO',
-  // Unlock contract: this flag in local storage means the character is playable.
-  unlock: { flag: 'warriorUnlocked' },
+  // Legacy flags remain valid; the campaign encounter also grants availability.
+  unlock: { flag: 'warriorUnlocked', scene: 'act-04-warrior' },
   // Selection screen metadata: label, profile block and preview pose belong
   // to the ficha; adding a character never touches screens or app again.
   label: 'Warrior',
@@ -26,12 +26,10 @@ const warrior = {
       <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>`,
-  // Locked text never renders: an unlocked Solago's note always precedes it.
   unlockNote: {
-    locked: '',
-    unlocked: 'WARRIOR DESBLOQUEADO · GANÁ EL MAPA CON WARRIOR PARA PAPAZITO',
+    locked: 'WARRIOR · BLOQUEADO · ENCUENTRO DEL ACTO 4',
+    unlocked: 'WARRIOR DESBLOQUEADO · DISPONIBLE PARA JUGAR',
   },
-  victoryLine: '¡Warrior desbloqueado! Ya podés elegirlo en la próxima partida.',
   rosterPose: { x: 28, y: 46 },
   drawRoster(ctx) { drawWarrior(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
   preview(ctx, { time, cycle }) { drawWarrior(ctx, 128, 150, { time, moving: cycle < 3.4, scale: 2 }); },

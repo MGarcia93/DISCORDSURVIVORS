@@ -2,9 +2,8 @@ import { CHARACTERS, ROSTER } from './characters/index.mjs';
 
 export const PROGRESS_STORAGE_KEY = 'discord-survivors.progress.v1';
 
-// Victory unlock chain: winning a map with one roster entry unlocks the next
-// one. The order and the flags live on the characters themselves, so this
-// module never names a character.
+// Registered unlockable characters. Legacy consumers retain roster order;
+// campaign encounters and their saved flags belong to each character's sheet.
 export const UNLOCK_CHAIN = ROSTER.filter(character => character.unlock.flag).map(character => character.id);
 
 function resolveStorage(storage) {
@@ -88,7 +87,9 @@ export function isCharacterUnlocked(character, storage) {
   if (!progress) return false;
   if (progress.debugUnlockAll === true) return true;
   if (!descriptor) return false;
-  return progress[descriptor.flag] === true;
+  return progress[descriptor.flag] === true
+    || (typeof descriptor.scene === 'string' && Array.isArray(progress.seenScenes)
+      && progress.seenScenes.includes(descriptor.scene));
 }
 
 export function isDebugUnlockAll(storage) {
@@ -101,7 +102,8 @@ export function unlockCharacter(character, storage) {
   return writeProgressFlag(flag, storage);
 }
 
-// A victory grants the next roster entry; the last entry grants nothing.
+// Legacy explicit API retained for compatibility. Gameplay no longer calls it:
+// completed or skipped campaign encounters determine character availability.
 export function recordMapVictory(character, storage) {
   const index = ROSTER.findIndex(entry => entry.id === character);
   if (index < 0) return false;
@@ -123,13 +125,8 @@ export function unlockAllForTesting(storage) {
   }
 }
 
-// The unlock chain hangs off the waveCleared bus event instead of the UI
-// overlay: any map victory advances it through recordMapVictory.
-export function handleWaveClearedEvent(event, storage) {
-  const run = event?.run;
-  if (run?.phase === 'won') return recordMapVictory(run.character, storage);
+// Compatibility hook: winning a world no longer grants a roster successor.
+// The gameplay director persists successful encounters through sceneSeenStore.
+export function handleWaveClearedEvent(_event, _storage) {
   return false;
 }
-
-import { on } from './bus.mjs';
-on('waveCleared', event => handleWaveClearedEvent(event));

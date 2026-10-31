@@ -6,10 +6,10 @@ const solago = {
   id: 'solago',
   name: 'SOLAGO',
   gameNote: 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E',
-  // Unlock contract: this flag in local storage means the character is playable.
-  unlock: { flag: 'solagoUnlocked' },
+  // Legacy flags remain valid; the campaign encounter also grants availability.
+  unlock: { flag: 'solagoUnlocked', scene: 'act-02-solago' },
   // Selection screen metadata: label, profile block and preview pose belong
-  // to the ficha; the note folds over the unlock chain order.
+  // to the ficha; the roster presents the next missing campaign encounter.
   label: 'Solago',
   detailLabel: 'Solago',
   previewAria: 'Pixel art de Solago: remera oscura, reloj y paletas grandes',
@@ -23,10 +23,9 @@ const solago = {
       <div class="skill"><kbd>8×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 8 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
   unlockNote: {
-    locked: 'SOLAGO · BLOQUEADO · GANÁ EL MAPA 01 PARA DESBLOQUEARLO',
-    unlocked: 'SOLAGO DESBLOQUEADO · GANÁ EL MAPA 01 CON SOLAGO PARA WARRIOR',
+    locked: 'SOLAGO · BLOQUEADO · ENCUENTRO DEL ACTO 2',
+    unlocked: 'SOLAGO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
   },
-  victoryLine: '¡Solago desbloqueado! Ya podés elegirlo en la próxima partida.',
   rosterPose: { x: 26, y: 47 },
   drawRoster(ctx) { drawSolago(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
   preview(ctx, { time, cycle }) {

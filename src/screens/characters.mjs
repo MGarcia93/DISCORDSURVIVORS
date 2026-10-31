@@ -9,7 +9,7 @@ import { PLAYABLE_ACTS, getAct } from '../campaign/acts.mjs';
 // from the ficha (src/characters/); adding a character never touches this
 // file — it only fills the ROSTER through the registry.
 const ROSTER_PLACEHOLDERS = ['Maxi', 'Jhonny', 'Pasasito', 'Tomi'];
-const rosterButton = (ficha, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${ficha.id}" aria-label="${ficha.label}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : 'bloqueado; ganá el mapa anterior para desbloquearlo'}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${ficha.id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${ficha.label}</small></button>`;
+const rosterButton = (ficha, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${ficha.id}" aria-label="${ficha.label}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : ficha.unlockNote.locked}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${ficha.id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${ficha.label}</small></button>`;
 
 export function characters() {
   for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = isCharacterUnlocked(id);
@@ -20,13 +20,12 @@ export function characters() {
     ?? ROSTER.find(entry => isCharacterUnlocked(entry.id));
   state.selectedCharacter = ficha.id;
   const unlockedCount = ROSTER.filter(entry => isCharacterUnlocked(entry.id)).length;
-  // Progress note: the furthest unlocked ficha along the chain owns the shown
-  // text; with none unlocked yet, the first chained ficha's locked note shows.
+  // Encounter order may differ from roster order, including on older saves.
+  const nextEncounter = ROSTER.filter(entry => entry.unlock.scene && !isCharacterUnlocked(entry.id))
+    .sort((a, b) => a.unlock.scene.localeCompare(b.unlock.scene))[0];
   const rosterNote = state.debugUnlockAll
     ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS'
-    : UNLOCK_CHAIN.reduce(
-        (note, id) => isCharacterUnlocked(id) ? getCharacter(id).unlockNote.unlocked : note,
-        getCharacter(UNLOCK_CHAIN[0]).unlockNote.locked);
+    : nextEncounter?.unlockNote.locked ?? 'TODOS LOS PERSONAJES IMPLEMENTADOS DESBLOQUEADOS';
   state.selectedAct = getAct(state.selectedAct).status === 'playable' ? getAct(state.selectedAct).id : PLAYABLE_ACTS[0].id;
   const actOptions = PLAYABLE_ACTS
     .map(act => `<option value="${act.id}"${act.id === state.selectedAct ? ' selected' : ''}>Mundo 0${act.order} · ${act.title}</option>`)
