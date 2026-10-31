@@ -74,3 +74,31 @@ test('existing actors and cinematic bosses render without changing the roster or
     else delete globalThis.localStorage;
   }
 });
+
+test('portrait conversations keep the cast sprites on the stage', () => {
+  for (const sprite of ['negro', 'jhony']) {
+    const { root, calls, content } = fixture();
+    const catalog = { characters: { visitor: {
+      sprite, name: 'Visitor', expressions: { neutral: 'neutral.svg' },
+    } } };
+    const view = createPresenter(root, catalog, assert.fail);
+    const line = { speaker: 'visitor', expression: 'neutral', text: 'Still here.' };
+    const player = {
+      active: false, time: 0, camera: { x: 572, y: 374, zoom: 1 },
+      scene: { stage: { background: 'arena', points: { spot: [700, 480] },
+        actors: { visitor: { character: 'visitor', at: 'spot' } } },
+      steps: [{ type: 'dialogue', lines: [line] }] },
+      props: {}, actors: { visitor: {
+        character: 'visitor', x: 700, y: 480, facing: 1, animation: 'idle',
+      } },
+    };
+    view.render(player, null, null, { preview: true });
+    const withoutPortrait = calls.splice(0);
+    player.dialogue = line;
+    view.render(player, null, null, { preview: true });
+    assert.deepEqual(calls, withoutPortrait, `${sprite} remains drawn during portrait dialogue`);
+    assert.match(content.innerHTML, /neutral\.svg/, 'the portrait remains visible too');
+    assert.match(content.innerHTML, /Still here\./);
+    view.dispose();
+  }
+});
