@@ -142,7 +142,28 @@ too much, the honest options are, in order: lower `SFX.throw.gain`, make the
 transient shorter, or drop the throw sound entirely and let `kill` carry the
 feedback — impacts vary with the wave, a muzzle sound never does.
 
-## Adding a track
+## UI sounds
+
+`UI` in `mix.mjs` is the interface answering the finger: a tap on any button, a
+select on a roster card or an ability, a confirm on an upgrade or the next wave,
+a coin on a purchase, a deny for a locked thing. `app.mjs` maps one sound per
+kind of click, so every button has a voice instead of silence.
+
+They ride the **SFX** bus, because that is what a player expects "Efectos" to
+govern.
+
+Two rules:
+
+1. **No `jitter`.** A weapon must vary; the interface must not. A UI sound that
+   changes every press reads as a glitch.
+2. **A tone needs `release`.** `down` and the UI blips are oscillators, and an
+   oscillator that just stops at full level clicks. `release` decays it to
+   silence over its duration.
+
+UI gains stay under the gameplay hits (`0.05`–`0.08` against `kill`'s `0.076`),
+so a menu never shouts louder than the arena.
+
+
 
 1. Drop the file in `assets/audio/`.
 2. Add an entry to `TRACKS` in `src/audio/mix.mjs`, keyed by campaign act id.
@@ -150,10 +171,14 @@ feedback — impacts vary with the wave, a muzzle sound never does.
 
 ## The player's own level
 
-Two sliders, in two places that are always reachable: **CONTROLES** on the home
-screen and the **pause overlay** (`ESC` during a run). Same `volumeRow` from
-`src/audio/controls.mjs`, so a slider cannot exist in one place and not the
-other.
+Sound has its own menu, not a button: **SONIDO** on the home screen opens a
+dialog with both sliders and the mute switch, and the **pause overlay** (`ESC`
+during a run) carries the same three controls. Same `volumeRow`/`muteRow` from
+`src/audio/controls.mjs`, so a control cannot exist in one place and not the
+other. CONTROLES is the key manual and nothing else.
+
+A mute button on its own is a shortcut, not a setting — that is why the switch
+lives with the levels.
 
 | Slider | Governs |
 | --- | --- |

@@ -393,6 +393,13 @@ export class AudioEngine {
       source = context.createOscillator();
       source.frequency.value = definition.frequency ?? 440;
       source.connect(gain);
+      // A tone that just stops clicks. With `release`, it decays instead, which
+      // is the difference between a blip and a beep.
+      if (definition.release) {
+        const peak = gain.gain.value;
+        gain.gain.setValueAtTime(peak, now);
+        gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, peak * 0.01), now + duration);
+      }
       source.start(now);
       source.stop(now + duration);
       source.onended = () => {

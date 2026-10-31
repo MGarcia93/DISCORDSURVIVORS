@@ -4,7 +4,7 @@ Vanilla ES modules in the browser: no build step, no package manager, no
 dependencies. Serve the repository over HTTP (`file://` breaks module loading).
 
 ```sh
-python3 -m http.server 5173 --bind 127.0.0.1
+node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
 ```
 
 ## Checks
@@ -81,9 +81,9 @@ Read `docs/audio.md` before adding a sound. The rules that keep it listenable:
    provisional track has at its seam.
 5. **The bed sits under the SFX.** `MUSIC_BED_GAIN` is the one number the whole
    mix scales from; everything else is relative to it.
-6. **The player's level wins.** The sliders in CONTROLES are the control. A
-   constant in `mix.mjs` is a default, never a verdict on how loud the game
-   should be.
+6. **The player's level wins.** The **SONIDO** menu and the pause overlay own
+   the levels and the mute switch; CONTROLES is the key manual. A constant in
+   `mix.mjs` is a default, never a verdict on how loud the game should be.
 7. `mix.mjs` stays DOM-free and WebAudio-free so `tests/audio.test.mjs` can run
    it under `node --test`. Put browser code in `engine.mjs` only.
 

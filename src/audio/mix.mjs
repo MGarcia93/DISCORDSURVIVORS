@@ -91,6 +91,20 @@ export const SFX = {
   down: { frequency: 90, duration: 0.7, gain: 0.052 },
 };
 
+// UI feedback: the clicks the player makes, not the world reacting. Same bus as
+// the gameplay SFX, because "Efectos" is what a player expects to govern it, but
+// its own registry so nobody confuses a menu tap with a hit.
+//
+// No `jitter` here: a UI sound should sound identical every time. It is the
+// weapon that must vary, never the interface.
+export const UI = {
+  tap: { noise: true, duration: 0.028, filter: 'bandpass', cutoff: 2600, Q: 1.6, gain: 0.05 },
+  select: { frequency: 520, duration: 0.07, gain: 0.06, release: true },
+  confirm: { frequency: 780, duration: 0.1, gain: 0.08, release: true },
+  deny: { frequency: 150, duration: 0.14, gain: 0.07, release: true },
+  coin: { noise: true, duration: 0.04, filter: 'bandpass', cutoff: 3400, Q: 2, gain: 0.06 },
+};
+
 // A voice per sound, but never more than this many at once: a wave can kill
 // faster than the ear separates events, and thirty noise bursts read as a
 // hiss, not as throwing.
@@ -98,8 +112,9 @@ export const SFX_VOICES = 6;
 
 // A hard ceiling that rate upgrades cannot breach. It sits well above the 3.1/s
 // El Negro reaches, so in practice it only catches pathological stacking: the
-// anti-fatigue work is the jitter, not this.
-export const SFX_MIN_GAP = { throw: 0.1, kill: 0.07 };
+// anti-fatigue work is the jitter, not this. `ui` only stops a held click from
+// machine-gunning the interface.
+export const SFX_MIN_GAP = { throw: 0.1, kill: 0.07, ui: 0.04 };
 
 export function trackFor(act) {
   return TRACKS[act?.id] ?? TRACKS[FALLBACK_TRACK];

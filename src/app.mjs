@@ -9,7 +9,7 @@ import { state } from './app/state.mjs';
 import { updateHUD } from './game/hud.mjs';
 import { overlay } from './game/overlays.mjs';
 import { draw } from './game/renderer.mjs';
-import { home, controls, closeControls } from './screens/home.mjs';
+import { home, controls, sound, closeMenuOverlay } from './screens/home.mjs';
 import { story } from './screens/story.mjs';
 import { characters, drawPreview } from './screens/characters.mjs';
 import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
@@ -17,7 +17,7 @@ import { enemiesScreen, drawEnemyPreview, isEnemyDevelopment } from './screens/e
 import { game } from './screens/game.mjs';
 import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment } from './narrative/integration.mjs';
 import { audio } from './audio/index.mjs';
-import { musicCue, SFX } from './audio/mix.mjs';
+import { musicCue, SFX, UI } from './audio/mix.mjs';
 
 // Any map victory passes through the bus: progression records the unlock and
 // app reads it back through the chain to refresh the roster cache and mark
@@ -113,11 +113,24 @@ function frame(timestamp) {
   requestAnimationFrame(frame);
 }
 
+// One sound per kind of click. The interface answers the finger before the
+// screen redraws: a menu with visual feedback and silent buttons reads as broken.
+function clickSound(button) {
+  const data = button.dataset;
+  if (data.level) return 'confirm';
+  if (data.sale || data.heal || data.upgrade) return 'coin';
+  if (data.character || data.special) return 'select';
+  if (data.action === 'next-wave' || data.action === 'resume') return 'confirm';
+  if (data.action === 'home' || data.action === 'close-menu' || data.action === 'sell-menu-close') return 'select';
+  return 'tap';
+}
+
 document.addEventListener('click', event => {
   // Browsers only allow audio after a gesture; this is the first one we get.
   audio.unlock();
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
+  audio.playSound(UI[clickSound(button)] ?? UI.tap, 'ui');
   const action = button.dataset.action;
   if (narrativeAction(action)) { state.keys.clear(); return; }
   if (activeNarrativeHost().blocked && action !== 'home') return;
@@ -126,12 +139,13 @@ document.addEventListener('click', event => {
     characters();
   }
   if (action === 'controls') controls();
-  if (action === 'mute') {
+  if (action === 'sound') sound();
+  if (action === 'toggle-mute') {
     const muted = audio.toggleMuted();
-    button.textContent = muted ? '♪ MUDO' : '♪ SONIDO';
+    button.textContent = muted ? 'ACTIVAR SONIDO' : 'SILENCIAR TODO';
     button.setAttribute('aria-pressed', String(muted));
   }
-  if (action === 'close-controls') closeControls();
+  if (action === 'close-menu') closeMenuOverlay();
   if (['home', 'characters', 'worlds'].includes(action)) show(action);
   if (action === 'story-start') { state.storyPage = 0; show('story'); }
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
@@ -192,7 +206,7 @@ document.addEventListener('keydown', event => {
       event.preventDefault();
       return;
     }
-    if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeControls();
+    if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeMenuOverlay();
     if (state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
       if (unlockAllForTesting()) {
         state.debugUnlockAll = true;
@@ -218,6 +232,7 @@ document.addEventListener('keydown', event => {
   }
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) event.preventDefault();
   if (key === 'escape' && !event.repeat && state.run.phase === 'playing') {
+    audio.playSound(UI.select, 'ui');
     if (state.sellMenuOpen) { state.sellMenuOpen = false; state.lastPhase = ''; state.keys.clear(); overlay(); updateHUD(); }
     else { state.paused = !state.paused; state.keys.clear(); }
   }

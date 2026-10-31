@@ -7,7 +7,7 @@ A playable pixel-art browser prototype based on the supplied Discord Survivors c
 From this directory, run:
 
 ```sh
-python3 -m http.server 5173 --bind 127.0.0.1
+node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
 ```
 
 Open **http://localhost:5173** in a current browser. No build, package install, account, or backend is required. Serve the directory over HTTP rather than opening `index.html` directly; the game uses JavaScript modules.
@@ -37,7 +37,7 @@ Each world's scenery lives in `src/backgrounds/` and is selected per scene with 
 
 Leaving the browser tab automatically pauses combat. Between waves, spend dropped currency on upgrades, heal at the delivery button, or continue without buying. Upgrades stack through several levels with rising prices; levels persist for the whole run. Surviving a wave gives twenty bonus currency. Defeat the Administrator to win; waiting out the final wave is not enough. Retry creates a fresh run.
 
-The title menu supports Up/Down to choose and Enter to confirm. Open **CONTROLES** for the in-game control panel; Escape closes it. Menus honour the system reduced-motion preference.
+The title menu supports Up/Down to choose and Enter to confirm. Open **CONTROLES** for the in-game control panel, or **SONIDO** for the music and effects levels and the mute switch; Escape closes either. Menus honour the system reduced-motion preference.
 
 Solago's chore meter fills every eight kills. When full, it grants +30% damage and attack speed for eight seconds. **Alt+Shift+U** on the title screen sets one `debugUnlockAll` flag in the versioned local-storage record. The shared character-unlock check uses that same flag for every implemented character and future characters registered through it. Without the debug flag, normal map-one victory unlocks Solago. This is local browser progress, not account sync. The cheat only changes local storage; it does not edit the run or character data.
 
