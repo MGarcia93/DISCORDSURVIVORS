@@ -1,44 +1,50 @@
 import { createCatalog } from './reward-catalog.mjs';
 import { CHARACTERS } from './characters/index.mjs';
 
-// Initial tuning, not a measured balance result. Values are independent of
-// combat logic; zero boss XP avoids terminal choices after the final victory.
+// The shipped balance. Initial tuning, not a measured result, but it is the
+// balance the game runs: values are independent of combat logic, and zero boss
+// XP avoids terminal choices after the final victory.
+//
+// XP: an ordinary kill pays 1 point, so the first level costs ten kills and the
+// curve (factor × level²) keeps growing from there. `multiplier` exists only for
+// the test mode below, which is what the playtest pacing used to be.
 export const BALANCE = {
   // Wave length, density and the boss belong to the act (src/campaign/). This
-  // object only carries economy plus the local short-wave override below.
-  // Playtest XP: 10 per ordinary kill so every character can reach the new
-  // level-3 upgrades quickly. Lower it to 1 for real balance.
+  // object only carries economy plus an optional length override.
   xp: {
-    factor: 10, exponent: 2,
-    // The Rift kinds keep the same 10-per-kill playtest rate as the walkers;
-    // the mini-boss pays like a milestone, and the act boss closes the run.
+    factor: 10, exponent: 2, multiplier: 1,
+    // An ordinary enemy pays one point; an elite pays like three, and the
+    // mini-boss like a milestone. The act boss closes the run, so it pays none.
     rewards: {
-      zombie: 10, runner: 10, brute: 20, boss: 0,
-      meleeMinion: 5, mageMinion: 8, siegeMinion: 12, mistWalker: 8, maiden: 60,
-      // Act 3 keeps the same playtest rate: the elite pays like a milestone and
-      // the mini-boss like Act 2's Maiden.
-      skeleton: 8, lesserDemon: 12, shaman: 10, burningElite: 25, batSwarm: 4,
-      lordZir: 60,
-      // Act 4 keeps the same playtest rate: the alchemists pay a little more,
-      // the mini-boss like Act 2's Maiden and the act boss closes the run.
-      barbarian: 8, slaver: 10, archer: 10, alchemist: 12, lotusAlchemist: 60,
+      zombie: 1, runner: 1, brute: 2, boss: 0,
+      meleeMinion: 1, mageMinion: 1, siegeMinion: 1, mistWalker: 1, maiden: 6,
+      skeleton: 1, lesserDemon: 1, shaman: 1, burningElite: 3, batSwarm: 1,
+      lordZir: 6,
+      barbarian: 1, slaver: 1, archer: 1, alchemist: 1, lotusAlchemist: 6,
     },
   },
   gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },
   shopSize: 4,
 };
 
-// Local playtests use short waves; any hosted build keeps the act's real
-// length. `?waves=<seconds>` forces a length anywhere, so the real pacing can be
-// exercised locally. This is the only place that reads the hostname.
+// Test mode: the pacing used while tuning. Short waves and ten times the XP, so
+// every character reaches the level-3 upgrades quickly. It is opt-in — `?playtest`
+// in the URL or the balance lab (?dev=balance) — never a hostname shortcut.
 export const LOCAL_WAVE_SECONDS = 15;
+const PLAYTEST = { waves: { duration: LOCAL_WAVE_SECONDS }, xp: { multiplier: 10 } };
 
-export function balanceFor(hostname, search = '') {
-  const requested = Number(new URLSearchParams(search).get('waves'));
-  const forced = Number.isFinite(requested) && requested > 0 ? requested : null;
-  const local = ['localhost', '127.0.0.1', '[::1]'].includes(String(hostname ?? '').toLowerCase());
-  const duration = forced ?? (local ? LOCAL_WAVE_SECONDS : null);
-  return duration === null ? BALANCE : { ...BALANCE, waves: { duration } };
+export function playtestBalance() {
+  return { ...BALANCE, ...PLAYTEST, xp: { ...BALANCE.xp, ...PLAYTEST.xp } };
+}
+
+// `?waves=<seconds>` forces only the wave length, on top of either mode, so the
+// real pacing can be exercised with the test economy and the other way around.
+export function balanceFor(search = '') {
+  const params = new URLSearchParams(search ?? '');
+  const base = params.has('playtest') ? playtestBalance() : BALANCE;
+  const requested = Number(params.get('waves'));
+  if (!Number.isFinite(requested) || requested <= 0) return base;
+  return { ...base, waves: { duration: requested } };
 }
 
 const flat = (stat, value) => ({ stat, operation: 'flat', value });

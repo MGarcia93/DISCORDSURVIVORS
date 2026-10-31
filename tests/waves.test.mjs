@@ -127,17 +127,14 @@ test('the shipped act plays full-minute waves and leaves the boss untimed', () =
   assert.ok(run.time > run.duration);
 });
 
-test('wave length belongs to the act and only localhost shortens it', () => {
+test('wave length belongs to the act and only an explicit test mode shortens it', () => {
   assert.equal(Object.hasOwn(BALANCE, 'waves'), false, 'the balance no longer owns wave data');
-  assert.equal(balanceFor('localhost').waves.duration, 15);
-  assert.equal(balanceFor('127.0.0.1').waves.duration, 15);
-  assert.equal(balanceFor('[::1]').waves.duration, 15);
-  assert.equal(balanceFor('discord-survivors.com').waves, undefined);
+  assert.equal(balanceFor('').waves, undefined, 'the real pacing is the default');
   assert.equal(balanceFor(undefined).waves, undefined);
-  assert.equal(balanceFor('localhost', '?waves=60').waves.duration, 60, 'the real pacing is forceable locally');
-  assert.equal(balanceFor('discord-survivors.com', '?waves=45').waves.duration, 45);
-  assert.equal(balanceFor('localhost', '?waves=nope').waves.duration, 15);
-  const local = createRun(() => 0.5, 'negro', { balance: balanceFor('localhost') });
-  assert.equal(local.duration, 15);
-  assert.equal(local.spawnBudget, Math.round(48 * 15 / 60));
+  assert.equal(balanceFor('?playtest').waves.duration, 15, 'the test mode is opt-in');
+  assert.equal(balanceFor('?waves=45').waves.duration, 45, 'the length stays forceable');
+  assert.equal(balanceFor('?waves=nope').waves, undefined);
+  const real = createRun(() => 0.5, 'negro', { balance: balanceFor('') });
+  assert.equal(real.duration, real.act.duration);
+  assert.equal(real.spawnBudget, Math.round(48 * 60 / 60));
 });

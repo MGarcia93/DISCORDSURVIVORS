@@ -23,12 +23,19 @@ export function initializeRewards(run, { catalog = DEFAULT_CATALOG, balance = BA
 }
 
 export function nextLevelXP(run, level = run.level) {
-  return Math.ceil(run.rewardBalance.xp.factor * level ** run.rewardBalance.xp.exponent);
+  return nextLevelXPFor(run.rewardBalance, level);
+}
+
+// The curve alone, so tools (the balance lab's per-wave budget) can project how
+// many levels a pile of XP buys without building a run first.
+export function nextLevelXPFor(balance, level) {
+  return Math.ceil(balance.xp.factor * level ** balance.xp.exponent);
 }
 
 export function awardXP(run, amount) {
-  if (run.phase !== 'playing' || !Number.isSafeInteger(amount) || amount < 0) return false;
-  let xp = run.xp + amount, level = run.level;
+  const scaled = amount * (run.rewardBalance.xp.multiplier ?? 1);
+  if (run.phase !== 'playing' || !Number.isSafeInteger(scaled) || scaled < 0) return false;
+  let xp = run.xp + scaled, level = run.level;
   if (!Number.isSafeInteger(xp)) return false;
   const pending = [];
   while (xp >= nextLevelXP(run, level)) {

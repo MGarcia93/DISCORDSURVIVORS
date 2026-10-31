@@ -8,9 +8,10 @@ import { createNextWorldRun } from '../game/campaign-run.mjs';
 
 // Arena DOM builder: built once per run; HUD values update separately.
 export function game(previousRun = null) {
-  state.run = previousRun ? createNextWorldRun(previousRun) : createRun(Math.random, state.selectedCharacter, {
-    balance: balanceFor(globalThis.location?.hostname, globalThis.location?.search),
+  state.run = previousRun ? createNextWorldRun(previousRun) : state.pendingRun ?? createRun(Math.random, state.selectedCharacter, {
+    balance: balanceFor(globalThis.location?.search),
   }, getAct(state.selectedAct));
+  state.pendingRun = null;
   state.facing = 1;
   state.lastPhase = '';
   const act = state.run.act;
