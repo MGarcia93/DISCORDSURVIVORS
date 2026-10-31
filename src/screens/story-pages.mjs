@@ -2,9 +2,6 @@
 // background each page lives in is authored next to its text, not inferred
 // from an array index: `background` names a world from src/backgrounds and
 // `overlay` names the extra staging the page draws on top of it.
-//
-// One page per world: the intro has to tell the whole campaign, so it walks the
-// five acts in order and leaves the corrupted server for last.
 export const storyPages = [
   {
     title: 'Una partida. Era todo lo que pedíamos.',
@@ -19,56 +16,23 @@ export const storyPages = [
   },
   {
     title: 'Bienvenidos al apocalipsis de los boludos.',
-    label: '02 / MUNDO 01 · KNOX COUNTY',
+    label: '02 / CONEXIÓN PERDIDA',
     symbol: '☠',
-    tag: 'PROJECT ZOMBOID · ZONA INFECTADA',
-    text: 'El Discord colapsó y mezcló todos los mundos que jugaban. El primero es el de los muertos: zombis en la calle, corredores que llegan antes y un resistente que no cae de un tiro. En la sexta oleada suena la alarma.',
+    tag: 'MUNDO 01 · ZONA INFECTADA',
+    text: 'El Discord colapsó y mezcló todos los mundos que jugaban. Ahora hay zombis en el servidor, demonios esperando loot y cobradores de alquiler. Esta primera incursión empieza entre los muertos.',
     quote: 'Los zombis te persiguen. Los corredores llegan antes. Ninguno respeta el AFK.',
     background: 'zomboid',
     overlay: 'zombies',
     art: 'Maxi Negro rodeado de zombies',
   },
   {
-    title: 'Se abre la grieta.',
-    label: '03 / MUNDO 02 · SUMMONER’S RIFT',
-    symbol: '⚔',
-    tag: 'LEAGUE OF LEGENDS · LA GRIETA',
-    text: 'Del zombi se pasa a la grieta: minions, torretas y un caminante de la niebla que arrastra a Yorick. Ahí aparece Solago, que juega mal, discute peor y se queda igual.',
-    quote: 'Si no te hacen caso en tu casa, ¿acá te van a hacer caso?',
-    background: 'rift',
-    overlay: null,
-    art: 'La grieta de League of Legends',
-  },
-  {
-    title: 'El infierno tiene loot.',
-    label: '04 / MUNDO 03 · EL INFIERNO',
-    symbol: '♨',
-    tag: 'DIABLO · MAZMORRA',
-    text: 'Después la mazmorra: esqueletos, demonios y un chamán que tira maldiciones de lejos. El que se suma acá es Papasito, que dice que no le interesa el loot y lo levanta todo igual.',
-    quote: 'Los objetos están ahí. Nadie dijo que fueran para vos.',
-    background: 'inferno',
-    overlay: null,
-    art: 'La mazmorra del infierno',
-  },
-  {
-    title: 'El desierto cobra deudas.',
-    label: '05 / MUNDO 04 · LAS TIERRAS EXILIADAS',
-    symbol: '⛓',
-    tag: 'CONAN EXILES · CAMPAMENTO DE ESCLAVISTAS',
-    text: 'El cuarto mundo es el de los esclavistas: redes, flechas y alquimistas con frascos de loto. En el campamento hay un boliviano —jujeño, insiste— encadenado a una rueda que necesita que alguien lo saque de ahí.',
-    quote: 'Warrior. De Jujuy. Argentina. Igual no hay caso.',
-    background: 'exiles',
-    overlay: null,
-    art: 'El campamento de los esclavistas',
-  },
-  {
     title: 'Sobreviví. Después discutimos.',
-    label: '06 / MUNDO 05 · DISCORD CORRUPTO',
-    symbol: '⚡',
+    label: '03 / LA ÚLTIMA PARTIDA',
+    symbol: '♜',
     tag: 'OBJETIVO · VOLVER AL DISCORD',
-    text: 'El último mundo es el servidor mismo: recicla los zombis, los minions, los demonios y los esclavistas, y en la quinta oleada devuelve a todos los jefes que ya caíste. El que cierra la partida es El Administrador del Servidor.',
-    quote: 'No es un error. Es una característica.',
-    background: 'discord',
+    text: 'Elegí a tu sobreviviente, aguantá las oleadas y comprá mejoras entre rondas. Sobreviví a lo que te tire el servidor y buscá cómo salir de esta partida.',
+    quote: 'Vos caminá. El control remoto pega solo. Si no te movés por dos segundos, recuperás vida.',
+    background: 'arena',
     overlay: 'administrator',
     art: 'El Administrador del Servidor',
   },
