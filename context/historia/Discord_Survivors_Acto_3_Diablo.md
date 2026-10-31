@@ -434,30 +434,6 @@ Preparando siguiente mundo...
 
 **CONAN EXILES**
 
-**Maxi Negro:** Bueno, ¿ahora qué mierda toca?
-
-**Solago:** ¿Conan? ¿Y quién carajo estará ahí?
-
-**Maxi Negro:** Capaz Jhony. Lo dejamos en Project, pero por ahí ahora se une el hijo de puta.
-
-**Solago:** ¿Jhony? Ese hijo de puta debe seguir matando zombies.
-
-**Maxi Negro:** Y bueno, capaz está Maxi.
-
-**Solago:** O Papafrita.
-
-**Maxi Negro:** Alguno de esos pelotudos tiene que estar.
-
-**Solago:** ¿Vos qué decís, Papasito?
-
-**Papasito:** ...
-
-**Maxi Negro:** ¡PAPASITO, LA CONCHA DE TU MADRE! ¡TE ESTÁ HABLANDO!
-
-*Silencio.*
-
-**Solago:** JAJAJA, olvidate.
-
 La pantalla comienza a oscurecerse.
 
 Se escuchan cadenas, gritos y golpes contra una jaula.

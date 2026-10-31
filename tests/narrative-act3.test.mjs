@@ -151,6 +151,20 @@ test('Papasito enters before reacting, returns to loot, then rejoins the party',
   assert.ok(scene.steps.some(step => step.type === 'animate' && step.actor === 'papasito' && step.animation === 'kneel'));
 });
 
+test('the Act 3 epilogue does not repeat the Act 4 opening', async () => {
+  const catalog = await catalogFor();
+  const act04 = await import('../src/campaign/act-04-exiles.mjs').then(module => module.default);
+  const next = await loadCatalog({ urls: [manifestURL, actManifestURL(act04)], fetcher });
+  const lines = (entries, id) => entries.find(entry => entry.id === id).scene.steps
+    .filter(step => step.type === 'dialogue').flatMap(step => step.lines.map(line => line.text));
+  const epilogue = lines(catalog.entries, 'act-03-epilogue');
+  const arrival = lines(next.entries, 'act-04-arrival');
+  const repeated = epilogue.filter(text => arrival.includes(text));
+  assert.deepEqual(repeated, [], 'the Act 4 prologue owns the who-is-here beat');
+  assert.ok(arrival.includes('¿Vos qué decís, Papasito?'), 'the good version stays in Act 4');
+  assert.ok(epilogue.length === 0 || epilogue.every(text => !/Jhony|Papafrita|TE ESTÁ HABLANDO|olvidate/.test(text)));
+});
+
 test('Papasito silently kills the elite and finds the boss loot before the epilogue', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-03-loot').scene;
