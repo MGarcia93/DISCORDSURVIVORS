@@ -11,6 +11,35 @@ const root = () => ({ textContent: '', innerHTML: '', hidden: false });
 const view = () => ({ render() {}, dispose() {} });
 const audio = () => ({ play() {}, stop() {} });
 
+test('wave-boundary observations preserve alarm voices while a shop scene owns playback', async () => {
+  const sounds = { alarm: { frequency: 190, duration: 0.24, gain: 0.05 } };
+  const scene = { id: 'alarm', steps: [
+    { type: 'sound', sound: 'alarm', repeat: 9, interval: 0.4 },
+    { type: 'dialogue', lines: [{ speaker: 'guide', text: 'Alarm!' }] },
+  ] };
+  let stops = 0, played = 0;
+  const h = new NarrativeHost({
+    load: async () => ({ ...catalog, sounds, entries: [{ id: 'alarm', scene, actions: {} }],
+      bindings: [{ when: 'before_wave', wave: 4, scene: 'alarm' }] }),
+    makeView: view,
+    audio: { stop() { stops++; }, play() { played++; } },
+  });
+  const run = { phase: 'shop', wave: 3, time: 60 };
+  await h.attach(run, root());
+  h.nextWave(() => { run.phase = 'playing'; run.wave = 4; });
+  const before = stops;
+  for (let frame = 0; frame < 32; frame++) { h.tick(0.1); h.observe(); }
+  assert.ok(played > 1, 'the alarm repeats during the transition');
+  assert.equal(stops, before, 'observing the shop must not cut scene audio every frame');
+  h.skip();
+  assert.ok(stops > before, 'skip still releases the alarm');
+  assert.equal(run.wave, 4);
+  run.phase = 'shop';
+  const idleStops = stops;
+  h.observe();
+  assert.ok(stops > idleStops, 'an idle shop still stops unowned audio');
+});
+
 test('host blocks while loading, ignores stale loads after exit and never restores old ownership', async () => {
   let resolve;
   const h = new NarrativeHost({ load: () => new Promise(r => { resolve = r; }), makeView: view, audio: audio() });

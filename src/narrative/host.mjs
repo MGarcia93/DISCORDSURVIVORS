@@ -65,7 +65,9 @@ export class NarrativeHost {
     if (wasBlocking && !this.blocked) this.audio.stop();
   }
   observe() {
-    if (this.director?.run?.phase !== 'playing') this.audio.stop();
+    // Boundary scenes run while combat is still in shop/won. Their voices
+    // belong to the scene, not the combat phase being observed each frame.
+    if (!this.blocked && this.director?.run?.phase !== 'playing') this.audio.stop();
     this.director?.observe();
   }
   nextWave(start) {
