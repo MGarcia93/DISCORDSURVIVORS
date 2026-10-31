@@ -55,8 +55,8 @@ test('Papasito is found on wave three and Zir and Lilith close their waves', asy
   const papasito = catalog.bindings.find(binding => binding.scene === 'act-03-papasito');
   assert.deepEqual({ when: papasito.when, wave: papasito.wave }, { when: 'before_wave', wave: 3 });
   const scene = catalog.entries.find(entry => entry.id === 'act-03-papasito').scene;
-  assert.ok(scene.steps.some(step => step.type === 'notice'
-    && step.lines.includes('¡PAPASITO DESBLOQUEADO!')), 'the unlock announcement is staged');
+  assert.ok(scene.steps.some(step => step.type === 'splash' && step.speaker === 'papasito'
+    && step.text.includes('¡PAPASITO DESBLOQUEADO!')), 'the unlock announcement keeps the portrait card');
   assert.equal(act03.miniboss.wave, 5);
   assert.equal(act03.miniboss.kind, 'lordZir');
   assert.equal(act03.boss.wave, 6);
@@ -139,7 +139,7 @@ test('all seven cinematics play and skip with the same final staging and effects
   }
 });
 
-test('Papasito reacts before entering, returns to loot, then rejoins the party', async () => {
+test('Papasito enters before reacting, returns to loot, then rejoins the party', async () => {
   const catalog = await catalogFor();
   const scene = catalog.entries.find(entry => entry.id === 'act-03-papasito').scene;
   const lines = scene.steps.filter(step => step.type === 'dialogue').flatMap(step => step.lines.map(line => line.text));
@@ -147,7 +147,7 @@ test('Papasito reacts before entering, returns to loot, then rejoins the party',
   assert.equal(lines.filter(text => text === '¡PAPASITO!').length, 2);
   const reaction = scene.steps.findIndex(step => step.lines?.some(line => line.text === '¿Tomi? ¿Dónde?'));
   const entrance = scene.steps.findIndex(step => step.type === 'move' && step.actor === 'papasito');
-  assert.ok(reaction < entrance);
+  assert.ok(entrance >= 0 && entrance < reaction);
   assert.ok(scene.steps.some(step => step.type === 'animate' && step.actor === 'papasito' && step.animation === 'kneel'));
 });
 

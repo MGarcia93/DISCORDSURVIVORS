@@ -189,9 +189,11 @@
       ]
     },
     {
-      "type": "flash",
-      "at": "walker-a",
-      "duration": 0.2
+      "type": "parallel",
+      "steps": [
+        { "type": "sound", "sound": "shovel" },
+        { "type": "flash", "at": "walker-a", "duration": 0.2 }
+      ]
     },
     {
       "type": "down",
@@ -219,9 +221,11 @@
       ]
     },
     {
-      "type": "flash",
-      "at": "walker-b",
-      "duration": 0.2
+      "type": "parallel",
+      "steps": [
+        { "type": "sound", "sound": "shovel" },
+        { "type": "flash", "at": "walker-b", "duration": 0.2 }
+      ]
     },
     {
       "type": "down",
@@ -248,13 +252,10 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "DISCORD SURVIVORS",
-      "duration": 4,
-      "lines": [
-        "¡SOLAGO DESBLOQUEADO!",
-        "Disponible para seleccionar en las próximas partidas."
-      ]
+      "type": "splash",
+      "speaker": "solago",
+      "text": "¡SOLAGO DESBLOQUEADO!\nDisponible para seleccionar en las próximas partidas.",
+      "duration": 4
     }
   ],
   "effects": [

@@ -3,12 +3,31 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { actManifestURL, loadCatalog, manifestURL } from '../src/narrative/catalog.mjs';
 import act02 from '../src/campaign/act-02-rift.mjs';
+import { ScenePlayer } from '../src/narrative/runtime.mjs';
 
 // Act 2 ships its own manifest. These tests run the real files through the real
 // loader, so a broken scene or a paraphrased line fails here and not mid-run.
 const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 const catalogFor = () => loadCatalog({ urls: [manifestURL, actManifestURL(act02)], fetcher });
 const ACT_SCENES = ['act-02-arrival', 'act-02-solago', 'act-02-maiden', 'act-02-boss-intro', 'act-02-boss-defeat', 'act-02-epilogue'];
+
+test('Solago rescue sounds an impact for each fallen walker without firing a shot', async () => {
+  const catalog = await catalogFor();
+  const entry = catalog.entries.find(item => item.id === 'act-02-solago');
+  const impacts = [];
+  let player;
+  player = new ScenePlayer(entry.scene, { ...catalog, actions: entry.actions,
+    onSound: id => impacts.push({ id, dead: Object.values(player.actors).filter(actor => actor.dead).length }),
+  });
+  for (let frame = 0; player.active && frame < 1000; frame++) {
+    if (player.dialogue || player.splash || player.notice) player.advance();
+    else player.tick(0.05);
+  }
+  assert.equal(player.status, 'completed');
+  assert.deepEqual(impacts, [{ id: 'shovel', dead: 0 }, { id: 'shovel', dead: 1 }]);
+  assert.equal(player.actors['walker-a'].dead, true);
+  assert.equal(player.actors['walker-b'].dead, true);
+});
 
 test('the act registers its six cinematics and every scene validates', async () => {
   const catalog = await catalogFor();
@@ -51,8 +70,8 @@ test('Solago is found on wave three and the Maiden closes wave five', async () =
   const solago = catalog.bindings.find(binding => binding.scene === 'act-02-solago');
   assert.deepEqual({ when: solago.when, wave: solago.wave }, { when: 'before_wave', wave: 3 });
   const scene = catalog.entries.find(entry => entry.id === 'act-02-solago').scene;
-  assert.ok(scene.steps.some(step => step.type === 'notice'
-    && step.lines.includes('¡SOLAGO DESBLOQUEADO!')), 'the unlock announcement is staged');
+  assert.ok(scene.steps.some(step => step.type === 'splash' && step.speaker === 'solago'
+    && step.text.includes('¡SOLAGO DESBLOQUEADO!')), 'the unlock announcement keeps the portrait card');
   assert.equal(act02.miniboss.wave, 5);
   assert.equal(act02.miniboss.kind, 'maiden');
 });

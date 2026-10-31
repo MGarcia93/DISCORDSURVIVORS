@@ -37,11 +37,11 @@
       { "speaker": "solago", "expression": "happy", "text": "¡PAPASITO! ¡ESTAMOS CON TOMI!" }
     ] },
     { "type": "sound", "sound": "chime" },
+    { "type": "camera", "to": "group", "zoom": 1.15, "duration": 0.5 },
+    { "type": "move", "actor": "papasito", "to": "papasito", "duration": 1.4 },
     { "type": "dialogue", "lines": [
       { "speaker": "papasito", "expression": "surprised", "text": "¿Tomi? ¿Dónde?" }
     ] },
-    { "type": "move", "actor": "papasito", "to": "papasito", "duration": 1.4 },
-    { "type": "camera", "to": "group", "zoom": 1.15, "duration": 0.5 },
     { "type": "dialogue", "lines": [
       { "speaker": "maxi-negro", "expression": "happy", "text": "JAJAJA. ¡MIRÁ CÓMO APARECIÓ EL HIJO DE PUTA!" },
       { "speaker": "solago", "expression": "happy", "text": "¡A VER SI AHORA VENÍS, QUE SE TE MOJA LA TANGA CADA VEZ QUE HABLAMOS DE TU MACHO!" },
@@ -79,7 +79,7 @@
       { "speaker": "papasito", "expression": "angry", "text": "¡CALLATE LA BOCA!" }
     ] },
     { "type": "sound", "sound": "chime" },
-    { "type": "notice", "title": "DISCORD SURVIVORS", "duration": 4, "lines": ["¡PAPASITO DESBLOQUEADO!", "Disponible para seleccionar en las próximas partidas."] }
+    { "type": "splash", "speaker": "papasito", "text": "¡PAPASITO DESBLOQUEADO!\nDisponible para seleccionar en las próximas partidas.", "duration": 4 }
   ],
   "effects": [{ "key": "act-03-met-papasito", "value": true }]
 }
