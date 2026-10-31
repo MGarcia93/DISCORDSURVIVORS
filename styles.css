@@ -271,12 +271,21 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-text strong, .narrative-banter strong { color: #d7f779; }
 .narrative-text p { min-height: 3em; font: 16px/1.6 monospace; color: #f4e9dc; overflow-wrap: anywhere; max-height: 28vh; overflow-y: auto; }
 .narrative-text .actions { justify-content: flex-end; }
+.narrative-stage-dialog { inset: auto 12px 12px; background: transparent; }
+.narrative-stage-dialog .narrative-text { padding: 10px 14px; }
+.narrative-stage-dialog .narrative-text p { min-height: 0; margin: 6px 0; }
 .narrative-skip { position: absolute; top: 10px; right: 10px; pointer-events: auto; }
+/* A held beat closes where a character panel does: its actions at the panel's
+   bottom right, and clickable, because the layer passes clicks to the game. */
+.narrative-splash .actions, .narrative-notice .actions { position: absolute; right: 12px; bottom: 12px; pointer-events: auto; }
 .narrative-splash { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #151320d9; }
 .narrative-splash img { width: 35%; }
 .narrative-splash-extended-frame { position: relative; width: 35%; aspect-ratio: 4 / 5; max-height: 310px; }
 .narrative-splash-extended-frame .portrait-extended { position: absolute; bottom: 0; left: 50%; height: 119%; width: auto; max-height: none; transform: translateX(-50%); }
 .narrative-splash h2 { color: #d7f779; text-align: center; }
+.narrative-notice { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 24px; background: #0b0f1af0; border: 3px solid #5865f2; text-align: center; }
+.narrative-notice strong { color: #9fb1ff; font: 15px/1.4 monospace; letter-spacing: .18em; }
+.narrative-notice p { margin: 0; color: #f4e9dc; font: 15px/1.6 monospace; overflow-wrap: anywhere; max-width: 40em; }
 .narrative-banter { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 12px; width: min(440px, 65%); padding: 10px; background: #191725e8; border: 2px solid #786b95; font: 13px/1.5 monospace; }
 .narrative-banter img { width: 55px; height: 65px; }
 .narrative-banter .portrait-extended { width: 63.25px; height: 77.35px; flex-shrink: 0; align-self: flex-end; }
@@ -304,7 +313,7 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
   .narrative-text { padding: 8px; }
   .narrative-text p { font-size: 12px; line-height: 1.4; margin: 6px 0; min-height: 0; max-height: 22vh; }
   .narrative-text .actions { gap: 6px; }
-  .narrative-text button, .narrative-skip { padding: 8px; font-size: 9px; }
+  .narrative-text button, .narrative-skip, .narrative-splash .actions button, .narrative-notice .actions button { padding: 8px; font-size: 9px; }
   .narrative-portraits > div { flex: 1 1 0; }
   .narrative-portrait { max-height: 100px; }
   .narrative-portrait.portrait-extended { max-height: 119px; }
