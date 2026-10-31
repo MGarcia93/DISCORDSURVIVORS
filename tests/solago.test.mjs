@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, step, activateSpecial } from '../src/engine.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
 
-test('Solago has normal health and speed, 15% defense, stronger short-range melee and no projectiles', () => {
+test('Solago is the tanky melee: more health and defense than the baseline, a little faster, and no projectiles', () => {
   const run = createRun(() => 0.5, 'solago');
   const negro = createRun(() => 0.5, 'negro');
   const p = run.player;
-  assert.equal(p.maxHp, 100);
-  assert.equal(p.speed, negro.player.speed);
-  assert.equal(p.defense, 0.15);
+  assert.equal(p.maxHp, 130);
+  assert.ok(p.speed > negro.player.speed, 'she moves a little faster than the tank');
+  assert.equal(p.defense, 0.2);
   assert.equal(p.damage, 30 * 1.35);
   assert.equal(p.attackRange, 68.4 * UNIT_PX);
   assert.ok(p.hitRadius < negro.player.hitRadius, 'Solago has a narrower collision box than the tank');
@@ -42,14 +42,27 @@ test('Solago narrow hitbox avoids a graze that still reaches El Negro', () => {
   assert.equal(solago.player.hp, solago.player.maxHp);
 });
 
-test('Sonrisa blindada periodically absorbs 25% extra incoming damage', () => {
+test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   const run = createRun(() => 0.5, 'solago');
   run.spawnIn = 100;
-  run.player.smileCooldown = 0;
-  run.enemies.push({ id: 1, x: run.player.x + 25, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+  const p = run.player;
+  p.smileCooldown = 0;
+  run.enemies.push({ id: 1, x: p.x + 25, y: p.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
   step(run, 0.05, {});
-  assert.ok(run.player.smile > 0);
-  assert.equal(run.player.hp, 100 - 12 * (1 - 0.15 - 0.25));
+  assert.ok(p.smile > 0, 'the smile is on');
+  const block = 25;
+  const absorbed = 12 * (1 - p.defense);
+  assert.ok(Math.abs(p.shield - (block - absorbed)) < 1e-9, 'the shield pays what the body would have taken');
+  assert.equal(p.hp, p.maxHp, 'and the body takes none of it');
+  assert.equal(p.characterDef.contactDefenseBonus, undefined, 'no defense bonus is stacked on top');
+
+  // The block ends with the smile: what nobody used is gone.
+  run.enemies = [];
+  p.smileCooldown = 10;
+  for (let frame = 0; frame < 80; frame++) step(run, 0.05, {});
+  assert.equal(p.smile, 0);
+  assert.equal(p.shield, 0);
+  assert.equal(p.hp, p.maxHp);
 });
 
 test('eight chore-task kills trigger a temporary damage and attack-speed buff', () => {
@@ -83,7 +96,7 @@ test('La Patrona holds Solago still, deals area damage, and nicks him when she l
   p.stand = 0.05;
   p.standCooldown = 10;
   step(run, 0.05, {});
-  assert.equal(p.hp, 85);
+  assert.equal(p.hp, p.maxHp - 15, 'the exit costs her 15 health, whatever her sheet says');
   assert.equal(p.x, startX);
   assert.equal(p.y, startY);
   assert.equal(activateSpecial(run, 'stand'), false);

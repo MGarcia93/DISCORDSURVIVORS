@@ -2,6 +2,11 @@ import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawSolago, drawPatrona } from '../sprites.mjs';
 
+// What one smile is worth in damage. It is a block, not a stance: the pool is
+// spent by the hits that land while she laughs, and what nobody uses is gone
+// when the smile ends.
+const SMILE_BLOCK = 25;
+
 const solago = {
   id: 'solago',
   name: 'SOLAGO',
@@ -17,9 +22,9 @@ const solago = {
       <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
-      <div class="stats solago-stats"><div><b>100</b><small>VIDA NORMAL</small></div><div><b>+35%</b><small>DAÑO MELEE</small></div><div><b>−5%</b><small>ALCANCE</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="stats solago-stats"><div><b>130</b><small>VIDA</small></div><div><b>+35%</b><small>DAÑO MELEE</small></div><div><b>−5%</b><small>ALCANCE</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: +25% de defensa durante 2,5 segundos.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 25 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>8×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 8 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
   unlockNote: {
@@ -42,21 +47,21 @@ const solago = {
   stats: {
     hitRadius: 15 * WORLD_SCALE, // collision size: not one of the six combat stats
     ...resolveEntityStats({
-      life: 100,            // 100 points of damage
-      defense: 30,          // 3 defense points -> 15% mitigation
+      life: 130,            // 130 points of damage: the tank of the roster
+      defense: 40,          // 4 defense points -> 20% mitigation
       attack: 405,          // 40.5 damage per bite (135% of EL NEGRO's shot)
       attackSpeed: 178.57,  // ~1.79 attacks/s (~0.56s between bites)
       attackDistance: 68.4, // 68.4% of the base 100-unit reach
-      moveSpeed: 3300,      // 165 scaled px/s
+      moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
     }),
   },
   attack: { type: 'melee' },
   decays: ['permissionActive'],
   combat: { permissionDamageMult: 1.3, permissionRateMult: 0.72 },
-  contactDefenseBonus(p) { return p.smile > 0 ? 0.25 : 0; },
   regenHud(p) { return { ringY: p.y + 2, radius: 34, textX: p.x - 31, textY: p.y - 46 }; },
   initPlayer(p) {
     p.smile = 0;
+    p.smileBlock = 0;
     p.smileCooldown = 6;
     p.taskKills = 0;
     p.permissionNeeded = 8;
@@ -74,11 +79,20 @@ const solago = {
   passives: [
     {
       key: 'smile',
+      // The laugh is a block, not a stance: it eats damage while it lasts, and
+      // it leaves nothing behind. The engine owns the shield pool, so the ring,
+      // a projectile and a punch all hit the same wall.
       tick(run, p, dt, ctx) {
+        if (p.smile <= 0 && (p.smileBlock ?? 0) > 0) {
+          p.shield = Math.max(0, (p.shield ?? 0) - p.smileBlock);
+          p.smileBlock = 0;
+        }
         if (p.smileCooldown > 0 || p.smile > 0) return;
         p.smile = 2.5 + (p.rewardBonuses.smileDuration ?? 0);
         p.smileCooldown = Math.max(4, 12 - (p.rewardBonuses.smileCooldown ?? 0));
-        run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: 'JA!', ttl: 0.8, kind: 'smile' });
+        p.smileBlock = SMILE_BLOCK;
+        p.shield = (p.shield ?? 0) + SMILE_BLOCK;
+        run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: '¡JA!', ttl: 0.8, kind: 'smile' });
       },
     },
   ],
