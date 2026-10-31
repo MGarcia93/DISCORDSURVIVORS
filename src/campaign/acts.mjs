@@ -31,6 +31,14 @@ export function getAct(id) {
   return ACTS.find(act => act.id === id) ?? DEFAULT_ACT;
 }
 
+// The inverse lookup. A scene names the world it paints, not the act it belongs
+// to, so this is what turns `stage.background` into the act that owns it — and
+// therefore into the act's track. A shared world ('arena', 'room') belongs to no
+// act and answers null; the caller falls back to the default track.
+export function actForWorld(world) {
+  return ACTS.find(act => act.world === world) ?? null;
+}
+
 export function nextPlayableAct(id) {
   const index = PLAYABLE_ACTS.findIndex(act => act.id === id);
   return index < 0 ? null : PLAYABLE_ACTS[index + 1] ?? null;

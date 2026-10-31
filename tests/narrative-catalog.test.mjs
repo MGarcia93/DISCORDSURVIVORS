@@ -51,3 +51,15 @@ test('uncached preview loads do not mix a new scene with an older cached charact
   assert.equal(catalog.entries.find(entry => entry.id === 'act-04-warrior-rescue-preview').error, null);
   assert.equal(catalog.characters['maxi-negro'].name, 'Maxi Negro');
 });
+
+test('every preview entry knows the act that owns it', async () => {
+  const catalog = await loadPreviewCatalog({ fetcher: localFetch });
+  const actOf = Object.fromEntries(catalog.entries.map(entry => [entry.id, entry.act]));
+  assert.equal(actOf['act-02-arrival'], 'act-02', 'an act manifest owns its scenes');
+  assert.equal(actOf['act-05-prologue'], 'act-05');
+  // The shared manifest owns the samples, so they belong to no act and keep the
+  // default track. Its Act 4 preview is a preview of that world, so the world
+  // it paints is what scores it.
+  assert.equal(actOf['sample-conversation'], null);
+  assert.equal(actOf['act-04-warrior-rescue-preview'], 'act-04');
+});

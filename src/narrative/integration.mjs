@@ -12,6 +12,7 @@ export function leaveNarrative() { viewer?.dispose(); viewer = null; narrative.d
 export function showNarrativeViewer(container) { leaveNarrative(); viewer = openViewer(container); }
 export function activeNarrativeHost() { return viewer?.host ?? narrative; }
 export function tickNarrativeViewer(dt) { viewer?.tick(dt); }
+export function activeNarrativeAct() { return viewer?.act() ?? null; }
 export function narrativeAction(action) {
   if (viewer) return viewer.action(action);
   if (action === 'narrative-next') narrative.advance();

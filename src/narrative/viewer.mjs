@@ -1,12 +1,13 @@
 import { NarrativeHost } from './host.mjs';
-import { campaignCatalogURLs, loadCatalog } from './catalog.mjs';
+import { getAct } from '../campaign/acts.mjs';
+import { campaignCatalogSources, loadCatalog } from './catalog.mjs';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // The viewer plays every manifest the campaign registers, so a new act's
 // cinematics show up here without touching this module.
 export function loadPreviewCatalog({ fetcher = globalThis.fetch } = {}) {
-  return loadCatalog({ urls: campaignCatalogURLs(), fetcher: (url, options) => fetcher(url, { ...options, cache: 'no-store' }) });
+  return loadCatalog({ sources: campaignCatalogSources(), fetcher: (url, options) => fetcher(url, { ...options, cache: 'no-store' }) });
 }
 
 export function openViewer(container) {
@@ -29,6 +30,13 @@ export function openViewer(container) {
   }
   return {
     host,
+    // The act that owns the scene on screen, so the shell can score a preview
+    // with that world's track instead of the fallback. Null while nothing plays.
+    act() {
+      const scene = host.director?.player?.scene;
+      const entry = scene ? host.catalog?.entries.find(candidate => candidate.id === scene.id) : null;
+      return entry?.act ? getAct(entry.act) : null;
+    },
     action(action) {
       if (action === 'narrative-play') { selected = select.value; host.preview(selected); }
       else if (action === 'narrative-restart') { if (selected) host.preview(selected); else { selected = select.value; host.preview(selected); } }

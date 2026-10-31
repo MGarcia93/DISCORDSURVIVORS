@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, statSync } from 'node:fs';
 import {
   musicCue, waveCutoff, trackFor, TRACKS, SFX, SFX_MIN_GAP, UI,
   MUSIC_BED_GAIN, DUCK, PAUSE, LEVEL_CEILING,
@@ -90,10 +91,60 @@ test('the bed level is one number the whole mix scales from', () => {
   assert.ok(cue.gain > 0 && cue.gain < 1, 'the bed sits under the SFX, never at full scale');
 });
 
-test('an act without a track falls back to the provisional one', () => {
-  assert.equal(trackFor({ id: 'act-01' }), TRACKS['act-01']);
-  assert.equal(trackFor({ id: 'act-04' }), TRACKS['act-01']);
+test('every world plays its own track and an unknown act falls back to the provisional one', () => {
+  const worlds = ['act-01', 'act-02', 'act-03', 'act-04', 'act-05'];
+  const sources = new Set();
+  for (const id of worlds) {
+    const track = TRACKS[id];
+    assert.ok(track, `${id} has a track of its own`);
+    assert.equal(trackFor({ id }), track, `${id} resolves to its own track`);
+    assert.ok(track.gain > 0 && track.gain <= 1, `${id} sits at or below the calibrated bed`);
+    sources.add(track.src);
+  }
+  assert.equal(sources.size, worlds.length, 'no two worlds share a file');
+
+  // The fallback stays a real state: an act authored before its score lands, or
+  // a dev viewer with no act at all, still gets a bed.
+  assert.equal(trackFor({ id: 'act-99' }), TRACKS['act-01']);
   assert.equal(trackFor(undefined), TRACKS['act-01']);
+});
+
+test('every declared track is a file that ships', () => {
+  for (const [id, track] of Object.entries(TRACKS)) {
+    const file = new URL(`../${track.src}`, import.meta.url);
+    assert.ok(existsSync(file), `${id} points at a file the repository carries`);
+    assert.ok(statSync(file).size > 1024, `${id} is a real recording, not a placeholder`);
+  }
+});
+
+test('the per-track gain keeps every world at the calibrated bed level', () => {
+  // The mix is judged with the Act 1 track: MUSIC_BED_GAIN is the amplitude that
+  // lands the bed under the SFX. Every other file must be pulled to that same
+  // level by its own gain, or a louder master would break the whole mix.
+  for (const id of ['act-02', 'act-03', 'act-04', 'act-05']) {
+    const cue = musicCue({ screen: 'game', run: { wave: 1, phase: 'playing', act: { id, boss: { wave: 6 } } } });
+    assert.equal(cue.src, TRACKS[id].src);
+    assert.equal(cue.gain.toFixed(6), (MUSIC_BED_GAIN * TRACKS[id].gain).toFixed(6));
+  }
+});
+
+test('a screen with no run scores the world it is showing', () => {
+  // The dev viewers have no run, but they do have a world on screen. The track
+  // follows that world instead of repeating the Act 1 fallback all evening.
+  const preview = musicCue({ screen: 'narrative', act: { id: 'act-04' } });
+  assert.equal(preview.src, TRACKS['act-04'].src);
+  assert.equal(preview.gain.toFixed(6), (MUSIC_BED_GAIN * TRACKS['act-04'].gain).toFixed(6));
+  assert.equal(preview.cutoff, CUTOFF_HUB, 'a preview has no waves, so the filter stays at the hub');
+
+  assert.equal(musicCue({ screen: 'worlds', act: { id: 'act-02' } }).src, TRACKS['act-02'].src);
+  assert.equal(musicCue({ screen: 'enemies', act: { id: 'act-05' } }).src, TRACKS['act-05'].src);
+  assert.equal(musicCue({ screen: 'narrative', act: null }).src, TRACKS['act-01'].src,
+    'a scene that names no world still gets a bed');
+});
+
+test('a live run owns the bed, not the act on the side', () => {
+  const cue = musicCue({ screen: 'game', run: runAt(1), act: { id: 'act-05' } });
+  assert.equal(cue.src, TRACKS['act-01'].src, 'the run decides, so a stale preview cannot bleed into gameplay');
 });
 
 test('every gameplay SFX is a definition the engine can voice', () => {

@@ -50,15 +50,30 @@ export const DUCK = 0.7;
 export const PAUSE = 0.75;
 
 export const TRACKS = {
-  // The provisional demo. Replace `src` when the real score lands; nothing else
-  // in the game needs to know.
+  // One file per world, keyed by campaign act id. `trackFor` reads this and
+  // nothing else in the game knows a track exists.
   //
-  // `trim` and `fade` describe how the file must be looped: it was rendered with
-  // a ~0.2 s decay tail and a loud head, so joining head-to-tail jumps 30 dB.
-  // Trim the dead tail and blend the last quarter second into the head, so the
-  // seam is a crossfade between two loud passages instead of a fade-in out of
-  // silence. A properly looped track sets `trim: 0`.
+  // `gain` is not taste: it is the loudness alignment. The mix was judged on the
+  // Act 1 demo, so its -21.7 dBFS RMS is the reference every other master is
+  // pulled to (measured RMS in the comment of each entry). Skip it and a hot
+  // master plays 8 dB over the bed the whole mix was built around.
+  //
+  // `trim` and `fade` describe how the file must be looped. Act 1 was rendered
+  // with a ~0.2 s decay tail and a loud head, so joining head-to-tail jumps
+  // 30 dB: trim the dead tail and blend the last quarter second into the head,
+  // so the seam is a crossfade between two loud passages instead of a fade-in
+  // out of silence. A file that ends loud, like every act below, sets no trim
+  // and takes the default crossfade.
   'act-01': { src: 'assets/audio/act-01-zomboid.ogg', gain: 1, trim: 0.2, fade: 0.25 },
+  // -17.7 dBFS RMS, 65 s, ends loud: it laps on the default fade.
+  'act-02': { src: 'assets/audio/act-02-rift.ogg', gain: 0.63 },
+  // -18.0 dBFS RMS, 74 s, ends loud.
+  'act-03': { src: 'assets/audio/act-03-inferno.ogg', gain: 0.65 },
+  // -13.6 dBFS RMS, 85 s: the hottest master of the five, hence the deepest gain.
+  'act-04': { src: 'assets/audio/act-04-exiles.ogg', gain: 0.39 },
+  // -13.5 dBFS RMS, 60 s, peaks at full scale before the gain: the bed cannot
+  // add headroom the file already spent.
+  'act-05': { src: 'assets/audio/act-05-discord.ogg', gain: 0.39 },
 };
 
 export const FALLBACK_TRACK = 'act-01';
@@ -133,11 +148,15 @@ export function waveCutoff(wave, bossWave) {
 
 // The one question the shell asks every frame: what should the bed be doing.
 // A null cue means silence — only a game screen with no run, death and victory.
-export function musicCue({ screen, run = null, paused = false, blocked = false }) {
+//
+// A live run always wins: its act is the truth. `act` is for the screens that
+// have no run but do have a world on them — the dev viewers — so previewing Act
+// 4 sounds like Act 4 instead of repeating the fallback all evening.
+export function musicCue({ screen, run = null, act = null, paused = false, blocked = false }) {
   const inRun = screen === 'game';
   if (inRun && !run) return null;
   if (inRun && (run.phase === 'dead' || run.phase === 'won')) return null;
-  const track = trackFor(inRun ? run.act : null);
+  const track = trackFor(inRun ? run.act : act);
   const cutoff = inRun ? waveCutoff(run.wave, run.act?.boss?.wave) : CUTOFF_HUB;
   const gain = MUSIC_BED_GAIN * (track.gain ?? 1)
     * (inRun && paused ? PAUSE : 1)

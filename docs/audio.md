@@ -1,7 +1,7 @@
 # Audio
 
 Three buses, one `AudioContext`. Read this before adding a sound: the rules here
-are what keep a 32-second loop from turning into an alarm.
+are what keep a loop from turning into an alarm.
 
 ## Where things live
 
@@ -163,11 +163,40 @@ Two rules:
 UI gains stay under the gameplay hits (`0.05`–`0.08` against `kill`'s `0.076`),
 so a menu never shouts louder than the arena.
 
+## The tracks
 
+One file per world, keyed by campaign act id. The mix was judged on Act 1, so
+every master is pulled to its **-21.7 dBFS RMS** by its own `gain`: the bed level
+then means the same thing in every world.
+
+| Act | World | File | Length | Master RMS | `gain` |
+| --- | --- | --- | --- | --- | --- |
+| `act-01` | Zomboid | `act-01-zomboid.ogg` | 32 s | -21.7 dBFS | 1 |
+| `act-02` | LoL | `act-02-rift.ogg` | 65 s | -17.7 dBFS | 0.63 |
+| `act-03` | Diablo | `act-03-inferno.ogg` | 74 s | -18.0 dBFS | 0.65 |
+| `act-04` | Conan Exiles | `act-04-exiles.ogg` | 85 s | -13.6 dBFS | 0.39 |
+| `act-05` | Discord | `act-05-discord.ogg` | 60 s | -13.5 dBFS | 0.39 |
+
+Every file but Act 1 ends loud, so they take `trim: 0` and the default 0.25 s
+crossfade. Act 1 is the one with a decay tail, which is what its 0.2 s trim is
+for. A hot master is not fixed by ear: move its `gain`, because a file left
+8 dB louder breaks the level the whole mix was judged at.
+
+A live run always plays its own act. The screens with no run follow the world
+they are showing: a narrative preview plays the act that owns its scene, and the
+world and enemy viewers the world picked in their menu. Ownership is catalog data
+(`entry.act`): the manifest that declared the scene wins, and a shared-manifest
+preview falls back to the act whose world it paints, which is what `actForWorld`
+in `src/campaign/acts.mjs` answers. The shared stages (`arena`, `room`) belong to
+no act and get the fallback track.
+
+## Adding a track
 
 1. Drop the file in `assets/audio/`.
-2. Add an entry to `TRACKS` in `src/audio/mix.mjs`, keyed by campaign act id.
-3. Nothing else changes. `FALLBACK_TRACK` covers acts that have no track yet.
+2. Measure it and add an entry to `TRACKS` in `src/audio/mix.mjs`, keyed by
+   campaign act id, with `gain` set to `10^((-21.7 - rms) / 20)`.
+3. Nothing else changes. `FALLBACK_TRACK` covers acts that have no track yet, and
+   `tests/audio.test.mjs` fails when a declared `src` is not a file in the repo.
 
 ## The player's own level
 
