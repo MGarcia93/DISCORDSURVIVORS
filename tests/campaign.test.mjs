@@ -8,9 +8,19 @@ import act03 from '../src/campaign/act-03-inferno.mjs';
 import act04 from '../src/campaign/act-04-exiles.mjs';
 import act05 from '../src/campaign/act-05-discord.mjs';
 import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
+import { enemyAttackInterval, enemyContactDamage, enemyHp } from '../src/enemies/index.mjs';
 
 const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
 const playable = () => structuredClone(act01);
+
+test('the first boss is the softest world boss in the campaign', () => {
+  const kinds = ACTS.map(act => act.boss.kind);
+  const dps = kind => enemyContactDamage(kind, 6) / enemyAttackInterval(kind, 6);
+  for (const kind of kinds.slice(1)) {
+    assert.ok(dps(kinds[0]) < dps(kind), `${kind} must hit harder than the first boss`);
+  }
+  assert.ok(enemyHp(kinds[0], 6) < enemyHp(kinds.at(-1), 6), 'and the last boss must have more health');
+});
 
 test('the campaign registers five worlds in order and all five are playable', () => {
   assert.equal(ACTS.length, 5);

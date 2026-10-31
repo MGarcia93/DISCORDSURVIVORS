@@ -49,7 +49,7 @@ test('enemy sheets are percentages over the base stats with per-wave curves', ()
   assert.equal(enemyHp('runner', 2), 38);
   assert.equal(enemySpeed('zombie', 5), 60 * WORLD_SCALE);
   assert.equal(enemySpeed('runner', 5), 108 * WORLD_SCALE);
-  assert.equal(enemyHp('alarmZombie', 4), 2200);
+  assert.equal(enemyHp('alarmZombie', 4), 1500);
   assert.equal(ENEMY_KINDS.zombie.radius, 17);
   assert.equal(ENEMY_KINDS.runner.radius, 13);
   assert.equal(ENEMY_KINDS.alarmZombie.radius, 38);
@@ -58,7 +58,7 @@ test('enemy sheets are percentages over the base stats with per-wave curves', ()
     assert.equal(enemyContactDamage(kind), 12);
     assert.equal(enemyBounty(kind), 2);
   }
-  assert.equal(enemyContactDamage('alarmZombie'), 30);
+  assert.equal(enemyContactDamage('alarmZombie'), 20);
   assert.equal(enemyBounty('alarmZombie'), 30);
 });
 
@@ -95,7 +95,7 @@ test('the act boss takes its stats from the table on its own wave', () => {
   assert.equal(startNextWave(run), true);
   const [boss] = run.enemies;
   assert.equal(boss.kind, 'alarmZombie');
-  assert.equal(boss.hp, 2200);
+  assert.equal(boss.hp, 1500);
   assert.equal(boss.radius, 38 * 1.1);
   assert.equal(boss.speed, 52 * 1.1);
 });
@@ -106,7 +106,7 @@ test('contact damage and coin rewards read the table at runtime', () => {
     radius: 10 * 1.1, speed: 0 });
   const before = run.player.hp;
   step(run, 0.016);
-  assert.equal(run.player.hp, before - 30 * (1 - 0.2));
+  assert.equal(run.player.hp, before - 20 * (1 - 0.2));
 
   const killRun = createRun(() => 0.5);
   killRun.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 1, maxHp: 1, x: killRun.player.x, y: killRun.player.y,
