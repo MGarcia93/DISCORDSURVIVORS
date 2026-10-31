@@ -97,7 +97,9 @@ cell prop and the unlock are unchanged. Preview it in `?dev=narrative` →
 
 Act 3 runs in the `inferno` dungeon with the seven kinds its script asks for:
 skeletons, lesser demons, the ranged shaman, the burning elite, Lord Zir's bat
-swarm, Lord Zir himself as the mini-boss and Lilith as the boss. Its cinematics
+swarm, Lord Zir himself as the mini-boss and Lilith as the boss. Wave 5 is
+untimed: defeating Lord Zir ends the wave immediately and clears his remaining
+bats; the timer cannot end the fight while he is alive. Its cinematics
 live in `assets/narrative/acts/act-03/manifest.json`; the dialogue for the two
 bosses is the addendum at the end of the act script.
 

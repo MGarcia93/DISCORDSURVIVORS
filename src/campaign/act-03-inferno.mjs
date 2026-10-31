@@ -40,8 +40,9 @@ export default {
       life: { burningElite: 174, skeleton: 52, shaman: 44 },
     },
     // Lord Zir arrives once at the start of this wave; his court of bats keeps
-    // him company and gives the wave its pressure.
-    { wave: 5, perMinute: 24, mix: { batSwarm: 1 }, life: { batSwarm: 20 } },
+    // him company and gives the wave its pressure. His death closes the wave,
+    // not the clock or the remaining bats.
+    { wave: 5, untimed: true, perMinute: 24, mix: { batSwarm: 1 }, life: { batSwarm: 20 } },
     // The boss wave is untimed and carries no budget of its own: Lilith brings
     // her echo with her, not a horde.
     { wave: 6, perMinute: 0, mix: {}, life: {} },
