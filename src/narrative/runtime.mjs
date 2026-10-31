@@ -1,7 +1,7 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
 const animations = new Set(['idle', 'walk', 'point', 'celebrate', 'kneel']);
 const stageFields = new Set(['points', 'actors', 'props', 'background', 'size']);
-const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'splash', 'notice', 'flash']);
+const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'flash']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
 // The viewport stays fixed; a scene may provide a larger world behind it.
 // Clamp the visible frame to that world, including during zoom interpolation.
@@ -67,6 +67,10 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
       requireValue(step && text(step.type), 'Action type is required');
       if (step.delay !== undefined) requireValue(finite(step.delay) && step.delay >= 0, 'Invalid delay');
       if (timedTypes.has(step.type)) requireValue(finite(step.duration) && step.duration >= 0, `Invalid duration: ${step.type}`);
+      // A held beat keeps `duration` optional: the player dismisses it, never a clock.
+      if (['splash', 'notice'].includes(step.type) && step.duration !== undefined) {
+        requireValue(finite(step.duration) && step.duration >= 0, `Invalid duration: ${step.type}`);
+      }
       if (['move', 'animate'].includes(step.type)) requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
       if (step.type === 'camera') requireValue(own(points, step.to), `Unknown point: ${step.to}`);
       // A move either reaches a point or walks toward one at its own pace: the
@@ -82,6 +86,16 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
           requireValue(Array.isArray(step.lines) && step.lines.length > 0, 'Dialogue lines are required');
           step.lines.forEach(line => validateLine(line, characters));
           requireValue(step.layout === undefined || ['portraits', 'stage'].includes(step.layout), 'Invalid dialogue layout');
+          // Optional per-line cast expressions: a beat where everyone reacts at
+          // once (the shared grimace) cannot be told one speaker at a time.
+          if (step.expressions !== undefined) {
+            requireValue(step.expressions && typeof step.expressions === 'object' && !Array.isArray(step.expressions),
+              'Invalid dialogue expressions');
+            for (const [id, expression] of Object.entries(step.expressions)) {
+              requireValue(characters[id], `Unknown expression speaker: ${id}`);
+              requireValue(characters[id].expressions[expression], `${id} has no ${expression} portrait`);
+            }
+          }
           if (step.staging !== undefined) {
             requireValue(own(actions, step.staging), `Unknown dialogue staging: ${step.staging}`);
             requireValue(typeof actions[step.staging].validate === 'function' && typeof actions[step.staging].start === 'function', 'Dialogue staging requires validate/start');
@@ -205,6 +219,7 @@ export class ScenePlayer {
       const setLine = () => {
         this.dialogue = index < step.lines.length ? { expression: 'neutral', ...step.lines[index] } : null;
         if (this.dialogue && step.layout) this.dialogue.layout = step.layout;
+        if (this.dialogue && step.expressions) this.dialogue.expressions = step.expressions;
       };
       setLine();
       return {
@@ -254,13 +269,23 @@ export class ScenePlayer {
       this.actors[step.actor].animation = step.animation;
       return this._timed(step.duration, t => { if (t === 1) this.actors[step.actor].animation = 'idle'; });
     }
+    // A splash and a system notice are blocking beats, like dialogue: they stay
+    // up until the player continues, so pacing is theirs and not a stopwatch's.
     if (step.type === 'splash') {
       this.splash = { speaker: step.speaker, text: step.text };
-      return this._timed(step.duration, t => { if (t === 1) this.splash = null; });
+      return {
+        tick: () => this.splash === null,
+        advance: () => { this.splash = null; },
+        skip: () => { this.splash = null; },
+      };
     }
     if (step.type === 'notice') {
       this.notice = { title: step.title, lines: [...step.lines] };
-      return this._timed(step.duration, t => { if (t === 1) this.notice = null; });
+      return {
+        tick: () => this.notice === null,
+        advance: () => { this.notice = null; },
+        skip: () => { this.notice = null; },
+      };
     }
     if (step.type === 'wait') return this._timed(step.duration, () => {});
     if (step.type === 'prop') {
@@ -318,7 +343,8 @@ export class ScenePlayer {
   }
 
   advance() {
-    if (!this.active || !this.dialogue) return;
+    // Dialogue, splash and notice wait for the player; timed steps ignore it.
+    if (!this.active || !this.task?.advance) return;
     this.task.advance();
     if (this.task.tick(0)) { this.task = null; this._pump(); }
   }

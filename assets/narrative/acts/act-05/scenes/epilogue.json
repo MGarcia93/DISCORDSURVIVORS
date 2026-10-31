@@ -1,0 +1,620 @@
+{
+  "id": "act-05-epilogue",
+  "repeat": "once",
+  "stage": {
+    "background": "creator-desk",
+    "points": {
+      "warrior": [
+        260,
+        470
+      ],
+      "negro": [
+        370,
+        470
+      ],
+      "papasito": [
+        260,
+        560
+      ],
+      "solago": [
+        370,
+        560
+      ],
+      "walk-warrior": [
+        1150,
+        470
+      ],
+      "walk-negro": [
+        1250,
+        470
+      ],
+      "walk-papasito": [
+        1150,
+        560
+      ],
+      "walk-solago": [
+        1250,
+        560
+      ],
+      "start": [
+        572,
+        374
+      ],
+      "party": [
+        410,
+        470
+      ],
+      "walk-cam": [
+        1000,
+        470
+      ],
+      "maxi": [
+        1690,
+        460
+      ],
+      "maxi-close": [
+        1600,
+        430
+      ],
+      "desk": [
+        1350,
+        470
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    },
+    "size": [
+      2288,
+      748
+    ]
+  },
+  "steps": [
+    {
+      "type": "animate",
+      "actor": "maxi",
+      "animation": "kneel",
+      "duration": 0
+    },
+    {
+      "type": "camera",
+      "to": "party",
+      "zoom": 1,
+      "duration": 0
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡AL FIN, PELOTUDOS! ¡VOLVIMOS!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "tired",
+          "text": "¡LA CONCHA DE SU MADRE, QUÉ JUEGO DE MIERDA!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Ya estamos en el Discord?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡PAPASITO! ¿SEGUÍS VIVO?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Sí, pues. Te estoy hablando."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, bárbaro. Pensé que te habíamos perdido."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Che, pará. ¿Y Maxi?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Ni idea. A ese hijo de puta no lo encontramos en ningún lado."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "surprised",
+          "text": "¡¿Y DÓNDE ESTÁ?!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Qué sé yo. Capaz ni entró al juego."
+        }
+      ],
+      "layout": "stage"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "walk-negro",
+          "duration": 3
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "walk-solago",
+          "duration": 3
+        },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "walk-papasito",
+          "duration": 3
+        },
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "walk-warrior",
+          "duration": 3
+        },
+        {
+          "type": "camera",
+          "to": "walk-cam",
+          "zoom": 1,
+          "duration": 3
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD",
+      "duration": 4,
+      "lines": [
+        "Maxi se ha unido al canal de voz."
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "maxi-close",
+      "zoom": 1,
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Bueno, ¿qué onda? ¿Les gustó el jueguito?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Pará... ¿MAXI?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Qué pasa, negro?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡¿Y VOS DÓNDE MIERDA ESTABAS?!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Acá, boludo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡¿CÓMO QUE ACÁ?!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Qué? ¿No se divirtieron?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PARÁ, HIJO DE PUTA! ¡¿VOS SABÍAS TODO LO QUE ESTABA PASANDO?!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y sí, Negro."
+        },
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "¡¿CÓMO QUE SÍ?!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Quién te pensás que programó todo eso?"
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "maxi-close",
+      "zoom": 1.1,
+      "duration": 1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NOOOOO! ¡LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡¿VOS HICISTE TODO ESTO, HIJO DE PUTA?!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y sí, boludos."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO POR QUÉ MIERDA NOS METISTE EN TODOS ESOS JUEGOS!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Hace tres horas que rompen las pelotas con qué jugar y no se ponen de acuerdo."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Les armé uno para todos y listo."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡PERO CASI NOS MATAN, PELOTUDO!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Bueno, pero jugaron juntos, ¿o no?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Listo. Funcionó."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Pará, pará. ¿Y el Administrador ese de mierda?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Era un bot que hice para manejar toda la partida. Parece que se fue un poquito al carajo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO ERA UN HIJO DE PUTA!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y... aprendió de ustedes. Mirá cómo terminó."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡¿Y POR QUÉ YORICK ME TENÍA DE MURGANEO?!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y, Solago... sos petiso, dientudo y jugás Yorick. Me la dejaste servida."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡ENCIMA LO HIZO A PROPÓSITO!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Igual lo de tu jermu me dio más risa que el jefe."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡CHUPAME BIEN LA PIJA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Maxi, una cosa..."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Qué pasó, Papasito?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "annoyed",
+          "text": "¿Y lo de mi historial?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿El de la transferencia?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡LO VIERON TODOS!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y... me basé en algo que ya había pasado."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJAJA! ¡NOOO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡LO MANDÓ AL FRENTE HASTA EN EL JUEGO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "tired",
+          "text": "Ya van a empezar otra vez..."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Che, Maxi, ¿y por qué terminé en Conan?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Ah, eso fue el bot. Le puse Jujuy y entendió Bolivia."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡Pero Jujuy es Argentina!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y sí, ya sé. Pero cuando vi lo que hizo, lo dejé."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡ENCIMA VIO EL ERROR Y NI LO ARREGLÓ!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡Sos un culiao!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Igual no te quejes, había Loto Amarillo y todo."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡HASTA EL PROGRAMADOR LE CONSIGUIÓ LA FALOPA!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, pará. ¿Y Jhony? ¿Lo dejaste atrapado en Project?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿A Jhony? Lo dejé en Project. Con las horas que tiene, estaba más cómodo ahí que acá."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡SE QUEDÓ JUGANDO SOLO!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Le mandé una invitación. Me puteó y siguió jugando."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA. Ese es Jhony."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Y Papafrita?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "A ese lo mandé al Monster Hunter y le corté el micrófono."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "disgusted",
+          "text": "¡PUAAAAAJ!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "No, dejá. Le das el micrófono y te explica Monster Hunter hasta mañana."
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "walk-cam",
+      "zoom": 1,
+      "duration": 0.9
+    }
+  ]
+}

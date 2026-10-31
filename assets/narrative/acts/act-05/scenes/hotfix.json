@@ -4,96 +4,285 @@
   "stage": {
     "background": "discord",
     "points": {
-      "party": [300, 500],
-      "solago": [440, 505],
-      "papasito": [590, 505],
-      "warrior": [730, 498],
-      "floor-a": [420, 260],
-      "floor-b": [780, 300],
-      "floor-c": [600, 620],
-      "wide": [572, 374]
+      "party": [
+        410,
+        462
+      ],
+      "solago": [
+        410,
+        545
+      ],
+      "papasito": [
+        300,
+        545
+      ],
+      "warrior": [
+        300,
+        462
+      ],
+      "floor-a": [
+        420,
+        260
+      ],
+      "floor-b": [
+        780,
+        300
+      ],
+      "floor-c": [
+        600,
+        620
+      ],
+      "wide": [
+        572,
+        374
+      ]
     },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "party" },
-      "solago": { "character": "solago", "at": "solago" },
-      "papasito": { "character": "papasito", "at": "papasito" },
-      "warrior": { "character": "warrior", "at": "warrior" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "party"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      }
     }
   },
   "steps": [
-    { "type": "sound", "sound": "glitch" },
-    { "type": "camera", "to": "floor-a", "zoom": 1.2, "duration": 0.6 },
-    { "type": "flash", "at": "floor-a", "duration": 0.3 },
-    { "type": "camera", "to": "floor-b", "zoom": 1.2, "duration": 0.6 },
-    { "type": "flash", "at": "floor-b", "duration": 0.3 },
-    { "type": "camera", "to": "floor-c", "zoom": 1.2, "duration": 0.6 },
-    { "type": "flash", "at": "floor-c", "duration": 0.3 },
-    { "type": "sound", "sound": "error" },
-    { "type": "camera", "to": "wide", "zoom": 1, "duration": 0.7 },
+    {
+      "type": "sound",
+      "sound": "glitch"
+    },
+    {
+      "type": "camera",
+      "to": "floor-a",
+      "zoom": 1.1,
+      "duration": 0.6
+    },
+    {
+      "type": "flash",
+      "at": "floor-a",
+      "duration": 0.3
+    },
+    {
+      "type": "camera",
+      "to": "floor-b",
+      "zoom": 1.1,
+      "duration": 0.6
+    },
+    {
+      "type": "flash",
+      "at": "floor-b",
+      "duration": 0.3
+    },
+    {
+      "type": "camera",
+      "to": "floor-c",
+      "zoom": 1.1,
+      "duration": 0.6
+    },
+    {
+      "type": "flash",
+      "at": "floor-c",
+      "duration": 0.3
+    },
+    {
+      "type": "sound",
+      "sound": "error"
+    },
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.7
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡PARÁ, PELOTUDO! ¡DEJÁ DE CAMBIAR EL MAPA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PARÁ, PELOTUDO! ¡DEJÁ DE CAMBIAR EL MAPA!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Aplicando actualización de emergencia."] },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Aplicando actualización de emergencia."
+      ]
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "surprised", "text": "¿QUÉ ACTUALIZACIÓN?" }
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "¿QUÉ ACTUALIZACIÓN?"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Hotfix 1.0.4: ajustes menores de dificultad."] },
-    { "type": "sound", "sound": "alert" },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 5,
+      "lines": [
+        "Hotfix 1.0.4: ajustes menores de dificultad."
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡PERO LOS HICISTE MÁS RÁPIDOS, HIJO DE PUTA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO LOS HICISTE MÁS RÁPIDOS, HIJO DE PUTA!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": ["Corrección aplicada."] },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Hotfix 1.0.5: reducción temporal de habilidades especiales."] },
-    { "type": "flash", "at": "party", "duration": 0.4 },
-    { "type": "sound", "sound": "error" },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 3,
+      "lines": [
+        "Corrección aplicada."
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 5,
+      "lines": [
+        "Hotfix 1.0.5: reducción temporal de habilidades especiales."
+      ]
+    },
+    {
+      "type": "flash",
+      "at": "party",
+      "duration": 0.4
+    },
+    {
+      "type": "sound",
+      "sound": "error"
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "surprised", "text": "¡¿DÓNDE ESTÁ MI SILLÓN?!" },
-        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡TE LO NERFEARON!" },
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡DEVOLVEME EL SILLÓN, BOT DE MIERDA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡¿DÓNDE ESTÁ MI SILLÓN?!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡TE LO NERFEARON!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡DEVOLVEME EL SILLÓN, BOT DE MIERDA!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["La habilidad fue considerada excesivamente cómoda."] },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 5,
+      "lines": [
+        "La habilidad fue considerada excesivamente cómoda."
+      ]
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡Y PARA ESO LA TENGO, PELOTUDO!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡Y PARA ESO LA TENGO, PELOTUDO!"
+        }
       ]
     },
-    { "type": "sound", "sound": "glitch" },
-    { "type": "wait", "duration": 1.2 },
+    {
+      "type": "sound",
+      "sound": "glitch"
+    },
+    {
+      "type": "wait",
+      "duration": 1.2
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "papasito", "expression": "neutral", "text": "Esto ya está funcionando mal, ¿verdad?" },
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡Y SÍ, PAPASITO! ¡LO PROGRAMARON CON LAS PATAS!" }
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Esto ya está funcionando mal, ¿verdad?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡Y SÍ, PAPASITO! ¡LO PROGRAMARON CON LAS PATAS!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Advertencia. Críticas al desarrollo detectadas."] },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Advertencia. Críticas al desarrollo detectadas."
+      ]
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡ENCIMA SE OFENDE!" }
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡ENCIMA SE OFENDE!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["No es un error. Es una característica."] },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "No es un error. Es una característica."
+      ]
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE!"
+        }
       ]
     },
-    { "type": "sound", "sound": "portal" },
-    { "type": "wait", "duration": 0.5 }
+    {
+      "type": "sound",
+      "sound": "portal"
+    },
+    {
+      "type": "wait",
+      "duration": 0.5
+    }
   ]
 }

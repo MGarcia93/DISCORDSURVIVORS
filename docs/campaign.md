@@ -117,7 +117,9 @@ at a time. El Administrador del Servidor (`administrator`) closes the run on wav
 6 with three phases: `/mute` and `/timeout` with recycled copies, dangerous
 ground plus one `rollback`, then the breakdown that gives the specials back and
 attacks without pause. Its cinematics live in
-`assets/narrative/acts/act-05/manifest.json`.
+`assets/narrative/acts/act-05/manifest.json`. The epilogue is a wide scroll of
+the `discord` world: the group walks back through the server to the window where
+Maxi is waiting, plugged in.
 
 ## Wave length
 

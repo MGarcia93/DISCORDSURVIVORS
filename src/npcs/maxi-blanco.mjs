@@ -1,7 +1,7 @@
 import { pixel } from '../sprites.mjs';
 
 // Creator cameo: the outfit photograph supplies the clothes, not the glasses.
-export function drawMaxiBlanco(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0 } = {}) {
+export function drawMaxiBlanco(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0, sitting = false } = {}) {
   const step = moving ? Math.floor(time * 8) % 2 : 0;
   const ink = '#171526', skin = '#d6ae94', light = '#edc6a8', shade = '#b48d79';
   const p = (x, y, w, h, color) => pixel(ctx, x, y, w, h, color);
@@ -12,21 +12,37 @@ export function drawMaxiBlanco(ctx, x, y, { scale = 2, facing = 1, moving = fals
   p(-15, 0, 30, 2, '#11141c');
   ctx.translate(0, -46 + step);
 
-  // Loose straight gray joggers, folded cuffs and soft rounded slippers.
-  p(-10, 32, 21, 12, ink);
-  p(-9, 33, 8, 10 - step, '#aaaab0');
-  p(2, 33, 8, 10 + step, '#91929b');
-  p(-8, 34, 2, 7 - step, '#c3c1c4');
-  p(7, 35, 2, 7 + step, '#767984');
-  p(-1, 35, 3, 9, ink);
-  p(-9, 41 - step, 8, 2, '#b6b4ba');
-  p(2, 41 + step, 8, 2, '#a4a3ac');
-  p(-12, 44 - step, 12, 2, ink);
-  p(1, 44 + step, 12, 2, ink);
-  p(-11, 43 - step, 10, 2, '#292a33');
-  p(2, 43 + step, 10, 2, '#292a33');
-  p(-10, 43 - step, 7, 1, '#4b4b55');
-  p(3, 43 + step, 7, 1, '#41434c');
+  if (sitting) {
+    // Seated at the machine: the lap folds forward and the shins drop to the
+    // floor, so the chair underneath him reads as a chair and not a stool.
+    p(-11, 30, 23, 9, ink);
+    p(-10, 31, 21, 7, '#aaaab0');
+    p(-9, 32, 7, 5, '#c3c1c4');
+    p(3, 32, 7, 5, '#91929b');
+    p(-1, 31, 3, 7, ink);
+    p(-10, 38, 8, 4, ink);
+    p(3, 38, 8, 4, ink);
+    p(-9, 38, 6, 3, '#b6b4ba');
+    p(4, 38, 6, 3, '#a4a3ac');
+    p(-11, 41, 9, 2, '#292a33');
+    p(3, 41, 9, 2, '#292a33');
+  } else {
+    // Loose straight gray joggers, folded cuffs and soft rounded slippers.
+    p(-10, 32, 21, 12, ink);
+    p(-9, 33, 8, 10 - step, '#aaaab0');
+    p(2, 33, 8, 10 + step, '#91929b');
+    p(-8, 34, 2, 7 - step, '#c3c1c4');
+    p(7, 35, 2, 7 + step, '#767984');
+    p(-1, 35, 3, 9, ink);
+    p(-9, 41 - step, 8, 2, '#b6b4ba');
+    p(2, 41 + step, 8, 2, '#a4a3ac');
+    p(-12, 44 - step, 12, 2, ink);
+    p(1, 44 + step, 12, 2, ink);
+    p(-11, 43 - step, 10, 2, '#292a33');
+    p(2, 43 + step, 10, 2, '#292a33');
+    p(-10, 43 - step, 7, 1, '#4b4b55');
+    p(3, 43 + step, 7, 1, '#41434c');
+  }
 
   // Navy hoodie body; gray raglan sleeves, ribbed hem and kangaroo pocket.
   p(-10, 20, 21, 3, ink);
@@ -120,6 +136,7 @@ export default {
   id: 'maxi-blanco',
   label: 'Maxi Blanco',
   draw(ctx, x, y, context = {}) {
-    drawMaxiBlanco(ctx, x, y, context);
+    // A kneeling actor in a scene is Maxi at his desk: same body, seated.
+    drawMaxiBlanco(ctx, x, y, { ...context, sitting: context.kneeling === true });
   },
 };

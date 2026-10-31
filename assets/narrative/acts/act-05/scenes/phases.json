@@ -4,110 +4,345 @@
   "stage": {
     "background": "discord",
     "points": {
-      "party": [260, 520],
-      "solago": [400, 525],
-      "papasito": [540, 528],
-      "warrior": [680, 522],
-      "figure": [880, 360],
-      "zone-a": [700, 300],
-      "zone-b": [980, 480],
-      "wide": [572, 420]
+      "party": [
+        410,
+        462
+      ],
+      "solago": [
+        410,
+        545
+      ],
+      "papasito": [
+        300,
+        545
+      ],
+      "warrior": [
+        300,
+        462
+      ],
+      "figure": [
+        880,
+        360
+      ],
+      "zone-a": [
+        700,
+        300
+      ],
+      "zone-b": [
+        980,
+        480
+      ],
+      "wide": [
+        572,
+        420
+      ]
     },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "party" },
-      "solago": { "character": "solago", "at": "solago" },
-      "papasito": { "character": "papasito", "at": "papasito" },
-      "warrior": { "character": "warrior", "at": "warrior" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "party"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "boss": {
+        "enemy": "administrator",
+        "at": "figure"
+      }
     }
   },
   "steps": [
-    { "type": "camera", "to": "figure", "zoom": 1.2, "duration": 1 },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Ejecutando comando: /mute."] },
-    { "type": "sound", "sound": "error" },
-    { "type": "flash", "at": "figure", "duration": 0.5 },
     {
-      "type": "dialogue",
+      "type": "camera",
+      "to": "figure",
+      "zoom": 1.1,
+      "duration": 1
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
       "lines": [
-        { "speaker": "maxi-negro", "expression": "surprised", "text": "¡EH! ¡¿POR QUÉ NO PUEDO USAR MI SILLÓN?!" }
+        "Ejecutando comando: /mute."
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 3, "lines": ["Usuario silenciado."] },
+    {
+      "type": "sound",
+      "sound": "error"
+    },
+    {
+      "type": "flash",
+      "at": "figure",
+      "duration": 0.5
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡TE MUTEARON, NEGRO!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡EH! ¡¿POR QUÉ NO PUEDO USAR MI SILLÓN?!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Ejecutando comando: /timeout."] },
-    { "type": "flash", "at": "zone-a", "duration": 0.5 },
-    { "type": "flash", "at": "zone-b", "duration": 0.5 },
-    { "type": "sound", "sound": "alert" },
     {
-      "type": "dialogue",
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 3,
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡SOLAGO, MOVÉ EL ORTO!" },
-        { "speaker": "solago", "expression": "angry", "text": "¡ESTOY INTENTANDO, PELOTUDO!" }
+        "Usuario silenciado."
       ]
     },
-
-    { "type": "camera", "to": "wide", "zoom": 1, "duration": 0.9 },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Integridad del servidor: 65%."] },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Aplicando medidas correctivas."] },
-    { "type": "sound", "sound": "glitch" },
-    { "type": "flash", "at": "zone-a", "duration": 0.4 },
-    { "type": "flash", "at": "zone-b", "duration": 0.4 },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡NOOO! ¡OTRA VEZ LOS HOTFIX!" },
-        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡NEGRO, NOS ESTÁN HACIENDO TESTEAR EL JUEGO!" },
-        { "speaker": "papasito", "expression": "neutral", "text": "Pero si está lleno de errores esto." }
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡TE MUTEARON, NEGRO!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["No son errores. Son características."] },
     {
-      "type": "dialogue",
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡CARACTERÍSTICA MIS PELOTAS!" }
+        "Ejecutando comando: /timeout."
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Ejecutando rollback..."] },
-    { "type": "sound", "sound": "alert" },
-    { "type": "flash", "at": "figure", "duration": 0.5 },
+    {
+      "type": "flash",
+      "at": "zone-a",
+      "duration": 0.5
+    },
+    {
+      "type": "flash",
+      "at": "zone-b",
+      "duration": 0.5
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "surprised", "text": "¡NOOO! ¡SE CURÓ EL HIJO DE PUTA!" },
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡PERO ESO ES TRAMPA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡SOLAGO, MOVÉ EL ORTO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡ESTOY INTENTANDO, PELOTUDO!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Herramientas de administración autorizadas."] },
     {
-      "type": "dialogue",
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.9
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡SOS UN HIJO DE PUTA!" }
+        "Integridad del servidor: 65%."
       ]
     },
-
-    { "type": "sound", "sound": "error" },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Error crítico.", "Riesgo de pérdida total de control.", "Ejecutando protocolo de emergencia."] },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 6, "lines": ["TODOS LOS USUARIOS SERÁN DESCONECTADOS."] },
     {
-      "type": "dialogue",
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
       "lines": [
-        { "speaker": "solago", "expression": "surprised", "text": "Pará... ¿Eso es bueno o malo?" },
-        { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡QUÉ SÉ YO, SOLAGO!" },
-        { "speaker": "papasito", "expression": "scared", "text": "No sé, a mí no me gusta nada eso." },
-        { "speaker": "warrior", "expression": "angry", "text": "¡Hay que bajarlo ya!" }
+        "Aplicando medidas correctivas."
       ]
     },
-    { "type": "sound", "sound": "glitch" },
-    { "type": "flash", "at": "figure", "duration": 0.6 },
-    { "type": "camera", "to": "wide", "zoom": 1, "duration": 0.8 },
+    {
+      "type": "sound",
+      "sound": "glitch"
+    },
+    {
+      "type": "flash",
+      "at": "zone-a",
+      "duration": 0.4
+    },
+    {
+      "type": "flash",
+      "at": "zone-b",
+      "duration": 0.4
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡DALE, PELOTUDOS! ¡QUE YA CASI ESTÁ!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NOOO! ¡OTRA VEZ LOS HOTFIX!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡NEGRO, NOS ESTÁN HACIENDO TESTEAR EL JUEGO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Pero si está lleno de errores esto."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "No son errores. Son características."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡CARACTERÍSTICA MIS PELOTAS!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Ejecutando rollback..."
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "flash",
+      "at": "figure",
+      "duration": 0.5
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "¡NOOO! ¡SE CURÓ EL HIJO DE PUTA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO ESO ES TRAMPA!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Herramientas de administración autorizadas."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡SOS UN HIJO DE PUTA!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "error"
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Error crítico.",
+        "Riesgo de pérdida total de control.",
+        "Ejecutando protocolo de emergencia."
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 6,
+      "lines": [
+        "TODOS LOS USUARIOS SERÁN DESCONECTADOS."
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "Pará... ¿Eso es bueno o malo?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "¡QUÉ SÉ YO, SOLAGO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "scared",
+          "text": "No sé, a mí no me gusta nada eso."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡Hay que bajarlo ya!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "glitch"
+    },
+    {
+      "type": "flash",
+      "at": "figure",
+      "duration": 0.6
+    },
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡DALE, PELOTUDOS! ¡QUE YA CASI ESTÁ!"
+        }
       ]
     }
   ]

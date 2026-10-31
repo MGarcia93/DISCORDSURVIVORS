@@ -56,7 +56,7 @@
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Usuario Papafrita localizado.", "Cargando siguiente entorno... MONSTER HUNTER."]
+      "lines": ["Usuario Papafrita localizado.", "Cargando siguiente mundo... MONSTER HUNTER."]
     },
     { "type": "sound", "sound": "alert", "repeat": 2, "interval": 0.3 },
     { "type": "wait", "duration": 0.6 },
@@ -160,7 +160,7 @@
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 4,
-      "lines": ["Para omitir un entorno obligatorio se requiere aprobación unánime."]
+      "lines": ["Para omitir un mundo obligatorio se requiere aprobación unánime."]
     },
     {
       "type": "dialogue",
@@ -232,7 +232,7 @@
       "type": "notice",
       "title": "ADMINISTRADOR",
       "duration": 5,
-      "lines": ["Los usuarios han completado los entornos de prueba.", "Iniciando fase final."]
+      "lines": ["Los usuarios han completado los mundos de prueba.", "Iniciando fase final."]
     },
     {
       "type": "dialogue",

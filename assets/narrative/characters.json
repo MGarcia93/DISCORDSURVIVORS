@@ -153,5 +153,19 @@
       "angry": "portraits/esclavista/angry.svg",
       "surprised": "portraits/esclavista/surprised.svg"
     }
+  },
+  "maxi": {
+    "name": "Maxi",
+    "sprite": "maxi-blanco",
+    "expressions": {
+      "neutral": "portraits/maxi/neutral.svg",
+      "happy": "portraits/maxi/happy.svg",
+      "annoyed": "portraits/maxi/annoyed.svg",
+      "angry": "portraits/maxi/angry.svg",
+      "surprised": "portraits/maxi/surprised.svg",
+      "scared": "portraits/maxi/scared.svg",
+      "tired": "portraits/maxi/tired.svg",
+      "disgusted": "portraits/maxi/disgusted.svg"
+    }
   }
 }

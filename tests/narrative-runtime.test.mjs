@@ -107,11 +107,31 @@ test('parallel actions reject competing writers and multiple dialogue owners', (
   assert.throws(() => player([{ type: 'parallel', steps: [{ type: 'dialogue', lines: [line] }] }]), /parallel/);
 });
 
+test('a splash and a notice hold the scene until the player continues', () => {
+  const p = player([
+    { type: 'notice', title: 'ADMINISTRADOR', lines: ['Solicitud denegada.'] },
+    { type: 'splash', speaker: 'guest', text: 'Sample arrival' },
+  ]);
+  assert.equal(p.notice.title, 'ADMINISTRADOR');
+  p.tick(600);
+  assert.equal(p.notice.title, 'ADMINISTRADOR', 'the notice waits for the player, not a clock');
+  assert.equal(p.status, 'playing');
+  p.advance();
+  assert.equal(p.notice, null);
+  assert.equal(p.splash.text, 'Sample arrival');
+  p.tick(600);
+  assert.equal(p.splash.text, 'Sample arrival', 'the splash waits for the player too');
+  assert.equal(p.status, 'playing');
+  p.advance();
+  assert.equal(p.splash, null);
+  assert.equal(p.status, 'completed');
+});
+
 test('scene data is not mutated and sound/splash/animation use the narrative clock', () => {
   const source = scene([
     { type: 'sound', sound: 'chime' },
     { type: 'animate', actor: 'visitor', animation: 'point', duration: 1 },
-    { type: 'splash', speaker: 'guest', text: 'Sample arrival', duration: 1 },
+    { type: 'splash', speaker: 'guest', text: 'Sample arrival' },
   ]);
   const before = JSON.stringify(source), sounds = [];
   const p = new ScenePlayer(source, { characters, sounds: { chime: {} }, onSound: id => sounds.push(id) });
@@ -119,7 +139,7 @@ test('scene data is not mutated and sound/splash/animation use the narrative clo
   assert.equal(p.actors.visitor.animation, 'point');
   p.tick(1);
   assert.equal(p.splash.text, 'Sample arrival');
-  p.tick(1);
+  p.advance();
   assert.equal(p.status, 'completed');
   assert.equal(JSON.stringify(source), before);
 });

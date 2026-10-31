@@ -78,6 +78,16 @@
       "id": "act-05-defeat",
       "title": "Acto 5: Servidor desconectado",
       "file": "scenes/defeat.json"
+    },
+    {
+      "id": "act-05-epilogue",
+      "title": "Acto 5: El verdadero responsable",
+      "file": "scenes/epilogue.json"
+    },
+    {
+      "id": "act-05-final",
+      "title": "Acto 5: ¿Y ahora qué jugamos?",
+      "file": "scenes/final.json"
     }
   ],
   "bindings": [
@@ -125,6 +135,16 @@
       "when": "after_wave",
       "wave": 6,
       "scene": "act-05-defeat"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-05-epilogue"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-05-final"
     }
   ],
   "banter": [

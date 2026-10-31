@@ -169,7 +169,8 @@ test('the boss scene keeps the party on the left and the taskmaster on his wheel
     if (player.dialogue) {
       if (player.dialogue.speaker === 'taskmaster') bossLine = true;
       player.advance();
-    } else player.tick(0.1);
+    } else if (player.splash || player.notice) player.advance();
+    else player.tick(0.1);
   }
   assert.equal(player.status, 'completed');
   assert.equal(bossLine, true, 'the taskmaster speaks with his own portrait');
@@ -192,7 +193,7 @@ test('all eight cinematics play and skip with the same final staging and effects
     const effects = [], sounds = [], skippedEffects = [], skippedSounds = [];
     const player = make(effects, sounds);
     for (let tick = 0; tick < 20000 && player.active; tick++) {
-      if (player.dialogue) player.advance();
+      if (player.dialogue || player.splash || player.notice) player.advance();
       else player.tick(0.1);
     }
     assert.equal(player.status, 'completed', `${id}: ${player.error}`);

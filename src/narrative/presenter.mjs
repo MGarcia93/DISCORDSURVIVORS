@@ -9,9 +9,10 @@ import lilith from '../npcs/lilith.mjs';
 import lotusAlchemist from '../npcs/lotus-alchemist.mjs';
 import taskmaster from '../npcs/taskmaster.mjs';
 import esclavista from '../npcs/esclavista.mjs';
+import maxiBlanco from '../npcs/maxi-blanco.mjs';
 
 // Narrative actors may be NPCs without entering the playable roster.
-const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita, yorick, lordZir, lilith, lotusAlchemist, taskmaster, esclavista };
+const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita, yorick, lordZir, lilith, lotusAlchemist, taskmaster, esclavista, 'maxi-blanco': maxiBlanco };
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -199,6 +200,10 @@ export function createPresenter(root, catalog, onError) {
         // No stale line: a beat between two conversations (a move, a camera
         // push) shows the stage, not the sentence the player already read.
         const spoken = line ?? null;
+        // The held beats (splash, notice) close with the same actions block as a
+        // character panel, in the same corner, and it must re-enable pointer
+        // events: the narrative layer otherwise passes the click to the game.
+        const heldActions = '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>';
         if (spoken?.layout === 'stage') {
           // Keep moving sprites visible; a compact subtitle panel replaces the
           // large portraits only for dialogue that explicitly opts into it.
@@ -222,15 +227,15 @@ export function createPresenter(root, catalog, onError) {
           const actions = line
             ? '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>'
             : '';
-          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : 'neutral')}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
+          content.innerHTML = `<div class="narrative-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"${line ? '' : ' aria-live="off"'}><div class="narrative-portraits">${cast.map(entry => `<div class="${entry.id === spoken.speaker ? 'speaking' : 'listening'}${facing(entry)}${catalog.characters[entry.id].portraitLayout === 'extended' ? ' portrait-extended-frame' : ''}">${portrait(entry.id, entry.id === spoken.speaker ? spoken.expression : (spoken.expressions?.[entry.id] ?? 'neutral'))}</div>`).join('')}</div><div class="narrative-text"><strong>${escape(catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p>${actions}</div></div>`;
         } else if (player?.notice) {
-          content.innerHTML = `<div class="narrative-notice" role="status"><strong>${escape(player.notice.title)}</strong>${player.notice.lines.map(text => `<p>${escape(text)}</p>`).join('')}</div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
+          content.innerHTML = `<div class="narrative-notice" role="status"><strong>${escape(player.notice.title)}</strong>${player.notice.lines.map(text => `<p>${escape(text)}</p>`).join('')}${heldActions}</div>`;
         } else if (player?.splash) {
           const speaker = player.splash.speaker;
           const image = portrait(speaker);
           const framed = catalog.characters[speaker].portraitLayout === 'extended'
             ? `<div class="narrative-splash-extended-frame">${image}</div>` : image;
-          content.innerHTML = `<div class="narrative-splash">${framed}<h2>${escape(player.splash.text)}</h2></div><button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>`;
+          content.innerHTML = `<div class="narrative-splash">${framed}<h2>${escape(player.splash.text)}</h2>${heldActions}</div>`;
         } else if (active) {
           content.innerHTML = '<button class="secondary narrative-skip" data-action="narrative-skip">Skip scene</button>';
         } else if (banter) {

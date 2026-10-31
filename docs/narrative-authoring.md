@@ -112,7 +112,7 @@ An actor is either a member of the cast or an enemy:
 
 | Step | Fields | Meaning |
 | --- | --- | --- |
-| `dialogue` | `lines`, optional `layout`, `staging` | Manual conversation; defaults to portraits. `layout: "stage"` keeps actors visible above a compact text panel; `staging` names a scene-local action that ticks while the reader advances lines |
+| `dialogue` | `lines`, optional `layout`, `staging`, `expressions` | Manual conversation; defaults to portraits. `layout: "stage"` keeps actors visible above a compact text panel; `staging` names a scene-local action that ticks while the reader advances lines; `expressions` maps speaker ids to an expression so the whole cast reacts at once (the shared grimace), not just whoever holds the line |
 | `move` | `actor`, `to`, `duration` | Walk to a named point |
 | `animate` | `actor`, `animation`, `duration` | `idle`, `walk`, `point` or `celebrate` |
 | `camera` | `to`, optional `zoom`, `duration` | Pan/zoom; zoom range 1–4. The camera stays inside the stage, including larger maps |
@@ -120,12 +120,12 @@ An actor is either a member of the cast or an enemy:
 | `down` | `actor` | Drop an enemy where it stands; a dead enemy never animates |
 | `flash` | `at`, `duration` | A short burst at a point: muzzle flash, hit spark |
 | `sound` | `sound` | Play a catalog sound without waiting |
-| `splash` | `speaker`, `text`, `duration` | Timed presentation using a catalog portrait |
-| `notice` | `title`, `lines`, `duration` | System message: the world's own UI, no portrait |
+| `splash` | `speaker`, `text` | Blocking presentation using a catalog portrait; it stays up until the player continues |
+| `notice` | `title`, `lines` | Blocking system message: the world's own UI, no portrait; it stays up until the player continues |
 | `wait` | `duration` | Wait in narrative seconds |
 | `parallel` | `steps` | Run independent actions together |
 
-Durations are nonnegative seconds. Parallel actions cannot write the same actor, camera or prop, and cannot contain dialogue, splash or custom actions. Sequential actions appear in the top-level `steps` array. The sample arrival shows movement and camera in parallel, followed by conversation and splash.
+Durations are nonnegative seconds. `splash` and `notice` are player-paced beats, like dialogue: they show a **Continue** button and never expire on a clock, so a `duration` on them is accepted for older scenes and ignored. A beat that must pass on its own belongs in `wait`. Parallel actions cannot write the same actor, camera or prop, and cannot contain dialogue, splash or custom actions. Sequential actions appear in the top-level `steps` array. The sample arrival shows movement and camera in parallel, followed by conversation and splash.
 
 ### Larger cinematic maps
 
@@ -175,6 +175,8 @@ A world is one module in `src/backgrounds/` that paints the scenery of a place. 
 | `exiles` | Act 4 — the Exiled Lands; the shipped Act 4 preview |
 | `laboratory` | Act 4 — the Lotus Alchemist's laboratory (waves 5) |
 | `discord` | Act 5 — the corrupted server |
+| `discord-voice` | Act 5 — the Discord they believe they came back to: channel list, conversation and the connected call |
+| `creator-desk` | Act 5 epilogue — the room behind the server, where Maxi is at the machine |
 
 Each world exports `{ id, title, draw, animate? }`:
 

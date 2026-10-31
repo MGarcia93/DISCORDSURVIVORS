@@ -15,10 +15,10 @@
     { "type": "wait", "duration": 1.2 },
     { "type": "notice", "title": "ADMINISTRADOR", "duration": 3.2, "lines": [
       "Mundo 01 completado.",
-      "Preparando transferencia al siguiente entorno."
+      "Preparando transferencia al siguiente mundo."
     ] },
     { "type": "dialogue", "lines": [
-      { "speaker": "maxi-negro", "expression": "scared", "text": "Pará, pará. ¿Siguiente entorno? ¡Sacame de acá, hijo de puta!" }
+      { "speaker": "maxi-negro", "expression": "scared", "text": "Pará, pará. ¿Siguiente mundo? ¡Sacame de acá, hijo de puta!" }
     ] },
     { "type": "sound", "sound": "gunshot" }
   ]

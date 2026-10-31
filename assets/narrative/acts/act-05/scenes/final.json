@@ -1,0 +1,223 @@
+{
+  "id": "act-05-final",
+  "repeat": "once",
+  "stage": {
+    "background": "creator-desk",
+    "points": {
+      "warrior": [
+        1180,
+        470
+      ],
+      "negro": [
+        1290,
+        470
+      ],
+      "papasito": [
+        1180,
+        560
+      ],
+      "solago": [
+        1290,
+        560
+      ],
+      "maxi": [
+        1690,
+        460
+      ],
+      "wide": [
+        1450,
+        420
+      ],
+      "maxi-close": [
+        1600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    },
+    "size": [
+      2288,
+      748
+    ]
+  },
+  "steps": [
+    {
+      "type": "animate",
+      "actor": "maxi",
+      "animation": "kneel",
+      "duration": 0
+    },
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, Maxi. Igual el jueguito estuvo bueno."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Sí, estuvo bastante bien."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Estuvo entretenido, la verdad."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "happy",
+          "text": "Sí, estuvo bueno, changos."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Vieron? Les armé algo para pasar la noche."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, pero ahora juguemos algo de verdad."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Dale. ¿Qué quieren jugar?"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿LoL?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NOOO! ¡LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Podemos jugar Diablo."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "¿Y si vemos otro juego?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡DALE, WARRIOR! ¡ELEGÍ ALGO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, un Project."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NOOO! ¡OTRA VEZ ESA MIERDA NO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Yo dije Diablo nomás."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "tired",
+          "text": "..."
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 1.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "tired",
+          "text": "La concha de su madre..."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "tired",
+          "text": "Bueno, mañana les programo otro juego."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "disconnect"
+    },
+    {
+      "type": "wait",
+      "duration": 1
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD SURVIVORS",
+      "duration": 6,
+      "lines": [
+        "La verdadera supervivencia era ponerse de acuerdo sobre qué jugar."
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD SURVIVORS",
+      "duration": 4,
+      "lines": [
+        "Objetivo: FALLIDO."
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD SURVIVORS",
+      "duration": 5,
+      "lines": [
+        "FIN DE DISCORD SURVIVORS."
+      ]
+    }
+  ]
+}

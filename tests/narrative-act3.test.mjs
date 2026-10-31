@@ -103,7 +103,8 @@ test('the Zir scene keeps the party on the left and the boss on the right', asyn
         assert.equal(player.camera.zoom, 1, 'the conversation uses a wide shot');
       }
       player.advance();
-    } else player.tick(0.1);
+    } else if (player.splash || player.notice) player.advance();
+    else player.tick(0.1);
   }
   assert.equal(player.status, 'completed');
   assert.equal(bossDialogue, true);
@@ -122,7 +123,7 @@ test('all seven cinematics play and skip with the same final staging and effects
     const effects = [], sounds = [], skippedEffects = [], skippedSounds = [];
     const player = make(effects, sounds);
     for (let tick = 0; tick < 20000 && player.active; tick++) {
-      if (player.dialogue) player.advance();
+      if (player.dialogue || player.splash || player.notice) player.advance();
       else player.tick(0.1);
     }
     assert.equal(player.status, 'completed', `${id}: ${player.error}`);

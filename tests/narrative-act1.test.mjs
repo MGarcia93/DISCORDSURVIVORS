@@ -287,7 +287,9 @@ test('an act can show a system notice without a portrait', async () => {
   validateScene(scene, { characters: catalog.characters, sounds: {}, backgrounds: catalog.backgrounds });
   const player = new ScenePlayer(scene, { characters: catalog.characters });
   assert.equal(player.notice.title, 'ADMINISTRADOR');
-  player.tick(2);
+  player.tick(60);
+  assert.equal(player.notice.title, 'ADMINISTRADOR', 'the notice waits for the player');
+  player.advance();
   assert.equal(player.notice, null);
   assert.equal(player.status, 'completed');
   const nested = { id: 'probe', steps: [{ type: 'parallel', steps: [{ type: 'notice', title: 'X', lines: ['y'], duration: 1 }] }] };

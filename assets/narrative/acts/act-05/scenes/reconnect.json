@@ -4,66 +4,199 @@
   "stage": {
     "background": "discord",
     "points": {
-      "party": [260, 505],
-      "solago": [400, 500],
-      "papasito": [540, 505],
-      "warrior": [680, 498],
-      "zombies": [880, 300],
-      "minions": [1000, 460],
-      "tomb": [860, 580],
-      "walker": [880, 540],
-      "wide": [572, 400]
+      "party": [
+        410,
+        462
+      ],
+      "solago": [
+        410,
+        545
+      ],
+      "papasito": [
+        300,
+        545
+      ],
+      "warrior": [
+        300,
+        462
+      ],
+      "zombies": [
+        880,
+        300
+      ],
+      "minions": [
+        1000,
+        460
+      ],
+      "tomb": [
+        860,
+        580
+      ],
+      "walker": [
+        880,
+        540
+      ],
+      "wide": [
+        572,
+        400
+      ]
     },
     "actors": {
-      "negro": { "character": "maxi-negro", "at": "party" },
-      "solago": { "character": "solago", "at": "solago" },
-      "papasito": { "character": "papasito", "at": "papasito" },
-      "warrior": { "character": "warrior", "at": "warrior" },
-      "shambler": { "enemy": "zombie", "at": "zombies" },
-      "minion": { "enemy": "meleeMinion", "at": "minions" },
-      "mage": { "enemy": "mageMinion", "at": "minions" },
-      "walker": { "enemy": "mistWalker", "at": "walker" }
+      "negro": {
+        "character": "maxi-negro",
+        "at": "party"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "shambler": {
+        "enemy": "zombie",
+        "at": "zombies"
+      },
+      "minion": {
+        "enemy": "meleeMinion",
+        "at": "minions"
+      },
+      "mage": {
+        "enemy": "mageMinion",
+        "at": "minions"
+      },
+      "walker": {
+        "enemy": "mistWalker",
+        "at": "walker"
+      }
     }
   },
   "steps": [
-    { "type": "camera", "to": "wide", "zoom": 1, "duration": 1 },
-    { "type": "sound", "sound": "portal" },
-    { "type": "flash", "at": "zombies", "duration": 0.4 },
-    { "type": "flash", "at": "minions", "duration": 0.4 },
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 1
+    },
+    {
+      "type": "sound",
+      "sound": "portal"
+    },
+    {
+      "type": "flash",
+      "at": "zombies",
+      "duration": 0.4
+    },
+    {
+      "type": "flash",
+      "at": "minions",
+      "duration": 0.4
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡NOOO! ¡OTRA VEZ LOS ZOMBIES!" },
-        { "speaker": "solago", "expression": "happy", "text": "¡JAJAJA! ¡Y LOS MINIONS! ¡ESTAMOS EN DOS JUEGOS A LA VEZ!" },
-        { "speaker": "maxi-negro", "expression": "annoyed", "text": "¡PERO QUÉ ES ESTA MEZCLA DE MIERDA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NOOO! ¡OTRA VEZ LOS ZOMBIES!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡Y LOS MINIONS! ¡ESTAMOS EN DOS JUEGOS A LA VEZ!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "¡PERO QUÉ ES ESTA MEZCLA DE MIERDA!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 4, "lines": ["Recuperando recursos de los mundos anteriores."] },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 4,
+      "lines": [
+        "Recuperando recursos de los mundos anteriores."
+      ]
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "maxi-negro", "expression": "angry", "text": "¡BUENO, RECUPERÁ UNA PUTA SALIDA!" }
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡BUENO, RECUPERÁ UNA PUTA SALIDA!"
+        }
       ]
     },
-    { "type": "sound", "sound": "glitch" },
-    { "type": "camera", "to": "tomb", "zoom": 1.25, "duration": 0.9 },
-    { "type": "flash", "at": "tomb", "duration": 0.5 },
+    {
+      "type": "sound",
+      "sound": "glitch"
+    },
+    {
+      "type": "camera",
+      "to": "tomb",
+      "zoom": 1.1,
+      "duration": 0.9
+    },
+    {
+      "type": "flash",
+      "at": "tomb",
+      "duration": 0.5
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "neutral", "text": "Che, negro, por lo menos no está Yorick." },
-        { "speaker": "maxi-negro", "expression": "happy", "text": "¡JAJAJA! ¡SOLAGO, TE VINO A BUSCAR TU HERMANO!" },
-        { "speaker": "solago", "expression": "angry", "text": "¡LA CONCHA DE TU MADRE, NEGRO!" }
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Che, negro, por lo menos no está Yorick."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJA! ¡SOLAGO, TE VINO A BUSCAR TU HERMANO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE, NEGRO!"
+        }
       ]
     },
-    { "type": "notice", "title": "ADMINISTRADOR", "duration": 5, "lines": ["Compatibilidad genética entre Solago y caminantes: elevada."] },
+    {
+      "type": "notice",
+      "title": "ADMINISTRADOR",
+      "duration": 5,
+      "lines": [
+        "Compatibilidad genética entre Solago y caminantes: elevada."
+      ]
+    },
     {
       "type": "dialogue",
       "lines": [
-        { "speaker": "solago", "expression": "angry", "text": "¡CERRÁ EL ORTO, BOT PELOTUDO!" }
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡CERRÁ EL ORTO, BOT PELOTUDO!"
+        }
       ]
     },
-    { "type": "sound", "sound": "alarm" },
-    { "type": "camera", "to": "wide", "zoom": 1, "duration": 0.8 }
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    }
   ]
 }

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { createPresenter } from '../src/narrative/presenter.mjs';
 import { CHARACTERS } from '../src/characters/index.mjs';
 
@@ -15,6 +16,27 @@ function fixture() {
   };
   return { root, calls, content };
 }
+
+test('the held-beat actions sit where a character panel puts them and take the click', () => {
+  const css = readFileSync(new URL('../styles.css', import.meta.url), 'utf8');
+  assert.match(css, /#narrative-layer \{[^}]*pointer-events: none;/, 'the layer lets clicks reach the game');
+  const actions = css.match(/\.narrative-splash \.actions, \.narrative-notice \.actions \{[^}]*\}/)?.[0] ?? '';
+  assert.match(actions, /pointer-events: auto/, 'the actions take the click a visible button would swallow');
+  assert.match(actions, /right: 12px;[^}]*bottom: 12px;/, 'they close the panel at its bottom right, like a character panel');
+});
+
+test('a splash and a notice ask the player to continue instead of skipping ahead', () => {
+  const { root, content } = fixture();
+  const catalog = { characters: { visitor: { sprite: 'negro', name: 'Visitor', expressions: { neutral: 'neutral.svg' } } } };
+  const view = createPresenter(root, catalog, assert.fail);
+  view.render({ active: false, time: 0, camera: { x: 0, y: 0, zoom: 1 }, scene: { stage: { points: {}, actors: {}, props: {} } }, props: {}, actors: {}, notice: { title: 'ADMINISTRADOR', lines: ['Solicitud denegada.'] } }, null, null);
+  assert.match(content.innerHTML, /data-action="narrative-next"/, 'the notice offers a Continue button');
+  assert.match(content.innerHTML, /ADMINISTRADOR/);
+  view.render({ active: false, time: 0, camera: { x: 0, y: 0, zoom: 1 }, scene: { stage: { points: {}, actors: {}, props: {} } }, props: {}, actors: {}, splash: { speaker: 'visitor', text: 'WARRIOR DESBLOQUEADO' } }, null, null);
+  assert.match(content.innerHTML, /data-action="narrative-next"/, 'the splash offers a Continue button');
+  assert.match(content.innerHTML, /WARRIOR DESBLOQUEADO/);
+  view.dispose();
+});
 
 test('existing actors and cinematic bosses render without changing the roster or progression', () => {
   const before = JSON.stringify(CHARACTERS);
