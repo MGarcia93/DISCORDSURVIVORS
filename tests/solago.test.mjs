@@ -22,6 +22,21 @@ test('Solago is the tanky melee: more health and defense than the baseline, a li
   assert.ok(p.attackFlash > 0, 'A successful bite starts its attack animation');
 });
 
+test('every bite shoves its target out of reach, so she has to step after it', () => {
+  const run = createRun(() => 0.5, 'solago');
+  run.spawnIn = 100;
+  const target = { id: 1, x: run.player.x + 40, y: run.player.y, hp: 5000, maxHp: 5000, speed: 0, radius: 10, kind: 'zombie' };
+  run.enemies.push(target);
+  const before = target.x;
+  step(run, 0.05, {});
+  assert.ok(target.x > before + 10, 'the bite pushes the body away');
+  run.player.rewardBonuses.knockback = 25;
+  const pushed = target.x;
+  run.shotIn = 0;
+  step(run, 0.05, {});
+  assert.ok(target.x - pushed > 30, 'the upgrade adds to the base shove instead of replacing it');
+});
+
 test('Mordida de paleta cannot hit outside its reduced melee reach', () => {
   const run = createRun(() => 0.5, 'solago');
   run.spawnIn = 100;
@@ -48,6 +63,8 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   run.spawnIn = 100;
   const p = run.player;
   p.smileCooldown = 0;
+  // The bite would shove the zombie out of contact: this case is about the hit.
+  run.shotIn = 100;
   run.enemies.push({ id: 1, x: p.x + 25, y: p.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
   step(run, 0.05, {});
   assert.ok(p.smile > 0, 'the smile is on');

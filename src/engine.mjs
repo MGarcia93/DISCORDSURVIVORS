@@ -437,7 +437,9 @@ function attackMelee(run) {
   for (let index = 1; index <= extra; index++) hit(run, inReach[index], damage * 0.7, 'bite');
   const second = p.rewardBonuses.secondBite ?? 0;
   if (second > 0 && inReach[0].hp > 0) hit(run, inReach[0], damage * second, 'bite');
-  const push = p.rewardBonuses.knockback ?? 0;
+  // The push belongs to the ficha (a bite shoves, a remote does not) and the
+  // upgrade adds to it instead of replacing it.
+  const push = (p.rewardBonuses.knockback ?? 0) + (combat.knockback ?? 0);
   if (push > 0) {
     for (const enemy of inReach.slice(0, 1 + extra)) {
       const away = distance(enemy, p) || 1;

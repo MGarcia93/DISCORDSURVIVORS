@@ -26,7 +26,7 @@ const solago = {
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
       <div class="stats solago-stats"><div><b>190</b><small>VIDA</small></div><div><b>+133%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido.</p></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido, y empuja lo que muerde.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
@@ -60,7 +60,9 @@ const solago = {
   },
   attack: { type: 'melee' },
   decays: ['permissionActive'],
-  combat: { permissionDamageMult: 1.3, permissionRateMult: 0.72 },
+  // The heaviest bite in the cast shoves what it hits: every bite buys a step
+  // forward, so standing still is not a strategy with her.
+  combat: { permissionDamageMult: 1.3, permissionRateMult: 0.72, knockback: 15 },
   regenHud(p) { return { ringY: p.y + 2, radius: 34, textX: p.x - 31, textY: p.y - 46 }; },
   initPlayer(p) {
     p.smile = 0;
