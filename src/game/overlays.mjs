@@ -4,7 +4,7 @@ import { EFFECTS } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { formatTime } from './hud.mjs';
 import { rewardPreviewLines } from './reward-view.mjs';
-import { countOf } from '../run-rewards.mjs';
+import { countOf, itemPrice } from '../run-rewards.mjs';
 import { drawItemIcon } from './item-icons.mjs';
 import { volumeRow, muteRow } from '../audio/controls.mjs';
 import { nextPlayableAct } from '../campaign/acts.mjs';
@@ -70,12 +70,13 @@ export function overlay() {
       const item = state.run.rewardCatalog.items.find(entry => entry.id === offer.id);
       const count = countOf(state.run.items, item.id);
       const preview = offer.bought ? [] : rewardPreviewLines(state.run, `item-preview:${item.id}`, item);
-      const disabled = offer.bought || count >= item.maxCopies || state.run.coins < item.price || !preview;
+      const price = itemPrice(item, count);
+      const disabled = offer.bought || count >= item.maxCopies || state.run.coins < price || !preview;
       const description = describeReward(item, EFFECTS).map(escapeText).join(' · ');
       return `<button class="reward-card item-card ${offer.bought ? 'bought' : ''}" data-item="${escapeText(item.id)}" ${disabled ? 'disabled' : ''}>
         <span class="reward-art"><canvas data-art="${escapeText(item.id)}" width="64" height="64" aria-hidden="true"></canvas></span>
         <span class="reward-body">
-          <span class="reward-top"><b class="reward-name">${escapeText(item.name)}</b><span class="reward-price">${item.price} ◈</span></span>
+          <span class="reward-top"><b class="reward-name">${escapeText(item.name)}</b><span class="reward-price">${price} ◈</span></span>
           <span class="reward-effect">${description}</span>
           <span class="reward-preview">${preview ? preview.map(escapeText).join('<br>') : 'No compatible con las estadísticas actuales'}</span>
           <span class="reward-lore">${escapeText(item.lore)}</span>

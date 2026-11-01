@@ -1,5 +1,5 @@
 import { createRun, seedWave } from '../engine.mjs';
-import { applyUpgradeRank, countOf, grantItem } from '../run-rewards.mjs';
+import { applyUpgradeRank, countOf, grantItem, itemPrice } from '../run-rewards.mjs';
 import { BALANCE, playtestBalance } from '../reward-data.mjs';
 import { waveEntryBudget } from './wave-budget.mjs';
 
@@ -27,7 +27,7 @@ export function itemBlocked(item, { coins, items = {} }) {
   if (!item) return 'unknown';
   if (item.enabled === false) return 'disabled';
   if (countOf(items, item.id) >= item.maxCopies) return 'maxed';
-  if (coins < item.price) return 'coins';
+  if (coins < itemPrice(item, countOf(items, item.id))) return 'coins';
   return null;
 }
 
@@ -70,8 +70,9 @@ export function seedRun({
   for (const [id, wanted] of Object.entries(items)) {
     const item = run.rewardCatalog.items.find(candidate => candidate.id === id);
     for (let bought = 0; bought < wanted; bought++) {
-      if (!item || run.coins < item.price || !grantItem(run, id)) break;
-      run.coins -= item.price;
+      const price = item ? itemPrice(item, countOf(run.items, id)) : Infinity;
+      if (!item || run.coins < price || !grantItem(run, id)) break;
+      run.coins -= price;
     }
   }
   run.phase = playing;

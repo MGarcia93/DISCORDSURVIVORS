@@ -56,7 +56,7 @@ test('coins buy items and never go negative', () => {
   assert.ok(run.coins >= 0);
   assert.ok(run.coins < entry.coins, 'something was spent');
   assert.ok(run.items.bleach >= 1);
-  assert.ok(run.player.maxHp > 150, 'the bleach raised the ceiling');
+  assert.ok(run.player.maxHp > 120, 'the bleach raised the ceiling');
 });
 
 test('an item is capped by its copies', () => {

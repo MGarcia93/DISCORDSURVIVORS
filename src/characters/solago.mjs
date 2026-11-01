@@ -8,7 +8,7 @@ import { drawSolago, drawPatrona } from '../sprites.mjs';
 const SMILE_BLOCK = 40;
 // Every bite that lands a kill feeds her: without it a melee body cannot walk
 // through a six-wave act, let alone five of them.
-const BITE_HEAL = 9;
+const BITE_HEAL = 4;
 
 const solago = {
   id: 'solago',
@@ -25,8 +25,8 @@ const solago = {
       <div class="eyebrow">Tanque cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
-      <div class="stats solago-stats"><div><b>190</b><small>VIDA</small></div><div><b>+60%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 9 de vida. Y pega 2 veces por segundo.</p></div></div>
+      <div class="stats solago-stats"><div><b>190</b><small>VIDA</small></div><div><b>+133%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
@@ -52,8 +52,8 @@ const solago = {
     ...resolveEntityStats({
       life: 190,            // 190 points of damage: the tank of the roster
       defense: 55,          // 5.5 defense points -> 27.5% mitigation
-      attack: 480,          // 48 damage per bite: the heaviest punch in the cast
-      attackSpeed: 200,     // 2 bites per second: heavy and quick, that is her whole kit
+      attack: 700,          // 70 damage per bite: the heaviest punch in the cast
+      attackSpeed: 150,     // 1.5 bites per second: each one has to hurt
       attackDistance: 78,   // wide enough to bite without standing inside the boss
       moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
     }),

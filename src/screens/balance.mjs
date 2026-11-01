@@ -2,7 +2,7 @@ import { PLAYABLE_ACTS, getAct } from '../campaign/acts.mjs';
 import { ROSTER } from '../characters/index.mjs';
 import { DEFAULT_CATALOG, EFFECTS } from '../reward-data.mjs';
 import { describeReward } from '../reward-catalog.mjs';
-import { countOf, previewReward } from '../run-rewards.mjs';
+import { countOf, itemPrice, previewReward } from '../run-rewards.mjs';
 import { state } from '../app/state.mjs';
 import { balanceForMode, itemBlocked, pickBlocked, seedRun } from '../game/balance-seed.mjs';
 import { drawItemIcon } from '../game/item-icons.mjs';
@@ -68,7 +68,7 @@ function itemCards(run) {
     return `<button class="upgrade" data-item="${escapeText(item.id)}" ${reason ? 'disabled' : ''}>
       <b><canvas data-art="${escapeText(item.id)}" width="24" height="24" aria-hidden="true"></canvas>${escapeText(item.name)}</b>
       <span>${escapeText(describeReward(item, EFFECTS).join(' · '))}</span>
-      <small>${reason ? REASONS[reason] : `${owned}/${item.maxCopies} · ${item.price} ◈`}</small>
+      <small>${reason ? REASONS[reason] : `${owned}/${item.maxCopies} · ${itemPrice(item, owned)} ◈`}</small>
     </button>`;
   }).join('');
 }

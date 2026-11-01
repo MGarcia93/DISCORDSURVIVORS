@@ -4,7 +4,7 @@ import { createRun } from '../src/engine.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
 import {
   initializeRewards, awardXP, beginRewards, chooseLevelReward,
-  skipEmptyChoice, buyItem, finishRewards,
+  skipEmptyChoice, buyItem, finishRewards, itemPrice,
 } from '../src/run-rewards.mjs';
 
 const setup = (options = {}, character = 'negro') => {
@@ -25,6 +25,11 @@ test('approved XP curve carries overflow and queues each earned level without st
     assert.equal(run.levelChoices, null);
     assert.equal(run.coins, 0);
   }
+});
+
+test('each copy of an item costs more than the one before', () => {
+  const item = { price: 40 };
+  assert.deepEqual([0, 1, 2, 3].map(owned => itemPrice(item, owned)), [40, 60, 80, 100]);
 });
 
 test('invalid XP awards leave every state field unchanged', () => {
@@ -137,7 +142,8 @@ test('items can reappear next wave until their own cap; fewer or no offers are v
   beginRewards(run);
   assert.deepEqual(run.shopOffers, []);
   assert.equal(run.items.health, 2);
-  assert.equal(run.coins, 80);
+  // The second copy costs half again: 10 + 15.
+  assert.equal(run.coins, 75);
 });
 
 test('starting a later reward cycle preserves XP, items, ranks and other stat sources', () => {

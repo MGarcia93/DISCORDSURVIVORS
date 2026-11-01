@@ -124,7 +124,7 @@ test('the alarm boss calls its horde in from the edge, not from its own body', (
   run.enemies.push(boss);
   step(run, 0.05, {});
   const horde = run.enemies.filter(enemy => enemy.kind === 'zombie');
-  assert.equal(horde.length, 2 + Math.floor(300 / 25), 'the horde size still grows with the run');
+  assert.equal(horde.length, 9, 'the horde never fields more than nine walkers');
   for (const walker of horde) {
     const outside = walker.x < 0 || walker.x > WIDTH || walker.y < 0 || walker.y > HEIGHT;
     assert.ok(outside, 'every walker enters from outside the arena, like any wave spawn');

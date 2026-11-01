@@ -10,8 +10,9 @@ test('Solago is the tanky melee: more health and defense than the baseline, a li
   assert.equal(p.maxHp, 190);
   assert.ok(p.speed > negro.player.speed, 'she moves a little faster than the tank');
   assert.equal(p.defense, 0.275);
-  assert.equal(p.damage, 48);
+  assert.equal(p.damage, 70);
   assert.equal(p.attackRange, 78 * UNIT_PX);
+  assert.equal(p.attackFlash, 0);
   assert.ok(p.hitRadius < negro.player.hitRadius, 'Solago has a narrower collision box than the tank');
   run.spawnIn = 100;
   run.enemies.push({ id: 1, x: p.x + p.attackRange - 4, y: p.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
@@ -70,7 +71,7 @@ test('every kill feeds her a mouthful, never past her ceiling', () => {
   const p = run.player;
   p.hp = 50;
   p.characterDef.onKill(run, p, {}, {});
-  assert.equal(p.hp, 59, 'a bite that lands a kill gives 9 back');
+  assert.equal(p.hp, 54, 'a bite that lands a kill gives 4 back');
   p.hp = p.maxHp - 1;
   p.characterDef.onKill(run, p, {}, {});
   assert.equal(p.hp, p.maxHp);
