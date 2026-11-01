@@ -12,15 +12,11 @@ const alarmZombie = {
   // Marks the kind as a world boss: only bosses get the simplified crowd
   // control, the boss health bar and the run-ending kill.
   boss: true,
-  // The first boss is the softest one in the campaign, and that is a rule, not
-  // a coincidence: it was the hardest hitter in the game (46 dps, more than the
-  // Administrator's 34) while every later boss was slower. A first boss teaches
-  // the fight; it does not out-damage the ending.
   stats: {
-    life: 1500,       // 1500 points of damage
+    life: 2200,       // 2200 points of damage
     defense: 0,
-    attack: 200,      // 200% -> 20 contact damage
-    attackSpeed: 120, // 120% -> one swing every 0.83 s
+    attack: 300,      // 300% -> 30 contact damage
+    attackSpeed: 154, // 154% -> one swing every 0.65 s
     attackDistance: 0,
     moveSpeed: 1040,  // 52 scaled px/s
   },
@@ -31,7 +27,7 @@ const alarmZombie = {
     {
       key: 'summon',
       chance: 1,
-      cooldown: 10,
+      cooldown: 9,
       range: 520,
       // "Cuanto más dura el combate, más zombis aparecen": the count grows with
       // the run, not with the wave.
@@ -49,12 +45,11 @@ const alarmZombie = {
     {
       key: 'wave',
       chance: 2,
-      cooldown: 8,
+      cooldown: 6,
       range: 330,
-      // A ring that grows out of the alarm: get out of its way or take it. Melee
-      // cannot outrun it from inside, so the first boss charges less for it.
+      // A ring that grows out of the alarm: get out of its way or take it.
       run(run, enemy, ctx) {
-        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 14 });
+        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 18 });
       },
     },
   ],

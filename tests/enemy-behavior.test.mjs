@@ -112,7 +112,7 @@ test('the alarm boss pulls a horde in with its own summon action', () => {
   step(run, 0.05, {});
   assert.equal(run.enemies.length, 3, 'the boss plus the two it dragged in');
   assert.ok(run.enemies.some(enemy => enemy.kind === 'zombie'), 'summoned zombies, not decorations');
-  assert.equal(boss.actionCds.summon, 10, 'and the summon pays its cooldown');
+  assert.equal(boss.actionCds.summon, 9, 'and the summon pays its cooldown');
 });
 
 test('the alarm boss calls its horde in from the edge, not from its own body', () => {
@@ -150,7 +150,7 @@ test('the alarm boss uses its abilities while it is still walking toward the pla
   assert.ok(!((boss.attackRange ?? 0) + boss.radius + run.player.hitRadius > 250), 'the player is out of contact');
   step(run, 0.05, {});
   assert.equal(run.shockwaves.length, 1, 'the ring leaves the alarm from a distance');
-  assert.equal(boss.actionCds.wave, 8, 'and pays its cooldown');
+  assert.equal(boss.actionCds.wave, 6, 'and pays its cooldown');
 
   const summoning = quietRun();
   summoning.random = () => 0.1; // the summon band
