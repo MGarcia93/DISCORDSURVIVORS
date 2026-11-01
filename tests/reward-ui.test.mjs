@@ -87,7 +87,7 @@ test('rendered level controls advance consecutive choices and then show the shop
   awardXP(run, 50); endWave(run);
   const coins = run.coins;
   render(run);
-  assert.equal(ids('level').length, 3);
+  assert.equal(ids('level').length, 4);
   assert.match(box.innerHTML, /Nivel 2 · 2 elecciones pendientes/);
   assert.deepEqual(ids('item'), []);
   run.random = () => 0;

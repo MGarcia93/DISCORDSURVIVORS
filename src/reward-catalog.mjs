@@ -93,10 +93,17 @@ export function sampleEntries(entries, count, random) {
   return result;
 }
 
+// A level offers four upgrades. They are all real choices: the shared pool
+// fills the rest, never filler.
+export const LEVEL_OPTIONS = 4;
+// One of those four slots is the character's own upgrade, and it only shows up
+// this often: a build should be shaped by what the run offered, not by a menu
+// that always hands the same signature upgrade. Milestone levels override it.
+export const OWN_OFFER_CHANCE = 0.25;
+
 // The caller stores these choices. Rendering must never call this generator.
-// A guaranteed entry ignores its own chance and must appear in that level's
-// selection; the rest of the slots stay random. Everything else passes a
-// per-offer probability roll, so an upgrade can be rare instead of certain.
+// A guaranteed entry ignores every roll and must appear in that level's
+// selection; the rest of the slots stay random.
 function pickWithGuarantee(pool, count, level, random) {
   if (count <= 0) return [];
   const forced = pool.filter(entry => (entry.guaranteedAt ?? []).includes(level));
@@ -105,18 +112,35 @@ function pickWithGuarantee(pool, count, level, random) {
   return [...chosen, ...sampleEntries(rest, count - chosen.length, random)];
 }
 
+// Which own upgrade shows up when the slot opens: weighted by the entry's own
+// chance, so some signatures are rarer than others.
+function weightedEntry(entries, random) {
+  const weight = entry => (Number.isFinite(entry.chance) && entry.chance > 0 ? entry.chance : 1);
+  const share = entries.reduce((sum, entry) => sum + weight(entry), 0);
+  if (!(share > 0)) return null;
+  let roll = random() * share;
+  for (const entry of entries) {
+    roll -= weight(entry);
+    if (roll < 0) return entry;
+  }
+  return entries[entries.length - 1] ?? null;
+}
+
 export function selectLevelOptions(catalog, { character, level, ranks }, random) {
   const rankOf = id => Object.hasOwn(ranks, id) ? ranks[id] : 0;
   const eligible = catalog.upgrades.filter(entry =>
     (entry.characters === 'all' || entry.characters === character)
     && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length
     && entry.requires.every(requirement => rankOf(requirement.id) >= requirement.rank));
-  const available = entry => (entry.guaranteedAt ?? []).includes(level)
-    || (entry.chance ?? 1) >= random();
-  const own = eligible.filter(entry => entry.characters === character && available(entry));
-  const common = eligible.filter(entry => entry.characters === 'all' && available(entry));
-  const ownPicks = pickWithGuarantee(own, 1, level, random);
-  return [...ownPicks, ...pickWithGuarantee(common, ownPicks.length ? 2 : 3, level, random)];
+  const own = eligible.filter(entry => entry.characters === character);
+  const common = eligible.filter(entry => entry.characters === 'all');
+  const forced = own.filter(entry => (entry.guaranteedAt ?? []).includes(level));
+  // No signature is eligible at all: no roll is spent, so the sequence stays
+  // stable for a character that cannot grow that way yet.
+  const ownPick = forced.length ? weightedEntry(forced, random)
+    : own.length > 0 && random() < OWN_OFFER_CHANCE ? weightedEntry(own, random) : null;
+  const picks = ownPick ? [ownPick] : [];
+  return [...picks, ...pickWithGuarantee(common, LEVEL_OPTIONS - picks.length, level, random)];
 }
 
 export function describeReward(reward, effects = {}) {

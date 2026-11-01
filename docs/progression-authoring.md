@@ -70,10 +70,11 @@ An effect references `{ type, value }`; its trusted registry entry provides
 `validate(value)` and `describe(value)`. Actual effect execution is not part
 of this catalog module. New mechanics still need a reusable implementation.
 
-`selectLevelOptions(catalog, { character, level, ranks }, random)` draws one
-eligible own upgrade and two common upgrades, or three common upgrades when
-no own upgrade is eligible. It returns fewer when pools are insufficient,
-without duplicate filler. The engine stores the drawn options, applies the
+`selectLevelOptions(catalog, { character, level, ranks }, random)` draws four
+upgrades: the character's own slot, when it opens, and commons for the rest. The
+own slot opens a quarter of the time off a milestone, and the entry that fills
+it is picked by its own `chance` weight. It returns fewer when pools are
+insufficient, without duplicate filler. The engine stores the drawn options, applies the
 chosen rank once and offers an explicit continuation when the pool is empty;
 `src/run-rewards.mjs` owns those steps and `src/game/overlays.mjs` renders them.
 `describeReward` derives mechanical text from entry data.
@@ -141,14 +142,16 @@ Second batch, assigned to later levels with their own probability:
 
 An upgrade entry may declare two extra fields:
 
-- `chance` (0 < chance ≤ 1): probability that it takes part in a given level
-  selection. Defaults to 1, so existing entries stay certain.
-- `guaranteedAt`: array of levels where the entry is always included,
-  bypassing `chance`.
+- `chance` (0 < chance ≤ 1): the weight of that entry when the own slot opens,
+  so a small value makes it rarer than its siblings. Defaults to 1.
+- `guaranteedAt`: array of levels where the entry is always included, whatever
+  the slot roll says.
 
-Selection rolls each eligible entry's chance, draws one own upgrade and two
-common ones (three common when no own option qualifies), and forces the
-milestone entry of that level into its slot. Only one guaranteed own entry may
+A level always offers four upgrades. One slot is the character's own, and it
+only opens a quarter of the time (`OWN_OFFER_CHANCE` in
+`src/reward-catalog.mjs`); when it opens, the entry is drawn among the eligible
+own upgrades weighted by `chance`. The other three slots are commons. A
+milestone level forces its entry into the own slot. Only one guaranteed own entry may
 exist per character and level, otherwise they would compete for the single own
 slot. The current milestones are: Negro `remote-bounce` (3) and
 `waifu-pierce` (4); Solago `bite-arc` (3) and `patrona-final` (4); Warrior

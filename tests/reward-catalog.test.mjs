@@ -17,20 +17,23 @@ test('a data-only item and common or character upgrade enter the shared catalog'
   assert.ok(Object.isFrozen(result.upgrades[0].ranks));
 });
 
-test('level options contain one own and two distinct common upgrades', () => {
-  const data = catalog([own('bounce'), own('chair'), common('attack'), common('health'), common('speed')]);
+test('every level offers four distinct upgrades, at most one of them own', () => {
+  const data = catalog([own('bounce'), own('chair'), common('attack'), common('health'), common('speed'), common('reach')]);
   const choices = selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, () => 0);
-  assert.equal(choices.length, 3);
+  assert.equal(choices.length, 4);
   assert.equal(choices.filter(choice => choice.characters === 'negro').length, 1);
-  assert.equal(choices.filter(choice => choice.characters === 'all').length, 2);
-  assert.equal(new Set(choices.map(choice => choice.id)).size, 3);
+  assert.equal(choices.filter(choice => choice.characters === 'all').length, 3);
+  assert.equal(new Set(choices.map(choice => choice.id)).size, 4);
   assert.ok(choices.every(choice => choice.characters !== 'solago'));
 });
 
-test('without an eligible own upgrade, three common options are offered', () => {
+test('without an eligible own upgrade, the four slots come from the common pool', () => {
   const late = { ...own('bounce'), minLevel: 4 };
-  const data = catalog([late, own('smile', 'solago'), common('attack'), common('health'), common('speed')]);
-  assert.deepEqual(selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, () => 0).map(x => x.id), ['attack', 'health', 'speed']);
+  const data = catalog([late, own('smile', 'solago'), common('attack'), common('health'), common('speed'), common('reach')]);
+  const choices = selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, () => 0);
+  assert.equal(choices.length, 4);
+  assert.ok(choices.every(choice => choice.characters === 'all'));
+  assert.deepEqual(choices.map(x => x.id), ['attack', 'health', 'speed', 'reach']);
 });
 
 test('eligibility requires level, prerequisites and an uncompleted rank', () => {
@@ -43,26 +46,40 @@ test('eligibility requires level, prerequisites and an uncompleted rank', () => 
   assert.deepEqual(ids({ level: 3, ranks: { base: 2, advanced: 2 } }), []);
 });
 
-test('chance rolls entries out of the offer while guaranteed levels force them in', () => {
-  const rare = { ...own('rare'), chance: 0.2 };
-  const certain = { ...own('certain'), chance: 1 };
-  const forced = { ...own('forced'), chance: 0.01, guaranteedAt: [3] };
-  const data = catalog([rare, certain, forced, common('attack'), common('health'), common('speed')]);
-  for (let index = 0; index < 40; index++) {
-    const options = selectLevelOptions(data, { character: 'negro', level: 3, ranks: {} }, () => index / 40 + 0.001);
-    assert.ok(options.some(entry => entry.id === 'forced'), 'guaranteed entry always present');
-    assert.equal(options.length, 3);
+test('the signature slot opens a quarter of the time, and its own probability picks which', () => {
+  const data = catalog([{ ...own('rare'), chance: 0.2 }, own('certain'),
+    common('attack'), common('health'), common('speed'), common('reach')]);
+  // A spread of rolls across [0, 1): the slot opens on the first quarter only.
+  const golden = () => { let index = 0; return () => ((index++ * 0.6180339887498949) % 1); };
+  const roll = golden();
+  let opened = 0;
+  const samples = 400;
+  for (let index = 0; index < samples; index++) {
+    const options = selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, roll);
+    assert.equal(options.length, 4, 'four choices at every level');
+    assert.ok(options.every(entry => entry.id), 'no empty slot');
+    if (options.some(entry => entry.characters === 'negro')) opened++;
   }
-  // Off the milestone level the guaranteed entry competes normally: the certain
-  // one always passes its roll, the rare one only sometimes.
-  const seen = new Set();
-  for (let index = 0; index < 40; index++) {
-    const [first] = selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, () => index / 40 + 0.001);
-    assert.ok(first, 'an own entry is always offered when one is certain');
-    seen.add(first.id);
-  }
-  assert.ok(seen.has('certain'));
-  assert.ok(!seen.has('forced') || seen.size > 0);
+  const rate = opened / samples;
+  assert.ok(rate > 0.17 && rate < 0.33, `signature slot opens about a quarter of the time (got ${rate})`);
+
+  // Inside the open slot the entry is picked by its own weight, not by order.
+  const withRolls = values => { let index = 0; return () => values[Math.min(index++, values.length - 1)]; };
+  const pick = value => selectLevelOptions(data, { character: 'negro', level: 2, ranks: {} }, withRolls([0.1, value]))
+    .find(entry => entry.characters === 'negro')?.id;
+  // Weights: rare 0.2 against certain 1, so the rare one only owns the low
+  // sixth of the roll.
+  assert.deepEqual([pick(0), pick(0.5), pick(0.95)], ['rare', 'certain', 'certain'],
+    'the rarer signature only wins in its own slice of the roll');
+});
+
+test('a milestone level forces its entry even when the slot roll fails', () => {
+  const forced = { ...own('forced'), guaranteedAt: [3] };
+  const data = catalog([forced, common('attack'), common('health'), common('speed'), common('reach')]);
+  const closed = () => 0.99;
+  const options = selectLevelOptions(data, { character: 'negro', level: 3, ranks: {} }, closed);
+  assert.ok(options.some(entry => entry.id === 'forced'));
+  assert.equal(options.length, 4);
 });
 
 test('invalid chance and milestone data is rejected with the entry id', () => {

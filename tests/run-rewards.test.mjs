@@ -40,8 +40,11 @@ test('each pending level gets stable choices at its own eligibility level', () =
   const run = setup();
   awardXP(run, 150);
   run.phase = 'shop';
+  // 0.1 opens the signature slot at level 2, where the only own entry is the
+  // duration upgrade this case is about.
+  run.random = () => 0.1;
   beginRewards(run);
-  assert.equal(run.levelChoices.length, 3);
+  assert.equal(run.levelChoices.length, 4);
   assert.ok(!run.levelChoices.some(entry => entry.id === 'remote-bounce'));
   const before = serialize(run.levelChoices);
   beginRewards(run);

@@ -17,7 +17,7 @@ test('all six common stats and each character have initial data-authored options
   assert.equal(new Set(common.flatMap(entry => entry.ranks[0].modifiers.map(effect => effect.stat))).size, 6);
   for (const character of ['negro', 'solago', 'warrior', 'papazito']) {
     const choices = selectLevelOptions(DEFAULT_CATALOG, { character, level: 2, ranks: {} }, () => 0);
-    assert.equal(choices.length, 3);
+    assert.equal(choices.length, 4);
     assert.equal(choices[0].characters, character);
     assert.ok(describeReward(choices[0].ranks[0], EFFECTS)[0]);
   }

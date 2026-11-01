@@ -68,7 +68,7 @@ test('real kill settlement awards XP once, not survival income or later frames',
   clearWave(run);
   assert.equal(run.phase, 'shop');
   assert.equal(run.xp, 0);
-  assert.equal(run.levelChoices.length, 3);
+  assert.equal(run.levelChoices.length, 4);
 });
 
 test('level choices block old purchases, healing and next wave, then expose the item shop', () => {
@@ -138,6 +138,8 @@ test('Negro shots bounce only after the corresponding level choice', () => {
 test('selected duration effects alter real waifu and Patrona activations', () => {
   for (const [character, key, expected] of [['negro', 'anime', 9], ['solago', 'stand', 8]]) {
     const run = createRun(() => 0.5, character);
+    // 0.1 opens the signature slot: a level only offers it a quarter of the time.
+    run.random = () => 0.1;
     kills(run, 10); clearWave(run);
     const own = run.levelChoices.find(entry => entry.characters === character);
     chooseLevelReward(run, own.id); startNextWave(run);
@@ -148,6 +150,7 @@ test('selected duration effects alter real waifu and Patrona activations', () =>
 
 test('selected smoke duration affects the next actual smoke cloud', () => {
   const run = createRun(() => 0.5, 'warrior');
+  run.random = () => 0.1;
   kills(run, 10); clearWave(run);
   chooseLevelReward(run, 'smoke-time'); startNextWave(run);
   run.player.smokeCloudCooldown = 0;
@@ -158,6 +161,7 @@ test('selected smoke duration affects the next actual smoke cloud', () => {
 
 test('sale upgrades improve proceeds while preserving debt settlement and giving no XP', () => {
   const run = createRun(() => 0.5, 'papazito');
+  run.random = () => 0.1;
   kills(run, 10); clearWave(run);
   chooseLevelReward(run, 'sale-value'); startNextWave(run);
   run.player.senaDebt = 5;
