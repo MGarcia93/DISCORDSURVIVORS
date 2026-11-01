@@ -73,6 +73,7 @@ test('the signature slot opens a quarter of the time, and its own probability pi
     'the rarer signature only wins in its own slice of the roll');
 });
 
+
 test('a milestone level forces its entry even when the slot roll fails', () => {
   const forced = { ...own('forced'), guaranteedAt: [3] };
   const data = catalog([forced, common('attack'), common('health'), common('speed'), common('reach')]);

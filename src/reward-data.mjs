@@ -179,10 +179,11 @@ export const LEVEL_UPGRADES = [
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   // The jackpot of her own pool: the mouth grows and the bite stops being melee.
-  // One rank, one huge step, so finding it is the story — no build required.
+  // Three ranks, each one a bigger mouth: 146 px, 206 px, 266 px, which is a
+  // ranged character's reach. Finding it once already changes the run.
   { id: 'paleta-growth', name: 'Crecimiento de paleta', characters: 'solago',
-    minLevel: 3, chance: 0.6, requires: [],
-    ranks: [{ modifiers: [percent('attackDistance', 150)] }] },
+    minLevel: 3, chance: 0.8, requires: [],
+    ranks: Array.from({ length: 3 }, () => ({ modifiers: [percent('attackDistance', 70)] })) },
   ...[
     ['second-bite', 'Doble paleta', 'solago', 'secondBite', 0.5, 0.6],
     ['bite-push', 'Mordida que empuja', 'solago', 'knockback', 25, 0.5],

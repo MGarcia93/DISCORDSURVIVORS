@@ -34,16 +34,21 @@ test('XP configuration matches approved initial pacing and remains separate from
   assert.notEqual(BALANCE.gold.survival, BALANCE.xp.rewards.zombie);
 });
 
-test('the paleta growth turns her bite into reach in a single rank', () => {
+test('the paleta growth stacks three times and ends up at a ranged reach', () => {
   const entry = DEFAULT_CATALOG.upgrades.find(upgrade => upgrade.id === 'paleta-growth');
   assert.equal(entry.characters, 'solago');
   assert.equal(entry.minLevel, 3);
-  assert.equal(entry.ranks.length, 1, 'one rank: finding it IS the build');
+  assert.equal(entry.ranks.length, 3, 'it stacks: three mouths, three reaches');
   assert.ok(entry.chance < 1, 'and it does not show up every run');
 
   const run = createRun(() => 0.5, 'solago');
-  const base = run.player.attackRange;
-  assert.ok(base < 90, 'she starts in melee');
-  assert.equal(applyUpgradeRank(run, entry), true);
-  assert.ok(run.player.attackRange > 190, `one rank already reaches (${run.player.attackRange})`);
+  const reaches = [run.player.attackRange];
+  for (let rank = 0; rank < 3; rank++) {
+    assert.equal(applyUpgradeRank(run, entry), true);
+    reaches.push(run.player.attackRange);
+  }
+  assert.ok(reaches[0] < 90, 'she starts in melee');
+  assert.ok(reaches[1] > 130 && reaches[1] < 170, `first rank is a step, not a teleport (${reaches[1]})`);
+  assert.ok(reaches[3] > 260, `third rank reaches like a ranged character (${reaches[3]})`);
+  assert.ok(reaches[0] < reaches[1] && reaches[1] < reaches[2] && reaches[2] < reaches[3], 'each rank is more');
 });
