@@ -225,7 +225,7 @@ test('solago smile passive ticks from the definition and stand expiry applies it
   sol.player.smileCooldown = 0;
   step(sol, 0.016);
   assert.equal(sol.player.smile, 2.5);
-  assert.equal(sol.player.smileCooldown, 12);
+  assert.equal(sol.player.smileCooldown, 10);
 
   assert.equal(activateSpecial(sol, 'stand'), true);
   sol.player.stand = 0.02;

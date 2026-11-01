@@ -42,15 +42,15 @@ test('percentage sheets resolve the six stats into the absolute engine values EL
   assert.equal(negro.speed, 165 * WORLD_SCALE);
 });
 
-test('SOLAGO resolves its melee 68.4% reach at the same engine distance as before', () => {
+test('SOLAGO resolves its wider melee reach and heavier bite', () => {
   const solago = resolveEntityStats({
-    life: 130, defense: 40, attack: 405, attackSpeed: 178.57,
-    attackDistance: 68.4, moveSpeed: 3550,
+    life: 170, defense: 55, attack: 480, attackSpeed: 200,
+    attackDistance: 78, moveSpeed: 3550,
   });
-  assert.equal(solago.maxHp, 130);
-  assert.equal(solago.defense, 0.2);
-  assert.equal(solago.damage, 40.5);
-  assert.ok(Math.abs(solago.attackRange - 75.24) < 1e-9);
+  assert.equal(solago.maxHp, 170);
+  assert.equal(solago.defense, 0.275);
+  assert.equal(solago.damage, 48);
+  assert.ok(Math.abs(solago.attackRange - 78 * UNIT_PX) < 1e-9);
 });
 
 test('defense resolves into 5% mitigation per point and caps at 75%', () => {

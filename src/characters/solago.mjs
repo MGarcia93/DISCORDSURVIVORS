@@ -5,7 +5,10 @@ import { drawSolago, drawPatrona } from '../sprites.mjs';
 // What one smile is worth in damage. It is a block, not a stance: the pool is
 // spent by the hits that land while she laughs, and what nobody uses is gone
 // when the smile ends.
-const SMILE_BLOCK = 25;
+const SMILE_BLOCK = 40;
+// Every bite that lands a kill feeds her: without it a melee body cannot walk
+// through a six-wave act, let alone five of them.
+const BITE_HEAL = 9;
 
 const solago = {
   id: 'solago',
@@ -22,10 +25,10 @@ const solago = {
       <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
-      <div class="stats solago-stats"><div><b>130</b><small>VIDA</small></div><div><b>+35%</b><small>DAÑO MELEE</small></div><div><b>−5%</b><small>ALCANCE</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
-      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 25 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
-      <div class="skill"><kbd>8×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 8 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
+      <div class="stats solago-stats"><div><b>170</b><small>VIDA</small></div><div><b>+60%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 9 de vida. Y pega 2 veces por segundo.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
+      <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'SOLAGO · BLOQUEADO · ENCUENTRO DEL ACTO 2',
@@ -47,11 +50,11 @@ const solago = {
   stats: {
     hitRadius: 15 * WORLD_SCALE, // collision size: not one of the six combat stats
     ...resolveEntityStats({
-      life: 130,            // 130 points of damage: the tank of the roster
-      defense: 40,          // 4 defense points -> 20% mitigation
-      attack: 405,          // 40.5 damage per bite (135% of EL NEGRO's shot)
-      attackSpeed: 178.57,  // ~1.79 attacks/s (~0.56s between bites)
-      attackDistance: 68.4, // 68.4% of the base 100-unit reach
+      life: 170,            // 170 points of damage: the tank of the roster
+      defense: 55,          // 5.5 defense points -> 27.5% mitigation
+      attack: 480,          // 48 damage per bite: the heaviest punch in the cast
+      attackSpeed: 200,     // 2 bites per second: heavy and quick, that is her whole kit
+      attackDistance: 78,   // wide enough to bite without standing inside the boss
       moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
     }),
   },
@@ -64,7 +67,7 @@ const solago = {
     p.smileBlock = 0;
     p.smileCooldown = 6;
     p.taskKills = 0;
-    p.permissionNeeded = 8;
+    p.permissionNeeded = 6;
     p.permissionActive = 0;
   },
   taskHud(p) {
@@ -89,7 +92,7 @@ const solago = {
         }
         if (p.smileCooldown > 0 || p.smile > 0) return;
         p.smile = 2.5 + (p.rewardBonuses.smileDuration ?? 0);
-        p.smileCooldown = Math.max(4, 12 - (p.rewardBonuses.smileCooldown ?? 0));
+        p.smileCooldown = Math.max(4, 10 - (p.rewardBonuses.smileCooldown ?? 0));
         p.smileBlock = SMILE_BLOCK;
         p.shield = (p.shield ?? 0) + SMILE_BLOCK;
         run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: '¡JA!', ttl: 0.8, kind: 'smile' });
@@ -98,6 +101,7 @@ const solago = {
   ],
   onKill(run, p, enemy, ctx) {
     p.taskKills++;
+    p.hp = Math.min(p.maxHp, p.hp + BITE_HEAL);
     if (p.taskKills >= p.permissionNeeded) {
       p.taskKills = 0;
       p.permissionActive = 8;
@@ -108,6 +112,8 @@ const solago = {
     {
       key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26, durationBonus: 'standDuration',
       immobilize: true,
+      // The stand takes the punches: while she scissors, contact hurts her half.
+      contactFactor: 0.5,
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;
         if (run.standIn > 0) return;

@@ -7,11 +7,11 @@ test('Solago is the tanky melee: more health and defense than the baseline, a li
   const run = createRun(() => 0.5, 'solago');
   const negro = createRun(() => 0.5, 'negro');
   const p = run.player;
-  assert.equal(p.maxHp, 130);
+  assert.equal(p.maxHp, 170);
   assert.ok(p.speed > negro.player.speed, 'she moves a little faster than the tank');
-  assert.equal(p.defense, 0.2);
-  assert.equal(p.damage, 30 * 1.35);
-  assert.equal(p.attackRange, 68.4 * UNIT_PX);
+  assert.equal(p.defense, 0.275);
+  assert.equal(p.damage, 48);
+  assert.equal(p.attackRange, 78 * UNIT_PX);
   assert.ok(p.hitRadius < negro.player.hitRadius, 'Solago has a narrower collision box than the tank');
   run.spawnIn = 100;
   run.enemies.push({ id: 1, x: p.x + p.attackRange - 4, y: p.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
@@ -50,7 +50,7 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   run.enemies.push({ id: 1, x: p.x + 25, y: p.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
   step(run, 0.05, {});
   assert.ok(p.smile > 0, 'the smile is on');
-  const block = 25;
+  const block = 40;
   const absorbed = 12 * (1 - p.defense);
   assert.ok(Math.abs(p.shield - (block - absorbed)) < 1e-9, 'the shield pays what the body would have taken');
   assert.equal(p.hp, p.maxHp, 'and the body takes none of it');
@@ -65,15 +65,26 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   assert.equal(p.hp, p.maxHp);
 });
 
-test('eight chore-task kills trigger a temporary damage and attack-speed buff', () => {
+test('every kill feeds her a mouthful, never past her ceiling', () => {
+  const run = createRun(() => 0.5, 'solago');
+  const p = run.player;
+  p.hp = 50;
+  p.characterDef.onKill(run, p, {}, {});
+  assert.equal(p.hp, 59, 'a bite that lands a kill gives 9 back');
+  p.hp = p.maxHp - 1;
+  p.characterDef.onKill(run, p, {}, {});
+  assert.equal(p.hp, p.maxHp);
+});
+
+test('six chore-task kills trigger a temporary damage and attack-speed buff', () => {
   const run = createRun(() => 0.5, 'solago');
   run.spawnIn = 100;
   const p = run.player;
-  for (let id = 1; id <= 8; id++) {
+  for (let id = 1; id <= 6; id++) {
     run.enemies.push({ id, x: p.x + p.attackRange - 4, y: p.y, hp: 1, maxHp: 1, speed: 0, radius: 8, kind: 'zombie' });
   }
   for (let i = 0; i < 130; i++) step(run, 0.05, {});
-  assert.equal(run.kills, 8);
+  assert.equal(run.kills, 6);
   assert.equal(p.taskKills, 0);
   assert.ok(p.permissionActive > 0);
   assert.ok(p.permissionNeeded > 0);
