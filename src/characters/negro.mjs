@@ -15,10 +15,10 @@ const negro = {
   detailLabel: 'El Negro',
   previewAria: 'Sprite de El Negro: buzo amarillo, pelo negro recogido, lentes, mostacho, perilla y piercings',
   profile: `
-      <div class="eyebrow">Tanque sedentario · Dificultad fácil</div><h2>EL NEGRO</h2>
+      <div class="eyebrow">Sedentario a distancia · Dificultad fácil</div><h2>EL NEGRO</h2>
       <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
       <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
-      <div class="stats"><div><b>+50%</b><small>VIDA MÁXIMA</small></div><div><b>+20%</b><small>DEFENSA</small></div><div><b class="penalty">−25%</b><small>VELOCIDAD</small></div></div>
+      <div class="stats"><div><b>120</b><small>VIDA</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b class="penalty">−15%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Empieza sin rebote; podés elegirlo al subir de nivel.</p></div></div>
       <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
@@ -44,12 +44,14 @@ const negro = {
   stats: {
     hitRadius: 17 * WORLD_SCALE, // collision size: not one of the six combat stats
     ...resolveEntityStats({
-      life: 150,             // 150 points of damage
-      defense: 40,           // 4 defense points -> 20% mitigation
+      // The joke is the effort he does not make: he is the slowest body in the
+      // roster and he does not take hits for anyone. The tank is Solago.
+      life: 120,             // 120 points of damage
+      defense: 30,           // 3 defense points -> 15% mitigation
       attack: 300,           // 30 damage per shot
       attackSpeed: 222.22,   // ~2.22 attacks/s (~0.45s between shots)
       attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
-      moveSpeed: 3300,       // 165 scaled px/s
+      moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always
     }),
   },
   attack: { type: 'ranged', device: 'remote' },

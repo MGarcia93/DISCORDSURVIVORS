@@ -89,8 +89,8 @@ test('zero-defense percentage source permits legacy armor without a partial char
   assert.equal(chooseUpgrade(run, 'armor'), true);
   assert.equal(run.coins, 82);
   assert.equal(run.upgrades.armor, 1);
-  assert.equal(run.player.defense, 0.05);
-  assert.equal(resolveStatState(run.statState).defense, 0.05);
+  assert.ok(Math.abs(run.player.defense - 0.05) < 1e-9);
+  assert.ok(Math.abs(resolveStatState(run.statState).defense - 0.05) < 1e-9);
   const armor = UPGRADES.find(entry => entry.id === 'armor');
   const original = armor.apply;
   try {

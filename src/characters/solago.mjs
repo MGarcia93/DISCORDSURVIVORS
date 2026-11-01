@@ -22,10 +22,10 @@ const solago = {
   detailLabel: 'Solago',
   previewAria: 'Pixel art de Solago: remera oscura, reloj y paletas grandes',
   profile: `
-      <div class="eyebrow">Luchador cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
+      <div class="eyebrow">Tanque cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
-      <div class="stats solago-stats"><div><b>170</b><small>VIDA</small></div><div><b>+60%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
+      <div class="stats solago-stats"><div><b>190</b><small>VIDA</small></div><div><b>+60%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 9 de vida. Y pega 2 veces por segundo.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
@@ -50,7 +50,7 @@ const solago = {
   stats: {
     hitRadius: 15 * WORLD_SCALE, // collision size: not one of the six combat stats
     ...resolveEntityStats({
-      life: 170,            // 170 points of damage: the tank of the roster
+      life: 190,            // 190 points of damage: the tank of the roster
       defense: 55,          // 5.5 defense points -> 27.5% mitigation
       attack: 480,          // 48 damage per bite: the heaviest punch in the cast
       attackSpeed: 200,     // 2 bites per second: heavy and quick, that is her whole kit
@@ -112,8 +112,6 @@ const solago = {
     {
       key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26, durationBonus: 'standDuration',
       immobilize: true,
-      // The stand takes the punches: while she scissors, contact hurts her half.
-      contactFactor: 0.5,
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;
         if (run.standIn > 0) return;

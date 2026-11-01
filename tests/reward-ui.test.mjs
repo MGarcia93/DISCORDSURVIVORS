@@ -131,9 +131,9 @@ test('catalog text is escaped and the real capped-stat preview is visible', () =
   assert.match(box.innerHTML, /Armor &lt;trial&gt;/);
   assert.match(box.innerHTML, /&lt;img src=x&gt;/);
   assert.ok(!box.innerHTML.includes('<img'));
-  assert.match(box.innerHTML, /Defensa: 4 → 15/);
+  assert.match(box.innerHTML, /Defensa: 3 → 15/);
   assert.match(box.innerHTML, /0\/1/);
-  assert.equal(run.player.defense, 0.2);
+  assert.equal(run.player.defense, 0.15, 'a preview never mutates the sheet');
 });
 
 test('every shop offer paints its own item portrait on a canvas', () => {

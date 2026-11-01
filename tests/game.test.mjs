@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRun, step, chooseUpgrade, startNextWave, activateSpecial } from '../src/engine.mjs';
 
-test('El Negro starts as a slow tank and moves diagonally without a speed bonus', () => {
+test('El Negro starts slow and light, and moves diagonally without a speed bonus', () => {
   const run = createRun(() => 0.5);
-  assert.equal(run.player.maxHp, 150);
-  assert.equal(run.player.defense, 0.2);
+  assert.equal(run.player.maxHp, 120);
+  assert.equal(run.player.defense, 0.15);
   const { x, y } = run.player;
   step(run, 0.05, { x: 1, y: 1 });
   assert.ok(Math.abs(Math.hypot(run.player.x - x, run.player.y - y) - run.player.speed * 0.05) < 0.001);

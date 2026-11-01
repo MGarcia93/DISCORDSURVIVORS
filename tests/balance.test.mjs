@@ -7,7 +7,7 @@ test('the zoomed-out arena exposes a world 10% larger while keeping movement sca
   assert.equal(WIDTH, 1144);
   assert.equal(HEIGHT, 748);
   assert.equal(WORLD_SCALE, 1.1);
-  assert.equal(run.player.speed, 165 * WORLD_SCALE);
+  assert.equal(run.player.speed, 140 * WORLD_SCALE, 'El Negro is the slow one');
 });
 
 test('wave length comes from the balance configuration, not a hardcoded stage', () => {
@@ -47,7 +47,7 @@ test('rate and armor upgrades improve fire cooldown and damage reduction', () =>
   assert.equal(chooseUpgrade(run, 'rate'), true);
   assert.ok(run.player.shotInterval < 0.45);
   assert.equal(chooseUpgrade(run, 'armor'), true);
-  assert.equal(run.player.defense, 0.25);
+  assert.equal(run.player.defense, 0.2, 'base 15% plus the armor upgrade');
 });
 
 test('upgrade levels persist between waves and are not reset by the shop', () => {
@@ -66,10 +66,10 @@ test('upgrade levels persist between waves and are not reset by the shop', () =>
 test('delivery heals 60 HP, cannot overheal and costs twelve coins', () => {
   const run = createRun(() => 0.5);
   run.phase = 'shop';
-  run.player.hp = 60;
+  run.player.hp = 30;
   run.coins = 24;
   assert.equal(buyHeal(run), true);
-  assert.equal(run.player.hp, 120);
+  assert.equal(run.player.hp, 90);
   assert.equal(run.coins, 12);
   assert.equal(buyHeal(run), true);
   assert.equal(run.player.hp, run.player.maxHp);

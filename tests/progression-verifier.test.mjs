@@ -27,9 +27,9 @@ const reject = (action, run, label) => {
 };
 
 test('S2: maximum-life examples apply once through real purchases', () => {
-  // Solago's sheet is 170 health: the third row is the clamp, a body above the
+  // Solago's sheet is 190 health: the third row is the clamp, a body above the
   // new ceiling that has to come down with it.
-  for (const [delta, hp, expectedHp, expectedMax] of [[20, 60, 80, 190], [-20, 60, 60, 150], [-20, 160, 150, 150]]) {
+  for (const [delta, hp, expectedHp, expectedMax] of [[20, 60, 80, 210], [-20, 60, 60, 170], [-20, 180, 170, 170]]) {
     const run = createRun(rng, 'solago', { catalog: catalogWith([statItem('probe', 'life', 'flat', delta)]) });
     run.player.hp = hp;
     shop(run);

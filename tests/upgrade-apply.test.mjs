@@ -22,11 +22,11 @@ test('chooseUpgrade delegates to apply and preserves exact stat effects', () => 
   // rounds to 0.45s within float tolerance.
   assert.ok(Math.abs(buy('rate').shotInterval - 0.45 * 0.92) < 0.001);
   const health = buy('health');
-  assert.equal(health.maxHp, 175);
-  assert.equal(health.hp, 175);
-  assert.equal(buy('armor').defense, 0.25);
+  assert.equal(health.maxHp, 145);
+  assert.equal(health.hp, 145);
+  assert.equal(buy('armor').defense, 0.2);
   assert.equal(buy('regen').regen, 6.5);
-  assert.equal(buy('speed').speed, 165 * 1.1 * 1.08);
+  assert.equal(buy('speed').speed, 140 * 1.1 * 1.08);
 });
 
 test('an upgrade can carry a custom apply without touching engine logic', () => {

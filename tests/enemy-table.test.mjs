@@ -106,7 +106,7 @@ test('contact damage and coin rewards read the table at runtime', () => {
     radius: 10 * 1.1, speed: 0 });
   const before = run.player.hp;
   step(run, 0.016);
-  assert.equal(run.player.hp, before - 30 * (1 - 0.2));
+  assert.equal(run.player.hp, before - 30 * (1 - 0.15));
 
   const killRun = createRun(() => 0.5);
   killRun.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 1, maxHp: 1, x: killRun.player.x, y: killRun.player.y,
