@@ -88,9 +88,10 @@ Waves last 60 seconds of real time; change that single number to lengthen or
 shorten every wave. The boss wave has no time limit and ends only when the boss
 dies. HUD labels, boss timing and wave endings all read this configuration, so
 no other file needs editing. Initial
-XP uses the approved `10 * currentLevel ** 2` curve and an ordinary kill pays one
-point, so the first level costs ten kills; an elite pays three and a mini-boss
-six. `xp.multiplier` exists for the playtest pacing only (`?playtest` sets it to
+XP uses `14 * currentLevel ** 0.5` and an ordinary kill pays one point, so a level
+costs a mouthful of kills that barely grows with the level: about one level per
+wave where the player cleans up, from the first act to the last. An elite pays
+three and a mini-boss six. `xp.multiplier` exists for the playtest pacing only (`?playtest` sets it to
 10, which is what the old tuning table granted), and the balance lab prices a
 wave's entry budget from the same numbers. Gold, prices, item caps and upgrade magnitudes are provisional tuning,
 not measured final balance. The first catalog includes all eight lore items.

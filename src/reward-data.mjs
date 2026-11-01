@@ -5,14 +5,15 @@ import { CHARACTERS } from './characters/index.mjs';
 // balance the game runs: values are independent of combat logic, and zero boss
 // XP avoids terminal choices after the final victory.
 //
-// XP: an ordinary kill pays 1 point, so the first level costs ten kills and the
-// curve (factor × level²) keeps growing from there. `multiplier` exists only for
-// the test mode below, which is what the playtest pacing used to be.
+// XP: an ordinary kill pays 1 point and a level costs a roughly constant
+// mouthful (14 at level 1, 45 by level 10, 70 by level 25), so a wave where the
+// player cleans up is worth about one level from the first act to the last.
+// `multiplier` exists only for the test mode below.
 export const BALANCE = {
   // Wave length, density and the boss belong to the act (src/campaign/). This
   // object only carries economy plus an optional length override.
   xp: {
-    factor: 10, exponent: 2, multiplier: 1,
+    factor: 14, exponent: 0.5, multiplier: 1,
     // An ordinary enemy pays one point; an elite pays like three, and the
     // mini-boss like a milestone. The act boss closes the run, so it pays none.
     rewards: {
@@ -149,12 +150,12 @@ export const EFFECTS = {
 
 export const LEVEL_UPGRADES = [
   ...[
-    ['life', 'Más vida', flat('life', 10)], ['defense', 'Más defensa', flat('defense', 0.5)],
-    ['attack', 'Más ataque', percent('attack', 5)], ['attackDistance', 'Más alcance', percent('attackDistance', 10)],
-    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 5)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 5)],
+    ['life', 'Más vida', flat('life', 5)], ['defense', 'Más defensa', flat('defense', 0.25)],
+    ['attack', 'Más ataque', percent('attack', 2.5)], ['attackDistance', 'Más alcance', percent('attackDistance', 5)],
+    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 2.5)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 2.5)],
   ].map(([id, name, modifier]) => ({
     id: `stat-${id}`, name, characters: 'all', minLevel: 2, requires: [],
-    ranks: Array.from({ length: 5 }, () => ({ modifiers: [modifier] })),
+    ranks: Array.from({ length: 3 }, () => ({ modifiers: [modifier] })),
   })),
   ...[
     ['otaku-time', 'Un capítulo más', 'negro', 'waifuDuration'],

@@ -4,7 +4,7 @@ import { createRun } from '../src/engine.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
 import {
   initializeRewards, awardXP, beginRewards, chooseLevelReward,
-  skipEmptyChoice, buyItem, finishRewards, itemPrice,
+  skipEmptyChoice, buyItem, finishRewards, itemPrice, nextLevelXP,
 } from '../src/run-rewards.mjs';
 
 const setup = (options = {}, character = 'negro') => {
@@ -13,15 +13,23 @@ const setup = (options = {}, character = 'negro') => {
   return run;
 };
 const serialize = run => JSON.stringify(run);
+// Whatever the shipped curve says, a test asks for "level N" and gets the XP
+// that costs, instead of hardcoding a number that ages.
+const toLevel = (run, target) => {
+  let total = 0;
+  for (let level = 1; level < target; level++) total += nextLevelXP(run, level);
+  return total;
+};
 
 test('approved XP curve carries overflow and queues each earned level without stopping combat', () => {
-  for (const [amount, level, xp, pending] of [[100, 3, 50, [2, 3]], [150, 4, 10, [2, 3, 4]]]) {
+  for (const target of [3, 4]) {
     const run = setup();
-    assert.equal(awardXP(run, amount), true);
+    const overflow = 7;
+    assert.equal(awardXP(run, toLevel(run, target) + overflow), true);
     assert.equal(run.phase, 'playing');
-    assert.equal(run.level, level);
-    assert.equal(run.xp, xp);
-    assert.deepEqual(run.pendingLevels, pending);
+    assert.equal(run.level, target);
+    assert.equal(run.xp, overflow);
+    assert.deepEqual(run.pendingLevels, Array.from({ length: target - 1 }, (_, index) => index + 2));
     assert.equal(run.levelChoices, null);
     assert.equal(run.coins, 0);
   }
@@ -43,7 +51,7 @@ test('invalid XP awards leave every state field unchanged', () => {
 
 test('each pending level gets stable choices at its own eligibility level', () => {
   const run = setup();
-  awardXP(run, 150);
+  awardXP(run, toLevel(run, 3));
   run.phase = 'shop';
   // 0.1 opens the signature slot at level 2, where the only own entry is the
   // duration upgrade this case is about.
@@ -55,7 +63,7 @@ test('each pending level gets stable choices at its own eligibility level', () =
   beginRewards(run);
   assert.equal(serialize(run.levelChoices), before);
   assert.equal(chooseLevelReward(run, run.levelChoices[0].id), true);
-  assert.deepEqual(run.pendingLevels, [3, 4]);
+  assert.deepEqual(run.pendingLevels, [3]);
   assert.equal(run.levelRanks['otaku-time'], 1);
   assert.equal(run.player.rewardBonuses.waifuDuration, 1);
   assert.equal(run.shopOffers, null);
@@ -64,7 +72,7 @@ test('each pending level gets stable choices at its own eligibility level', () =
 test('shop purchases are blocked until all level choices are resolved', () => {
   const run = setup();
   run.coins = 1000;
-  awardXP(run, 10);
+  awardXP(run, nextLevelXP(run, 1));
   run.phase = 'shop';
   beginRewards(run);
   const before = serialize(run);
@@ -148,7 +156,7 @@ test('items can reappear next wave until their own cap; fewer or no offers are v
 
 test('starting a later reward cycle preserves XP, items, ranks and other stat sources', () => {
   const run = setup();
-  awardXP(run, 12);
+  awardXP(run, nextLevelXP(run, 1) + 2);
   run.phase = 'shop'; beginRewards(run);
   const choice = run.levelChoices.find(entry => entry.characters === 'all');
   assert.equal(chooseLevelReward(run, choice.id), true);

@@ -11,6 +11,9 @@ import { BALANCE } from '../src/reward-data.mjs';
 
 const rng = () => 0.5;
 const oneXp = structuredClone(BALANCE);
+// These cases pin the mechanics, not the shipped curve: a fixed curve keeps the
+// arithmetic readable whatever the balance says today.
+oneXp.xp.factor = 10; oneXp.xp.exponent = 2;
 oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, alarmZombie: 0 };
 const createRun = (random = rng, character = 'negro', options = {}) =>
   engineRun(random, character, { balance: oneXp, ...options });
@@ -27,9 +30,9 @@ const reject = (action, run, label) => {
 };
 
 test('S2: maximum-life examples apply once through real purchases', () => {
-  // Solago's sheet is 190 health: the third row is the clamp, a body above the
+  // Solago's sheet is 150 health: the third row is the clamp, a body above the
   // new ceiling that has to come down with it.
-  for (const [delta, hp, expectedHp, expectedMax] of [[20, 60, 80, 210], [-20, 60, 60, 170], [-20, 180, 170, 170]]) {
+  for (const [delta, hp, expectedHp, expectedMax] of [[20, 60, 80, 170], [-20, 60, 60, 130], [-20, 140, 130, 130]]) {
     const run = createRun(rng, 'solago', { catalog: catalogWith([statItem('probe', 'life', 'flat', delta)]) });
     run.player.hp = hp;
     shop(run);

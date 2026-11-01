@@ -1,7 +1,7 @@
 import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRun, step } from '../src/engine.mjs';
-import { awardXP } from '../src/run-rewards.mjs';
+import { awardXP, nextLevelXP } from '../src/run-rewards.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
 import { handleRewardAction } from '../src/game/reward-actions.mjs';
 import { drawItemIcon, ILLUSTRATED_ITEMS } from '../src/game/item-icons.mjs';
@@ -167,7 +167,7 @@ test('valid catalog IDs matching object properties render and acquire their firs
     ranks: [{ modifiers: [{ stat: 'attack', operation: 'percent', value: 10 }] }],
   }] });
   const run = createRun(() => 0, 'negro', { catalog });
-  awardXP(run, 10); endWave(run); render(run);
+  awardXP(run, nextLevelXP(run, 1)); endWave(run); render(run);
   assert.match(box.innerHTML, /RANGO 1\/1/);
   assert.equal(activate(run, { level: ids('level')[0] }), true);
   assert.equal(run.levelRanks.constructor, 1);

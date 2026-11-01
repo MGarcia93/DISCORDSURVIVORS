@@ -10,6 +10,9 @@ import { resolveStatState } from '../src/stat-modifiers.mjs';
 import { BALANCE } from '../src/reward-data.mjs';
 
 const oneXp = structuredClone(BALANCE);
+// These cases pin the mechanics, not the shipped curve: a fixed curve keeps the
+// arithmetic readable whatever the balance says today.
+oneXp.xp.factor = 10; oneXp.xp.exponent = 2;
 oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, alarmZombie: 0 };
 const createRun = (random = Math.random, character = 'negro', options = {}) =>
   engineRun(random, character, { balance: oneXp, ...options });

@@ -50,9 +50,9 @@ const solago = {
   stats: {
     hitRadius: 15 * WORLD_SCALE, // collision size: not one of the six combat stats
     ...resolveEntityStats({
-      life: 190,            // 190 points of damage: the tank of the roster
-      defense: 55,          // 5.5 defense points -> 27.5% mitigation
-      attack: 700,          // 70 damage per bite: the heaviest punch in the cast
+      life: 150,            // 150 points of damage: the tank of the roster
+      defense: 45,          // 4.5 defense points -> 22.5% mitigation
+      attack: 520,          // 52 damage per bite: the heaviest punch in the cast
       attackSpeed: 150,     // 1.5 bites per second: each one has to hurt
       attackDistance: 78,   // wide enough to bite without standing inside the boss
       moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite

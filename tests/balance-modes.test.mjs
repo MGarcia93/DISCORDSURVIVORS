@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BALANCE, balanceFor, playtestBalance } from '../src/reward-data.mjs';
 import { createRun } from '../src/engine.mjs';
-import { awardXP } from '../src/run-rewards.mjs';
+import { awardXP, nextLevelXP } from '../src/run-rewards.mjs';
 
 // The shipped balance is the real one; the fast pacing is a tool the user turns
 // on, not something the environment turns on for them.
@@ -14,11 +14,12 @@ test('the shipped balance runs the real pacing and pays one XP per ordinary kill
   assert.equal(run.rewardBalance.xp.multiplier ?? 1, 1);
 });
 
-test('ten ordinary kills buy the second level, not one', () => {
+test('a level costs a mouthful of kills, never a single one', () => {
   const run = createRun(() => 0.5);
-  for (let kill = 0; kill < 9; kill++) assert.equal(awardXP(run, 1), true);
+  const cost = nextLevelXP(run, 1);
+  for (let kill = 0; kill < cost - 1; kill++) assert.equal(awardXP(run, 1), true);
   assert.equal(run.level, 1);
-  assert.equal(run.xp, 9);
+  assert.equal(run.xp, cost - 1);
   assert.equal(awardXP(run, 1), true);
   assert.equal(run.level, 2);
   assert.equal(run.xp, 0);
@@ -45,8 +46,8 @@ test('?waves forces only the wave length, in either mode', () => {
 test('the multiplier scales what a kill pays and leaves the curve alone', () => {
   const fast = createRun(() => 0.5, 'negro', { balance: playtestBalance() });
   assert.equal(awardXP(fast, 1), true);
-  assert.equal(fast.level, 2, 'one ordinary kill still buys a level in playtest');
-  assert.equal(fast.xp, 0);
+  assert.equal(fast.xp, 10, 'one ordinary kill pays ten in the test mode');
+  assert.equal(fast.level, 1, 'and the curve still costs what it costs');
   // A fractional award is still rejected after scaling.
   const real = createRun(() => 0.5);
   const before = JSON.stringify(real);

@@ -4,11 +4,14 @@ import {
   createRun as engineRun, step, startNextWave, activateSpecial, chooseLevelReward,
   skipEmptyChoice, buyItem, chooseUpgrade, buyHeal, sellBelonging,
 } from '../src/engine.mjs';
-import { BALANCE } from '../src/reward-data.mjs';
+import { BALANCE, DEFAULT_CATALOG } from '../src/reward-data.mjs';
 
 // The shipped balance grants playtest XP; these cases pin the curve itself, so
 // they run with one XP per ordinary kill and override only what they test.
 const oneXp = structuredClone(BALANCE);
+// These cases pin the mechanics, not the shipped curve: a fixed curve keeps the
+// arithmetic readable whatever the balance says today.
+oneXp.xp.factor = 10; oneXp.xp.exponent = 2;
 oneXp.xp.rewards = { zombie: 1, runner: 1, brute: 1, boss: 0 };
 const createRun = (random = Math.random, character = 'negro', options = {}) =>
   engineRun(random, character, { balance: oneXp, ...options });
@@ -105,12 +108,18 @@ test('legacy exported stat purchases compose with new level and item sources', (
   const run = createRun(() => 0.5);
   kills(run, 10); clearWave(run);
   run.coins = 1000;
+  // Derived from the catalogue, so retuning a rank never breaks the case.
+  const base = run.player.damage;
+  const ranked = 1 + DEFAULT_CATALOG.upgrades.find(entry => entry.id === 'stat-attack').ranks[0].modifiers[0].value / 100;
   assert.equal(chooseLevelReward(run, 'stat-attack'), true);
-  assert.equal(run.player.damage, 31.5);
+  assert.ok(Math.abs(run.player.damage - base * ranked) < 1e-9);
   assert.equal(chooseUpgrade(run, 'damage'), true);
-  assert.equal(run.player.damage, 40.95);
+  assert.ok(Math.abs(run.player.damage - base * ranked * 1.3) < 1e-9);
+  const beforeItem = run.player.damage;
   assert.equal(buyItem(run, 'slipper'), true);
-  assert.ok(Math.abs(run.player.damage - 44.85) < 1e-9);
+  // The item's percentage stacks with the level rank instead of multiplying it.
+  assert.ok(run.player.damage > beforeItem, 'the item adds on top of both');
+  assert.ok(run.player.damage < beforeItem * 1.1 + 1e-9, 'and it shares the percentage pool');
   assert.equal(run.levelRanks['stat-attack'], 1);
   assert.equal(run.upgrades.damage, 1);
   assert.equal(run.items.slipper, 1);

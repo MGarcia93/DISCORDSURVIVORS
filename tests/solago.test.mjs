@@ -7,10 +7,10 @@ test('Solago is the tanky melee: more health and defense than the baseline, a li
   const run = createRun(() => 0.5, 'solago');
   const negro = createRun(() => 0.5, 'negro');
   const p = run.player;
-  assert.equal(p.maxHp, 190);
+  assert.equal(p.maxHp, 150);
   assert.ok(p.speed > negro.player.speed, 'she moves a little faster than the tank');
-  assert.equal(p.defense, 0.275);
-  assert.equal(p.damage, 70);
+  assert.equal(p.defense, 0.225);
+  assert.equal(p.damage, 52);
   assert.equal(p.attackRange, 78 * UNIT_PX);
   assert.equal(p.attackFlash, 0);
   assert.ok(p.hitRadius < negro.player.hitRadius, 'Solago has a narrower collision box than the tank');
