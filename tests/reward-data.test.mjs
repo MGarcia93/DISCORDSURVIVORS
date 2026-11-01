@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULT_CATALOG, BALANCE, EFFECTS } from '../src/reward-data.mjs';
 import { describeReward, selectLevelOptions } from '../src/reward-catalog.mjs';
+import { createRun } from '../src/engine.mjs';
+import { applyUpgradeRank } from '../src/run-rewards.mjs';
 
 test('the initial catalog contains the eight approved generic items with different prices', () => {
   assert.equal(DEFAULT_CATALOG.items.length, 8);
@@ -30,4 +32,18 @@ test('XP configuration matches approved initial pacing and remains separate from
   assert.ok(BALANCE.xp.rewards.runner >= 1);
   assert.equal(BALANCE.shopSize, 4);
   assert.notEqual(BALANCE.gold.survival, BALANCE.xp.rewards.zombie);
+});
+
+test('the paleta growth turns her bite into reach in a single rank', () => {
+  const entry = DEFAULT_CATALOG.upgrades.find(upgrade => upgrade.id === 'paleta-growth');
+  assert.equal(entry.characters, 'solago');
+  assert.equal(entry.minLevel, 3);
+  assert.equal(entry.ranks.length, 1, 'one rank: finding it IS the build');
+  assert.ok(entry.chance < 1, 'and it does not show up every run');
+
+  const run = createRun(() => 0.5, 'solago');
+  const base = run.player.attackRange;
+  assert.ok(base < 90, 'she starts in melee');
+  assert.equal(applyUpgradeRank(run, entry), true);
+  assert.ok(run.player.attackRange > 190, `one rank already reaches (${run.player.attackRange})`);
 });
