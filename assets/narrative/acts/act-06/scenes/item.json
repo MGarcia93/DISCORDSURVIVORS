@@ -2,60 +2,76 @@
   "id": "act-06-item",
   "stage": {
     "background": "monster-hunter",
+    "size": [
+      1600,
+      748
+    ],
     "points": {
-      "left": [
-        400,
+      "negro": [
+        300,
         470
       ],
-      "mid-left": [
-        470,
-        540
+      "solago": [
+        380,
+        545
       ],
-      "mid-right": [
-        610,
-        540
+      "papasito": [
+        500,
+        545
       ],
-      "right": [
-        690,
+      "warrior": [
+        600,
         470
       ],
       "papafrita": [
-        830,
+        800,
         470
       ],
-      "close": [
-        600,
+      "kulu-off": [
+        1520,
         480
       ],
-      "wide": [
-        600,
-        430
+      "kulu": [
+        1150,
+        480
       ],
-      "boss": [
-        600,
-        300
+      "kulu-close": [
+        1010,
+        490
+      ],
+      "wide": [
+        720,
+        440
+      ],
+      "clash": [
+        1030,
+        440
       ]
     },
     "actors": {
       "negro": {
         "character": "maxi-negro",
-        "at": "left"
+        "at": "negro"
       },
       "solago": {
         "character": "solago",
-        "at": "mid-left"
+        "at": "solago"
       },
       "papasito": {
         "character": "papasito",
-        "at": "mid-right"
+        "at": "papasito"
       },
       "warrior": {
         "character": "warrior",
-        "at": "right"
+        "at": "warrior"
       },
       "papafrita": {
         "character": "papafrita",
         "at": "papafrita"
+      },
+      "kulu": {
+        "enemy": "kuluYaKu",
+        "at": "kulu-off"
       }
     }
   },
@@ -103,12 +119,39 @@
           "speaker": "maxi-negro",
           "expression": "angry",
           "text": "¡IRME A MI CASA!"
-        },
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
         {
           "speaker": "papafrita",
           "expression": "neutral",
           "text": "Ahí está. Cuidado porque usa esas piedras para defenderse."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "kulu",
+          "to": "kulu",
+          "duration": 1.8
         },
+        {
+          "type": "camera",
+          "to": "clash",
+          "zoom": 1.05,
+          "duration": 1.8
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
         {
           "speaker": "papasito",
           "expression": "neutral",
@@ -123,12 +166,43 @@
           "speaker": "papasito",
           "expression": "happy",
           "text": "JAJA, dejá de joder, Papafrita."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "papasito",
+          "toward": "kulu-close",
+          "speed": 420,
+          "duration": 0.9
         },
+        {
+          "type": "wait",
+          "duration": 0.9
+        }
+      ]
+    },
+    {
+      "type": "flash",
+      "at": "kulu",
+      "duration": 0.3
+    },
+    {
+      "type": "dialogue",
+      "lines": [
         {
           "speaker": "maxi-negro",
           "expression": "neutral",
           "text": "¡Anamencua!"
-        },
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
         {
           "speaker": "papasito",
           "expression": "annoyed",
