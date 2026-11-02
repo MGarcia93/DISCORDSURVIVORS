@@ -53,7 +53,7 @@ const solago = {
       life: 150,            // 150 points of damage: the tank of the roster
       defense: 45,          // 4.5 defense points -> 22.5% mitigation
       attack: 520,          // 52 damage per bite: the heaviest punch in the cast
-      attackSpeed: 150,     // 1.5 bites per second: each one has to hurt
+      attackSpeed: 120,     // 1.2 bites per second: the boss answer has to earn its window
       attackDistance: 83,   // close to Jhony: a bite that lands without living inside the boss
       moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
     }),
