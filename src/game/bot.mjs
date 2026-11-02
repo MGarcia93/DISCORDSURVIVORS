@@ -30,6 +30,9 @@ const DIRECTIONS = new Map([[16, directions(16)], [8, directions(8)], [4, direct
 export const SKILLS = {
   perfect: { reactionFrames: 1, candidates: 16, ringIgnore: 0, lookahead: LOOKAHEAD, switchMargin: 0.08 },
   average: { reactionFrames: 12, candidates: 8, ringIgnore: 0.35, lookahead: LOOKAHEAD, switchMargin: 0 },
+  // The lazy check: never take a step. If a run finishes like this, the game is
+  // passable without playing it.
+  still: { reactionFrames: 999, candidates: 4, ringIgnore: 1, lookahead: 1, switchMargin: 0, frozen: true },
 };
 
 function distance(a, b) {
@@ -71,6 +74,7 @@ export function scoreSpot(run, x, y, { dodgeRings = true } = {}) {
 
 // The best of sixteen headings, plus staying put when it is already good.
 export function botInput(run, profile = SKILLS.perfect, random = () => 1, previous = null) {
+  if (profile.frozen) return { x: 0, y: 0 };
   const p = run.player;
   // The bot's own dice: a sloppy hand must not shift the game's spawns, or the
   // two runs stop being the same campaign.
