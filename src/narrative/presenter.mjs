@@ -261,7 +261,13 @@ export function createPresenter(root, catalog, onError) {
           const sceneSpeakers = [...new Set(player.scene.steps.flatMap(step => step.type === 'dialogue' ? step.lines.map(item => item.speaker) : []))];
           const stageX = id => {
             const stage = player.scene.stage;
-            const entry = Object.values(stage?.actors ?? {}).find(actor => actor.character === id);
+            const actors = Object.values(stage?.actors ?? {});
+            // A speaker id may dress the same body differently (`papafrita-casual`
+            // against `papafrita`), so an exact miss falls back to the actor that
+            // shares its stage sprite. Otherwise the portrait queues at the end.
+            const sprite = catalog.characters[id]?.sprite;
+            const entry = actors.find(actor => actor.character === id)
+              ?? actors.find(actor => catalog.characters[actor.character]?.sprite === sprite);
             const point = entry ? stage.points?.[entry.at] : null;
             return Array.isArray(point) ? point[0] : null;
           };
