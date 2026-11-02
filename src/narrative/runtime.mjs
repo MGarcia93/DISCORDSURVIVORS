@@ -185,6 +185,9 @@ export class ScenePlayer {
       const [x, y] = scene.stage.points[actor.at];
       return [id, {
         character: actor.character, enemy: actor.enemy, dead: (actor.state ?? 'alive') === 'dead',
+        // A scene may dress an actor differently from the rest of the act: the
+        // epilogue's Papafrita leaves the armour behind once he is expelled.
+        outfit: actor.outfit,
         x, y, facing: 1, animation: actor.state === 'dead' ? 'idle' : 'idle',
       }];
     }));

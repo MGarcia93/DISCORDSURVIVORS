@@ -59,7 +59,8 @@
       },
       "papafrita": {
         "character": "papafrita",
-        "at": "sky"
+        "at": "sky",
+        "outfit": "casual"
       }
     },
     "size": [

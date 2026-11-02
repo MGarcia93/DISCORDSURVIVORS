@@ -210,7 +210,7 @@ export function createPresenter(root, catalog, onError) {
           }
           const def = STAGE_SPRITES[catalog.characters[actor.character].sprite];
           const lift = actor.animation === 'celebrate' ? Math.abs(Math.sin(player.time * 7)) * 12 : 0;
-          def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {}, kneeling: actor.animation === 'kneel' });
+          def.draw(ctx, actor.x, actor.y - lift, { time: player.time, moving: actor.animation === 'walk', facing: actor.facing, player: {}, kneeling: actor.animation === 'kneel', outfit: actor.outfit });
           if (actor.animation === 'point') {
             ctx.fillStyle = '#f3dea4'; ctx.fillRect(actor.x + 16 * actor.facing, actor.y - 45, 35 * actor.facing, 6);
           }
