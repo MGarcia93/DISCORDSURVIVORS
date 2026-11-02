@@ -245,6 +245,11 @@ const jhony = {
       },
     },
   ],
+  // Berserker: the bottle that lands a kill pours a mouthful back. It is the
+  // sustain that keeps a body fighting at contact range.
+  onKill(run, p) {
+    p.hp = Math.min(p.maxHp, p.hp + Math.round(p.maxHp * 0.04));
+  },
   initPlayer(p) {
     p.tilt = 0;
     p.fury = 0;

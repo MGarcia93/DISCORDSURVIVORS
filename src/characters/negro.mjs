@@ -61,6 +61,10 @@ const negro = {
       moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always
     }),
   },
+  // Sedentarismo extremo: the only body in the cast that heals by not moving.
+  initPlayer(p) {
+    p.regen = 4;
+  },
   attack: { type: 'ranged', device: 'remote' },
   decays: [],
   passives: [],

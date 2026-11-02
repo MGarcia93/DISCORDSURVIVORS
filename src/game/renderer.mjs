@@ -85,21 +85,14 @@ export function drawRunScene(ctx, run, {
   for (const wave of run.shockwaves ?? []) {
     pixelRing(ctx, wave.x, wave.y, wave.radius, '#ffb3c4', 1 - wave.radius / wave.maxRadius);
   }
-  // Papafrita's voice: the monologue balloon, his decoy and the animal that
+  // Papafrita's voice: the monologue waves, his decoy and the animal that
   // answers him. The run carries them, so the sandbox paints them too.
   if (run.monologue) {
-    const bubble = run.monologue;
-    const width = Math.min(200, bubble.r * 1.5), height = Math.min(92, bubble.r * 0.8);
-    ctx.save();
-    ctx.globalAlpha = Math.min(1, Math.max(0, bubble.ttl));
-    // A paper balloon over the zone, thin enough to keep the fight readable:
-    // the rim marks the damage radius, the balloon says who is talking.
-    pixelRing(ctx, bubble.x, bubble.y, bubble.r, '#f7efe2', 0.16);
-    rounded(ctx, bubble.x - width / 2 - 3, bubble.y - height / 2 - 3, width + 6, height + 6, 10, 'rgba(23,21,38,0.45)');
-    rounded(ctx, bubble.x - width / 2, bubble.y - height / 2, width, height, 8, 'rgba(244,233,220,0.62)');
-    // pixelText is left-anchored: these coordinates centre the three dots.
-    pixelText(ctx, '...', bubble.x - 18, bubble.y - 5, 2, '#3a3244');
-    ctx.restore();
+    for (const wave of run.monologue.rings) {
+      const progress = wave.radius / wave.max;
+      pixelRing(ctx, wave.x, wave.y, wave.radius, '#f7efe2', 0.6 - 0.4 * progress);
+      pixelRing(ctx, wave.x, wave.y, Math.max(0, wave.radius - 7), '#b39a7c', 0.3 - 0.2 * progress);
+    }
   }
   if (run.decoy) {
     const decoy = run.decoy;

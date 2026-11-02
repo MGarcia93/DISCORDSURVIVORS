@@ -220,7 +220,7 @@ test('the monologue is an expanding wave: it opens, it hits who it crosses', () 
   assert.equal(far.hp, 400, 'the far one waits for the edge');
   for (let i = 0; i < 20; i++) papafrita.onTick(run, p, 0.1, toolbox(run));
   assert.ok(far.hp < 400, 'until the wave opens that far');
-  assert.equal(near.hp, 400 - 27 * 0.8, 'each body is hit exactly once per wave');
+  assert.equal(near.hp, 400 - 27 * (2 / 3), 'each body is hit exactly once per wave');
 });
 
 function passivate(run, p) {

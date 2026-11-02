@@ -47,7 +47,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
       hp: s.maxHp, maxHp: s.maxHp, defense: s.defense, damage: s.damage,
       hitRadius: s.hitRadius, attackRange: s.attackRange, shotInterval: s.shotInterval,
       speed: s.speed,
-      regen: 4, still: 0, immune: 0, attackFlash: 0,
+      regen: 0, still: 0, immune: 0, attackFlash: 0,
       smile: 0, smileCooldown: 0,
     },
     enemies: [], projectiles: [], effects: [],
@@ -328,6 +328,21 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     : kind === 'shroom' ? 'shroom'
     : kind === 'bottle' ? 'bottle'
     : kind === 'voice' ? 'voice' : 'magic';
+  // A sheet may ask for a wave instead of a homing shot: it leaves in the
+  // target's direction once, keeps that heading, and hits everything its own
+  // width touches on the way. No re-targeting, no bouncing.
+  if (attack?.straight) {
+    const angle = Math.atan2(target.y - source.y, target.x - source.x);
+    const speed = (attack.speed ?? 520) * WORLD_SCALE;
+    const width = attack.width ?? 12;
+    const wave = { x: source.x, y: source.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+      damage, kind, device, hit: [], ttl: Math.max(0.5, maxDistance / speed + 0.25),
+      angle, spin: false, through: true,
+      radius: Math.max(4, width / 2) * WORLD_SCALE, width };
+    run.projectiles.push(wave);
+    emit('shot', { run, kind });
+    return wave;
+  }
   const shot = { x: source.x, y: source.y, target: target.id,
     damage, kind, device, hit: [], ttl: 3, attack,
     // A wave points where it was thrown and never tumbles; everything else
@@ -699,8 +714,20 @@ export function step(run, seconds, input = {}) {
       }).filter(collision => collision.distance <= collision.enemy.radius + shot.radius)
         .sort((a, b) => a.t - b.t);
       if (collisions.length) {
-        hit(run, collisions[0].enemy, shot.damage);
-        shot.ttl = 0;
+        // A wave passes through: every uncrossed body in reach takes it, and the
+        // shot keeps its heading until the ficha's own budget runs out.
+        if (shot.through) {
+          for (const collision of collisions) {
+            if (shot.hit.includes(collision.enemy.id)) continue;
+            shot.hit.push(collision.enemy.id);
+            hit(run, collision.enemy, shot.damage);
+            p.characterDef.onProjectileHit?.(run, shot, collision.enemy,
+              { hit, distance, nearest, fireRadial });
+          }
+        } else {
+          hit(run, collisions[0].enemy, shot.damage);
+          shot.ttl = 0;
+        }
       }
       shot.x += dx;
       shot.y += dy;
