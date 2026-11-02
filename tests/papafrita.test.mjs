@@ -125,3 +125,20 @@ test('extended portrait styling is opt-in and existing characters keep their ori
     unknown: { sprite: '__proto__' },
   } }, () => {}), /Unknown sprite for unknown: __proto__/);
 });
+
+test('the casual portrait set exists for every expression and is a separate catalogue entry', async () => {
+  const { readFile: read } = await import('node:fs/promises');
+  const catalog = JSON.parse(await read('assets/narrative/characters.json', 'utf8'));
+  const casual = catalog['papafrita-casual'];
+  assert.ok(casual, 'the casual speaker exists');
+  assert.equal(casual.name, 'Papafrita', 'same name in the dialogue box');
+  assert.equal(casual.sprite, 'papafrita', 'same stage sprite');
+  const names = Object.keys(catalog.papafrita.expressions);
+  assert.deepEqual(Object.keys(casual.expressions), names);
+  for (const [expression, path] of Object.entries(casual.expressions)) {
+    assert.equal(path, `portraits/papafrita-casual/${expression}.svg`);
+    const svg = await read(new URL(`../assets/narrative/${path}`, import.meta.url), 'utf8');
+    assert.match(svg, /data-expression="/);
+    assert.doesNotMatch(svg, /id="creature-/, 'no creature on the casual head');
+  }
+});

@@ -90,12 +90,12 @@
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "surprised",
           "text": "¿Eh? ¡PARÁ, QUE NO TERMINÉ!"
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "angry",
           "text": "¡MAXI, LA CONCHA DE TU MADRE! ¡ME FALTABA PROBAR LA ARMADURA!"
         },
@@ -110,7 +110,7 @@
           "text": "JAJAJAJA. ¡LO BANEARON POR ROMPEBOLAS!"
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "angry",
           "text": "¡Pero si estaba explicando una cosa!"
         },
@@ -149,7 +149,7 @@
       "type": "dialogue",
       "lines": [
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "neutral",
           "text": "Che, Negro."
         },
@@ -159,7 +159,7 @@
           "text": "¿Qué?"
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "neutral",
           "text": "¿Mañana jugamos al Monster Hunter?"
         },
@@ -169,7 +169,7 @@
           "text": "¿No que querías jugar solo?"
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "neutral",
           "text": "Necesito farmear otra armadura."
         },
@@ -179,7 +179,7 @@
           "text": "Ahhh, ¿así que querés jugar conmigo?"
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "neutral",
           "text": "No, Negro. Necesito alguien que me ayude."
         },
@@ -189,7 +189,7 @@
           "text": "JAJAJAJA. Dale, hijo de puta. Tipo nueve."
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "happy",
           "text": "Dale, Negro. Te quiero."
         },
@@ -199,7 +199,7 @@
           "text": "Yo también, pelotudo."
         },
         {
-          "speaker": "papafrita",
+          "speaker": "papafrita-casual",
           "expression": "neutral",
           "text": "Igual no llegues tarde."
         },

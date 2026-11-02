@@ -22,6 +22,21 @@ unlock is added. Existing world-viewer cast slots are unchanged.
 { "speaker": "papafrita", "expression": "happy", "text": "Example line." }
 ```
 
+## Casual portraits
+
+The epilogue needs him out of the armour once Maxi expels him. `portrait-neutral-casual.svg`
+reuses the approved face and swaps the armoured body for the photo outfit (black
+tee, denim bermuda) with the creature and the spikes removed;
+`expressions-casual.json` builds the same eight expressions from it.
+
+```sh
+python3 tools/build_portraits.py --recipe art/characters/papafrita/expressions-casual.json --out assets/narrative/portraits/papafrita-casual
+```
+
+The catalogue entry is `papafrita-casual` (same name, same stage sprite): a scene
+that has him back in Discord speaks with that id, while every Monster Hunter
+scene keeps `papafrita`.
+
 ## Rebuild portraits
 
 ```sh

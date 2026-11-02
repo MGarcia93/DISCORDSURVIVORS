@@ -167,5 +167,20 @@
       "tired": "portraits/maxi/tired.svg",
       "disgusted": "portraits/maxi/disgusted.svg"
     }
+  },
+  "papafrita-casual": {
+    "name": "Papafrita",
+    "sprite": "papafrita",
+    "portraitLayout": "extended",
+    "expressions": {
+      "neutral": "portraits/papafrita-casual/neutral.svg",
+      "happy": "portraits/papafrita-casual/happy.svg",
+      "annoyed": "portraits/papafrita-casual/annoyed.svg",
+      "angry": "portraits/papafrita-casual/angry.svg",
+      "surprised": "portraits/papafrita-casual/surprised.svg",
+      "scared": "portraits/papafrita-casual/scared.svg",
+      "tired": "portraits/papafrita-casual/tired.svg",
+      "disgusted": "portraits/papafrita-casual/disgusted.svg"
+    }
   }
 }
