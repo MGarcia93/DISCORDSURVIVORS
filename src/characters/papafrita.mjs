@@ -55,9 +55,10 @@ function voiceWave(run, p, target, damage, width = 16) {
   const angle = Math.atan2(target.y - p.y, target.x - p.x);
   const speed = 560 * WORLD_SCALE;
   run.projectiles.push({
-    x: p.x, y: p.y,
+    // It starts a step ahead so the icon never sits on his face.
+    x: p.x + Math.cos(angle) * 18, y: p.y + Math.sin(angle) * 18,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-    damage, kind: 'voice', device: 'voice', hit: [], through: true, lift: 56,
+    damage, kind: 'voice', device: 'voice', hit: [], through: true, lift: 46,
     ttl: Math.max(0.5, p.attackRange / speed + 0.25),
     angle, spin: false, radius: Math.max(4, width / 2) * WORLD_SCALE, width,
   });
@@ -74,9 +75,9 @@ function waveAt(run, p, ctx, { to = null, exclude = [], damage, width = 16 } = {
 function spawnEcho(run, p, angle, damage, width) {
   const speed = 560 * WORLD_SCALE;
   run.projectiles.push({
-    x: p.x, y: p.y,
+    x: p.x + Math.cos(angle) * 18, y: p.y + Math.sin(angle) * 18,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-    damage, kind: 'voice', device: 'voice', hit: [], ttl: 1.6, through: true, lift: 56,
+    damage, kind: 'voice', device: 'voice', hit: [], ttl: 1.6, through: true, lift: 46,
     angle, radius: Math.max(4, width / 2) * WORLD_SCALE, width, echo: true,
   });
 }
@@ -189,7 +190,7 @@ const papafrita = {
     }),
   },
   // «No te callás más»: a straight wave of sound, not a homing shot.
-  attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560, lift: 56 },
+  attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560, lift: 46 },
   ownOfferChance: 0.45,
   combat: {},
   decays: [],
