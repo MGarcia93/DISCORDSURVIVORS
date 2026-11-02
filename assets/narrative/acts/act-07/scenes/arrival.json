@@ -1,0 +1,395 @@
+{
+  "id": "act-07-arrival",
+  "stage": {
+    "background": "zomboid-approach",
+    "size": [
+      3432,
+      748
+    ],
+    "points": {
+      "start-negro": [
+        300,
+        410
+      ],
+      "start-solago": [
+        300,
+        490
+      ],
+      "start-papasito": [
+        160,
+        520
+      ],
+      "start-warrior": [
+        160,
+        450
+      ],
+      "start-papafrita": [
+        160,
+        370
+      ],
+      "horde-a": [
+        60,
+        510
+      ],
+      "horde-b": [
+        120,
+        520
+      ],
+      "horde-c": [
+        20,
+        485
+      ],
+      "gate-negro": [
+        3000,
+        410
+      ],
+      "gate-solago": [
+        3000,
+        490
+      ],
+      "gate-papasito": [
+        2860,
+        520
+      ],
+      "gate-warrior": [
+        2860,
+        450
+      ],
+      "gate-papafrita": [
+        2860,
+        370
+      ],
+      "horde-run-a": [
+        520,
+        510
+      ],
+      "horde-run-b": [
+        580,
+        520
+      ],
+      "horde-run-c": [
+        470,
+        485
+      ],
+      "corpse-a": [
+        820,
+        430
+      ],
+      "corpse-b": [
+        1520,
+        560
+      ],
+      "corpse-c": [
+        2180,
+        390
+      ],
+      "corpse-d": [
+        2620,
+        600
+      ],
+      "walker-top-a": [
+        620,
+        240
+      ],
+      "walker-top-b": [
+        1480,
+        235
+      ],
+      "walker-top-c": [
+        2520,
+        245
+      ],
+      "walker-bottom-a": [
+        1020,
+        688
+      ],
+      "walker-bottom-b": [
+        2020,
+        692
+      ],
+      "jhony": [
+        3089,
+        270
+      ],
+      "cam-start": [
+        320,
+        400
+      ],
+      "cam-run": [
+        1500,
+        400
+      ],
+      "cam-gate": [
+        3000,
+        400
+      ],
+      "cam-horde": [
+        500,
+        560
+      ],
+      "run-left": [
+        200,
+        480
+      ],
+      "run-gate": [
+        2960,
+        480
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "start-negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "start-solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "start-papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "start-warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "start-papafrita",
+        "outfit": "casual"
+      },
+      "horde-a": {
+        "enemy": "zombie",
+        "at": "horde-a"
+      },
+      "horde-b": {
+        "enemy": "runner",
+        "at": "horde-b"
+      },
+      "horde-c": {
+        "enemy": "zombie",
+        "at": "horde-c"
+      },
+      "corpse-a": {
+        "enemy": "zombie",
+        "at": "corpse-a",
+        "state": "dead"
+      },
+      "corpse-b": {
+        "enemy": "runner",
+        "at": "corpse-b",
+        "state": "dead"
+      },
+      "corpse-c": {
+        "enemy": "zombie",
+        "at": "corpse-c",
+        "state": "dead"
+      },
+      "corpse-d": {
+        "enemy": "zombie",
+        "at": "corpse-d",
+        "state": "dead"
+      },
+      "walker-top-a": {
+        "enemy": "zombie",
+        "at": "walker-top-a"
+      },
+      "walker-top-b": {
+        "enemy": "zombie",
+        "at": "walker-top-b"
+      },
+      "walker-top-c": {
+        "enemy": "runner",
+        "at": "walker-top-c",
+        "state": "dead"
+      },
+      "walker-bottom-a": {
+        "enemy": "zombie",
+        "at": "walker-bottom-a"
+      },
+      "walker-bottom-b": {
+        "enemy": "zombie",
+        "at": "walker-bottom-b"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "cam-start",
+      "zoom": 1,
+      "duration": 0
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita-casual",
+          "expression": "annoyed",
+          "text": "Uh, este juego de mierda."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Qué pasó ahora?"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "annoyed",
+          "text": "Nada, me acordé de cuando me agarraba depresión todo el tiempo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA, ¿otra vez?"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡Pero si no hacía nada, boludo! Comía, dormía, salía a buscar cosas y el hijo de puta estaba deprimido igual."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "Capaz era por jugar con vos."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "Cerrá el orto, Negro."
+        }
+      ],
+      "layout": "stage",
+      "staging": "run"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "gate-negro",
+          "duration": 2.2
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "gate-solago",
+          "duration": 2.2
+        },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "gate-papasito",
+          "duration": 2.2
+        },
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "gate-warrior",
+          "duration": 2.2
+        },
+        {
+          "type": "move",
+          "actor": "papafrita",
+          "to": "gate-papafrita",
+          "duration": 2.2
+        },
+        {
+          "type": "camera",
+          "to": "cam-gate",
+          "zoom": 1,
+          "duration": 2.2
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "surprised",
+          "text": "No."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "scared",
+          "text": "No, no, no, no…"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Qué pasa?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¿USTEDES VINIERON CORRIENDO HASTA ACÁ?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "…"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡ME TRAJERON TODA LA PUTA CIUDAD!"
+        }
+      ],
+      "layout": "stage"
+    },
+    {
+      "type": "sound",
+      "sound": "roar"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "camera",
+          "to": "cam-horde",
+          "zoom": 1,
+          "duration": 1.2
+        },
+        {
+          "type": "move",
+          "actor": "horde-a",
+          "to": "horde-run-a",
+          "duration": 2.4
+        },
+        {
+          "type": "move",
+          "actor": "horde-b",
+          "to": "horde-run-b",
+          "duration": 2.4
+        },
+        {
+          "type": "move",
+          "actor": "horde-c",
+          "to": "horde-run-c",
+          "duration": 2.4
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 0.6
+    }
+  ]
+}

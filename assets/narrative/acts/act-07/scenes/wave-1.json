@@ -1,0 +1,534 @@
+{
+  "id": "act-07-wave-1",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "gate": [
+        572,
+        620
+      ],
+      "yard": [
+        572,
+        540
+      ],
+      "boxes": [
+        470,
+        380
+      ],
+      "car": [
+        745,
+        545
+      ],
+      "yard-a": [
+        660,
+        380
+      ],
+      "yard-b": [
+        660,
+        480
+      ],
+      "yard-c": [
+        500,
+        530
+      ],
+      "yard-d": [
+        500,
+        430
+      ],
+      "yard-e": [
+        500,
+        330
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "papafrita": [
+        520,
+        610
+      ],
+      "warrior": [
+        600,
+        640
+      ],
+      "papasito": [
+        480,
+        640
+      ],
+      "negro": [
+        660,
+        600
+      ],
+      "solago": [
+        720,
+        650
+      ],
+      "body-a": [
+        520,
+        640
+      ],
+      "body-b": [
+        620,
+        650
+      ],
+      "wide": [
+        572,
+        470
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      },
+      "body-a": {
+        "enemy": "zombie",
+        "at": "body-a",
+        "state": "dead"
+      },
+      "body-b": {
+        "enemy": "runner",
+        "at": "body-b",
+        "state": "dead"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "Me hicieron mierda la entrada."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Pero aguantó bastante bien."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Porque la hice bien."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, viste. No pasó nada."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡ME ROMPIERON LA PUERTA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Y bueno, hacés otra."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "..."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "No, Negro. No lo ayudés más."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "yard-a",
+          "duration": 1.4
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "yard-b",
+          "duration": 1.4
+        },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "yard-c",
+          "duration": 1.4
+        },
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "yard-d",
+          "duration": 1.4
+        },
+        {
+          "type": "move",
+          "actor": "papafrita",
+          "to": "yard-e",
+          "duration": 1.4
+        },
+        {
+          "type": "camera",
+          "to": "wide",
+          "zoom": 1,
+          "duration": 1.4
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "A la mierda."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Qué grande es esto."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Vos hiciste toda esta base?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Qué enfermo de mierda."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "¿Qué querés? ¿Que me quede parado como un pelotudo?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Igual, alta base te mandaste."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Y sí. Me vi unas guías, armé una buena build, limpié toda la zona..."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita-casual",
+          "expression": "neutral",
+          "text": "Igual, Negro, vos no toqués nada acá."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Por qué?"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "neutral",
+          "text": "Porque después pasa lo mismo que cuando activé el PvP sin querer."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Qué pasó?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "Me cagó matando el hijo de puta."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡PERO FUE SIN QUERER!"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "happy",
+          "text": "JAJAJA, me acuerdo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡Me pisó la cabeza, boludo!"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡¿Y CÓMO IBA A SABER QUE TE MORÍAS DE UN PISOTÓN EN LA CABEZA?!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡¿CÓMO QUE NO?! ¡SI MI PERSONAJE ESTABA RE DÉBIL! ¡POR ESO ESTUVE TODO EL TIEMPO EN LA BASE!"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "happy",
+          "text": "JAJAJAJA."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "annoyed",
+          "text": "Bueno, yo qué sabía que te iba a matar."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡Y ENCIMA TENÍAS EL PVP ACTIVADO, PELOTUDO!"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡QUE FUE SIN QUERER, BOLUDO!"
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "boxes",
+          "duration": 1.2
+        },
+        {
+          "type": "camera",
+          "to": "boxes",
+          "zoom": 1,
+          "duration": 1.2
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y para qué tenés tantas cajas?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Para organizar las cosas."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y esta?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Herramientas."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y esta?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Comida."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y esta?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡NEGRO, NO ME ROMPÁS LAS PELOTAS CON LAS CAJAS!"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "happy",
+          "text": "Está todo etiquetado. Yo lo entiendo."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "car",
+          "duration": 1.2
+        },
+        {
+          "type": "camera",
+          "to": "car",
+          "zoom": 1,
+          "duration": 1.2
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿y este auto funciona?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Sí, pero no lo toqués."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "A ver."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡NEGRO!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Ah."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJAJA."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "Apagala."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Cómo?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡APAGÁ LA ALARMA!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "sound",
+      "sound": "roar"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "La concha de tu madre..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, tampoco es para tanto."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "yard-a",
+          "duration": 1.4
+        },
+        {
+          "type": "camera",
+          "to": "wide",
+          "zoom": 1,
+          "duration": 1.4
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡ME LIMPIÉ TODA LA PUTA CIUDAD Y EN CINCO MINUTOS ME TRAJISTE TODOS LOS ZOMBIS!"
+        }
+      ]
+    }
+  ]
+}

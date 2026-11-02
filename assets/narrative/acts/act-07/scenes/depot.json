@@ -1,0 +1,116 @@
+{
+  "id": "act-07-depot",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "depot": [
+        880,
+        240
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        580,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      },
+      "fireman": {
+        "enemy": "firemanZombie",
+        "at": "depot",
+        "state": "dead"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "Me rompieron el depósito..."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Por lo menos salvamos bastante."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Tenía todo ordenado."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, después te ayudamos a ordenar."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "Vos no tocás una sola caja más."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, che. Qué carácter."
+        }
+      ]
+    }
+  ]
+}

@@ -9,10 +9,10 @@
 ## 1. Reglas de canon y continuidad
 
 - El epílogo comienza en Discord después de que **Maxi (programador)** baneó a Papafrita de Monster Hunter y lo expulsó forzosamente al Discord. Papafrita ya no está atrapado en Monster Hunter.
-- Jhony permaneció en Project Zomboid desde el Acto 1. No es un jefe enemigo; es un **NPC aliado**. Al finalizar debe regresar al Discord con el grupo.
+- Jhony permaneció en Project Zomboid desde el Acto 1. No es un jefe enemigo y **no pelea**: aparece solo en las cinemáticas. Al finalizar debe regresar al Discord con el grupo.
 - Maxi (programador) no es un personaje jugable ni un jefe. Abre el portal y manda al grupo a buscar a Jhony haciéndose el boludo.
-- Los cuatro que viajan son **Maxi Negro, Solago, Papasito y Warrior**. Si el juego permite seleccionar otro personaje, preservar a los cuatro como participantes de las cinemáticas; el jugador controla a su personaje elegido y el resto puede representarse como retratos/acompañantes según el sistema existente.
-- **Secuencia inalterable:** inicio Discord → portal → los cuatro corren a la base → encuentro «¡ME TRAJERON TODA LA PUTA CIUDAD!» → **oleada 1** → diálogo sobre la casa y las cajas → Negro activa alarma de auto → **oleadas 2–6** → Jhony vuelve al Discord → postcréditos.
+- Los que viajan son **Maxi Negro, Solago, Papasito, Warrior y Papafrita**. Papafrita ya está desbloqueado como jugable y acaba de volver del Monster Hunter, así que cruza con el grupo: se abre un portal debajo de él, igual que con los demás, y está presente en todas las cinemáticas del acto. Si el juego permite seleccionar otro personaje, preservar a los cinco como participantes de las cinemáticas; el jugador controla a su personaje elegido y el resto puede representarse como retratos/acompañantes según el sistema existente.
+- **Secuencia inalterable:** inicio Discord → portal → los cinco corren a la base → encuentro «¡ME TRAJERON TODA LA PUTA CIUDAD!» → **oleada 1** → diálogo sobre la casa y las cajas → Negro activa alarma de auto → **oleadas 2–6** → Jhony vuelve al Discord → postcréditos.
 - Mantener los diálogos en el orden indicado. No inventar cambios a voces aprobadas al implementar.
 - Voz: Papasito es paraguayo del interior, generalmente educado; Warrior jujeño, sin caricaturizar dificultades del habla; Maxi seco y breve; Jhony tryhard y temperamental; Negro vago, bocón; Solago se suma a cargadas.
 - Sin obligar a que Jhony sea jugable al completar; el posible desbloqueo se define aparte.
@@ -38,12 +38,9 @@
 - `truckHornActive`: oleada 6, cesa al completar objetivo del jefe.
 - `jhonyReturnsToDiscord`: verdadero únicamente después de la cinemática final.
 
-### NPC aliado Jhony
+### Jhony en la partida
 
-- Pelea como aliado, nunca dañable por ataques del jugador, nunca bloquea el movimiento. El agente debe usar, si existe, el controlador de aliados actual.
-- Rol: defensa de base y apoyo a distancia. Ataca enemigos cercanos con arma de fuego; al terminar cada oleada vuelve a su ubicación de escena.
-- IA sugerida: priorizar enemigos que atacan la entrada, depósito o cultivos; buscar línea de visión; mantenerse próximo a posiciones de defensa; sin perseguir enemigos fuera de la zona.
-- Sus disparos y animaciones deben ser compatibles con los sprites minimalistas; no recrear un shooter complejo.
+- **No es un aliado jugable ni pelea**: no se implementa un NPC aliado en las oleadas. Jhony existe solo en las cinemáticas (llegada, cierres de oleada y final).
 - Las trampas o barricadas son ayudas del escenario y **no nuevas estadísticas de personaje**.
 
 ## 3. Catálogo de enemigos del epílogo
@@ -84,6 +81,8 @@
 **Solago:** ¿Uno menos? ¡Si Maxi lo tuvo que sacar a la fuerza!
 
 **Negro:** Y bueno, pero volvió. Cuenta.
+
+**Papafrita:** Volví expulsado, es distinto.
 
 **Papasito:** Por lo menos ya estamos todos.
 
@@ -137,7 +136,7 @@
 
 **Negro:** Bueno, listo.
 
-*De repente aparece un portal debajo de los cuatro.*
+*De repente aparece un portal debajo de cada uno. Los cinco caen por el portal.*
 
 **Negro:** Pará, ¿qué hacés?
 
@@ -145,7 +144,7 @@
 
 **Negro:** ¡PERO LA CONCHA DE TU MADRE!
 
-*Los cuatro caen por el portal.*
+*Los cinco caen por el portal.*
 
 *Maxi se queda mirando la pantalla.*
 
@@ -155,13 +154,27 @@
 
 ### Transición al mapa
 
-- Los cuatro llegan al mundo de Project Zomboid y **corren directamente hasta la casa de Jhony**; es una secuencia de desplazamiento sin combate ni oleada adicional.
+- Los cinco llegan al mundo de Project Zomboid y **corren directamente hasta la casa de Jhony**; es una secuencia de desplazamiento sin combate ni oleada adicional.
 - Mostrar visualmente que vienen corriendo y que una horda los sigue. No activar daño ni oleada hasta finalizar la cinematica de encuentro.
 - La base debe verse significativamente más fortificada que en el Acto 1: murallas, cultivos, generador, galpón, depósito, auto y cajas. Estética plana, pixel art consistente.
 
 ## 5. Cinemática de llegada — «La visita»
 
-*Los cuatro aparecen en Project Zomboid. Reconocen el mundo del primer acto y empiezan a correr para buscar a Jhony.*
+*Los cinco aparecen en Project Zomboid. Reconocen el mundo del primer acto y empiezan a correr para buscar a Jhony.*
+
+**Papafrita:** Uh, este juego de mierda.
+
+**Solago:** ¿Qué pasó ahora?
+
+**Papafrita:** Nada, me acordé de cuando me agarraba depresión todo el tiempo.
+
+**Negro:** JAJAJA, ¿otra vez?
+
+**Papafrita:** ¡Pero si no hacía nada, boludo! Comía, dormía, salía a buscar cosas y el hijo de puta estaba deprimido igual.
+
+**Negro:** Capaz era por jugar con vos.
+
+**Papafrita:** Cerrá el orto, Negro.
 
 *Tras atravesar las calles, encuentran una base enorme, rodeada por murallas y barricadas.*
 
@@ -189,7 +202,7 @@
 
 ## 6. Oleada 1 — «No toques nada»
 
-**Causa:** los cuatro arrastraron a todos los zombis mientras corrían hacia Jhony.  
+**Causa:** los cinco arrastraron a todos los zombis mientras corrían hacia Jhony.  
 **Enemigos:** zombis comunes, corredores y zombis trabajadores.  
 **Objetivo jugable:** acabar con la primera horda junto a la entrada de la base.
 
@@ -254,6 +267,34 @@
 
 **Jhony:** Y sí. Me vi unas guías, armé una buena build, limpié toda la zona...
 
+**Papafrita:** Igual, Negro, vos no toqués nada acá.
+
+**Negro:** ¿Por qué?
+
+**Papafrita:** Porque después pasa lo mismo que cuando activé el PvP sin querer.
+
+**Solago:** ¿Qué pasó?
+
+**Negro:** Me cagó matando el hijo de puta.
+
+**Papafrita:** ¡PERO FUE SIN QUERER!
+
+**Jhony:** JAJAJA, me acuerdo.
+
+**Negro:** ¡Me pisó la cabeza, boludo!
+
+**Papafrita:** ¡¿Y CÓMO IBA A SABER QUE TE MORÍAS DE UN PISOTÓN EN LA CABEZA?!
+
+**Negro:** ¡¿CÓMO QUE NO?! ¡SI MI PERSONAJE ESTABA RE DÉBIL! ¡POR ESO ESTUVE TODO EL TIEMPO EN LA BASE!
+
+**Jhony:** JAJAJAJA.
+
+**Papafrita:** Bueno, yo qué sabía que te iba a matar.
+
+**Negro:** ¡Y ENCIMA TENÍAS EL PVP ACTIVADO, PELOTUDO!
+
+**Papafrita:** ¡QUE FUE SIN QUERER, BOLUDO!
+
 **Negro:** ¿Y para qué tenés tantas cajas?
 
 **Jhony:** Para organizar las cosas.
@@ -269,6 +310,8 @@
 **Negro:** ¿Y esta?
 
 **Jhony:** ¡NEGRO, NO ME ROMPÁS LAS PELOTAS CON LAS CAJAS!
+
+**Papafrita:** Está todo etiquetado. Yo lo entiendo.
 
 *El Negro se aleja y se acerca a un auto estacionado.*
 
@@ -380,6 +423,40 @@
 
 **Negro:** ¿Y? Hace calor igual.
 
+### Después de la oleada 2 — «La gallina»
+
+*Jhony muestra los cultivos y los animales que tiene en la base.*
+
+**Negro:** Che, ¿tenés gallinas?
+
+**Jhony:** Sí. ¿Por?
+
+**Negro:** No dejes que Papafrita se acerque.
+
+**Papafrita:** Dale, Negro, no empecés.
+
+**Papasito:** ¿Qué pasó con las gallinas?
+
+**Jhony:** JAJAJA, no, la gallina...
+
+**Negro:** Tres horas, boludo. TRES HORAS buscando una gallina.
+
+**Papafrita:** Bueno, pero...
+
+**Negro:** La llevo a la base, la dejo ahí, viene este pelotudo, le pega una sola vez y la mata.
+
+**Jhony:** JAJAJAJA.
+
+**Papafrita:** ¡PERO NO PENSÉ QUE SE IBA A MORIR DE UN GOLPE!
+
+**Jhony:** ¡Y ME DEJASTE TODA LA BASE LLENA DE SANGRE, HIJO DE PUTA!
+
+**Papafrita:** ¡PERO ME HICISTE LIMPIARLA!
+
+**Jhony:** Papafrita, no toqués las gallinas.
+
+**Papafrita:** Bueno, tampoco iba a tocar ninguna.
+
 ## 8. Oleada 3 — «El depósito»
 
 **Minijefe:** El Bombero.  
@@ -393,6 +470,32 @@
 - Comunes y trabajadores sirven de escolta, sin tapar la lectura de la embestida.
 - Muerte del minijefe: detener sus ataques, limpiar mobs remanentes y pasar a escena de depósito dañado.
 - Marcar `warehouseDamaged=true`.
+
+### Durante la oleada — «Se fue solo»
+
+*El grupo está defendiendo el depósito de Jhony.*
+
+**Jhony:** ¿Dónde está Papafrita?
+
+**Solago:** No sé.
+
+**Negro:** Se fue solo otra vez.
+
+**Jhony:** ¡¿CÓMO QUE SE FUE SOLO?!
+
+**Papafrita (a lo lejos):** ¡Encontré unas casas para lootear!
+
+**Jhony:** ¡ESTAMOS DEFENDIENDO LA BASE!
+
+**Papafrita:** ¡YA VOY, PARÁ!
+
+**Negro:** Después lo agarran veinte zombis y se muere.
+
+**Papafrita:** ¡QUE NO ME VOY A MORIR!
+
+*Se escucha una horda acercándose desde su dirección.*
+
+**Jhony:** No, boludo. Otro más no.
 
 ### Cinemática del minijefe
 
@@ -658,37 +761,54 @@
 
 **Maxi:** ¿Terminaron?
 
-**Jhony:** ¿Y vos?
+**Jhony:** ¿Y vos qué hacés acá? No vuelvo una mierda, boludo.
 
-**Maxi:** Qué.
+**Maxi:** Nos tenemos que ir.
 
-**Jhony:** ¿No podías mandarlos a otro lado?
+**Jhony:** Pero bro...
 
-**Maxi:** Vine a buscarte.
+**Maxi:** Bro.
 
-**Jhony:** Bueno, ya me encontraron.
+**Jhony:** Bro...
 
-**Maxi:** ¿Volvés?
+**Maxi:** Brooo...
 
-**Jhony:** No sé.
+**Jhony:** ¡Bro!
 
-**Negro:** Dale, Jhony. Ya está.
-
-**Jhony:** Estaba re tranquilo acá, boludo.
-
-**Solago:** Sí, ya vimos.
-
-**Jhony:** Tenía todo armado, nadie me jodía...
-
-**Negro:** Y bueno, pero estabas jugando solo.
-
-**Jhony:** ¿Y?
-
-**Negro:** Nada, que es medio embolante.
+**Maxi:** Bro... 🥺
 
 **Jhony:** ...
 
-**Papasito:** Vamos, Jhony. Después podés volver a terminar la base.
+**Jhony:** Bro...
+
+*Maxi sonríe.*
+
+**Maxi:** Bro. 😏
+
+**Jhony:** La concha de tu madre... Dale.
+
+**Negro:** ¿Qué mierda fue eso?
+
+**Solago:** No entendí una mierda.
+
+**Papasito:** ¿Así nomás lo convenciste?
+
+**Maxi:** Sí.
+
+**Papafrita:** Ah, yo entendí. Es como una conversación donde no necesitás decir nada porque la otra persona ya sabe lo que querés decir. Pasa mucho cuando tenés confianza con alguien, porque...
+
+**Negro:** No entendiste una mierda, Papafrita.
+
+**Papafrita:** ¡Sí entendí, boludo! Es el meme ese de los dos que se hablan con «bro».
+
+> **Staging del «bro»:** Maxi y Jhony se entienden solo por la cara, como el meme.
+> Cada línea cambia de expresión y la escena se lee por ahí, no por el texto:
+> Jhony enojado (no vuelvo) → Maxi neutral (nos tenemos que ir) → Jhony molesto
+> (pero bro) → Maxi neutral (bro) → Jhony asustado (bro) → Maxi fastidiado
+> (brooo) → Jhony enojado (¡bro!) → Maxi con cara de cachorro (bro... 🥺) →
+> Jhony neutral (silencio) → Jhony cansado (bro...) → Maxi sonríe (bro. 😏) →
+> Jhony resignado (la concha de tu madre... dale). El resto del grupo mira sin
+> entender nada; ese es el chiste.
 
 *Jhony mira lo que queda de su construcción.*
 

@@ -1,0 +1,171 @@
+{
+  "id": "act-07-circle",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "gate": [
+        572,
+        620
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        580,
+        450
+      ],
+      "plan": [
+        760,
+        500
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "animate",
+      "actor": "jhony",
+      "animation": "point",
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Miren. Los vamos a hacer pasar por acá, después los encerramos en este sector."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Como la cárcel esa del LoL."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "¿Cuál?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "La de Veigar."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Ah, sí."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "La línea esa que pusiste una vez."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "surprised",
+          "text": "¿Qué línea?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Esa que tiraste y nos dejó encerrados."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "Era un círculo."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Sí, pero parecía una línea."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡ERA UN CÍRCULO, PAPASITO!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA, otra vez con el círculo."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Bueno, pero yo la vi como una línea."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡PERO SI TE RODEABA ENTERO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, ¿vamos a defender o no?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡SÍ, PERO QUE ENTIENDA QUE ERA UN CÍRCULO!"
+        }
+      ]
+    }
+  ]
+}

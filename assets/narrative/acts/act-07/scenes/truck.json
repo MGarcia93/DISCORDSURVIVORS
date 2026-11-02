@@ -1,0 +1,129 @@
+{
+  "id": "act-07-truck",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "road": [
+        572,
+        690
+      ],
+      "gate": [
+        572,
+        620
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        580,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      },
+      "truck": {
+        "enemy": "truckHorde",
+        "at": "road"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "sound",
+      "sound": "horn"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "scared",
+          "text": "¿Y ahora?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "Hay que llegar hasta el camión y apagar esa bocina."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y no podemos esperar que se queden sin nafta?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡LA BOCINA NO ESTÁ SONANDO POR LA NAFTA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, preguntaba."
+        }
+      ],
+      "layout": "stage"
+    },
+    {
+      "type": "camera",
+      "to": "road",
+      "zoom": 1,
+      "duration": 1.2
+    },
+    {
+      "type": "wait",
+      "duration": 0.6
+    }
+  ]
+}
