@@ -1,0 +1,115 @@
+{
+  "id": "act-06-venom",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "close": [
+        600,
+        480
+      ],
+      "wide": [
+        600,
+        430
+      ],
+      "boss": [
+        600,
+        300
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, cuidado acá. El Pukei-Pukei puede envenenarlos y también tiene ataques con la lengua."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, esquivamos el veneno."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Sí, pero hay otra cosa que tienen que saber."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "No."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "¿Y sabés qué más?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NO QUIERO SABER QUÉ MÁS!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡QUE TAMBIÉN ESCUPE VENENO A DISTANCIA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡LO ESTOY VIENDO, PELOTUDO!"
+        }
+      ]
+    }
+  ]
+}

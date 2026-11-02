@@ -30,24 +30,34 @@ combate: `radius` (tamaño de colisión, en píxeles sin escalar) y `bounty`
 (economía).
 
 Los valores por ola se siguen declarando como funciones del número de ola que
-devuelven el porcentaje de esa ola, igual que hoy.
+devuelven el porcentaje de esa ola, igual que hoy — salvo **vida**, que es un
+único valor por ficha: el escalón de su acto, escrito a mano.
 
 La ficha es la **única** dueña de las seis estadísticas. Una ola dice quién
-aparece y con qué frecuencia, nunca cuánto aguanta ni cuánto pega. Si un acto
-quiere usar un cuerpo ya existente en su propio nivel (el acto 5 recicla todo el
-elenco anterior), lo declara una vez en `statMultipliers`:
+aparece y con qué frecuencia, nunca cuánto aguanta ni cuánto pega.
+
+La campaña es **una sola escalera**: el cuerpo base del acto 1 es la referencia
+(zombie 46 de vida / 12 de daño) y cada acto suma 25% compuesto sobre la base
+—57/16, 72/20, 90/24, 112/29—, horneado en las fichas de ese acto. Los demás
+bichos de cada acto se montan proporcionales a ese base, así que dentro de un
+acto la proporcionalidad se mantiene.
+
+Un acto que use un cuerpo de **otro** escalón (el acto 5 recicla todo el elenco
+anterior) lo declara una vez en `statMultipliers`, y ese es el único lugar donde
+se permite un multiplicador:
 
 ```js
 statMultipliers: {
-  zombie: { life: 2.6, attack: 2 },
-  archer: { life: 4.7 },
+  zombie: { life: 2.44, attack: 2.44 },
+  archer: { life: 1.25, attack: 1.25 },
 }
 ```
 
 El multiplicador se aplica **por enemigo y por estadística**, sobre el porcentaje
 autorado, antes de cualquier resolver: `1` es el nivel neutral, y una estadística
-o un cuerpo que no aparezcan ahí conservan la ficha tal cual. Sumar una tabla de
-vida o daño a una ola es un error de validación, no una alternativa.
+o un cuerpo que no aparezcan ahí conservan la ficha tal cual. Los actos 1 a 4 no
+declaran multiplicadores. Sumar una tabla de vida o daño a una ola es un error de
+validación, no una alternativa.
 
 ## Comportamiento genérico: uno solo, para todos
 
@@ -259,6 +269,27 @@ pendientes: son catálogo de patrones, no ficha.
 - **Nada nuevo en el motor.** El acto usa el selector de acciones, `ctx.prison`,
   `ctx.shockwave` y `ctx.spawnEnemy` que ya existían; lo único que se sumó son
   tres dibujos de proyectil en `src/sprites.mjs`: `arrow`, `net` y `flask`.
+
+### Acto 6 — Epílogo de Papafrita (Monster Hunter)
+
+- **Nueve fichas nuevas:** `jagras`, `vespoid`, `kestodon` (carga telegrafiada),
+  `mernos` (se abalanza), `hornetaur` (el muro, 40% de mitigación),
+  `greatJagras` (élite: se traga un Jagras y rueda), `kuluYaKu` (minijefe: la
+  roca le da 0.75 de defensa hasta que la rompe al 75% de vida), `pukeiPukei`
+  (minijefe: lengua, escupe veneno y vacía el saco al 50%) y `rathalos` (jefe:
+  escupe fuego a distancia, ruge, se enoja al 66% y arde al 33%).
+- **Élite contra común:** la regla de altura del jugador mide a los cuerpos
+  comunes. Un élite (hoy `greatJagras`) puede pasar esa altura y se lee por la
+  melena, la panza y el ancho; lo que nunca hace es cerrar la oleada, porque eso
+  es del jefe y lo marca `boss: true`.
+- **Primitiva nueva del motor: `ctx.enemyShot({ x, y, device, damage, speed })`.**
+  Un enemigo que ataca a distancia sin volver toda su ficha a distancia. La
+  ficha dice qué sale de su boca y cuánto pega; el motor apunta al jugador y
+  posee el proyectil. Hacía falta porque `attackDistance` es una sola por ficha:
+  subirla convertía también el mordisco en proyectil.
+- **Dos dibujos de proyectil nuevos:** `fireball` (Rathalos) y `venom`
+  (Pukei-Pukei).
+
 - **Actor de escena:** los dos jefes tienen actor de cinemática (`src/npcs/`)
   y retratos, así que hablan en diálogo como los jefes de los actos 2 y 3. El
   cadáver del Capataz en la escena de derrota sigue siendo un actor `enemy` con

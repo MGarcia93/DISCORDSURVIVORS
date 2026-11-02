@@ -26,6 +26,15 @@ import alchemist from './alchemist.mjs';
 import lotusAlchemist from './lotus-alchemist.mjs';
 import taskmaster from './taskmaster.mjs';
 import administrator from './administrator.mjs';
+import jagras from './jagras.mjs';
+import vespoid from './vespoid.mjs';
+import kestodon from './kestodon.mjs';
+import mernos from './mernos.mjs';
+import hornetaur from './hornetaur.mjs';
+import greatJagras from './great-jagras.mjs';
+import kuluYaKu from './kulu-ya-ku.mjs';
+import pukeiPukei from './pukei-pukei.mjs';
+import rathalos from './rathalos.mjs';
 
 // Enemy registry, built from one module per kind exactly like src/characters/.
 // Each ficha owns its sheet and its drawing; this file only resolves percentages
@@ -41,14 +50,17 @@ import administrator from './administrator.mjs';
 // the multiplier lands on the authored percentage (see scaled).
 export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
   skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith,
-  barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster, administrator };
+  barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster, administrator,
+  jagras, vespoid, kestodon, mernos, hornetaur, greatJagras, kuluYaKu, pukeiPukei, rathalos };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
 export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,
   meleeMinion.id, mageMinion.id, siegeMinion.id, mistWalker.id, maiden.id, yorick.id,
   skeleton.id, lesserDemon.id, shaman.id, burningElite.id, batSwarm.id,
   lordZir.id, lilith.id,
-  barbarian.id, slaver.id, archer.id, alchemist.id, lotusAlchemist.id, taskmaster.id];
+  barbarian.id, slaver.id, archer.id, alchemist.id, lotusAlchemist.id, taskmaster.id,
+  jagras.id, vespoid.id, kestodon.id, mernos.id, hornetaur.id,
+  greatJagras.id, kuluYaKu.id, pukeiPukei.id, rathalos.id];
 
 export function getEnemyKind(id) {
   return ENEMY_KINDS[id] ?? ENEMY_KINDS.zombie;

@@ -1,0 +1,140 @@
+{
+  "id": "act-06-explain",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "close": [
+        600,
+        480
+      ],
+      "wide": [
+        600,
+        430
+      ],
+      "boss": [
+        600,
+        300
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, para llegar al Rathalos tenemos que pasar por el territorio de un Great Jagras. Este monstruo come Jagras pequeños y cuando tiene la panza llena empieza a—"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿Solago podría comerse uno entero?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "¿QUÉ?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Y... con esos dientes, boludo."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "happy",
+          "text": "JAJAJA."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "annoyed",
+          "text": "¡NEGRO, ESTOY EXPLICANDO!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, seguí."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Como decía, después de comer puede rodar y aplastar—"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Ah, como vos cuando te caés de la cama."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "annoyed",
+          "text": "Negro, te voy a cagar a trompadas."
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJAJA."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Ahí está. Ahora presten atención."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡AHORA PEGÁLE, NO EXPLIQUES!"
+        }
+      ]
+    }
+  ]
+}

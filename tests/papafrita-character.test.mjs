@@ -50,7 +50,7 @@ test('Papafrita runs on the percentage core and throws voice waves, not weapons'
   // §3: a little under the average on body, above it on reach and cadence.
   assert.equal(p.maxHp, 90);
   assert.equal(p.defense, 0.425);
-  assert.equal(p.damage, 36);
+  assert.equal(p.damage, 28.8);
   assert.equal(p.attackRange, 320 * UNIT_PX);
   assert.ok(Math.abs(p.shotInterval - 100 / 180) < 1e-9);
   assert.equal(p.speed, 165 * WORLD_SCALE);
@@ -220,7 +220,7 @@ test('the monologue is an expanding wave: it opens, it hits who it crosses', () 
   assert.equal(far.hp, 400, 'the far one waits for the edge');
   for (let i = 0; i < 20; i++) papafrita.onTick(run, p, 0.1, toolbox(run));
   assert.ok(far.hp < 400, 'until the wave opens that far');
-  assert.equal(near.hp, 400 - 36 * 0.5, 'each body is hit exactly once per wave');
+  assert.equal(near.hp, 400 - p.damage * 0.5, 'each body is hit exactly once per wave');
 });
 
 function passivate(run, p) {
@@ -315,7 +315,7 @@ test('the wave is eaten by what it crosses: less damage behind, and it runs out'
   step(run, 0.016);
   run.shotIn = 1e9; // one wave only, so the falloff can be counted
   for (let frame = 0; frame < 60 && run.projectiles.length; frame++) step(run, 0.05);
-  const damage = 36;
+  const damage = p.damage;
   assert.ok(Math.abs((400 - first.hp) - damage) < 1e-9, 'the front takes the full hit');
   assert.ok(Math.abs((400 - second.hp) - damage * 0.72) < 1e-9, 'the next one takes less');
   assert.equal(third.hp, 400, 'the wave ran out');

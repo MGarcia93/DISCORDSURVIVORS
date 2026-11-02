@@ -18,7 +18,7 @@ test('every enemy kind authors all six combat stats plus its body and bounty', (
 });
 
 test('the act 3 roster authors its own sheets, reach and roles', () => {
-  assert.equal(enemyHp('skeleton', 1), 36);
+  assert.equal(enemyHp('skeleton', 1), 72);
   assert.equal(enemyBounty('skeleton'), 2);
   assert.equal(enemyBounty('batSwarm'), 1);
   // The shaman is the act's artillery: it keeps its distance and throws a hex.
@@ -38,16 +38,16 @@ test('the resistant zombie is a slow wall: more life, mitigation and punch, less
   assert.equal(ENEMY_KINDS.brute.radius, 22);
   assert.equal(enemyHp('brute', 3), 156);
   assert.equal(enemyDefense('brute', 3), 0.3);
-  assert.equal(enemyContactDamage('brute', 3), 90);
+  assert.equal(enemyContactDamage('brute', 3), 42);
   assert.equal(enemyAttackInterval('brute', 3), 1);
   assert.equal(enemyAttackRange('brute', 3), 0);
   assert.equal(enemySpeed('brute', 3), 490 * 5 / 100 * WORLD_SCALE);
   assert.equal(enemyBounty('brute'), 5);
 });
 
-test('enemy sheets are percentages over the base stats with per-wave curves', () => {
+test('enemy sheets are percentages over the base stats, with life as one number', () => {
   assert.equal(enemyHp('zombie', 1), 46);
-  assert.equal(enemyHp('zombie', 10), 100);
+  assert.equal(enemyHp('zombie', 10), 46, 'life is one value: the wave never re-authors it');
   assert.equal(enemyHp('runner', 2), 38);
   assert.equal(enemySpeed('zombie', 5), 60 * WORLD_SCALE);
   assert.equal(enemySpeed('runner', 5), 108 * WORLD_SCALE);
@@ -56,7 +56,7 @@ test('enemy sheets are percentages over the base stats with per-wave curves', ()
   assert.equal(ENEMY_KINDS.runner.radius, 13);
   assert.equal(ENEMY_KINDS.alarmZombie.radius, 38);
   assert.equal(enemySpeed('alarmZombie', 4), 52 * WORLD_SCALE);
-  for (const [kind, contact] of [['zombie', 26], ['runner', 24]]) {
+  for (const [kind, contact] of [['zombie', 12], ['runner', 11]]) {
     assert.equal(enemyContactDamage(kind), contact);
     assert.equal(enemyBounty(kind), 2);
   }
@@ -166,25 +166,25 @@ test('contact damage and coin rewards read the table at runtime', () => {
 });
 
 test('the Rift minions keep the same six-stat sheet, each with its own numbers', () => {
-  assert.equal(enemyHp('meleeMinion', 1), 31);
+  assert.equal(enemyHp('meleeMinion', 1), 57);
   assert.equal(enemyDefense('meleeMinion'), 0.1);
-  assert.equal(enemyContactDamage('meleeMinion'), 11);
+  assert.equal(enemyContactDamage('meleeMinion'), 16);
   assert.equal(enemyAttackRange('meleeMinion'), 0, 'the soldier has to touch');
   assert.equal(enemyAttackInterval('meleeMinion'), 100 / 154);
   assert.equal(enemySpeed('meleeMinion', 1), 1010 * 5 / 100 * WORLD_SCALE);
   assert.equal(ENEMY_KINDS.meleeMinion.radius, 13);
   assert.equal(enemyBounty('meleeMinion'), 1);
 
-  assert.equal(enemyHp('mageMinion', 2), 32);
-  assert.equal(enemyContactDamage('mageMinion'), 10);
+  assert.equal(enemyHp('mageMinion', 2), 52);
+  assert.equal(enemyContactDamage('mageMinion'), 14);
   assert.ok(Math.abs(enemyAttackRange('mageMinion') - 187) < 1e-9, 'the mage keeps its distance');
   assert.equal(enemyAttackInterval('mageMinion'), 1);
   assert.equal(ENEMY_KINDS.mageMinion.projectile, 'bolt');
   assert.equal(enemyBounty('mageMinion'), 2);
 
-  assert.equal(enemyHp('siegeMinion', 2), 62);
+  assert.equal(enemyHp('siegeMinion', 2), 103);
   assert.equal(enemyDefense('siegeMinion'), 0.2);
-  assert.equal(enemyContactDamage('siegeMinion'), 16);
+  assert.equal(enemyContactDamage('siegeMinion'), 23);
   assert.ok(Math.abs(enemyAttackRange('siegeMinion') - 198) < 1e-9);
   assert.equal(enemyAttackInterval('siegeMinion'), 100 / 60);
   assert.equal(ENEMY_KINDS.siegeMinion.projectile, 'shell');
@@ -192,7 +192,7 @@ test('the Rift minions keep the same six-stat sheet, each with its own numbers',
 });
 
 test('the act 4 roster authors its own sheets, reach and roles', () => {
-  assert.equal(enemyHp('barbarian', 1), 39);
+  assert.equal(enemyHp('barbarian', 1), 90);
   assert.equal(enemyBounty('barbarian'), 2);
   assert.equal(enemyBounty('slaver'), 3);
   assert.equal(enemyBounty('archer'), 3);
@@ -216,4 +216,34 @@ test('the act 4 roster authors its own sheets, reach and roles', () => {
   // trades armour for speed.
   assert.ok(ENEMY_KINDS.lotusAlchemist.actions.some(action => action.key === 'overdose' && action.when));
   assert.ok(ENEMY_KINDS.taskmaster.actions.some(action => action.key === 'rage' && action.when));
+});
+
+test('the act 6 roster authors its own sheets, reach and roles', () => {
+  // Rung six: +25% over act 5, so the plain body is 140 life and 37 damage.
+  assert.equal(enemyHp('jagras', 1), 140);
+  assert.equal(enemyHp('jagras', 6), 140, 'life is one value per sheet');
+  assert.equal(enemyContactDamage('jagras'), 37);
+  // The wasp is the fast flank; the beetle is the wall of its wave.
+  assert.ok(enemySpeed('vespoid', 6) > enemySpeed('jagras', 6));
+  assert.equal(enemyDefense('hornetaur'), 0.4);
+  // The pack lizard lunges; it never throws anything.
+  assert.deepEqual(ENEMY_KINDS.jagras.actions.map(action => action.key), ['swipe', 'lunge']);
+  assert.equal(ENEMY_KINDS.jagras.projectile, undefined);
+  // The elite is the same family at four times the life, and it is not a boss.
+  assert.equal(ENEMY_KINDS.greatJagras.boss, undefined);
+  assert.ok(enemyHp('greatJagras') > enemyHp('jagras') * 4);
+  assert.deepEqual(ENEMY_KINDS.kestodon.actions.map(action => action.key), ['swipe', 'charge']);
+  assert.deepEqual(ENEMY_KINDS.mernos.actions.map(action => action.key), ['swipe', 'dive']);
+  // Two mini-bosses and the act boss carry the flag that gives them the bar.
+  assert.equal(ENEMY_KINDS.kuluYaKu.boss, true);
+  assert.equal(ENEMY_KINDS.pukeiPukei.boss, true);
+  assert.equal(ENEMY_KINDS.rathalos.boss, true);
+  assert.ok(enemyHp('rathalos') > enemyHp('pukeiPukei'), 'the boss outlasts the mini-boss');
+  assert.deepEqual(ENEMY_KINDS.kuluYaKu.actions.map(action => action.key),
+    ['swipe', 'raise', 'slam', 'expose']);
+  assert.deepEqual(ENEMY_KINDS.rathalos.actions.map(action => action.key),
+    ['swipe', 'flames', 'roar', 'dive', 'enrage', 'inferno']);
+  // The fire and the venom are projectiles: the sheet's reach is still contact.
+  assert.equal(enemyAttackRange('rathalos'), 0);
+  assert.equal(enemyAttackRange('pukeiPukei'), 0);
 });

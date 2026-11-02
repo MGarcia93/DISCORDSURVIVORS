@@ -31,12 +31,27 @@ export function itemBlocked(item, { coins, items = {}, wave = 1 }) {
   return null;
 }
 
+// Takes one copy back off a build. The lab owns the counts, so removing is the
+// inverse of picking: the last copy drops the entry, and the next render seeds
+// again with the budget the removed pick was spending. Picking is never undone
+// by mutating a run: the build is the input, the run is the measurement.
+export function removeOne(counts, id) {
+  const next = { ...counts };
+  const left = countOf(counts, id) - 1;
+  if (left > 0) next[id] = left;
+  else delete next[id];
+  return next;
+}
+
 export function seedRun({
   character = 'negro', act, wave, balance = BALANCE,
   picks = {}, items = {}, random = Math.random,
 } = {}) {
   const entry = waveEntryBudget(act, wave, balance);
   const run = createRun(random, character, { balance }, act);
+  // The run carries the flag so the shell can tell a lab wave from a campaign
+  // one: the overlays swap their exits instead of advancing the campaign.
+  run.lab = true;
   seedWave(run, wave);
   // The campaign reaches this wave with that much survival time behind it, and
   // some sheets read `elapsed` (the alarm zombie's horde grows with it), so the

@@ -21,6 +21,47 @@ const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&a
 // shows something. `chains` is the Wheel of Pain's: a shackle at the prisoner's
 // ankle and the slack running to a coil on the ground, snapped when broken.
 const PROP_ART = {
+  // A portal opening in the floor: a violet ring seen from above, with a dark
+  // vortex inside, a lit rim and sparks climbing out of it. `closed` paints
+  // nothing, so a scene can open them one by one under each actor.
+  portal(ctx, x, y, state) {
+    if (state === 'closed') return;
+    const wide = state === 'wide' ? 1.3 : 1;
+    const rx = 46 * wide, ry = 14 * wide;
+    const ink = '#0b0714', deep = '#2a1355', mid = '#4a2390', glow = '#7a4fd0';
+    const light = '#c9a6ff', rim = '#6b3fbe';
+    const ellipse = (k, color, inset = 0) => {
+      const ex = Math.round(rx * k), ey = Math.round(ry * k);
+      for (let row = -ey; row <= ey; row += 2) {
+        const t = row / ey;
+        const half = Math.round(ex * Math.sqrt(Math.max(0, 1 - t * t)));
+        if (half <= inset) continue;
+        ctx.fillStyle = color;
+        ctx.fillRect(x - half + inset, y + row, (half - inset) * 2, 2);
+      }
+    };
+    ellipse(1, ink);
+    ellipse(0.92, rim);
+    ellipse(0.78, ink);
+    ellipse(0.7, deep);
+    ellipse(0.5, mid);
+    ellipse(0.3, glow);
+    // The mouth of the hole: a dark core with a bent spiral of light escaping.
+    ctx.fillStyle = ink; ctx.fillRect(x - 10, y - 3, 20, 5);
+    ctx.fillStyle = light; ctx.fillRect(x - 7, y - 3, 14, 2);
+    ctx.fillStyle = '#f2e7ff'; ctx.fillRect(x - 3, y - 3, 6, 1);
+    for (let spark = 0; spark < 6; spark++) {
+      const side = spark % 2 ? 1 : -1;
+      ctx.fillStyle = spark % 3 ? glow : light;
+      ctx.fillRect(Math.round(x + side * (6 + spark * 4)), Math.round(y - 6 - (spark % 3) * 4), 2, 3);
+    }
+    // Rim light on the top lip, so the hole reads as cut into the floor.
+    for (let col = -rx + 6; col <= rx - 6; col += 3) {
+      const t = col / rx;
+      ctx.fillStyle = light;
+      ctx.fillRect(x + col, y - Math.round(ry * Math.sqrt(Math.max(0, 1 - t * t))) + 1, 3, 1);
+    }
+  },
   chains(ctx, x, y, state) {
     const ink = '#16151c', iron = '#6d6a72', light = '#cfcbcd', rust = '#5e3a24';
     const broken = state === 'broken';
@@ -141,7 +182,9 @@ export function createPresenter(root, catalog, onError) {
         const frontProps = [];
         const paintProp = (id, prop) => {
           const [x, y] = player.scene.stage.points[prop.at];
-          const art = PROP_ART[id];
+          // A prop id may carry a suffix (`portal-negro`) so a scene can hold
+          // four of them; the art is registered once, under the family name.
+          const art = PROP_ART[id] ?? PROP_ART[id.split('-')[0]];
           if (art) { art(ctx, x, y, prop.state); return; }
           ctx.fillStyle = prop.state === 'open' ? '#bfd890' : '#786b95';
           ctx.fillRect(x - 25, y - 65, 50, 60);
@@ -153,6 +196,7 @@ export function createPresenter(root, catalog, onError) {
           paintProp(id, prop);
         }
         for (const actor of Object.values(player.actors).sort((a, b) => a.y - b.y)) {
+          if (actor.hidden) continue;
           if (actor.enemy) {
             // Enemies stand on the stage and walk with their own art; a dead one
             // lies on the ground instead.

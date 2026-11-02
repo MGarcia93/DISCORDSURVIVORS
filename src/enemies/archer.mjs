@@ -7,9 +7,9 @@ import { drawArcher } from '../sprites.mjs';
 const archer = {
   id: 'archer',
   stats: {
-    life: wave => 24 + 5 * wave,
+    life: 70,
     defense: 0,
-    attack: 90,                          // 90% -> 9 damage per arrow
+    attack: 200,                          // 200% -> 20 damage per arrow
     attackSpeed: 75,                     // 75% -> one arrow every 1.33 s
     attackDistance: 210,                 // 210% of 100 units -> 231 px of reach
     moveSpeed: 880,                      // 44 scaled px/s: it gives ground slowly

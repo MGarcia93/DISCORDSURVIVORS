@@ -369,3 +369,99 @@ test('the taskmaster trades armour for speed once, when he is losing', () => {
   assert.ok(boss.defense < defense, 'and pays for it with armour');
   assert.equal(boss.actionCds.rage, 999, 'never again');
 });
+
+test('the kestodon charges to reach, it never throws anything', () => {
+  const run = quietRun();
+  const lizard = createEnemy(run, 'kestodon', run.player.x + 400, run.player.y);
+  run.enemies.push(lizard);
+  run.random = () => 0.9; // the charge quarter of the roll
+  step(run, 0.05, {});
+  assert.equal(lizard.chargeBoost, 2.6, 'it accelerates');
+  assert.ok(lizard.chargeTtl > 0, 'for a short burst');
+  assert.equal(run.projectiles.length, 0, 'and nothing leaves its body');
+});
+
+test('the jagras lunges: a burst of speed, not a wave', () => {
+  const run = quietRun();
+  const lizard = createEnemy(run, 'jagras', run.player.x + 400, run.player.y);
+  run.enemies.push(lizard);
+  run.random = () => 0.9; // the lunge quarter of the roll
+  step(run, 0.05, {});
+  assert.equal(lizard.chargeBoost, 2.4);
+  assert.ok(lizard.chargeTtl > 0);
+  assert.equal(run.shockwaves.length, 0, 'no ring of damage');
+  assert.equal(run.projectiles.length, 0, 'no shot either');
+});
+
+test('the great jagras swallows once and then rolls into the group', () => {
+  const run = quietRun();
+  const great = createEnemy(run, 'greatJagras', run.player.x + 400, run.player.y);
+  run.enemies.push(great);
+  run.random = () => 0.9;
+  step(run, 0.05, {});
+  assert.equal(great.fed, true, 'it eats first');
+  great.attackCd = 0;
+  step(run, 0.05, {});
+  assert.ok(great.chargeTtl > 0, 'and then it rolls at the player');
+  assert.equal(run.shockwaves.length, 0, 'the roll is the body, never a wave');
+});
+
+test('the kulu-ya-ku raises the rock, and the rock is its defence', () => {
+  const run = quietRun();
+  const bird = createEnemy(run, 'kuluYaKu', run.player.x + 300, run.player.y);
+  run.enemies.push(bird);
+  run.random = () => 0.9;
+  step(run, 0.05, {});
+  assert.equal(bird.raised, true);
+  assert.equal(bird.defense, 0.75, 'frontal damage almost does not land');
+  // Three quarters down, the rock breaks and it never gets it back.
+  bird.hp = bird.maxHp * 0.7;
+  bird.attackCd = 0;
+  step(run, 0.05, {});
+  assert.equal(bird.raised, false);
+  assert.equal(bird.exposed, true);
+  assert.ok(bird.defense < 0.75);
+  bird.attackCd = 0;
+  step(run, 0.05, {});
+  assert.notEqual(bird.raised, true, 'the rock is gone for good');
+});
+
+test('the pukei-pukei spits venom across the clearing', () => {
+  const run = quietRun();
+  const bird = createEnemy(run, 'pukeiPukei', run.player.x + 400, run.player.y);
+  run.enemies.push(bird);
+  run.random = () => 0.9; // the venom slot
+  step(run, 0.05, {});
+  assert.equal(run.projectiles.length, 1);
+  assert.equal(run.projectiles[0].device, 'venom');
+  assert.equal(run.projectiles[0].team, 'enemy');
+});
+
+test('the rathalos spits fire at distance and it travels', () => {
+  const run = quietRun();
+  const wyvern = createEnemy(run, 'rathalos', run.player.x + 500, run.player.y);
+  run.enemies.push(wyvern);
+  run.random = () => 0.5; // the fire slot
+  step(run, 0.05, {});
+  const fireball = run.projectiles.find(shot => shot.device === 'fireball');
+  assert.ok(fireball, 'a fireball leaves the mouth');
+  const before = run.player.hp;
+  for (let i = 0; i < 300; i++) step(run, 1 / 60, {});
+  assert.ok(run.player.hp < before, 'and the player has to move or eat it');
+});
+
+test('the rathalos gains its phases as it loses life', () => {
+  const run = quietRun();
+  const wyvern = createEnemy(run, 'rathalos', run.player.x + 300, run.player.y);
+  run.enemies.push(wyvern);
+  const speed = wyvern.speed;
+  wyvern.hp = wyvern.maxHp * 0.6;
+  run.random = () => 0.99; // the enrage slot
+  step(run, 0.05, {});
+  assert.equal(wyvern.enraged, true);
+  assert.ok(wyvern.speed > speed, 'it gets faster');
+  wyvern.hp = wyvern.maxHp * 0.3;
+  wyvern.attackCd = 0;
+  step(run, 0.05, {});
+  assert.equal(wyvern.inferno, true, 'and the last phase burns once');
+});

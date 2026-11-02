@@ -490,7 +490,7 @@
 
 **Negro:** ¡Hacé un círculo!
 
-**Jhony:** ¡CERRÁ EL CULO, NEGRO!
+**Jhony:** ¡CERRÁ EL ORTO, NEGRO!
 
 ### Final de oleada
 
@@ -708,7 +708,7 @@
 
 **Negro:** JAJAJA, sabía.
 
-**Jhony:** ¡CERRÁ EL CULO, NEGRO!
+**Jhony:** ¡CERRÁ EL ORTO, NEGRO!
 
 *Jhony camina hacia el portal.*
 

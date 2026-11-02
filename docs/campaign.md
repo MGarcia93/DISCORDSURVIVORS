@@ -59,12 +59,13 @@ export default {
   // miniboss: [{ wave: 5, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' }, ...],
   // Optional: this act's tier over the enemy sheets. Every statistic belongs to
   // the enemy's own ficha (src/enemies/); this block only multiplies the ones it
-  // names, per kind and per statistic, so act 5 can field shipped bodies at its
+  // names, per kind and per statistic, so a world can field shipped bodies at its
   // own level without authoring a second table. A stat left out, or an act with
-  // no block at all, fields the sheet exactly as written.
+  // no block at all, fields the sheet exactly as written. Acts 1-4 declare none:
+  // their tier is baked into the sheets, one +25% rung per act.
   statMultipliers: {
-    zombie: { life: 2.6, attack: 2 },
-    archer: { life: 4.7 },
+    zombie: { life: 2.44, attack: 2.44 },
+    archer: { life: 1.25 },
   },
   waves: [                   // one row per wave, numbered from 1
     // Optional per-wave modifiers: `speedBoost` multiplies the speed of that
@@ -77,9 +78,11 @@ export default {
 ```
 
 A wave says **who** arrives and **how often**, never how hard they hit: life,
-defense, attack, cadence, reach and speed all come from the enemy ficha at that
-wave number. An act that fields a body above or below its authored tier says so
-once, in `statMultipliers`.
+defense, attack, cadence, reach and speed all come from the enemy ficha. Each
+act's sheet values are that act's rung of one ladder: act 1's base body is the
+reference (zombie 46 life / 12 damage), and every act above it adds 25% of the
+base, baked into the fichas. A world that fields a body from another rung — act
+5 recycles the whole cast — says so once, in `statMultipliers`.
 
 The validator rejects an unknown world, an unknown enemy kind, a wave whose mix
 does not share one roll, a wave that re-authors a statistic, a tier that names an
@@ -194,13 +197,41 @@ environment decides:
 - `?dev=balance` opens the balance lab: pick a character, a world and a wave,
   spend that wave's entry budget on level upgrades and items, and play the
   wave for real. The budget is projected from the waves before it, so a level-5 build at
-  wave 5 is a claim about the campaign and not a number someone typed.
+  wave 5 is a claim about the campaign and not a number someone typed. A left
+  click adds a rank or an item, a right click (or the card's `−1`) takes one back
+  and returns the budget, and each group counts what is left, so the build is
+  editable until the wave starts. A card at its cap reads `RANK 5/5` or `2/2`, not
+  a refusal. A lab run never advances the campaign and never plays a cinematic:
+  its shop and its death screen offer repeat and back to the build screen, and the
+  pause menu is the way out of a wave that is still running.
 
 `balanceFor(search)` in `src/reward-data.mjs` resolves both flags; the shipped
 `BALANCE` object is the real one.
 
+## Act 6
+
+Act 6 is the Papafrita epilogue, **«Nadie te vino a buscar»**, and the campaign's
+postgame. It runs in the `monster-hunter` Primordial Forest with nine new fichas:
+`jagras`, `vespoid`, `kestodon`, `mernos` and `hornetaur` as the common kinds,
+`greatJagras` as the wave-2 elite (bigger, with a mane, but not a boss),
+`kuluYaKu` on wave 3 and `pukeiPukei` on wave 5 as the two mini-bosses, and
+`rathalos` closing wave 6. Every sheet is authored on the act-6 rung of the
+ladder, so the act declares no `statMultipliers`.
+
+The two mini-bosses sit on **different waves**, which is why the engine opens a
+mini-boss line per wave: an entry belongs to the wave it names, and act 5's four
+entries on one wave still read as one line. Both waves are `untimed`: the
+mini-boss decides when the wave ends.
+
+Rathalos attacks at distance with `ctx.enemyShot`: the fireball is a projectile
+that travels, while the sheet keeps contact reach for the bite. Pukei-Pukei spits
+its venom the same way.
+
+Its cinematics live in `assets/narrative/acts/act-06/manifest.json` and every line
+is quoted from `context/historia/Discord_Survivors_Epilogo_Papafrita.md`. The
+parental punchline appears exactly once, in the reunion.
+
 ## Monster Hunter
 
-Monster Hunter is **not** a world. It is a rejected pitch inside Act 4, so it
-lives in that act's script and, later, in that act's scene manifest. It joins
-`ACTS` the day it becomes playable.
+Monster Hunter was a rejected pitch inside Act 4 until the epilogue made it
+playable: it is now the `monster-hunter` world and act 6.

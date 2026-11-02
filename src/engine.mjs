@@ -53,6 +53,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
       hitRadius: s.hitRadius, attackRange: s.attackRange, shotInterval: s.shotInterval,
       speed: s.speed,
       regen: 0, still: 0, immune: 0, attackFlash: 0, hurtFlash: 0,
+      swingFacing: 1,
       smile: 0, smileCooldown: 0,
     },
     enemies: [], projectiles: [], effects: [],
@@ -198,8 +199,11 @@ export function seedWave(run, wave) {
   run.player.characterDef.onStageStart?.(run, run.player);
   // The act may declare mini-bosses before the boss: they arrive on their own
   // wave, one at a time, and killing one never closes the run.
-  const line = minibossLine(run.act);
-  if (line.length && wave === line[0].wave) {
+  // A line belongs to the wave it names: an act may hold one mini-boss on wave
+  // three and another on wave five, and each opens its own line. Act 5's four
+  // entries on one wave read as one line, exactly as before.
+  const line = minibossLine(run.act).filter(entry => entry.wave === wave);
+  if (line.length) {
     run.minibossLine = { list: line, index: 0 };
     run.enemies.push(gauntletEnemy(run, 0, line[0].kind));
   }
@@ -358,13 +362,17 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
   emit('shot', { run, kind });
   const extra = kind === 'shroom' ? (run.player.rewardBonuses.extraShroom ?? 0)
     : kind === 'brick' ? (run.player.rewardBonuses.brickFan ?? 0) : 0;
+  // A second mushroom is a second mushroom: it lands exactly what the first one
+  // lands, because the reward says "one more" and a weaker copy reads as a nerf.
+  // The brick fan does spread, so each extra brick travels lighter.
+  const spread = kind === 'shroom' ? 1 : 0.6;
   const used = [target.id];
   for (let index = 0; index < extra; index++) {
     const alt = nearest(run, source, used, maxDistance);
     if (!alt) break;
     used.push(alt.id);
     run.projectiles.push({ x: source.x, y: source.y, target: alt.id,
-      damage: damage * 0.6, kind, device, hit: [], ttl: 3, angle: 0, attack });
+      damage: damage * spread, kind, device, hit: [], ttl: 3, angle: 0, attack });
   }
   return shot;
 }
@@ -457,6 +465,24 @@ function fireEnemyShot(run, enemy) {
   });
 }
 
+// A sheet that spits asks for a shot, not for a heading: the engine aims it at
+// the player and the ficha names the projectile shape, its damage and its speed.
+// This is how a boss attacks at distance without making its whole sheet ranged,
+// which would turn every claw into a projectile too.
+function enemyShot(run, { x = 0, y = 0, device = 'bolt', damage = 0, speed = 300 } = {}) {
+  const p = run.player;
+  const dx = p.x - x;
+  const dy = p.y - y;
+  const length = Math.hypot(dx, dy) || 1;
+  const travel = speed * WORLD_SCALE;
+  run.projectiles.push({
+    x, y,
+    vx: dx / length * travel, vy: dy / length * travel,
+    team: 'enemy', device, damage,
+    radius: 6 * WORLD_SCALE, ttl: 4, angle: Math.atan2(dy, dx), hit: [],
+  });
+}
+
 function hit(run, enemy, damage, kind = 'damage') {
   const elemental = (enemy.confusionStacks ?? 0) >= 3 ? 1.5 : 1;
   // Warrior's smoke bonus: mushrooms bite harder on enemies breathing his cloud.
@@ -503,6 +529,8 @@ function attackMelee(run) {
     }
   }
   p.attackFlash = 0.22;
+  // Where the blow landed: the sprite turns to that side while the swing shows.
+  p.swingFacing = inReach[0].x < p.x ? -1 : 1;
   run.effects.push({ x: inReach[0].x, y: inReach[0].y - inReach[0].radius - 12,
     text: combat.hitText ?? '✦', ttl: 0.35, kind: combat.hitKind ?? 'bite' });
   // The sheet may hang its own follow-ups on the swing (glass shards, a thrown
@@ -523,6 +551,9 @@ export function step(run, seconds, input = {}) {
      spawnAtEdge: kind => (run.enemies.length < ALIVE_CAP ? spawn(run, kind) : null),
      shockwave: options => shockwave(run, options),
      prison: options => prison(run, options),
+     // A ranged ability: the ficha says what leaves its mouth and how hard it
+     // lands, the engine owns the aim.
+     enemyShot: options => enemyShot(run, options),
      // `/mute`: the ficha asks for the lock, the engine owns the clock.
      lockSpecials: seconds => { run.specialsLocked = Math.max(run.specialsLocked ?? 0, seconds); } };
   run.time += dt;
@@ -561,11 +592,15 @@ export function step(run, seconds, input = {}) {
   let speedFactor = 1;
   let contactFactor = 1;
   let immobilized = false;
+  let covering = false;
   for (const special of def.specials) {
     if (p[special.key] > 0) {
       speedFactor *= special.speedFactor ?? 1;
       contactFactor *= special.contactFactor ?? 1;
       immobilized ||= special.immobilize === true;
+      // A sheet may hand its own attack to someone else for the window: La
+      // Patrona fights while Solago covers up, so the body never swings.
+      covering ||= special.noAttack === true;
     }
   }
   const mx = immobilized ? 0 : (input.x || 0);
@@ -616,7 +651,7 @@ export function step(run, seconds, input = {}) {
     }
   }
   run.shotIn -= dt;
-  if (run.shotIn <= 0) {
+  if (run.shotIn <= 0 && !covering) {
     if (def.attack.type === 'melee') attackMelee(run);
     else {
       const empowered = p.sellNextMult ?? 1;

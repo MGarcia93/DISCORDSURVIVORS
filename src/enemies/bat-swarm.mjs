@@ -6,9 +6,9 @@ import { drawBatSwarm } from '../sprites.mjs';
 const batSwarm = {
   id: 'batSwarm',
   stats: {
-    life: wave => 10 + 2 * wave,
+    life: 43,
     defense: 0,
-    attack: 60,                          // 60% -> 6 contact damage
+    attack: 130,                          // 130% -> 13 contact damage
     attackSpeed: 160,                    // 160% -> one bite every 0.63 s
     attackDistance: 0,
     moveSpeed: 2100,                     // 105 scaled px/s: it flies

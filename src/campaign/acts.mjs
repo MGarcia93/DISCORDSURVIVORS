@@ -3,6 +3,7 @@ import act02 from './act-02-rift.mjs';
 import act03 from './act-03-inferno.mjs';
 import act04 from './act-04-exiles.mjs';
 import act05 from './act-05-discord.mjs';
+import act06 from './act-06-monster-hunter.mjs';
 import { validateCampaign } from './validate.mjs';
 
 // The campaign map. This is the ONLY module that knows how many worlds exist,
@@ -10,14 +11,15 @@ import { validateCampaign } from './validate.mjs';
 // reads the descriptor it is handed. Adding a world is a module plus one line
 // here; removing one is deleting that line.
 //
-// Monster Hunter is deliberately absent: it is a rejected pitch in Act 4, not a
-// world. It enters this list the day it becomes playable.
+// Monster Hunter was a rejected pitch inside Act 4 and becomes playable here, as
+// the Papafrita epilogue: the campaign's last world is the postgame.
 export const ACTS = [
   act01,
   act02,
   act03,
   act04,
   act05,
+  act06,
 ];
 
 // Loading the module validates the whole map, so a half-authored act fails at

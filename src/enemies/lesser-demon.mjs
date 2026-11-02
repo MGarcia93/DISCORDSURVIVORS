@@ -6,9 +6,9 @@ import { drawLesserDemon } from '../sprites.mjs';
 const lesserDemon = {
   id: 'lesserDemon',
   stats: {
-    life: wave => 44 + 8 * wave,
+    life: 103,
     defense: 15,                         // 15% -> 1.5 points -> 7.5% mitigation
-    attack: 130,                         // 130% -> 13 contact damage
+    attack: 290,                         // 290% -> 29 contact damage
     attackSpeed: 115,                    // 115% -> one swing every 0.87 s
     attackDistance: 0,
     moveSpeed: 1150,                     // 57.5 scaled px/s

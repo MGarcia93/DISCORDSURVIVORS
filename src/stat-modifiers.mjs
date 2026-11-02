@@ -20,7 +20,10 @@ export function createStatState(player) {
     attackDistance: player.attackRange / UNIT_PX,
     moveSpeed: player.speed / UNIT_PX,
   };
-  const state = Object.freeze({ base: Object.freeze(base), sources: Object.freeze({}) });
+  // A ficha may declare a ceiling for a statistic it must never outgrow: it
+  // travels with the state, so every resolver path (apply and preview) agrees.
+  const caps = Object.freeze({ ...(player.characterDef?.statCaps ?? {}) });
+  const state = Object.freeze({ base: Object.freeze(base), sources: Object.freeze({}), caps });
   resolveStatState(state);
   return state;
 }
@@ -45,7 +48,7 @@ export function withStatSource(state, source, modifiers) {
   let sources = { ...state.sources };
   if (modifiers === null) delete sources[source];
   else sources = { ...sources, [source]: copyModifiers(source, modifiers) };
-  const next = Object.freeze({ base: state.base, sources: Object.freeze(sources) });
+  const next = Object.freeze({ base: state.base, sources: Object.freeze(sources), caps: state.caps });
   resolveStatState(next, source);
   return next;
 }
@@ -74,7 +77,10 @@ export function resolveStatState(state, changedSource = 'base') {
     if (!Number.isFinite(value) || value < 0 || (positive && value === 0)) {
       invalid(changedSource, stat, `result must be ${positive ? 'positive' : 'nonnegative'} and finite`);
     }
-    percentages[stat] = value * 100 / BASE_STATS[stat];
+    // The ficha's own ceiling, never a global rule: a melee character that a
+    // single item turns into artillery stops being the character.
+    const cap = state.caps?.[stat];
+    percentages[stat] = Math.min(Number.isFinite(cap) ? cap : value, value) * 100 / BASE_STATS[stat];
   }
   // Keep the project's existing unit conversion and defense cap authoritative.
   return resolveEntityStats(percentages);

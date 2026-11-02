@@ -1,0 +1,130 @@
+{
+  "id": "act-06-path",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "close": [
+        600,
+        480
+      ],
+      "wide": [
+        600,
+        430
+      ],
+      "boss": [
+        600,
+        300
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, vamos todos juntos. No se separen."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale, capitán."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡HABLO EN SERIO, NEGRO!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Mirá quién se hace el jefe."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡ALGUIEN TIENE QUE ORGANIZAR!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, dientudo. Aprovechá que acá podés dar órdenes."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "happy",
+          "text": "JAJAJA."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡CALLATE, PARAGUAYO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Pero si no dije nada."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA, no te respetan ni los paraguayos, Solago."
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡LOS VOY A MANDAR A TODOS A LA MIERDA!"
+        }
+      ]
+    }
+  ]
+}

@@ -45,7 +45,7 @@ test('Viaje Astral deals continuous area damage, disorients normal enemies and b
   assert.equal(strong.confusionStacks, 3, 'normal enemies inside the circle get disoriented');
   // 3 staggered ticks: the confusion reaches 3 stacks on tick 2, so hits are
   // 0-stacks, 2-stacks (no bonus) and 3-stacks (x1.5 bonus).
-  assert.ok(Math.abs(weak.hp - (50 - 9 * (1 + 1 + 1.5))) < 1e-6,
+  assert.ok(Math.abs(weak.hp - (50 - 7.2 * (1 + 1 + 1.5))) < 1e-6,
     'the astral special continues to scale from Warrior base damage');
   assert.equal(weak.x, weakBefore, 'the weak one is briefly immobilized: too dazed to walk');
   assert.ok(weak.stunTtl > 0, 'the stun keeps refreshing while the circle lasts');
@@ -68,7 +68,33 @@ test('Strong enemies take the drop instead of the floor: bosses are only slowed'
   step(run, 0.05, {});
   assert.equal(boss.confusionStacks, 1, 'bosses cap at one stack: slow, never stunned');
   assert.equal(boss.stunTtl ?? 0, 0, 'no immobilization for a boss');
-  assert.ok(Math.abs(boss.hp - (2200 - 9)) < 1e-6, 'the circle still deals its tick damage');
+  assert.ok(Math.abs(boss.hp - (2200 - 7.2)) < 1e-6, 'the circle still deals its tick damage');
+});
+
+test('Me Desaparezco also swallows the boss ring, not just bodies and bolts', () => {
+  const ring = run => {
+    const p = run.player;
+    p.immune = 0;
+    run.shockwaves = [{ x: p.x, y: p.y, radius: 0, maxRadius: 400, speed: 300 * WORLD_SCALE, damage: 30, hit: false }];
+    step(run, 0.05, {});
+    return p;
+  };
+  // The ring lands on a body that is on stage...
+  const bare = createRun(() => 0.5, 'warrior');
+  bare.spawnIn = 100;
+  bare.shotIn = 100;
+  const caught = ring(bare);
+  assert.ok(caught.hp < caught.maxHp, 'a ring is one attack and it lands');
+
+  // ...and it never lands while he is gone.
+  const gone = createRun(() => 0.5, 'warrior');
+  gone.spawnIn = 100;
+  gone.shotIn = 100;
+  assert.equal(activateSpecial(gone, 'vanish'), true);
+  const p = gone.player;
+  const before = p.hp;
+  ring(gone);
+  assert.equal(p.hp, before, 'the ring never lands while he is vanished');
 });
 
 test('Me Desaparezco is total invulnerability and reappears away from the danger', () => {

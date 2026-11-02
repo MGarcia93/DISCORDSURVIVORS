@@ -61,7 +61,9 @@ test('Solago smile duration and Patrona radius change their real effects', () =>
   const wider = createRun(() => 0.5, 'solago');
   take(wider, 'wider-patrona', 2);
   for (const target of [run, wider]) {
-    target.enemies = [{ id: 1, kind: 'zombie', hp: 1e6, maxHp: 1e6, x: target.player.x + 190, y: target.player.y, radius: 1, speed: 0 }];
+    // Between the base ring (240 units) and the widened one (290): the upgrade
+    // has to be the difference between missing and landing.
+    target.enemies = [{ id: 1, kind: 'zombie', hp: 1e6, maxHp: 1e6, x: target.player.x + 290, y: target.player.y, radius: 1, speed: 0 }];
     target.standIn = 0;
     activateSpecial(target, 'stand');
     step(target, 0.01, {});

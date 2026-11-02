@@ -370,3 +370,12 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .balance-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
 .balance-cards .upgrade.own { border-color: var(--green); }
 .balance-cards canvas[data-art] { width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }
+/* A card adds, the corner −1 takes one back: the pick is a build input, not a
+   run, so undoing it has to be as cheap as making it. */
+.balance-pick { position: relative; display: flex; }
+.balance-pick .upgrade { flex: 1; padding-right: 40px; }
+/* A blocked card looks refused but keeps receiving the right click that takes a
+   pick back, so it is `blocked`, never `disabled`. */
+.balance-cards .upgrade.blocked, .balance-cards .upgrade.blocked:hover { opacity: 0.45; border-color: #6c5578; background: #32253e; cursor: default; }
+.balance-remove { position: absolute; top: 6px; right: 6px; padding: 1px 6px; border: 2px solid var(--border); background: var(--ink); color: var(--gold); font: inherit; font-size: 10px; line-height: 1.5; cursor: pointer; }
+.balance-remove:hover { border-color: var(--gold); color: var(--paper); }

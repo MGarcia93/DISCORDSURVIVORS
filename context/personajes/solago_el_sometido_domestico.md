@@ -65,6 +65,9 @@ Una figura espectral inspirada en su mujer aparece detrás de Solago, al estilo 
 
 - Provoca daño cuerpo a cuerpo en un área amplia alrededor del personaje.
 - Ejecuta múltiples tijeretazos durante unos segundos.
+- Mientras La Patrona está en escena, Solago es **inmune**: no le entra ningún
+  daño, ni golpes, ni proyectiles, ni anillos de jefe. Es su ventana de respiro,
+  y por eso la recarga es larga.
 - Tiene una animación dramática, exagerada y cómica.
 - Al terminar, le tira un último tijeretazo a Solago, que reacciona asustado y sale corriendo brevemente como parte de la animación.
 - Debe sentirse como su momento más poderoso, sin estar activa permanentemente.
@@ -90,7 +93,7 @@ Una figura espectral inspirada en su mujer aparece detrás de Solago, al estilo 
 
 ## 7. Identidad jugable
 
-Solago es un luchador de corto alcance: tiene que acercarse para morder, pero puede resistir mediante su risa defensiva y despejar el área con la invocación de La Patrona.
+Solago es un luchador de corto alcance: tiene que acercarse para morder, pero puede resistir mediante su risa defensiva y despejar el área con la invocación de La Patrona. Ninguna build la vuelve artillería: su alcance tiene techo, siempre por debajo del enemigo a distancia más corto.
 
 Se diferencia de otros personajes definidos:
 

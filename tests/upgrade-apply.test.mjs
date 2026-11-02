@@ -17,7 +17,7 @@ test('chooseUpgrade delegates to apply and preserves exact stat effects', () => 
     return run.player;
   };
 
-  assert.equal(buy('damage').damage, 30 * 1.3);
+  assert.equal(buy('damage').damage, 24 * 1.3);
   // attackSpeed is authored as a percentage (222.22%) whose resolved interval
   // rounds to 0.45s within float tolerance.
   assert.ok(Math.abs(buy('rate').shotInterval - (1 / 1.9) * 0.92) < 0.001);
@@ -39,7 +39,7 @@ test('an upgrade can carry a custom apply without touching engine logic', () => 
     run.phase = 'shop';
     run.coins = 5;
     assert.equal(chooseUpgrade(run, 'damage'), true);
-    assert.equal(run.player.damage, 129);
+    assert.equal(run.player.damage, 123);
     assert.equal(run.upgrades.damage, 1);
   } finally {
     UPGRADES.length = 0;

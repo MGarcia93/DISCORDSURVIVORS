@@ -131,6 +131,8 @@ Maxi ya le abrió un portal a Papafrita y le escribió repetidas veces; Papafrit
 
 **MAXI:** Dos boludos.
 
+**WARRIOR:** ¿Y quiénes son, ura?
+
 *En la pantalla aparece una lista.*
 
 ```text
@@ -156,9 +158,11 @@ PAPAFRITA — MONSTER_HUNTER_WORLD_OLD — CONECTADO
 
 **PAPASITO:** ¿Y no quiso salir?
 
-**MAXI:** No. Le mandé como veinte mensajes.
+**MAXI:** No. Me mandó como mil mensajes.
 
-**NEGRO:** ¿Y qué te contestó?
+**NEGRO:** ¿Y qué te decía?
+
+**MAXI:** Que estaba terminando una armadura. Lo tuve que bloquear.
 
 *Maxi abre el historial de mensajes.*
 
@@ -182,9 +186,9 @@ PAPAFRITA: para que te explico
 
 **PAPASITO:** Y sí, si quiere quedarse, que siga jugando.
 
-**MAXI:** No puedo cerrar el mundo con él adentro.
+**MAXI:** No puedo cerrar el juego con él adentro.
 
-**NEGRO:** Bueno, no lo cierres. Dejáselo de regalo.
+**NEGRO:** ¿Y qué hacemos? ¿Lo dejamos abierto para siempre?
 
 **MAXI:** Y bueno...
 
@@ -201,6 +205,8 @@ PAPAFRITA: para que te explico
 **SOLAGO:** ¡MAXI, HIJO DE PUTAAAA!
 
 **PAPASITO:** ¡EHHH, PARÁ!
+
+**WARRIOR:** ¡Pará, ura!
 
 *Los cuatro caen al portal.*
 
@@ -566,6 +572,10 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 **SOLAGO:** ¡AHORA, QUE NO TIENE LA PIEDRA!
 
+**NEGRO:** Che, Warrior, no te la vayas a aspirar.
+
+**WARRIOR:** ¡Ura, chupame un huevo!
+
 **NEGRO:** Che, Solago, ¿y si te llevás esa piedra para que no te saquen la PC?
 
 **SOLAGO:** ¡NEGRO, PEGÁLE AL BICHO!
@@ -750,6 +760,18 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 *Comienza la pelea.*
 
+### Durante la oleada — La lengua
+
+*Pukei-Pukei lanza un lengüetazo.*
+
+**PAPAFRITA:** ¡Cuidado, que ataca con la lengua!
+
+**NEGRO:** Entonces que me langutee.
+
+**PAPAFRITA:** JAJAJA. ¡No le des ideas que lo hace!
+
+---
+
 ### Durante la oleada — El veneno
 
 *Pukei-Pukei envenena al Negro.*
@@ -871,6 +893,12 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 **PAPAFRITA:** Pará, Negro, estoy intentando explicar.
 
+**PAPAFRITA:** Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—
+
+**RATHALOS:** ¡ROAAAAAR!
+
+**PAPAFRITA:** ¡ME VAS A DEJAR TERMINAR!
+
 **PAPAFRITA:** Bueno, primero hay que—
 
 **RATHALOS:** ¡ROAAAAAR!
@@ -910,6 +938,8 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 *Rathalos golpea a Papasito.*
 
 **PAPASITO:** ¡UUUUUUYYYYYY, HIJO DE PUTAAAA!
+
+**WARRIOR:** ¡Ura, corré, manco!
 
 **NEGRO:** JAJAJAJA.
 
@@ -1037,11 +1067,31 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 **SOLAGO:** ¡OTRA VEZ NO!
 
-*Papafrita continúa hablando mientras los otros cuatro se acercan al portal de regreso.*
+**NEGRO:** Bueno, nosotros nos vamos.
+
+**PAPASITO:** ¿Seguro que te quedás?
+
+**PAPAFRITA:** Sí, sí. Después los alcanzo.
+
+**WARRIOR:** Ura, nos vemos.
+
+*Los cuatro atraviesan el portal. Papafrita se queda sola en el bosque, hablando con su armadura.*
 
 ### Maxi recibe otro mensaje
 
-*Corte a Maxi, que sigue operando el servidor desde Discord.*
+*En Discord, los cuatro aparecen frente a Maxi.*
+
+**NEGRO:** Maxi.
+
+**MAXI:** ¿Y Papafrita?
+
+**SOLAGO:** Se quedó.
+
+**MAXI:** ¿Cómo que se quedó?
+
+**PAPASITO:** Dijo que tenía que probar la armadura.
+
+*Maxi abre el panel del servidor.*
 
 ```text
 MONSTER_HUNTER_WORLD_OLD — 5 USUARIOS CONECTADOS
@@ -1073,7 +1123,7 @@ MOTIVO: ROMPEBOLAS
 
 ### Regreso obligatorio al Discord
 
-*Corte al bosque. Papafrita continúa explicando su armadura. Una ventana de sistema aparece delante de él.*
+*En el bosque, una ventana de sistema aparece delante de Papafrita.*
 
 ```text
 HAS SIDO EXPULSADO DEL MUNDO
@@ -1082,7 +1132,7 @@ MOTIVO: ROMPEBOLAS
 
 **PAPAFRITA:** ¿Eh? ¡PARÁ, QUE NO TERMINÉ!
 
-*Papafrita desaparece. Los cuatro protagonistas atraviesan el portal. En Discord, Papafrita aparece cayendo junto a ellos.*
+*Papafrita desaparece del bosque. En Discord, aparece cayendo junto a los cuatro.*
 
 **PAPAFRITA:** ¡MAXI, LA CONCHA DE TU MADRE! ¡ME FALTABA PROBAR LA ARMADURA!
 

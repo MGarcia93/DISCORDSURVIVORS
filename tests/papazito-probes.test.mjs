@@ -31,7 +31,7 @@ test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
   const p = createRun(Math.random, 'papazito').player;
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.55);
-  assert.equal(p.damage, 34);
+  assert.equal(p.damage, 27.2);
   assert.equal(p.attackRange, 280 * WS);
   assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-12);
   assert.equal(p.speed, 148.5 * WS);

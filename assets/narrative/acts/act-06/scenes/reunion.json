@@ -1,0 +1,233 @@
+{
+  "id": "act-06-reunion",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "negro": [
+        360,
+        470
+      ],
+      "solago": [
+        440,
+        545
+      ],
+      "papasito": [
+        540,
+        545
+      ],
+      "warrior": [
+        620,
+        470
+      ],
+      "papafrita": [
+        850,
+        470
+      ],
+      "off": [
+        1240,
+        470
+      ],
+      "wide": [
+        600,
+        440
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "off"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "layout": "stage",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "...porque lo que mucha gente no entiende es que no siempre te conviene la armadura con más defensa. Tenés que mirar las habilidades, los espacios para decoraciones, el arma que estás usando y además..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "No, boludo. Ya lo escuché."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Nos podemos volver antes de que nos vea."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Pará, quiero ver qué está haciendo el pelotudo."
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "papafrita",
+      "to": "papafrita",
+      "duration": 0.9
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "¡NEGROOO! ¡Mirá quién apareció!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Vinimos a buscarte, hijo de puta."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "¿A mí? Qué lindo, Negro. ¿Sabés que te quiero?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Yo también, pelotudo."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Alguien te tiene que querer, si no tenés padres."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, dale. Vamos que Maxi está esperando."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "¿Adónde?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡AL PORTAL, PELOTUDO!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "¿Para qué? Estoy jugando."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Pensamos que estabas atrapado."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "¿Y quién les pidió que vinieran?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Maxi nos tiró por un portal, boludo."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "JAJAJAJA. Bueno, jodanse."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Ura, ¿no querés volver?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "No. Me falta una parte para terminar una armadura."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿y acá se pueden domesticar monstruos?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NEGRO, QUEREMOS IRNOS!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, pero imaginate tener un Jagras en Discord."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "En realidad podés capturar monstruos grandes, pero eso no es exactamente domesticarlos. Porque el sistema de captura—"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡NO LE EXPLIQUES!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJAJA."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, ya que están acá, ayúdenme a limpiar la zona."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Para qué?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Porque necesito cazar un Rathalos y estos bichos no paran de molestar."
+        }
+      ]
+    }
+  ]
+}

@@ -90,15 +90,18 @@ test('the playable Jhony carries a beer bottle that swings forward on attack', (
   assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true, attacking: true }))[1] > 30, 'the swing reaches further');
 });
 
-test('Tilt shows on the face: knitted brows, red cheeks and anger ticks', () => {
+test('Tilt shows on the face as brows and ticks; the red cheeks are the whisky', () => {
+  const red = calls => calls.some(([kind, key, color]) => kind === 'set' && key === 'fillStyle' && color === '#c4634a');
   const calm = record(ctx => drawJhony(ctx, 100, 150, {}));
   const angry = record(ctx => drawJhony(ctx, 100, 150, { tilt: 0.6 }));
   const furious = record(ctx => drawJhony(ctx, 100, 150, { tilt: 1 }));
   assert.deepEqual(calm, record(ctx => drawJhony(ctx, 100, 150, { tilt: 0 })), 'a calm Jhony draws the approved face');
   assert.ok(angry.length > calm.length, 'the tilt face adds features');
   assert.ok(furious.length > angry.length, 'the last tick only shows at full tilt');
-  assert.ok(record(ctx => drawJhony(ctx, 100, 150, { tilt: 0.6 }))
-    .some(([kind, key, color]) => kind === 'set' && key === 'fillStyle' && color === '#b4543c'), 'red cheeks');
+  assert.equal(red(angry), false, 'being angry never reddens the cheeks');
+  assert.equal(red(furious), false, 'Furia is anger, not a drink');
+  assert.deepEqual(calm, record(ctx => drawJhony(ctx, 100, 150, { drink: false })), 'no drink, no flush');
+  assert.ok(red(record(ctx => drawJhony(ctx, 100, 150, { drink: true }))), 'the whisky shows on the face');
 });
 
 test('Jhony is a playable ficha unlocked by his Act 1 encounter', () => {
@@ -164,4 +167,17 @@ test('the approved NPC rectangle set is never lost, and the bottle adds exactly 
   assert.equal(pin({}), 'ab24dcf79d7aff43652536fa9d086913ad34e7bccdd0bcd88b89bd3696e6f22e');
   assert.equal(pin({ moving: true, time: 0.125 }), 'bc93f66a6eb8d686bdf7e8f622c0dae8f6f77bbdd1cfb4f9b085f98c970079c7');
   assert.equal(rects({ bottle: true }).length - rects({}).length, 13, 'the bottle is the only added art');
+});
+
+// The approved drunk face: a red tie with white diagonal stripes around the head
+// plus the flush. Pinned so neither the budget nor the colours drift.
+test('the drinking face is pinned: the tie and the flush are the only added art', () => {
+  const pin = options => createHash('sha256').update(JSON.stringify([...rects(options)].sort())).digest('hex');
+  assert.equal(pin({ drink: true }), '7e5bf10ccee9fbfa9d26132b74d8b95064bc383361f52bdd88ae4b6d092a542c');
+  assert.equal(rects({ drink: true }).length - rects({}).length, 36, 'the tie and the flush add exactly thirty-six rectangles');
+  const painted = new Set(record(ctx => drawJhony(ctx, 100, 150, { drink: true }))
+    .filter(([kind, key]) => kind === 'set' && key === 'fillStyle').map(([, , value]) => value));
+  assert.ok(painted.has('#b2303e'), 'the tie is red');
+  assert.ok(painted.has('#efe4cf'), 'with white stripes');
+  assert.ok(painted.has('#c4634a'), 'and the face is flushed');
 });

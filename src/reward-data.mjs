@@ -13,7 +13,12 @@ export const BALANCE = {
   // Wave length, density and the boss belong to the act (src/campaign/). This
   // object only carries economy plus an optional length override.
   xp: {
-    factor: 14, exponent: 0.5, multiplier: 1,
+    // The curve used to hand out twelve levels inside act one, before the first
+    // boss: an exponent of 0.5 makes the early levels almost free while the act
+    // already pays four hundred experience. A flatter exponent spreads the same
+    // campaign over a shorter, more even ladder (act one ends at level 8, the
+    // campaign at 23) so the first world is not where the build is won.
+    factor: 30, exponent: 0.4, multiplier: 1,
     // An ordinary enemy pays one point; an elite pays like three, and the
     // mini-boss like a milestone. The act boss closes the run, so it pays none.
     rewards: {
@@ -22,9 +27,18 @@ export const BALANCE = {
       skeleton: 1, lesserDemon: 1, shaman: 1, burningElite: 3, batSwarm: 1,
       lordZir: 6,
       barbarian: 1, slaver: 1, archer: 1, alchemist: 1, lotusAlchemist: 6,
+      jagras: 1, vespoid: 1, kestodon: 1, mernos: 1, hornetaur: 2,
+      greatJagras: 3, kuluYaKu: 6, pukeiPukei: 6, rathalos: 0,
     },
   },
-  gold: { rewards: { zombie: 1, runner: 1, brute: 5, alarmZombie: 30 }, survival: 5 },
+  gold: {
+    rewards: {
+      zombie: 1, runner: 1, brute: 5, alarmZombie: 30,
+      jagras: 2, vespoid: 2, kestodon: 3, mernos: 2, hornetaur: 4,
+      greatJagras: 12, kuluYaKu: 25, pukeiPukei: 25, rathalos: 120,
+    },
+    survival: 5,
+  },
   shopSize: 4,
 };
 
@@ -69,13 +83,16 @@ export const ITEMS = [
     modifiers: [percent('moveSpeed', 6)] },
   { id: 'magic-mushrooms', name: 'Hongos Mágicos', price: 60, maxCopies: 3,
     lore: 'Warrior asegura que con esto anda más rápido. Nadie tuvo los huevos de explicarle que lleva tres horas mirando una pared.',
-    modifiers: [percent('attackSpeed', 7)] },
+    // Cadence is a rate, not a multiplier: a percentage made a fast body gain
+    // twice what a slow one gains. A flat point adds the same attacks per second
+    // to every sheet, so the reward reads the same whoever picks it.
+    modifiers: [flat('attackSpeed', 0.07)] },
   { id: 'alcohol', name: 'Alcohol', price: 35, maxCopies: 2,
     lore: 'Te vuelve más agresivo e intolerante. También te hace tanto daño que terminás considerando volver al LoL. Y eso ya es tocar fondo.',
     modifiers: [percent('attack', 10), flat('defense', -0.6)] },
-  // Range assignment remains provisional in the approved design: keep the
-  // entry available for authoring but exclude it from offers until confirmed.
-  { id: 'chicken', name: 'Gallina', enabled: false, price: 40, maxCopies: 3,
+  // The range assignment is confirmed: three chickens, +10% reach each, the
+  // same shape the other shelf items use.
+  { id: 'chicken', name: 'Gallina', price: 40, maxCopies: 3,
     lore: 'Cuenta la leyenda que alguien pasó horas cuidando de esta gallina, hasta que otro llegó y le pegó un saque. Por alguna razón, a Maxi Negro todavía le cuesta hablar del tema.',
     modifiers: [percent('attackDistance', 10)] },
 ];
@@ -147,18 +164,20 @@ export const EFFECTS = {
   senaBurst: { max: 1.2, validate: value => Number.isFinite(value) && value > 0,
     describe: value => `Ráfaga de La seña: ${Math.round(value * 100)}% del daño` },
   // Jhony's signatures: every entry either adds an attack or reshapes one, so
-  // the description names the shape and not a number.
-  tiltWave: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+  // the description names the shape and not a number. `cumulative` makes the
+  // descriptor read the total the rank leaves: rank I leaves 1 (the first form)
+  // and rank II leaves 2 (its evolution).
+  tiltWave: { max: 2, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'Onda de Tilt y el círculo queda en el piso' : 'Onda de Tilt al entrar en Furia' },
-  shout: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+  shout: { max: 2, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'Grito que pega en 360°' : 'Grito frontal periódico' },
-  bottleShards: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+  bottleShards: { max: 2, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'Fragmentos de vidrio en todas direcciones' : 'Fragmentos de vidrio tras el botellazo' },
-  extraBottle: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+  extraBottle: { max: 2, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'Dos botellas arrojadas por ronda' : 'Una botella arrojada cada 4 botellazos' },
-  stomp: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+  stomp: { max: 2, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'Remate con onda de impacto' : 'Remate sobre enemigos débiles' },
-  buildCombo: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+  buildCombo: { max: 2, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'La build suma rebotes' : 'La build dispara más seguido' },
   // Papafrita's six signatures: each one levels I..III, and his passive counts
   // how many DIFFERENT ones he owns, never how many copies.
@@ -177,33 +196,21 @@ export const EFFECTS = {
 };
 
 // Jhony's six signatures and their evolutions (§5). Each one adds or reshapes
-// an attack, and the evolution only opens once its base was taken.
+// an attack, so the doc's "desbloqueo" and its "evolución" are the two ranks of
+// ONE entry: rank I is the first form, rank II is the evolution. It is one card
+// per signature, the name never changes, and `value` is the form the rank
+// leaves — the descriptors below name the shape, never the number.
 const JHONY_UPGRADES = [
-  { id: 'tilt-circle', name: '¡ERA UN CÍRCULO!', characters: 'jhony', minLevel: 3, chance: 0.8,
-    requires: [], ranks: [{ effects: [{ type: 'tiltWave', value: 1 }] }] },
-  { id: 'tilt-circle-floor', name: 'El círculo queda', characters: 'jhony', minLevel: 4,
-    requires: [{ id: 'tilt-circle', rank: 1 }], ranks: [{ effects: [{ type: 'tiltWave', value: 1 }] }] },
-  { id: 'closed-mouth', name: '¡CERRÁ EL CULO!', characters: 'jhony', minLevel: 3,
-    requires: [], ranks: [{ effects: [{ type: 'shout', value: 1 }] }] },
-  { id: 'shout-360', name: 'Grito a 360', characters: 'jhony', minLevel: 4,
-    requires: [{ id: 'closed-mouth', rank: 1 }], ranks: [{ effects: [{ type: 'shout', value: 1 }] }] },
-  { id: 'broken-bottle', name: 'Botella rota', characters: 'jhony', minLevel: 3,
-    requires: [], ranks: [{ effects: [{ type: 'bottleShards', value: 1 }] }] },
-  { id: 'glass-everywhere', name: 'Vidrio para todos', characters: 'jhony', minLevel: 4,
-    requires: [{ id: 'broken-bottle', rank: 1 }], ranks: [{ effects: [{ type: 'bottleShards', value: 1 }] }] },
-  { id: 'one-more-beer', name: 'Una birra más', characters: 'jhony', minLevel: 3,
-    requires: [], ranks: [{ effects: [{ type: 'extraBottle', value: 1 }] }] },
-  { id: 'beer-round', name: 'La ronda', characters: 'jhony', minLevel: 4,
-    requires: [{ id: 'one-more-beer', rank: 1 }], ranks: [{ effects: [{ type: 'extraBottle', value: 1 }] }] },
-  { id: 'zomboid-stomp', name: '2.000 horas al pedo', characters: 'jhony', minLevel: 3,
-    requires: [], ranks: [{ effects: [{ type: 'stomp', value: 1 }] }] },
-  { id: 'stomp-wave', name: 'Remate de Zomboid', characters: 'jhony', minLevel: 4,
-    requires: [{ id: 'zomboid-stomp', rank: 1 }], ranks: [{ effects: [{ type: 'stomp', value: 1 }] }] },
-  { id: 'broken-build', name: 'La build está rotísima', characters: 'jhony', minLevel: 3,
-    requires: [], ranks: [{ effects: [{ type: 'buildCombo', value: 1 }] }] },
-  { id: 'build-updated', name: 'Build actualizada', characters: 'jhony', minLevel: 4,
-    requires: [{ id: 'broken-build', rank: 1 }], ranks: [{ effects: [{ type: 'buildCombo', value: 1 }] }] },
-];
+  ['tilt-circle', '¡ERA UN CÍRCULO!', 'tiltWave', 0.8],
+  ['closed-mouth', '¡CERRÁ EL ORTO, SI NI LO JUGASTE!', 'shout'],
+  ['broken-bottle', 'Botella rota', 'bottleShards'],
+  ['one-more-beer', 'Una birra más', 'extraBottle'],
+  ['zomboid-stomp', '2.000 horas al pedo', 'stomp'],
+  ['broken-build', 'La build está rotísima', 'buildCombo'],
+].map(([id, name, type, chance]) => ({
+  id, name, characters: 'jhony', minLevel: 3, chance, requires: [],
+  ranks: [1, 2].map(() => ({ effects: [{ type, value: 1 }] })),
+}));
 
 
 // Papafrita's six signatures (§5), each one with levels I, II and III. A rank
@@ -225,7 +232,7 @@ export const LEVEL_UPGRADES = [
   ...[
     ['life', 'Más vida', flat('life', 14)], ['defense', 'Más defensa', flat('defense', 0.7)],
     ['attack', 'Más ataque', percent('attack', 7)], ['attackDistance', 'Más alcance', percent('attackDistance', 12)],
-    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 7)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 6)],
+    ['attackSpeed', 'Más cadencia', flat('attackSpeed', 0.07)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 6)],
   ].map(([id, name, modifier]) => ({
     id: `stat-${id}`, name, characters: 'all', minLevel: 2, requires: [],
     ranks: Array.from({ length: 5 }, () => ({ modifiers: [modifier] })),
@@ -253,16 +260,18 @@ export const LEVEL_UPGRADES = [
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   // The jackpot of her own pool: the mouth grows and the bite stops being melee.
-  // Three ranks, each one a bigger mouth: 146 px, 206 px, 266 px, which is a
-  // ranged character's reach. Finding it once already changes the run.
+  // Three ranks, each one a bigger mouth: 114 px, 137 px, 160 px. Long enough to
+  // pick a body off, never long enough to outrange it — her reach has a ceiling
+  // (statCaps in the ficha) and this ladder stays under it. It is a jackpot, so
+  // it is the rarest offer in her pool, not the most common one.
   { id: 'paleta-growth', name: 'Crecimiento de paleta', characters: 'solago',
-    minLevel: 3, chance: 0.8, requires: [],
-    ranks: Array.from({ length: 3 }, () => ({ modifiers: [percent('attackDistance', 70)] })) },
+    minLevel: 3, chance: 0.15, requires: [],
+    ranks: Array.from({ length: 3 }, () => ({ modifiers: [percent('attackDistance', 25)] })) },
   ...[
     ['second-bite', 'Doble paleta', 'solago', 'secondBite', 0.5, 0.6],
     ['bite-push', 'Mordida que empuja', 'solago', 'knockback', 25, 0.5],
     ['smile-counter', 'Risa devuelta', 'solago', 'smileCounter', 0.4, 0.5],
-    ['extra-shroom', 'Más hongos', 'warrior', 'extraShroom', 1, 0.6],
+    ['extra-shroom', 'Más hongos', 'warrior', 'extraShroom', 1, 0.2],
     ['spore-zone', 'Esporas que quedan', 'warrior', 'sporeZone', 1, 0.5],
     ['smoke-trail', 'Humo a la espalda', 'warrior', 'smokeTrail', 1, 0.5],
     ['confusion-chain', 'Contagio de hongos', 'warrior', 'confusionChain', 1, 0.45],

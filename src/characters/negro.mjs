@@ -55,7 +55,7 @@ const negro = {
       // roster and he does not take hits for anyone. The tank is Solago.
       life: 120,             // 120 points of damage
       defense: 30,           // 3 defense points -> 15% mitigation
-      attack: 300,           // 30 damage per shot
+      attack: 240,           // 24 damage per shot: ranged pays 20% less, it never has to close
       attackSpeed: 190,      // 1.9 attacks/s: faster than the cast, still not a standing wave clear
       attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
       moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always

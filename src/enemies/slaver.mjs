@@ -8,9 +8,9 @@ import { drawSlaver } from '../sprites.mjs';
 const slaver = {
   id: 'slaver',
   stats: {
-    life: wave => 34 + 7 * wave,
+    life: 95,
     defense: 15,                         // 15% -> 1.5 points -> 7.5% mitigation
-    attack: 100,                         // 100% -> 10 contact damage
+    attack: 230,                         // 230% -> 23 contact damage
     attackSpeed: 120,                    // 120% -> one swing every 0.83 s
     attackDistance: 0,
     moveSpeed: 1000,                     // 50 scaled px/s: heavier than a raider

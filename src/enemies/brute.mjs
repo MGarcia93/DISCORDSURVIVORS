@@ -6,9 +6,9 @@ import { drawBrute } from '../sprites.mjs';
 const brute = {
   id: 'brute',
   stats: {
-    life: wave => 120 + 12 * wave,      // 120% + 12 pp per wave -> 156 in wave 3
+    life: 156,      // 120% + 12 pp per wave -> 156 in wave 3
     defense: 60,                        // 60% -> 6 points -> 30% mitigation
-    attack: 900,                        // 900% -> 90 contact damage: a brute hit is a mistake you notice
+    attack: 420,                        // 420% -> 42 contact damage: a brute hit is a mistake you notice
     attackSpeed: 100,                   // 100% -> one swing per second
     attackDistance: 0,                  // melee: contact, measured from the edge
     moveSpeed: wave => 400 + 30 * wave, // 400% + 30 pp per wave -> 27 px/s in wave 3

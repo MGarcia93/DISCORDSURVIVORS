@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BALANCE, DEFAULT_CATALOG, playtestBalance } from '../src/reward-data.mjs';
 import { getAct } from '../src/campaign/acts.mjs';
-import { itemBlocked, pickBlocked, seedRun } from '../src/game/balance-seed.mjs';
+import { itemBlocked, pickBlocked, removeOne, seedRun } from '../src/game/balance-seed.mjs';
 import { waveEntryBudget } from '../src/game/wave-budget.mjs';
 
 const act1 = getAct('act-01');
@@ -37,7 +37,7 @@ test('level picks apply inside the wave budget and stop at the cap', () => {
   const attack = upgrade('stat-attack');
   const { run } = seedRun({ character: 'negro', act: act1, wave: 3, picks: { [attack.id]: 99 } });
   assert.equal(run.levelRanks[attack.id], Math.min(attack.ranks.length, entry.choices));
-  assert.ok(run.player.damage > 30, 'the attack ranks landed on the sheet');
+  assert.ok(run.player.damage > 24, 'the attack ranks landed on the sheet');
 });
 
 test('a pick the level has not unlocked is ignored', () => {
@@ -91,7 +91,32 @@ test('the gates explain why a choice is refused', () => {
 
   assert.equal(itemBlocked(item('bleach'), { coins: 0 }), 'coins');
   assert.equal(itemBlocked(item('bleach'), { coins: 60, items: { bleach: 3 } }), 'maxed');
-  assert.equal(itemBlocked(item('chicken'), { coins: 999 }), 'disabled');
+  assert.equal(itemBlocked(item('chicken'), { coins: 999 }), null, 'the chicken is a real offer now');
   assert.equal(itemBlocked(item('bleach'), { coins: 60 }), null);
 
+});
+
+test('removing a pick returns its budget and the last copy drops the entry', () => {
+  const picks = { 'stat-attack': 2, 'stat-rate': 1 };
+  const once = removeOne(picks, 'stat-attack');
+  assert.deepEqual(once, { 'stat-attack': 1, 'stat-rate': 1 });
+  assert.deepEqual(picks, { 'stat-attack': 2, 'stat-rate': 1 }, 'the build passed in is never mutated');
+  const gone = removeOne({ 'stat-rate': 1 }, 'stat-rate');
+  assert.deepEqual(gone, {}, 'the last copy removes the entry instead of leaving a zero');
+  assert.deepEqual(removeOne({}, 'stat-rate'), {}, 'removing something never picked is a no-op');
+
+  const spent = seedRun({ character: 'negro', act: act1, wave: 4, picks: picks });
+  const after = seedRun({ character: 'negro', act: act1, wave: 4, picks: once });
+  assert.equal(after.run.levelRanks['stat-attack'], 1, 'one rank comes off the sheet');
+  assert.ok(after.remaining.choices > spent.remaining.choices, 'the removed rank frees a choice');
+});
+
+test('removing an item returns its coins', () => {
+  const wave = 4;
+  const bought = seedRun({ character: 'negro', act: act1, wave, items: { alcohol: 1 } });
+  const left = seedRun({ character: 'negro', act: act1, wave, items: removeOne({ alcohol: 1 }, 'alcohol') });
+  assert.equal(bought.run.items.alcohol, 1, 'the build really bought the copy');
+  assert.equal(left.run.items.alcohol, undefined, 'and taking it back drops the entry');
+  assert.ok(left.run.coins > bought.run.coins, 'the copy that came back pays for the next pick');
+  assert.ok(left.run.coins > 0);
 });

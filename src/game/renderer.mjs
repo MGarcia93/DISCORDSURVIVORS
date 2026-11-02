@@ -28,6 +28,13 @@ function pixelRing(ctx, x, y, radius, color, opacity = 0.65) {
 // paint through here, so the sandbox cannot show less than the game does. HUD
 // and overlays are DOM and live elsewhere. The figure drawers live in
 // figures.mjs, shared with the dev screens.
+//
+// A melee swing reads as a direction: while the hit flashes, the body turns to
+// the side the blow landed on, even when the keys say otherwise.
+export function playerFacing(player, facing) {
+  return player.attackFlash > 0 && player.swingFacing ? player.swingFacing : facing;
+}
+
 export function drawRunScene(ctx, run, {
   world, time = run?.elapsed ?? 0, facing = 1, moving = true, underlay,
 } = {}) {
@@ -71,7 +78,7 @@ export function drawRunScene(ctx, run, {
     if (figure.kind === 'player' && p.hurtFlash > 0 && Math.floor(p.hurtFlash * 20) % 2) ctx.globalAlpha = 0.4;
     if (figure.kind === 'player') {
       p.characterDef.draw(ctx, figure.x, figure.y + 38,
-        { time, moving, facing, player: p });
+        { time, moving, facing: playerFacing(p, facing), player: p });
     } else {
       drawEnemyFigure(ctx, figure, time);
     }

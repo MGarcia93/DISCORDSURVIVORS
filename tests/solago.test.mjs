@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, step, activateSpecial } from '../src/engine.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
+import { createStatState, resolveStatState, withStatSource, applyStatState } from '../src/stat-modifiers.mjs';
+import { enemyAttackRange } from '../src/enemies/index.mjs';
 
 test('Solago is the tanky melee: more health and defense than the baseline, a little faster, and no projectiles', () => {
   const run = createRun(() => 0.5, 'solago');
@@ -73,7 +75,7 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   step(run, 0.05, {});
   assert.ok(p.smile > 0, 'the smile is on');
   const block = 40;
-  const absorbed = 26 * (1 - p.defense);
+  const absorbed = 12 * (1 - p.defense);
   assert.ok(Math.abs(p.shield - (block - absorbed)) < 1e-9, 'the shield pays what the body would have taken');
   assert.equal(p.hp, p.maxHp, 'and the body takes none of it');
   assert.equal(p.characterDef.contactDefenseBonus, undefined, 'no defense bonus is stacked on top');
@@ -110,6 +112,99 @@ test('six chore-task kills trigger a temporary damage and attack-speed buff', ()
   assert.equal(p.taskKills, 0);
   assert.ok(p.permissionActive > 0);
   assert.ok(p.permissionNeeded > 0);
+});
+
+test('the range build never outranges a ranged enemy: her reach has a ceiling', () => {
+  const run = createRun(() => 0.5, 'solago');
+  const p = run.player;
+  const stacked = withStatSource(createStatState(p), 'probe',
+    [{ stat: 'attackDistance', operation: 'percent', value: 500 }]);
+  applyStatState(p, stacked);
+  assert.ok(p.attackRange <= 155 * UNIT_PX + 1e-9, 'the stack cannot push her past her ceiling');
+  assert.ok(p.attackRange < enemyAttackRange('alchemist'), 'the shortest ranged enemy still reaches her');
+  assert.ok(p.attackRange < enemyAttackRange('archer'), 'and so does the longest one');
+
+  // A character that declares no ceiling keeps the whole stack: this is hers,
+  // not a global rule.
+  const negro = createRun(() => 0.5, 'negro');
+  const wide = resolveStatState(withStatSource(createStatState(negro.player), 'probe',
+    [{ stat: 'attackDistance', operation: 'percent', value: 10 }]));
+  assert.ok(wide.attackRange > negro.player.attackRange, 'El Negro still grows with the same item');
+});
+
+test('the woman covers her: Solago never bites while La Patrona is on stage', () => {
+  const arena = () => {
+    const run = createRun(() => 0.5, 'solago');
+    run.spawnIn = 100;
+    const p = run.player;
+    p.hp = p.maxHp = 1e9;
+    run.enemies.push({ id: 1, x: p.x + 40, y: p.y, hp: 5000, maxHp: 5000, speed: 0, radius: 12, kind: 'skeleton' });
+    run.shotIn = 0;
+    return run;
+  };
+  // On her own the bite lands...
+  const alone = arena();
+  step(alone, 0.05, {});
+  assert.ok(alone.player.attackFlash > 0, 'she bites when she is the one fighting');
+
+  // ...and while the patrona is out she just covers up.
+  const covered = arena();
+  assert.equal(activateSpecial(covered, 'stand'), true);
+  step(covered, 0.05, {});
+  assert.equal(covered.player.attackFlash, 0, 'she is crouched, not biting');
+  assert.ok(covered.enemies[0].hp < 5000, 'the patrona is the one landing the hits');
+});
+
+test('the ring reaches past the longest ranged reach', () => {
+  const run = createRun(() => 0.5, 'solago');
+  run.spawnIn = 100;
+  const p = run.player;
+  p.hp = p.maxHp = 1e9;
+  // An archer parked at its own reach: it never walks any closer than this.
+  const archer = { id: 1, x: p.x + enemyAttackRange('archer'), y: p.y, hp: 500, maxHp: 500,
+    speed: 0, radius: 12, kind: 'archer', attackRange: enemyAttackRange('archer') };
+  run.enemies.push(archer);
+  activateSpecial(run, 'stand');
+  step(run, 0.05, {});
+  assert.ok(archer.hp < 500, 'the scissors reach where the arrows come from');
+});
+
+test('one stand clears the trash and never the boss', () => {
+  const run = createRun(() => 0.5, 'solago');
+  run.spawnIn = 100;
+  run.shotIn = 1e9;
+  const p = run.player;
+  p.hp = p.maxHp = 1e9;
+  const trash = { id: 1, x: p.x + 120, y: p.y, hp: 370, maxHp: 370, speed: 0, radius: 20, kind: 'burningElite' };
+  const boss = { id: 2, x: p.x - 120, y: p.y, hp: 2200, maxHp: 2200, speed: 0, radius: 38, kind: 'alarmZombie', boss: true };
+  run.enemies.push(trash, boss);
+  assert.equal(activateSpecial(run, 'stand'), true);
+  for (let i = 0; i < 150; i++) step(run, 0.05, {});
+  assert.ok(trash.hp <= 0, 'the trash dies');
+  assert.ok(boss.hp > 0, 'the boss is still standing');
+});
+
+test('La Patrona takes the hits: nothing reaches Solago while she is on stage', () => {
+  const arena = () => {
+    const run = createRun(() => 0.5, 'solago');
+    run.spawnIn = 100;
+    run.shotIn = 100;
+    const p = run.player;
+    run.enemies.push({ id: 1, x: p.x + 25, y: p.y, hp: 5000, maxHp: 5000, speed: 0, radius: 10, kind: 'zombie' });
+    return run;
+  };
+  // The same body lands its swing when she is not on stage...
+  const plain = arena();
+  for (let i = 0; i < 20; i++) step(plain, 0.05, {});
+  assert.ok(plain.player.hp < plain.player.maxHp, 'the walker reaches the body');
+
+  // ...and nothing lands while she is on it.
+  const guarded = arena();
+  assert.equal(activateSpecial(guarded, 'stand'), true);
+  const before = guarded.player.hp;
+  for (let i = 0; i < 20; i++) step(guarded, 0.05, {});
+  assert.equal(guarded.player.hp, before, 'La Patrona eats every hit while she is on stage');
+  assert.ok(guarded.player.stand > 0, 'the window is still open');
 });
 
 test('La Patrona holds Solago still, deals area damage, and nicks him when she leaves', () => {

@@ -1,0 +1,201 @@
+{
+  "id": "act-06-defeat",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "wide": [
+        600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "¡SALIOOO!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡BUENO, POR FIN, LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Dale, armá eso y nos vamos."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "Listo, muchachos. Miren cómo quedó."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Hermoso. Vamos."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Pará, Negro, que ahora tengo que probarla."
+        },
+        {
+          "speaker": "solago",
+          "expression": "surprised",
+          "text": "¿CÓMO QUE PROBARLA?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Y sí. ¿Para qué mierda la fabriqué si no la voy a usar?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Pero ya terminamos lo que vinimos a hacer."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, ustedes pueden irse. Yo me quedo un rato más."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "No, la concha de tu madre. Nos mandaron a buscarte."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Y yo nunca les pedí que vinieran."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Tiene razón, ura."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡NO LO DEFIENDAS, BOLIVIANO!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Igual, Negro, si le cambio las decoraciones podría conseguir más afinidad. Porque resulta que con esta pieza—"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡OTRA VEZ NO!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, nosotros nos vamos."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Seguro que te quedás?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Sí, sí. Después los alcanzo."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Ura, nos vemos."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "exit",
+          "actor": "negro",
+          "delay": 0.1
+        },
+        {
+          "type": "exit",
+          "actor": "solago",
+          "delay": 0.25
+        },
+        {
+          "type": "exit",
+          "actor": "papasito",
+          "delay": 0.4
+        },
+        {
+          "type": "exit",
+          "actor": "warrior",
+          "delay": 0.55
+        },
+        {
+          "type": "wait",
+          "duration": 0.8
+        }
+      ]
+    }
+  ]
+}

@@ -62,7 +62,13 @@ function show(name, previousRun = null) {
   if (name === 'enemies') enemiesScreen();
   if (name === 'balance') balance();
   if (name === 'story') story();
-  if (name === 'game') { game(previousRun); narrative.attach(state.run, document.querySelector('#narrative-layer')); }
+  if (name === 'game') {
+    game(previousRun);
+    // The lab measures a wave, not the story: a lab run skips every cinematic,
+    // arrival and wave boundaries included. `leaveNarrative()` above already
+    // cleared whatever the previous screen owned.
+    if (!state.run?.lab) narrative.attach(state.run, document.querySelector('#narrative-layer'));
+  }
   if (name === 'narrative') showNarrativeViewer(state.content);
   state.content.focus({ preventScroll: true });
   window.scrollTo(0, 0);
@@ -85,6 +91,25 @@ function previewAct() {
   if (state.screen === 'enemies') return actForWorld(state.enemyPreviewWorld);
   if (state.screen === 'balance') return actForWorld(getAct(state.balanceAct).world);
   return null;
+}
+
+// The lab seeds the run itself: the chosen wave, the build its budget paid for,
+// and the balance mode it compares with. Repeating a wave re-seeds from
+// `state.balance*`, so the build is whatever the lab last showed and two runs of
+// one build are the same wave.
+function playBalanceWave() {
+  const { run } = seedRun({
+    character: state.balanceCharacter,
+    act: getAct(state.balanceAct),
+    wave: state.balanceWave,
+    balance: balanceForMode(state.balanceMode),
+    picks: state.balancePicks,
+    items: state.balanceItems,
+  });
+  state.selectedAct = state.balanceAct;
+  state.selectedCharacter = state.balanceCharacter;
+  state.pendingRun = run;
+  show('game');
 }
 
 function frame(timestamp) {
@@ -174,22 +199,10 @@ document.addEventListener('click', event => {
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
   if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else enterWorld(); }
   if (action === 'play') enterWorld();
-  // The lab seeds the run itself: the chosen wave, the build its budget paid
-  // for, and the balance mode it compares with.
-  if (action === 'balance-play') {
-    const { run } = seedRun({
-      character: state.balanceCharacter,
-      act: getAct(state.balanceAct),
-      wave: state.balanceWave,
-      balance: balanceForMode(state.balanceMode),
-      picks: state.balancePicks,
-      items: state.balanceItems,
-    });
-    state.selectedAct = state.balanceAct;
-    state.selectedCharacter = state.balanceCharacter;
-    state.pendingRun = run;
-    show('game');
-  }
+  // The lab seeds the run itself, and a lab run's own overlays come back here:
+  // repeat re-seeds the same wave, back reopens the build screen.
+  if (action === 'balance-play' || action === 'balance-repeat') playBalanceWave();
+  if (action === 'balance-back') show('balance');
   if (action === 'next-act' && state.run?.worldCleared) {
     const next = nextPlayableAct(state.run.act.id);
     if (next) {

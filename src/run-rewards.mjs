@@ -145,9 +145,11 @@ export function skipEmptyChoice(run) {
 // Every copy of an item costs more than the one before, and the shelf gets
 // pricier as the campaign goes on: the shop stays a decision instead of a
 // shopping spree once a boss pays. The base price is the first copy in the
-// first world; each owned copy doubles it again and every wave adds the
-// campaign's inflation.
-export const COPY_MARKUP = 2;
+// first world; each owned copy multiplies it again and every wave adds the
+// campaign's inflation. The first copy keeps its author price, so a multiplier
+// here only makes the second and third copies expensive: the whole shelf has to
+// stay out of reach in the middle of the campaign instead of being swept once.
+export const COPY_MARKUP = 6;
 export const WAVE_MARKUP = 0.2;
 
 export function itemPrice(item, owned = 0, wave = 1) {

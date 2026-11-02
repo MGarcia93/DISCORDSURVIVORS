@@ -486,3 +486,35 @@ test('the act 4 commons never tower over the player', () => {
     assert.ok(enemyShape(kind).height <= player.height, `${kind} stays at or below the player's height`);
   }
 });
+
+test('the act 6 ground kinds are one connected body, and the elite is not a common', () => {
+  // The flyers (vespoid, mernos) are excluded on purpose: their body is airborne
+  // by design, so only the shadow touches the ground.
+  for (const kind of ['jagras', 'kestodon', 'hornetaur', 'greatJagras']) {
+    const cells = new Set();
+    for (const rect of enemyShape(kind).rects) {
+      for (let y = Math.round(rect.y); y < Math.round(rect.y + rect.h); y++) {
+        for (let x = Math.round(rect.x); x < Math.round(rect.x + rect.w); x++) cells.add(`${x},${y}`);
+      }
+    }
+    const lowest = [...cells].sort((a, b) => Number(b.split(',')[1]) - Number(a.split(',')[1]))[0];
+    const seen = new Set([lowest]);
+    const queue = [lowest];
+    while (queue.length) {
+      const [x, y] = queue.pop().split(',').map(Number);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const key = `${x + dx},${y + dy}`;
+        if (cells.has(key) && !seen.has(key)) { seen.add(key); queue.push(key); }
+      }
+    }
+    assert.equal(seen.size, cells.size, `${kind} must render as one connected figure`);
+  }
+  const player = characterShape('negro');
+  for (const kind of ['jagras', 'kestodon', 'hornetaur']) {
+    assert.ok(enemyShape(kind).height <= player.height,
+      `${kind} is a common body and never stands over the player`);
+  }
+  assert.ok(enemyShape('greatJagras').height > enemyShape('jagras').height * 1.4,
+    'the elite has to read apart from the pack at a glance');
+  assert.ok(enemyShape('rathalos').height > player.height * 2, 'the boss towers');
+});

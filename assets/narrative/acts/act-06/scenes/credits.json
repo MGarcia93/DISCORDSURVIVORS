@@ -1,0 +1,55 @@
+{
+  "id": "act-06-credits",
+  "stage": {
+    "background": "creator-desk",
+    "points": {
+      "maxi": [
+        1690,
+        460
+      ],
+      "wide": [
+        1600,
+        440
+      ]
+    },
+    "actors": {
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    },
+    "size": [
+      2288,
+      748
+    ]
+  },
+  "steps": [
+    {
+      "type": "notice",
+      "title": "DISCORD",
+      "lines": [
+        "PAPAFRITA: che maxi una cosa",
+        "PAPAFRITA: estuve pensando en el sistema de armaduras",
+        "PAPAFRITA: porque hay varias cosas que podrías mejorar",
+        "PAPAFRITA: primero"
+      ],
+      "duration": 4
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD",
+      "lines": [
+        "PAPAFRITA HA SIDO SILENCIADO DURANTE 1 HORA"
+      ],
+      "duration": 4
+    },
+    {
+      "type": "notice",
+      "title": "DISCORD",
+      "lines": [
+        "Papafrita está escribiendo…"
+      ],
+      "duration": 3
+    }
+  ]
+}

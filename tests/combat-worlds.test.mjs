@@ -9,9 +9,16 @@ const previousDocument = globalThis.document;
 const previousWindow = globalThis.window;
 globalThis.document = { querySelector: () => null };
 globalThis.window = { matchMedia: () => ({ matches: false }) };
-const { drawRunScene } = await import('../src/game/renderer.mjs');
+const { drawRunScene, playerFacing } = await import('../src/game/renderer.mjs');
 globalThis.document = previousDocument;
 globalThis.window = previousWindow;
+
+test('the body turns with the swing and goes back to the keys afterwards', () => {
+  assert.equal(playerFacing({ attackFlash: 0.2, swingFacing: -1 }, 1), -1, 'a blow on the left turns him left');
+  assert.equal(playerFacing({ attackFlash: 0.2, swingFacing: 1 }, -1), 1, 'a blow on the right turns him right');
+  assert.equal(playerFacing({ attackFlash: 0, swingFacing: -1 }, 1), 1, 'out of the flash the keys decide again');
+  assert.equal(playerFacing({ attackFlash: 0.2 }, -1), -1, 'a shot without a swing keeps the walking face');
+});
 
 function painting(run, options) {
   const calls = [];

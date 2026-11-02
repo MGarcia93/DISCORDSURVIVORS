@@ -6,9 +6,9 @@ import { drawRunner } from '../sprites.mjs';
 const runner = {
   id: 'runner',
   stats: {
-    life: wave => 28 + 5 * wave,          // 28% + 5 pp per wave
+    life: 38,          // 28% + 5 pp per wave
     defense: 0,
-    attack: 240,                          // 240% -> 24 contact damage
+    attack: 110,                          // 110% -> 11 contact damage
     attackSpeed: 154,                     // 154% -> one swing every 0.65 s
     attackDistance: 0,                    // melee: contact, measured from the edge
     moveSpeed: wave => 1760 + 80 * wave,  // 1760% + 80 pp per wave

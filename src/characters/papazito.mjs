@@ -54,7 +54,7 @@ const papazito = {
     ...resolveEntityStats({
       life: 110,             // +10% vida
       defense: 110,          // 11 points -> 55% mitigation
-      attack: 340,           // 34 damage per brick: he pays for the slow cadence with weight
+      attack: 272,           // 27.2 damage per brick: ranged pays 20% less, it never has to close
       attackSpeed: 90,       // 0.9 bricks/s: the slow heavy cadence of §4.1
       attackDistance: 280,   // 308px reach, slightly longer than El Negro
       moveSpeed: 2970,       // -10% mobility

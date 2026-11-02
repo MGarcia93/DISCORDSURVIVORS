@@ -6,9 +6,9 @@ import { drawShaman } from '../sprites.mjs';
 const shaman = {
   id: 'shaman',
   stats: {
-    life: wave => 26 + 5 * wave,
+    life: 72,
     defense: 0,
-    attack: 100,                         // 100% -> 10 damage per hex
+    attack: 210,                         // 210% -> 21 damage per hex
     attackSpeed: 90,                     // 90% -> one bolt every 1.11 s
     attackDistance: 170,                 // 170% of 100 units -> 187 px of reach
     moveSpeed: 900,                      // 45 scaled px/s: it stays behind

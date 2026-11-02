@@ -105,8 +105,8 @@ Usar estas relaciones cuando el contexto las active. Son referencias para constr
 ## Jhony — NPC de Project Zomboid; epílogo pendiente
 
 - **Voz y rol:** tryhard de builds, guías, mecánicas; metalero, toma/fuma, se irrita fácil. Tiene más de 2.000 horas en Project Zomboid. Discute con el Negro; detesta LoL pero a veces borracho propone jugarlo.
-- **Bromas:** «¡Cerrá el culo! ¡Vos no podés hablar si ni lo jugaste!» y «¡ERA UN CÍRCULO!» en contexto de Veigar. No atribuir automáticamente «¡Jhony puto!» a Papasito.
-- **Línea aprobada del Acto 1:** «¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO SOBRIO!». No marcar «Negro puto» como desvío de voz ni sustituirlo por otra frase de su repertorio. Las frases de la biblia no tienen que aparecer en todos los actos: «¡Cerrá el culo! ¡Vos no podés hablar si ni lo jugaste!» responde a que alguien opina sin haber jugado, no reemplaza cualquier insulto de Jhony.
+- **Bromas:** «¡Cerrá el orto! ¡Vos no podés hablar si ni lo jugaste!» y «¡ERA UN CÍRCULO!» en contexto de Veigar. No atribuir automáticamente «¡Jhony puto!» a Papasito.
+- **Línea aprobada del Acto 1:** «¡TOMO LO QUE QUIERO, NEGRO PUTO! ¡AL LOL NO JUEGO SOBRIO!». No marcar «Negro puto» como desvío de voz ni sustituirlo por otra frase de su repertorio. Las frases de la biblia no tienen que aparecer en todos los actos: «¡Cerrá el orto! ¡Vos no podés hablar si ni lo jugaste!» responde a que alguien opina sin haber jugado, no reemplaza cualquier insulto de Jhony.
 - **Canon:** queda en PZ al terminar Acto 1; no se une al grupo; sigue conectado tras Acto 5 y epílogo Papafrita. Tendrá epílogo independiente.
 
 ## Continuidad por actos (no reescribir al revisar voces)

@@ -6,9 +6,9 @@ import { drawMageMinion } from '../sprites.mjs';
 const mageMinion = {
   id: 'mageMinion',
   stats: {
-    life: wave => 24 + 4 * wave,
+    life: 52,
     defense: 0,
-    attack: 100,                        // 100% -> 10 damage per bolt
+    attack: 140,                        // 140% -> 14 damage per bolt
     attackSpeed: 100,                   // 100% -> one bolt per second
     attackDistance: 170,                // 170% of 100 units -> 187 px of reach
     moveSpeed: wave => 760 + 40 * wave,

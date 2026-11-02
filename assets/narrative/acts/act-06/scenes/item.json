@@ -1,0 +1,170 @@
+{
+  "id": "act-06-item",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "close": [
+        600,
+        480
+      ],
+      "wide": [
+        600,
+        430
+      ],
+      "boss": [
+        600,
+        300
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, ¿dónde está el Rathalos?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Todavía falta un poco. Primero quiero juntar provisiones."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿No dijiste que ya estabas preparado?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Sí, pero gastamos varias cosas contra el Great Jagras."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO NO VINIMOS A FARMEAR, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Negro, estamos en Monster Hunter. ¿Qué querés hacer?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡IRME A MI CASA!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Ahí está. Cuidado porque usa esas piedras para defenderse."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Yo me encargo de ese."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Vos sabés de piedras, paraguayo. ¿Le vas a levantar una pared?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "happy",
+          "text": "JAJA, dejá de joder, Papafrita."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¡Anamencua!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "annoyed",
+          "text": "Negro, ya empezás otra vez."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué? Te estoy hablando en guaraní."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "JAJAJA. Si el paraguayo no sabe ni lo que significa."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡Callate la boca, Papafrita!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJAJA, decí otra, Negro."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Anamencua dos."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡UUUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA!"
+        }
+      ]
+    }
+  ]
+}

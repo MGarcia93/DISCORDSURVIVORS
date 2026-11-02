@@ -1,0 +1,151 @@
+{
+  "id": "act-06-expulsion",
+  "stage": {
+    "background": "creator-desk",
+    "size": [
+      2288,
+      748
+    ],
+    "points": {
+      "negro": [
+        1180,
+        470
+      ],
+      "solago": [
+        1180,
+        560
+      ],
+      "papasito": [
+        1290,
+        470
+      ],
+      "warrior": [
+        1290,
+        560
+      ],
+      "maxi": [
+        1690,
+        460
+      ],
+      "wide": [
+        1450,
+        420
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Maxi."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Y Papafrita?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Se quedó."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Cómo que se quedó?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Dijo que tenía que probar la armadura."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "SERVIDOR",
+      "duration": 3.5,
+      "lines": [
+        "MONSTER_HUNTER_WORLD_OLD — 5 USUARIOS CONECTADOS"
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "CHAT PRIVADO",
+      "duration": 6,
+      "lines": [
+        "PAPAFRITA: che maxi",
+        "PAPAFRITA: ya consegui la armadura",
+        "MAXI: bueno sali",
+        "PAPAFRITA: para",
+        "PAPAFRITA: porque hay una cosa que tendrias que cambiar",
+        "PAPAFRITA: el sistema de armaduras",
+        "PAPAFRITA: funciona medio raro",
+        "PAPAFRITA: y sabes que mas"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "annoyed",
+          "text": "La concha de tu madre."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "portal"
+    },
+    {
+      "type": "notice",
+      "title": "EXPULSAR USUARIO",
+      "duration": 4,
+      "lines": [
+        "PAPAFRITA",
+        "MOTIVO: ROMPEBOLAS"
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "SISTEMA",
+      "duration": 3.5,
+      "lines": [
+        "HAS SIDO EXPULSADO DEL MUNDO",
+        "MOTIVO: ROMPEBOLAS"
+      ]
+    }
+  ]
+}

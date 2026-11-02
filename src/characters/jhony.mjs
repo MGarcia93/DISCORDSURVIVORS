@@ -25,7 +25,7 @@ const GUIDE_CADENCE = 0.45;     // seconds between thrown bottles
 // Exclusive upgrades (§5). The catalogue stores the ranks; the rules live here.
 const WAVE_RADIUS = 110;        // «¡ERA UN CÍRCULO!» scaled px
 const ZONE_SECONDS = 5;         // evolución: the circle stays on the floor
-const SHOUT_EVERY = 4;          // «¡CERRÁ EL CULO...!»
+const SHOUT_EVERY = 4;          // «¡CERRÁ EL ORTO...!»
 const SHOUT_RANGE = 150;
 const STOMP_EVERY = 3;          // «2.000 HORAS AL PEDO»
 const STOMP_RANGE = 120;
@@ -111,11 +111,26 @@ function glassShards(run, p, enemy, rank) {
   }
 }
 
-// «¡CERRÁ EL CULO, SI NI LO JUGASTE!»: a shout that hurts everything he is
+// Where he is looking. Walking, his heading is the last movement; standing
+// still, the nearest body — a cone hard-coded to one side is a cone that misses
+// whatever is in front of him.
+function shoutFront(run, p) {
+  const moving = Math.hypot(p.lastMoveX, p.lastMoveY);
+  if (moving > 0) return { x: p.lastMoveX / moving, y: p.lastMoveY / moving };
+  let nearest = null, gap = Infinity;
+  for (const enemy of run.enemies) {
+    if (enemy.hp <= 0) continue;
+    const distance = Math.hypot(enemy.x - p.x, enemy.y - p.y);
+    if (distance < gap) { gap = distance; nearest = enemy; }
+  }
+  if (!nearest || gap === 0) return { x: 1, y: 0 };
+  return { x: (nearest.x - p.x) / gap, y: (nearest.y - p.y) / gap };
+}
+
+// «¡CERRÁ EL ORTO, SI NI LO JUGASTE!»: a shout that hurts everything he is
 // looking at. Evolved, it is a 360-degree ring instead of a cone.
 function shoutBlast(run, p, ctx, rank) {
-  const front = Math.hypot(p.lastMoveX, p.lastMoveY) > 0
-    ? { x: p.lastMoveX, y: p.lastMoveY } : { x: 1, y: 0 };
+  const front = shoutFront(run, p);
   const reach = SHOUT_RANGE * WORLD_SCALE;
   let hitAny = false;
   for (const enemy of run.enemies) {
@@ -129,7 +144,7 @@ function shoutBlast(run, p, ctx, rank) {
     hitAny = true;
   }
   if (hitAny) {
-    run.effects.push({ x: p.x, y: p.y - 64 * WORLD_SCALE, text: '¡CERRÁ EL CULO!', ttl: 0.9, kind: 'shout' });
+    run.effects.push({ x: p.x, y: p.y - 64 * WORLD_SCALE, text: '¡CERRÁ EL ORTO!', ttl: 0.9, kind: 'shout' });
     run.effects.push({ x: p.x, y: p.y, kind: 'shoutWave', r: reach, ttl: 0.4, duration: 0.4 });
   }
 }
@@ -190,6 +205,7 @@ const jhony = {
       time: context.time, moving: context.moving, facing: context.facing, scale: 2, bottle: true,
       attacking: context.player.attackFlash > 0,
       tilt: context.player.fury > 0 ? 1 : (context.player.tilt ?? 0) / TILT_MAX,
+      drink: (context.player.drink ?? 0) > 0,
     });
   },
   // Stat sheet (§3): percentages over BASE_STATS. Vida +10%, Defensa −10%,

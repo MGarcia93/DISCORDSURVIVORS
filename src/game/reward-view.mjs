@@ -16,7 +16,10 @@ export function rewardPreviewLines(run, source, reward) {
     .map(stat => `${STAT_LABELS[stat]}: ${number.format(before[stat])} → ${number.format(after[stat])}`);
   for (const type of new Set((reward.effects ?? []).map(effect => effect.type))) {
     const increase = (preview.bonuses[type] ?? 0) - (run.player.rewardBonuses[type] ?? 0);
-    lines.push(EFFECTS[type].describe(increase));
+    // A descriptor that names the shape of a level reads the total the rank
+    // would leave, exactly like the card's own description. A numeric delta
+    // stays a delta: "Rebotes +1" is the change, not the pile.
+    lines.push(EFFECTS[type].describe(EFFECTS[type].cumulative ? (preview.bonuses[type] ?? 0) : increase));
   }
   return lines;
 }

@@ -6,9 +6,9 @@ import { drawMistWalker } from '../sprites.mjs';
 const mistWalker = {
   id: 'mistWalker',
   stats: {
-    life: wave => 30 + 6 * wave,
+    life: 59,
     defense: 10,                        // 10% -> 1 defence point -> 5% mitigation
-    attack: 90,                         // 90% -> 9 contact damage
+    attack: 130,                         // 130% -> 13 contact damage
     attackSpeed: 130,                   // 130% -> one swing every 0.77 s
     attackDistance: 0,
     moveSpeed: wave => 980 + 90 * wave, // it runs: the pack is the pressure

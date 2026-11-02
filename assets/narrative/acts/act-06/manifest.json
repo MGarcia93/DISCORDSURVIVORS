@@ -1,0 +1,872 @@
+{
+  "characters": "../../characters.json",
+  "sounds": {
+    "portal": {
+      "frequency": 180,
+      "duration": 0.6,
+      "gain": 0.08
+    },
+    "roar": {
+      "noise": true,
+      "duration": 0.5,
+      "cutoff": 420,
+      "gain": 0.14
+    },
+    "notice": {
+      "frequency": 620,
+      "duration": 0.12,
+      "gain": 0.1
+    }
+  },
+  "scenes": [
+    {
+      "id": "act-06-prologue",
+      "title": "Epílogo: Todavía faltan dos",
+      "file": "scenes/prologue.json"
+    },
+    {
+      "id": "act-06-reunion",
+      "title": "Epílogo: ¿Quién carajo los llamó?",
+      "file": "scenes/reunion.json"
+    },
+    {
+      "id": "act-06-explain",
+      "title": "Epílogo: Te explico",
+      "file": "scenes/explain.json"
+    },
+    {
+      "id": "act-06-item",
+      "title": "Epílogo: Me falta un ítem",
+      "file": "scenes/item.json"
+    },
+    {
+      "id": "act-06-path",
+      "title": "Epílogo: Una más y nos vamos",
+      "file": "scenes/path.json"
+    },
+    {
+      "id": "act-06-venom",
+      "title": "Epílogo: ¿Y sabés qué más?",
+      "file": "scenes/venom.json"
+    },
+    {
+      "id": "act-06-boss",
+      "title": "Epílogo: No me interrumpas",
+      "file": "scenes/boss.json"
+    },
+    {
+      "id": "act-06-defeat",
+      "title": "Epílogo: Expulsado por rompebolas",
+      "file": "scenes/defeat.json"
+    },
+    {
+      "id": "act-06-expulsion",
+      "title": "Epílogo: Expulsado por rompebolas",
+      "file": "scenes/expulsion.json"
+    },
+    {
+      "id": "act-06-final",
+      "title": "Epílogo: Papafrita desbloqueado",
+      "file": "scenes/final.json"
+    },
+    {
+      "id": "act-06-credits",
+      "title": "Epílogo: Un mensajito más",
+      "file": "scenes/credits.json"
+    }
+  ],
+  "bindings": [
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-06-prologue"
+    },
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-06-reunion"
+    },
+    {
+      "when": "before_wave",
+      "wave": 2,
+      "scene": "act-06-explain"
+    },
+    {
+      "when": "before_wave",
+      "wave": 3,
+      "scene": "act-06-item"
+    },
+    {
+      "when": "before_wave",
+      "wave": 4,
+      "scene": "act-06-path"
+    },
+    {
+      "when": "before_wave",
+      "wave": 5,
+      "scene": "act-06-venom"
+    },
+    {
+      "when": "before_wave",
+      "wave": 6,
+      "scene": "act-06-boss"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-06-defeat"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-06-expulsion"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-06-final"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-06-credits"
+    }
+  ],
+  "banter": [
+    {
+      "wave": 1,
+      "at": 2,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¡NEGRO, ATRÁS TUYO!"
+    },
+    {
+      "wave": 1,
+      "at": 3.6,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡YA LO VI!"
+    },
+    {
+      "wave": 1,
+      "at": 5.2,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Bueno, verlo no te sirvió de mucho."
+    },
+    {
+      "wave": 1,
+      "at": 6.8,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡AYUDAME, FORRO!"
+    },
+    {
+      "wave": 1,
+      "at": 8.6,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡VENGAN TODOS PARA ACÁ!"
+    },
+    {
+      "wave": 1,
+      "at": 10.2,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¿Vos estás dando órdenes?"
+    },
+    {
+      "wave": 1,
+      "at": 12,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡Y SÍ, NOS ESTÁN RODEANDO!"
+    },
+    {
+      "wave": 1,
+      "at": 13.6,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Mirá qué bien. Si no te hacen caso en tu casa, por lo menos intentás acá."
+    },
+    {
+      "wave": 1,
+      "at": 15.2,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "JAJAJAJA."
+    },
+    {
+      "wave": 1,
+      "at": 16.8,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡CERRÁ EL ORTO, NEGRO!"
+    },
+    {
+      "wave": 1,
+      "at": 18.4,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "Hay más bichos atrás."
+    },
+    {
+      "wave": 1,
+      "at": 20,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, Papasito, ¿cuánto cobrás por levantar una pared acá?"
+    },
+    {
+      "wave": 1,
+      "at": 21.6,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¿Una pared para qué?"
+    },
+    {
+      "wave": 1,
+      "at": 23.2,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Y... para que no pasen, paraguayo."
+    },
+    {
+      "wave": 1,
+      "at": 24.8,
+      "speaker": "papasito",
+      "expression": "happy",
+      "text": "JAJAJA. Mejor matalos, Negro."
+    },
+    {
+      "wave": 1,
+      "at": 26.4,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, AYUDÁ EN VEZ DE PEDIR PRESUPUESTOS!"
+    },
+    {
+      "wave": 2,
+      "at": 2,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¡CUIDADO, QUE VA A RODAR!"
+    },
+    {
+      "wave": 2,
+      "at": 3.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡YA LO VI!"
+    },
+    {
+      "wave": 2,
+      "at": 5,
+      "speaker": "papafrita",
+      "expression": "happy",
+      "text": "¡JAJAJAJA! ¡TE AVISÉ, NEGRO!"
+    },
+    {
+      "wave": 2,
+      "at": 6.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡AYUDAME, HIJO DE PUTA!"
+    },
+    {
+      "wave": 2,
+      "at": 8,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡PERO SI NO ME DEJASTE TERMINAR!"
+    },
+    {
+      "wave": 2,
+      "at": 9.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Pará, que me escribió mi mujer."
+    },
+    {
+      "wave": 2,
+      "at": 11,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡ESTAMOS PELEANDO, DIENTUDO!"
+    },
+    {
+      "wave": 2,
+      "at": 12.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡YA SÉ, UN SEGUNDO!"
+    },
+    {
+      "wave": 2,
+      "at": 14,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¿Qué pasó? ¿Te mandaron a lavar los platos?"
+    },
+    {
+      "wave": 2,
+      "at": 15.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Me pregunta si falta mucho."
+    },
+    {
+      "wave": 2,
+      "at": 17,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Decile que estamos esperando que Papasito termine una medianera."
+    },
+    {
+      "wave": 2,
+      "at": 18.5,
+      "speaker": "papasito",
+      "expression": "happy",
+      "text": "JAJAJA. No me metan a mí."
+    },
+    {
+      "wave": 2,
+      "at": 20,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Pobre Solago, ni en Monster Hunter puede jugar tranquilo."
+    },
+    {
+      "wave": 2,
+      "at": 21.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡CHÚPENSE UNA PIJA!"
+    },
+    {
+      "wave": 2,
+      "at": 27.5,
+      "speaker": "warrior",
+      "expression": "surprised",
+      "text": "¡Ura, se viene otra vez!"
+    },
+    {
+      "wave": 3,
+      "at": 2,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¡WARRIOR, CUIDADO!"
+    },
+    {
+      "wave": 3,
+      "at": 3.5,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "¡Ya lo vi, ura!"
+    },
+    {
+      "wave": 3,
+      "at": 5,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Bien ahí. Pensé que te ibas a quedar mirando la piedra."
+    },
+    {
+      "wave": 3,
+      "at": 6.5,
+      "speaker": "warrior",
+      "expression": "annoyed",
+      "text": "¡Dejá de joder, ura!"
+    },
+    {
+      "wave": 3,
+      "at": 8,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NO LE PEGUEN DE FRENTE, QUE BLOQUEA!"
+    },
+    {
+      "wave": 3,
+      "at": 9.5,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, ¿y si le tiramos a Papasito para romper la piedra?"
+    },
+    {
+      "wave": 3,
+      "at": 11,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¿Qué decís, Negro?"
+    },
+    {
+      "wave": 3,
+      "at": 12.5,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Y... es albañil. Algo tiene que saber."
+    },
+    {
+      "wave": 3,
+      "at": 14,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "Mejor te tiro a vos, Negro."
+    },
+    {
+      "wave": 3,
+      "at": 15.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, DEJÁ DE DECIR BOLUDECES!"
+    },
+    {
+      "wave": 3,
+      "at": 17,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡AHORA, QUE NO TIENE LA PIEDRA!"
+    },
+    {
+      "wave": 3,
+      "at": 18.2,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, Warrior, no te la vayas a aspirar."
+    },
+    {
+      "wave": 3,
+      "at": 19.2,
+      "speaker": "warrior",
+      "expression": "annoyed",
+      "text": "¡Ura, chupame un huevo!"
+    },
+    {
+      "wave": 3,
+      "at": 20.4,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, Solago, ¿y si te llevás esa piedra para que no te saquen la PC?"
+    },
+    {
+      "wave": 3,
+      "at": 21.6,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡NEGRO, PEGÁLE AL BICHO!"
+    },
+    {
+      "wave": 4,
+      "at": 2,
+      "speaker": "papafrita",
+      "expression": "happy",
+      "text": "¡JAJAJAJA! ¡NEGRO, SOS UN HIJO DE PUTA!"
+    },
+    {
+      "wave": 4,
+      "at": 3.5,
+      "speaker": "maxi-negro",
+      "expression": "surprised",
+      "text": "¡¿QUÉ PASA?!"
+    },
+    {
+      "wave": 4,
+      "at": 5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NOS ESTÁN ATACANDO Y VOS TE SENTÁS!"
+    },
+    {
+      "wave": 4,
+      "at": 6.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡ES MI HABILIDAD, PELOTUDO!"
+    },
+    {
+      "wave": 4,
+      "at": 8,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Ah, mirá. Encontraron la forma de que seas útil sin levantarte."
+    },
+    {
+      "wave": 4,
+      "at": 9.5,
+      "speaker": "maxi-negro",
+      "expression": "annoyed",
+      "text": "Chupame bien la pija."
+    },
+    {
+      "wave": 4,
+      "at": 11,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¿Otra vez el teléfono, Solago?"
+    },
+    {
+      "wave": 4,
+      "at": 12.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Sí, mi mujer me pregunta si falta mucho."
+    },
+    {
+      "wave": 4,
+      "at": 14,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¿Y dónde está ella?"
+    },
+    {
+      "wave": 4,
+      "at": 15.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Se fue a alinear los chakras y me dejó unas cosas para hacer."
+    },
+    {
+      "wave": 4,
+      "at": 17,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Pará. ¿A alinear los chakras?"
+    },
+    {
+      "wave": 4,
+      "at": 18.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Sí, pelotudo."
+    },
+    {
+      "wave": 4,
+      "at": 20,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Ahhh, mirá vos. ¿Y quién se los alinea?"
+    },
+    {
+      "wave": 4,
+      "at": 21.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Un tipo que hace esas sesiones."
+    },
+    {
+      "wave": 4,
+      "at": 23,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Uhhhh."
+    },
+    {
+      "wave": 4,
+      "at": 25,
+      "speaker": "warrior",
+      "expression": "happy",
+      "text": "¡JAJAJA, ura! ¡Dejalo ya!"
+    },
+    {
+      "wave": 4,
+      "at": 34,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "Ura, ¿falta mucho?"
+    },
+    {
+      "wave": 5,
+      "at": 1,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡Cuidado, que ataca con la lengua!"
+    },
+    {
+      "wave": 5,
+      "at": 2.2,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Entonces que me langutee."
+    },
+    {
+      "wave": 5,
+      "at": 3.4,
+      "speaker": "papafrita",
+      "expression": "happy",
+      "text": "JAJAJA. ¡No le des ideas que lo hace!"
+    },
+    {
+      "wave": 5,
+      "at": 5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡ME ENVENENÓ! ¡PAPAFRITA!"
+    },
+    {
+      "wave": 5,
+      "at": 6.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡USÁ UN ANTÍDOTO!"
+    },
+    {
+      "wave": 5,
+      "at": 8,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡NO TENGO!"
+    },
+    {
+      "wave": 5,
+      "at": 9.5,
+      "speaker": "papafrita",
+      "expression": "surprised",
+      "text": "¡¿CÓMO QUE NO TENÉS?!"
+    },
+    {
+      "wave": 5,
+      "at": 11,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡NO AGARRÉ NINGUNO!"
+    },
+    {
+      "wave": 5,
+      "at": 12.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, ESTUVIMOS MEDIA HORA JUNTANDO PROVISIONES!"
+    },
+    {
+      "wave": 5,
+      "at": 14,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡BUENO, DAME UNO VOS!"
+    },
+    {
+      "wave": 5,
+      "at": 15.5,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "¡SÍ, PARÁ!"
+    },
+    {
+      "wave": 5,
+      "at": 17,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "Gracias, te quiero."
+    },
+    {
+      "wave": 5,
+      "at": 18.5,
+      "speaker": "papafrita",
+      "expression": "annoyed",
+      "text": "Andate a la concha de tu madre."
+    },
+    {
+      "wave": 5,
+      "at": 21,
+      "speaker": "warrior",
+      "expression": "surprised",
+      "text": "¡Ura, no veo nada!"
+    },
+    {
+      "wave": 5,
+      "at": 22.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡SALÍ DE AHÍ, WARRIOR!"
+    },
+    {
+      "wave": 5,
+      "at": 24,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "¡Ya estoy saliendo, ura!"
+    },
+    {
+      "wave": 5,
+      "at": 25.5,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, Warrior, ¿estás seguro de que eso es veneno?"
+    },
+    {
+      "wave": 5,
+      "at": 27,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "¿Qué decís, ura?"
+    },
+    {
+      "wave": 5,
+      "at": 28.5,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Nada, capaz te gustó el humo."
+    },
+    {
+      "wave": 5,
+      "at": 30,
+      "speaker": "warrior",
+      "expression": "angry",
+      "text": "¡Chupame un huevo, Negro!"
+    },
+    {
+      "wave": 5,
+      "at": 31.5,
+      "speaker": "papafrita",
+      "expression": "happy",
+      "text": "JAJAJA. ¡NO TE LO FUMES, BOLIVIANO!"
+    },
+    {
+      "wave": 5,
+      "at": 33,
+      "speaker": "warrior",
+      "expression": "angry",
+      "text": "¡SOY DE JUJUY, URA!"
+    },
+    {
+      "wave": 6,
+      "at": 2,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, SALÍ DEL FUEGO!"
+    },
+    {
+      "wave": 6,
+      "at": 3.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡YA LO VI!"
+    },
+    {
+      "wave": 6,
+      "at": 5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡PERO SALÍ, HIJO DE PUTA!"
+    },
+    {
+      "wave": 6,
+      "at": 6.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡ESTOY INTENTANDO!"
+    },
+    {
+      "wave": 6,
+      "at": 8,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¡Voy por el costado!"
+    },
+    {
+      "wave": 6,
+      "at": 9.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡CUIDADO CON LA COLA!"
+    },
+    {
+      "wave": 6,
+      "at": 11,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡UUUUUUYYYYYY, HIJO DE PUTAAAA!"
+    },
+    {
+      "wave": 6,
+      "at": 11.5,
+      "speaker": "warrior",
+      "expression": "surprised",
+      "text": "¡Ura, corré, manco!"
+    },
+    {
+      "wave": 6,
+      "at": 12.5,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "JAJAJAJA."
+    },
+    {
+      "wave": 6,
+      "at": 14,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡CALLATE LA BOCA, NEGRO!"
+    },
+    {
+      "wave": 6,
+      "at": 15.5,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡NO DIJE NADA!"
+    },
+    {
+      "wave": 6,
+      "at": 17,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "¡Ura, se está levantando!"
+    },
+    {
+      "wave": 6,
+      "at": 18.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡APUNTEN A LAS ALAS!"
+    },
+    {
+      "wave": 6,
+      "at": 20,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, ¿y si le cortamos las alas y se las ponemos a Solago?"
+    },
+    {
+      "wave": 6,
+      "at": 21.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡¿PARA QUÉ MIERDA QUIERO ALAS?!"
+    },
+    {
+      "wave": 6,
+      "at": 23,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Así te escapás de tu casa cuando te mandan a limpiar."
+    },
+    {
+      "wave": 6,
+      "at": 24.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡LA CONCHA DE TU MADRE!"
+    },
+    {
+      "wave": 6,
+      "at": 26,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, DEJÁ DE HABLAR Y PEGÁLE!"
+    },
+    {
+      "wave": 6,
+      "at": 30,
+      "speaker": "warrior",
+      "expression": "surprised",
+      "text": "¡Ura, mirá cómo lo tiró!"
+    },
+    {
+      "wave": 6,
+      "at": 32,
+      "speaker": "warrior",
+      "expression": "happy",
+      "text": "¡Dale, ura, dale!"
+    }
+  ]
+}

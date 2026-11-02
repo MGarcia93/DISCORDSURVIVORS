@@ -33,26 +33,21 @@ export default {
     { wave: 5, kind: 'taskmaster', name: 'EL CAPATAZ DE LA RUEDA DEL DOLOR' },
   ],
   boss: { wave: 6, kind: 'administrator', name: 'EL ADMINISTRADOR DEL SERVIDOR' },
-  // Act five fields the whole shipped cast at its own tier. The sheets are the
-  // only owner of the six statistics: this block scales them, per kind and per
-  // statistic, so the zombie and the archer do not have to grow at the same
-  // rate. A statistic named here is multiplied on the authored percentage; a
-  // statistic left out keeps the sheet's own value, and an act that declares no
-  // block at all fields every body exactly as authored.
-  //
-  // These numbers reproduce today's flat act-five table at wave 1 (the first
-  // wave of this act is the tier the act used to freeze for all six). Wave by
-  // wave the sheet keeps growing from there, which is the point of the change.
+  // Act five fields the whole shipped cast at its own tier. Each sheet holds the
+  // rung of the ladder its own act plays (act 1 zombie 46/12, +25% per act); this
+  // world lifts every body from the rung it was authored on to rung five, so the
+  // whole cast lands together. Per kind, per statistic: a stat left out keeps
+  // its sheet, and acts 1-4 declare no multiplier at all.
   statMultipliers: {
-    zombie: { life: 2.63, attack: 2 },
-    meleeMinion: { life: 3.65, attack: 2 },
-    mageMinion: { life: 3.5, attack: 2 },
-    mistWalker: { life: 3.25, attack: 2 },
-    skeleton: { life: 3.58, attack: 2 },
-    barbarian: { life: 3.49, attack: 2 },
-    slaver: { life: 3.24, attack: 2 },
-    archer: { life: 4.69, attack: 2 },
-    alchemist: { life: 4.11, attack: 2 },
+    zombie: { life: 2.44, attack: 2.44 },
+    meleeMinion: { life: 1.95, attack: 1.95 },
+    mageMinion: { life: 1.95, attack: 1.95 },
+    mistWalker: { life: 1.95, attack: 1.95 },
+    skeleton: { life: 1.56, attack: 1.56 },
+    barbarian: { life: 1.25, attack: 1.25 },
+    slaver: { life: 1.25, attack: 1.25 },
+    archer: { life: 1.25, attack: 1.25 },
+    alchemist: { life: 1.25, attack: 1.25 },
   },
   waves: [
     // "Aparecen zombies de Project Zomboid y minions de League of Legends", plus

@@ -6,9 +6,9 @@ import { drawMeleeMinion } from '../sprites.mjs';
 const meleeMinion = {
   id: 'meleeMinion',
   stats: {
-    life: wave => 26 + 5 * wave,
+    life: 57,
     defense: 20,                        // 20% -> 2 defence points -> 10% mitigation
-    attack: 110,                        // 110% -> 11 contact damage
+    attack: 160,                        // 160% -> 16 contact damage
     attackSpeed: 154,                   // 154% -> one swing every 0.65 s
     attackDistance: 0,                  // melee: contact, measured from the edge
     moveSpeed: wave => 940 + 70 * wave,

@@ -6,9 +6,9 @@ import { drawBurningElite } from '../sprites.mjs';
 const burningElite = {
   id: 'burningElite',
   stats: {
-    life: wave => 110 + 16 * wave,
+    life: 370,
     defense: 30,                         // 30% -> 3 points -> 15% mitigation
-    attack: 170,                         // 170% -> 17 contact damage
+    attack: 370,                         // 370% -> 37 contact damage
     attackSpeed: 105,                    // 105% -> one swing every 0.95 s
     attackDistance: 0,
     moveSpeed: 1050,                     // 52.5 scaled px/s

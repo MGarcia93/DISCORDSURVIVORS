@@ -23,7 +23,7 @@ También está podrido de *League of Legends*: varios del grupo trollean a prop�
 **Frases representativas:**
 
 - «¡ERA UN CÍRCULO, LA CONCHA DE TU MADRE!»
-- «¡CERRÁ EL CULO! ¡VOS NO PODÉS HABLAR SI NI LO JUGASTE!»
+- «¡CERRÁ EL ORTO! ¡VOS NO PODÉS HABLAR SI NI LO JUGASTE!»
 - «No juego más a esta mierda».
 
 ### 1.1 Presencia en la historia: canon que no se altera
@@ -144,7 +144,7 @@ Cada mejora tiene **una forma inicial y una evolución**. La evolución solo pue
 
 **Referencia real:** Papasito erró la cárcel de Veigar en LoL; Jhony, tomado y tilteado, repetía que era un círculo, mientras Papasito insistía en que era una línea para hacerlo enojar.
 
-### 5.2 «¡CERRÁ EL CULO, SI NI LO JUGASTE!» — Grito
+### 5.2 «¡CERRÁ EL ORTO, SI NI LO JUGASTE!» — Grito
 
 **Desbloqueo:** Jhony lanza periódicamente un **grito frontal** que daña a todos los enemigos en un cono delante suyo.
 
@@ -234,7 +234,7 @@ No confundir el ítem Alcohol con el especial «Un traguito más» ni con la mej
 | Combate tranquilo | «Estoy jugando tranquilo. No rompan las pelotas». |
 | Recibir provocaciones | «¿Me estás tomando de pelotudo?». |
 | Tilt máximo | «¡ME TIENEN LOS HUEVOS LLENOS!». |
-| Con Maxi Negro | «¡CERRÁ EL CULO! ¡VOS NO PODÉS HABLAR SI NI LO JUGASTE!». |
+| Con Maxi Negro | «¡CERRÁ EL ORTO! ¡VOS NO PODÉS HABLAR SI NI LO JUGASTE!». |
 | Con Papasito | «¡ERA UN CÍRCULO, LA CONCHA DE TU MADRE!». |
 | Especial de whisky | «Bueno, un traguito más». |
 | Definitiva | «Pará, que vi una guía». |
@@ -277,7 +277,7 @@ La experiencia buscada es la de un metalero tryhard que empieza a los botellazos
 - La personalidad de Jhony: metalero, toma, fuma, se irrita fácilmente, intenta jugar en serio y estudia builds rotas.
 - La provocación deliberada de Papasito y las discusiones habituales con Maxi Negro.
 - La anécdota **círculo vs. línea** de la cárcel de Veigar.
-- La frase **«¡CERRÁ EL CULO! ¡VOS NO PODÉS HABLAR SI NI LO JUGASTE!»**.
+- La frase **«¡CERRÁ EL ORTO! ¡VOS NO PODÉS HABLAR SI NI LO JUGASTE!»**.
 - La contradicción sobre LoL: lo odia, pero cuando toma propone jugarlo.
 - La botella de cerveza como arma y el whisky como especial.
 - Tilt como mecánica principal y «ME VI UNA GUÍA» como definitiva.

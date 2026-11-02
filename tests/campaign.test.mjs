@@ -12,18 +12,19 @@ import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
 const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
 const playable = () => structuredClone(act01);
 
-test('the campaign registers five worlds in order and all five are playable', () => {
-  assert.equal(ACTS.length, 5);
-  assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5]);
-  assert.equal(new Set(ACTS.map(act => act.id)).size, 5);
-  assert.equal(PLAYABLE_ACTS.length, 5);
+test('the campaign registers six worlds in order and all six are playable', () => {
+  assert.equal(ACTS.length, 6);
+  assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5, 6]);
+  assert.equal(new Set(ACTS.map(act => act.id)).size, 6);
+  assert.equal(PLAYABLE_ACTS.length, 6);
   assert.equal(DEFAULT_ACT.id, 'act-01');
   assert.equal(getAct('act-03').status, 'playable');
   assert.equal(getAct('act-04').status, 'playable');
   assert.equal(getAct('act-05').status, 'playable');
+  assert.equal(getAct('act-06').status, 'playable');
   assert.equal(getAct('nope'), DEFAULT_ACT);
-  // Monster Hunter is a rejected pitch in Act 4, not a world.
-  assert.ok(!ACTS.some(act => /monster/i.test(act.id) || /monster/i.test(act.title)));
+  // Monster Hunter was a rejected pitch in Act 4 and became the epilogue world.
+  assert.ok(ACTS.some(act => act.world === 'monster-hunter'));
 });
 
 test('act five is the corrupted Discord with the four old bosses and the administrator', () => {
@@ -191,4 +192,31 @@ test('a world resolves to the act that owns it, and a shared one to nothing', ()
   // back to the default track instead of pretending they belong to Act 1.
   assert.equal(actForWorld('arena'), null);
   assert.equal(actForWorld(undefined), null);
+});
+
+test('act six is the Papafrita epilogue in the Primordial Forest', async () => {
+  const { default: act06 } = await import('../src/campaign/act-06-monster-hunter.mjs');
+  assert.equal(act06.world, 'monster-hunter');
+  assert.equal(act06.duration, 60);
+  assert.equal(act06.waves.length, 6);
+  assert.equal(act06.narrative, 'acts/act-06/manifest.json');
+  // Two mini-bosses on two different waves, each one before the boss.
+  assert.deepEqual(act06.miniboss, [
+    { wave: 3, kind: 'kuluYaKu', name: 'KULU-YA-KU' },
+    { wave: 5, kind: 'pukeiPukei', name: 'PUKEI-PUKEI' },
+  ]);
+  assert.deepEqual(act06.boss, { wave: 6, kind: 'rathalos', name: 'RATHALOS' });
+  // The two mini-boss waves are untimed: the boss decides when they end.
+  assert.equal(act06.waves[2].untimed, true);
+  assert.equal(act06.waves[4].untimed, true);
+  // Every kind here is new to the act and authored on this act's rung.
+  assert.equal(act06.statMultipliers, undefined);
+  const kinds = new Set(act06.waves.flatMap(row => Object.keys(row.mix)));
+  for (const kind of ['jagras', 'vespoid', 'kestodon', 'mernos', 'hornetaur', 'greatJagras']) {
+    assert.ok(kinds.has(kind), `${kind} is fielded by the act`);
+  }
+  // The Great Jagras is the wave-2 elite, never the mini-boss.
+  assert.ok(kinds.has('greatJagras'));
+  assert.equal(act06.waves[1].mix.greatJagras > 0 && act06.waves[1].mix.greatJagras < 0.1, true,
+    'the elite walks in with the pack, it does not crowd the wave');
 });

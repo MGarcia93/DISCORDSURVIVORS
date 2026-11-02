@@ -6,9 +6,9 @@ import { drawSkeleton } from '../sprites.mjs';
 const skeleton = {
   id: 'skeleton',
   stats: {
-    life: wave => 30 + 6 * wave,
+    life: 72,
     defense: 5,                          // 5% -> 0.5 points -> 2.5% mitigation
-    attack: 90,                          // 90% -> 9 contact damage
+    attack: 200,                          // 200% -> 20 contact damage
     attackSpeed: 140,                    // 140% -> one swing every 0.71 s
     attackDistance: 0,
     moveSpeed: 1250,                     // 62.5 scaled px/s: light on its feet

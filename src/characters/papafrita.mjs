@@ -182,7 +182,7 @@ const papafrita = {
     ...resolveEntityStats({
       life: 90,
       defense: 85,
-      attack: 360,
+      attack: 288,           // 28.8 per wave: ranged pays 20% less, it never has to close
       attackSpeed: 180,
       attackDistance: 320,
       moveSpeed: 3300,

@@ -1,0 +1,442 @@
+{
+  "id": "act-06-prologue",
+  "stage": {
+    "background": "creator-desk",
+    "size": [
+      2288,
+      748
+    ],
+    "points": {
+      "negro": [
+        1180,
+        470
+      ],
+      "solago": [
+        1180,
+        560
+      ],
+      "papasito": [
+        1290,
+        470
+      ],
+      "warrior": [
+        1290,
+        560
+      ],
+      "maxi": [
+        1690,
+        460
+      ],
+      "wide": [
+        1450,
+        420
+      ],
+      "maxi-close": [
+        1600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    },
+    "props": {
+      "portal-negro": {
+        "at": "negro",
+        "state": "closed"
+      },
+      "portal-solago": {
+        "at": "solago",
+        "state": "closed"
+      },
+      "portal-papasito": {
+        "at": "papasito",
+        "state": "closed"
+      },
+      "portal-warrior": {
+        "at": "warrior",
+        "state": "closed"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Che, pará."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Faltan dos."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Dos qué?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Dos boludos."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "¿Y quiénes son, ura?"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "USUARIOS CONECTADOS",
+      "duration": 4,
+      "lines": [
+        "JHONY — PROJECT_ZOMBOID — CONECTADO",
+        "PAPAFRITA — MONSTER_HUNTER_WORLD_OLD — CONECTADO"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Ah, Jhony sigue matando zombis."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Y sí, estaba bastante tranquilo ahí."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Y Papafrita?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "disgusted",
+          "text": "¡PUAJ!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "disgusted",
+          "text": "Sí, que se quede ahí."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "A Papafrita ya le abrí un portal para volver."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Y no quiso salir?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "No. Me mandó como mil mensajes."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y qué te decía?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Que estaba terminando una armadura. Lo tuve que bloquear."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "CHAT PRIVADO",
+      "duration": 5,
+      "lines": [
+        "MAXI: che salí del mundo que ya terminamos",
+        "PAPAFRITA: para que estoy terminando una armadura",
+        "MAXI: dale boludo",
+        "PAPAFRITA: igual hay una cosa que no entiendo",
+        "PAPAFRITA: porque en realidad el sistema de afinidad",
+        "PAPAFRITA: funciona distinto dependiendo del arma",
+        "PAPAFRITA: y sabés qué más",
+        "MAXI: PAPAFRITA SALÍ",
+        "PAPAFRITA: para que te explico"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJAJA. ¡EL HIJO DE PUTA TE ESTÁ EXPLICANDO EL MONSTER HUNTER!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, dejalo. Está feliz."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Y sí, si quiere quedarse, que siga jugando."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "No puedo cerrar el juego con él adentro."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Y qué hacemos? ¿Lo dejamos abierto para siempre?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Y bueno..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿qué hacés?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Nada."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "sound",
+          "sound": "portal"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-negro",
+          "state": "open",
+          "delay": 0.1
+        },
+        {
+          "type": "prop",
+          "prop": "portal-solago",
+          "state": "open",
+          "delay": 0.35
+        },
+        {
+          "type": "prop",
+          "prop": "portal-papasito",
+          "state": "open",
+          "delay": 0.6
+        },
+        {
+          "type": "prop",
+          "prop": "portal-warrior",
+          "state": "open",
+          "delay": 0.85
+        },
+        {
+          "type": "camera",
+          "to": "wide",
+          "zoom": 1,
+          "duration": 0.9
+        },
+        {
+          "type": "wait",
+          "duration": 1.1
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡PERO LA CONCHA DE TU MADRE, MAXI!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡MAXI, HIJO DE PUTAAAA!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "surprised",
+          "text": "¡EHHH, PARÁ!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "surprised",
+          "text": "¡Pará, ura!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "happy",
+          "text": "JAJAJAJA."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "flash",
+          "at": "negro",
+          "duration": 0.2
+        },
+        {
+          "type": "flash",
+          "at": "solago",
+          "duration": 0.2,
+          "delay": 0.08
+        },
+        {
+          "type": "flash",
+          "at": "papasito",
+          "duration": 0.2,
+          "delay": 0.16
+        },
+        {
+          "type": "flash",
+          "at": "warrior",
+          "duration": 0.2,
+          "delay": 0.24
+        },
+        {
+          "type": "wait",
+          "duration": 0.5
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "exit",
+          "actor": "negro",
+          "delay": 0.05
+        },
+        {
+          "type": "exit",
+          "actor": "solago",
+          "delay": 0.15
+        },
+        {
+          "type": "exit",
+          "actor": "papasito",
+          "delay": 0.25
+        },
+        {
+          "type": "exit",
+          "actor": "warrior",
+          "delay": 0.35
+        },
+        {
+          "type": "wait",
+          "duration": 0.6
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "prop",
+          "prop": "portal-negro",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-solago",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-papasito",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-warrior",
+          "state": "closed"
+        },
+        {
+          "type": "wait",
+          "duration": 0.5
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "USUARIOS CONECTADOS",
+      "duration": 3,
+      "lines": [
+        "JHONY — PROJECT_ZOMBOID — CONECTADO"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Después vemos qué hacemos con este."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "CORTE",
+      "lines": [
+        "CORTE A NEGRO"
+      ],
+      "duration": 1.6
+    }
+  ]
+}

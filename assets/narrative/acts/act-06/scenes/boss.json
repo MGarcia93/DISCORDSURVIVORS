@@ -1,0 +1,177 @@
+{
+  "id": "act-06-boss",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "close": [
+        600,
+        480
+      ],
+      "wide": [
+        600,
+        430
+      ],
+      "boss": [
+        600,
+        300
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "boss",
+      "zoom": 1.1,
+      "duration": 1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, escuchen bien. Este bicho tiene varios ataques importantes, así que—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Como les decía, cuando levanta vuelo—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJAJA. ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "annoyed",
+          "text": "Pará, Negro, estoy intentando explicar."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "annoyed",
+          "text": "Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡ME VAS A DEJAR TERMINAR!"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "Escuchame una cosa, dragón de mierda."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Uh, se calentó."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿y si le ponemos un micrófono a Papafrita y lo usamos de carnada?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡NEGRO, CERRÁ EL ORTO!"
+        }
+      ]
+    }
+  ]
+}

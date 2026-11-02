@@ -11,6 +11,7 @@ import laboratory from './laboratory.mjs';
 import discord from './discord.mjs';
 import discordVoice from './discord-voice.mjs';
 import creatorDesk from './creator-desk.mjs';
+import monsterHunter from './monster-hunter.mjs';
 
 // World backgrounds live as one module per world. A scene picks one by id
 // (`stage.background`), the story pages name theirs in story-pages.mjs, and
@@ -19,7 +20,7 @@ import creatorDesk from './creator-desk.mjs';
 // Each world is painted ONCE into an offscreen canvas and then blitted, so the
 // per-frame cost of any world is a single drawImage no matter how many tiles
 // it paints. Only what a world declares in `animate` runs every frame.
-const WORLDS = Object.freeze({ arena, room, zomboid, 'zomboid-combat': zomboidCombat, 'jhony-street': jhonyStreet, rift, inferno, exiles, 'warrior-camp': warriorCamp, laboratory, discord, 'discord-voice': discordVoice, 'creator-desk': creatorDesk });
+const WORLDS = Object.freeze({ arena, room, zomboid, 'zomboid-combat': zomboidCombat, 'jhony-street': jhonyStreet, rift, inferno, exiles, 'warrior-camp': warriorCamp, laboratory, discord, 'discord-voice': discordVoice, 'creator-desk': creatorDesk, 'monster-hunter': monsterHunter });
 
 export const worldIds = Object.freeze(Object.keys(WORLDS));
 export const defaultWorld = 'arena';

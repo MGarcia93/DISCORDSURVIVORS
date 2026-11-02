@@ -7,9 +7,9 @@ import { drawBarbarian } from '../sprites.mjs';
 const barbarian = {
   id: 'barbarian',
   stats: {
-    life: wave => 32 + 7 * wave,
+    life: 90,
     defense: 10,                         // 10% -> 1 point -> 5% mitigation
-    attack: 110,                         // 110% -> 11 contact damage
+    attack: 240,                         // 240% -> 24 contact damage
     attackSpeed: 130,                    // 130% -> one swing every 0.77 s
     attackDistance: 0,
     moveSpeed: wave => 900 + 60 * wave,

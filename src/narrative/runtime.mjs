@@ -110,6 +110,9 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
         case 'camera':
           requireValue(finite(step.zoom ?? 1) && (step.zoom ?? 1) >= 1 && (step.zoom ?? 1) <= 4, 'Invalid camera zoom');
           resources.push('camera'); break;
+        case 'exit':
+          requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
+          resources.push(`actor:${step.actor}`); break;
         case 'prop':
           requireValue(own(props, step.prop) && text(step.state), `Unknown prop/state: ${step.prop}`);
           resources.push(`prop:${step.prop}`); break;
@@ -291,6 +294,12 @@ export class ScenePlayer {
     if (step.type === 'wait') return this._timed(step.duration, () => {});
     if (step.type === 'prop') {
       this.props[step.prop].state = step.state;
+      return { tick: () => true, skip() {} };
+    }
+    if (step.type === 'exit') {
+      // An actor leaves the stage. A portal that swallows the group needs them
+      // gone before the next beat, not standing in the background.
+      this.actors[step.actor].hidden = true;
       return { tick: () => true, skip() {} };
     }
     if (step.type === 'flash') {

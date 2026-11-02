@@ -177,6 +177,7 @@ A world is one module in `src/backgrounds/` that paints the scenery of a place. 
 | `discord` | Act 5 — the corrupted server |
 | `discord-voice` | Act 5 — the Discord they believe they came back to: channel list, conversation and the connected call |
 | `creator-desk` | Act 5 epilogue — the room behind the server, where Maxi is at the machine |
+| `monster-hunter` | Act 6 — the Primordial Forest of the Papafrita epilogue |
 
 Each world exports `{ id, title, draw, animate? }`:
 

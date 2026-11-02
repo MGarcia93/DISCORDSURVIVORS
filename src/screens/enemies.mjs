@@ -120,6 +120,16 @@ export function drawEnemyPreview(dt) {
 }
 
 export function enemiesScreen() {
+  // Deep links: `?dev=enemies&kind=kuluYaKu&wave=6` opens the sandbox already on
+  // that body, so a review can be handed one URL per kind instead of asking
+  // someone to scroll a thirty-entry select.
+  const params = new URLSearchParams(globalThis.location?.search ?? '');
+  const requestedKind = params.get('kind');
+  const requestedWave = Math.round(Number(params.get('wave')));
+  if (KINDS.includes(requestedKind)) state.enemyPreviewKind = requestedKind;
+  if (Number.isFinite(requestedWave) && requestedWave >= 1) {
+    state.enemyPreviewWave = Math.min(6, requestedWave);
+  }
   state.enemyPreviewWorld = worldIds.includes(state.enemyPreviewWorld) ? state.enemyPreviewWorld : 'zomboid';
   state.enemyPreviewKind = KINDS.includes(state.enemyPreviewKind) ? state.enemyPreviewKind : KINDS[0];
   arena = null;

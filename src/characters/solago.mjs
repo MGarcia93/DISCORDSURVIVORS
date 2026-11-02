@@ -10,6 +10,11 @@ const SMILE_BLOCK = 40;
 // through a six-wave act, let alone five of them.
 const BITE_HEAL = 4;
 
+// How far the scissors cut, in world units, from Solago's body. It has to pass
+// the longest ranged reach (an archer parks at 231 px) or the ultimate leaves
+// every caster standing outside the ring and she cannot punish them for it.
+const STAND_RADIUS = 240;
+
 const solago = {
   id: 'solago',
   name: 'SOLAGO',
@@ -29,7 +34,7 @@ const solago = {
       <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido, y empuja lo que muerde.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos: mientras la patrona está en escena, a Solago no le entra nada. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'SOLAGO · BLOQUEADO · ENCUENTRO DEL ACTO 2',
     unlocked: 'SOLAGO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -60,6 +65,10 @@ const solago = {
   },
   attack: { type: 'melee' },
   decays: ['permissionActive'],
+  // The lightest of the six stats is the one a whole item dominates. Her bite is
+  // melee on purpose, so the ceiling sits just inside the shortest ranged
+  // enemy's reach: however the build stacks, a ranged body still shoots back.
+  statCaps: { attackDistance: 155 },
   // The heaviest bite in the cast shoves what it hits: every bite buys a step
   // forward, so standing still is not a strategy with her.
   combat: { permissionDamageMult: 1.3, permissionRateMult: 0.72, knockback: 15 },
@@ -130,12 +139,18 @@ const solago = {
   specials: [
     {
       key: 'stand', name: 'La Patrona', hotkey: 'q', duration: 7, cooldown: 26, durationBonus: 'standDuration',
-      buff: 'daño en área · no te podés mover',
+      buff: 'daño en área · inmune · no te podés mover',
       immobilize: true,
+      // She covers up and the woman fights: no bite of her own while the stand
+      // is up. The engine reads this flag next to `immobilize`.
+      noAttack: true,
+      // She is the one on stage: whatever lands, lands on her. The engine reads
+      // this flag in invulnerable(), so every hit path skips the body.
+      invulnerable: true,
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;
         if (run.standIn > 0) return;
-        const radius = (170 + (p.rewardBonuses.patronaRadius ?? 0)) * WORLD_SCALE;
+        const radius = (STAND_RADIUS + (p.rewardBonuses.patronaRadius ?? 0)) * WORLD_SCALE;
         for (const enemy of run.enemies) {
           if (ctx.distance(enemy, p) < radius) ctx.hit(run, enemy, p.damage * 0.9, 'stand');
         }
@@ -145,7 +160,7 @@ const solago = {
         // Finisher: the scissors get one last wide cut before she leaves.
         const burst = p.rewardBonuses?.patronaFinal ?? 0;
         if (burst > 0) {
-          const radius = (170 + (p.rewardBonuses?.patronaRadius ?? 0)) * WORLD_SCALE;
+          const radius = (STAND_RADIUS + (p.rewardBonuses?.patronaRadius ?? 0)) * WORLD_SCALE;
           for (const enemy of run.enemies) {
             if (enemy.hp > 0 && ctx.distance(enemy, p) < radius) ctx.hit(run, enemy, p.damage * burst, 'stand');
           }

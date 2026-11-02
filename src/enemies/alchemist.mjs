@@ -7,9 +7,9 @@ import { drawAlchemist } from '../sprites.mjs';
 const alchemist = {
   id: 'alchemist',
   stats: {
-    life: wave => 30 + 6 * wave,
+    life: 102,
     defense: 5,                          // 5% -> 0.5 points -> 2.5% mitigation
-    attack: 95,                          // 95% -> 9.5 damage per flask
+    attack: 210,                          // 210% -> 21 damage per flask
     attackSpeed: 80,                     // 80% -> one throw every 1.25 s
     attackDistance: 160,                 // 160% of 100 units -> 176 px of reach
     moveSpeed: 860,                      // 43 scaled px/s

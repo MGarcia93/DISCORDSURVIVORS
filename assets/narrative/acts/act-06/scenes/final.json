@@ -1,0 +1,221 @@
+{
+  "id": "act-06-final",
+  "stage": {
+    "background": "creator-desk",
+    "points": {
+      "negro": [
+        1180,
+        470
+      ],
+      "solago": [
+        1180,
+        560
+      ],
+      "papasito": [
+        1290,
+        470
+      ],
+      "warrior": [
+        1290,
+        560
+      ],
+      "maxi": [
+        1690,
+        460
+      ],
+      "papafrita": [
+        1420,
+        470
+      ],
+      "sky": [
+        1420,
+        -140
+      ],
+      "wide": [
+        1450,
+        420
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "sky"
+      }
+    },
+    "size": [
+      2288,
+      748
+    ]
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "move",
+      "actor": "papafrita",
+      "to": "papafrita",
+      "duration": 0.6
+    },
+    {
+      "type": "flash",
+      "at": "papafrita",
+      "duration": 0.25
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "surprised",
+          "text": "¿Eh? ¡PARÁ, QUE NO TERMINÉ!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡MAXI, LA CONCHA DE TU MADRE! ¡ME FALTABA PROBAR LA ARMADURA!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Me tenés los huevos llenos."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJAJA. ¡LO BANEARON POR ROMPEBOLAS!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡Pero si estaba explicando una cosa!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡POR ESO MISMO, PELOTUDO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Bueno, por lo menos ya estamos todos acá."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Falta Jhony, ura."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Sí, después vemos al otro."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "SERVIDOR",
+      "duration": 3.5,
+      "lines": [
+        "JHONY — PROJECT_ZOMBOID — CONECTADO",
+        "MONSTER_HUNTER_WORLD_OLD — 0 USUARIOS"
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Che, Negro."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Qué?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "¿Mañana jugamos al Monster Hunter?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿No que querías jugar solo?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Necesito farmear otra armadura."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Ahhh, ¿así que querés jugar conmigo?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "No, Negro. Necesito alguien que me ayude."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJAJA. Dale, hijo de puta. Tipo nueve."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "Dale, Negro. Te quiero."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Yo también, pelotudo."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Igual no llegues tarde."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Chupame bien la pija."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "PAPAFRITA DESBLOQUEADO",
+      "duration": 4.5,
+      "lines": [
+        "«Habla mucho. Demasiado. Por suerte ahora hace daño»."
+      ]
+    }
+  ]
+}

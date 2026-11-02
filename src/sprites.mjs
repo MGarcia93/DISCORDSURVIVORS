@@ -656,6 +656,32 @@ export function drawEnemyShot(ctx, device = 'bolt') {
     pixel(ctx, 5, -2, 3, 4, '#fff4cf');
     return;
   }
+  if (device === 'fireball') {
+    // Rathalos' fire: a white-hot core inside a stepped flame, trailing embers.
+    // It has to read as a ball of fire from across the arena, so the core is the
+    // brightest thing on the field after the player.
+    pixel(ctx, -13, -2, 8, 4, '#7a1f10');
+    pixel(ctx, -11, -4, 7, 8, '#c23a12');
+    roundedMass(ctx, -2, -7, 12, 14, '#5c160c');
+    roundedMass(ctx, -1, -6, 10, 12, '#e8611e');
+    pixel(ctx, 1, -5, 6, 5, '#ffb03a');
+    pixel(ctx, 2, -4, 4, 3, '#ffe9a0');
+    pixel(ctx, 2, 2, 4, 3, '#c23a12');
+    pixel(ctx, -6, -5, 3, 2, '#ffb03a');
+    return;
+  }
+  if (device === 'venom') {
+    // Pukei-Pukei's spit: a bubbling purple glob with a dark rim and two drops
+    // coming off it, so the poison is legible before it lands.
+    pixel(ctx, -10, -1, 6, 2, '#4d2762');
+    roundedMass(ctx, -3, -7, 12, 14, '#3a1c4c');
+    roundedMass(ctx, -2, -6, 10, 12, '#9a62b8');
+    pixel(ctx, -2, -6, 7, 3, '#c79ae0');
+    pixel(ctx, 1, -1, 4, 4, '#723f8d');
+    pixel(ctx, 3, 3, 3, 2, '#9a62b8');
+    pixel(ctx, -7, -6, 3, 3, '#723f8d');
+    return;
+  }
   if (device === 'hex') {
     // Act 3 hex bolt: a green curse with a dark rim and a thin tail, so it is
     // never mistaken for the mage's violet dart in the middle of a wave.
@@ -2577,10 +2603,12 @@ export function drawWarrior(ctx, x, y, options = {}) {
 
 // Jhony: the approved Act 1 stage sprite (black leather, ripped jeans, long
 // hair, glasses, beard) with his playable accessory. `bottle` adds the beer
-// bottle he swings as his basic attack, `attacking` thrusts it forward and
-// `tilt` (0..1) reddens the face on the way to Furia. With every option off the
-// rectangle sequence is byte-identical to the approved NPC sprite.
-export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0, bottle = false, attacking = false, tilt = 0 } = {}) {
+// bottle he swings as his basic attack, `attacking` thrusts it forward, `tilt`
+// (0..1) knits the brows and grows the anger ticks, and `drink` is the drunk
+// gag: flushed cheeks and the tie tied around his head while the whisky lasts.
+// With every option off the rectangle sequence is byte-identical to the approved
+// NPC sprite.
+export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0, bottle = false, attacking = false, tilt = 0, drink = false } = {}) {
   const step = moving ? Math.floor(time * 8) % 2 : 0;
   const ink = '#171526';
   const hair = '#181c26';
@@ -2774,15 +2802,13 @@ export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, ti
   p(-3, 21, 2, 1, '#55504b');
   p(3, 21, 1, 2, '#46413e');
 
-  // Tilt reads in the face before it reads in the effects: knitted brows, red
-  // cheeks and the anger ticks that grow towards Furia.
+  // Tilt reads in the face before it reads in the effects: knitted brows and
+  // the anger ticks that grow towards Furia.
   if (tilt >= 0.5) {
     p(-7, 9, 6, 1, '#2a2028');
     p(2, 9, 6, 1, '#2a2028');
     p(-7, 10, 2, 1, '#2a2028');
     p(6, 10, 2, 1, '#2a2028');
-    p(-7, 14, 4, 2, '#b4543c');
-    p(4, 14, 4, 2, '#b4543c');
   }
   if (tilt >= 0.25) {
     const ticks = tilt >= 0.9 ? 3 : tilt >= 0.55 ? 2 : 1;
@@ -2791,6 +2817,47 @@ export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, ti
       p(8 + i * 3, -4 - dy, 2, 1, '#c4404e');
       p(9 + i * 3, -3 - dy, 1, 2, '#c4404e');
     }
+  }
+
+  // «Un traguito más» is the drunk-salaryman gag: the face flushes and the tie
+  // ends up around his head, knot at the temple and tail hanging over the hair.
+  // It only shows while the whisky lasts, so the special has a tell on the body.
+  if (drink) {
+    // The tie itself: red with white stripes, the way a real tie reads. Solid
+    // red is a Rambo bandana, so the stripes are what carry the joke.
+    const tie = '#b2303e', tieLight = '#d4535c', tieShade = '#75202a', stripe = '#efe4cf';
+    // Band across the forehead. The stripes are one continuous diagonal: each
+    // row starts one pixel further left, the way a tie is woven.
+    p(-9, 7, 19, 2, tie);
+    for (let i = 0; i < 19; i++) {
+      for (let row = 0; row < 2; row++) {
+        if ((i + row) % 4 === 0) p(-9 + i, 7 + row, 1, 1, stripe);
+      }
+    }
+    // Knot at the temple, bulky enough to read as a knot and not as a strap.
+    p(-14, 4, 6, 6, ink);
+    p(-13, 5, 4, 4, tie);
+    p(-13, 5, 4, 1, tieLight);
+    p(-13, 7, 4, 1, stripe);
+    p(-13, 8, 4, 1, tieShade);
+    // Wide end hanging down the side of the head: four pixels wide, with the
+    // same diagonal running across its width, and a point over the shoulder.
+    p(-15, 10, 6, 12, ink);
+    p(-14, 10, 4, 11, tie);
+    p(-14, 10, 1, 8, tieLight);
+    p(-11, 11, 1, 9, tieShade);
+    for (let y = 10; y < 21; y++) {
+      for (let i = 0; i < 4; i++) {
+        if ((i + y) % 4 === 0) p(-14 + i, y, 1, 1, stripe);
+      }
+    }
+    p(-14, 20, 4, 1, tieShade);
+    p(-15, 21, 6, 2, ink);
+    p(-14, 21, 4, 1, tie);
+    // The flush sits under the glasses: both cheeks and the tip of the nose.
+    p(-7, 15, 4, 2, '#c4634a');
+    p(4, 15, 4, 2, '#c4634a');
+    p(0, 16, 3, 1, '#c4634a');
   }
   ctx.restore();
 }
@@ -3199,5 +3266,720 @@ export function drawServerAdministrator(ctx, x, y, options = {}) {
   pixel(ctx, 38, -34, 16, 10, ADMIN.ink);
   pixel(ctx, 39, -33, 14, 8, ADMIN.errorDark);
   pixel(ctx, 41, -31, 10, 2, ADMIN.error);
+  ctx.restore();
+}
+
+// ── Act 6 — Monster Hunter's Primordial Forest ───────────────────────────────
+// The epilogue's bestiary is the first cast drawn from a world none of the
+// others paint: a forest of giant ferns. Every body keeps the same ink contour
+// and stepped shading as the rest of the cast, and the common kinds stay under
+// the player's height so a pack of them never crowds the silhouette.
+
+const JAGRAS_INK = '#16211a';
+const JAGRAS_SKIN = { light: '#a9c46b', base: '#7d9a4a', mid: '#597335', dark: '#3a5123' };
+const JAGRAS_BELLY = { light: '#e0e0b0', base: '#c2c28d', dark: '#92926a' };
+const JAGRAS_MOUTH = '#a34f57';
+const JAGRAS_FANG = '#efe9cf';
+
+// Wave 1. Jagras: the small pack lizard. A low quadruped with a heavy jaw, a
+// long tail that counterweights the head and a ridge of spines: it has to read
+// as a living thing at a glance, because wave 1 puts six of them on screen.
+export function drawJagras(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 5 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -16, 0, 33, 2, '#131a20');
+  // Tail: a thick base tapering into a raised tip, with a spine on each segment.
+  for (let i = 0; i < 4; i++) {
+    const tx = -14 - i * 6;
+    const ty = -18 - i * 2;
+    const h = 8 - i;
+    pixel(ctx, tx, ty, 9, h, JAGRAS_INK);
+    pixel(ctx, tx + 1, ty + 1, 7, h - 2, i < 2 ? JAGRAS_SKIN.base : JAGRAS_SKIN.mid);
+    pixel(ctx, tx + 1, ty + 1, 5, 1, JAGRAS_SKIN.light);
+    pixel(ctx, tx + 2, ty - 2, 2, 3, JAGRAS_SKIN.dark);
+  }
+  // Hind legs: a folded thigh, a shin and a three-toed foot.
+  pixel(ctx, -13, -14 + stride, 8, 14 - stride, JAGRAS_INK);
+  pixel(ctx, -12, -13 + stride, 6, 12 - stride, JAGRAS_SKIN.mid);
+  pixel(ctx, -12, -13 + stride, 2, 11 - stride, JAGRAS_SKIN.base);
+  pixel(ctx, -15, -2 + stride, 11, 3, JAGRAS_INK);
+  pixel(ctx, -14, -1 + stride, 9, 2, JAGRAS_SKIN.dark);
+  for (let claw = 0; claw < 3; claw++) pixel(ctx, -13 + claw * 3, -1 + stride, 2, 2, JAGRAS_FANG);
+  // Front legs, shorter: the lizard walks on four but grabs with the front pair.
+  pixel(ctx, 6, -16 - stride, 8, 15 + stride, JAGRAS_INK);
+  pixel(ctx, 7, -15 - stride, 6, 13 + stride, JAGRAS_SKIN.base);
+  pixel(ctx, 7, -15 - stride, 2, 12 + stride, JAGRAS_SKIN.light);
+  pixel(ctx, 4, -2 - stride, 11, 3, JAGRAS_INK);
+  pixel(ctx, 5, -1 - stride, 9, 2, JAGRAS_SKIN.mid);
+  for (let claw = 0; claw < 3; claw++) pixel(ctx, 6 + claw * 3, -1 - stride, 2, 2, JAGRAS_FANG);
+  // Body: a low barrel, lit along the spine and banded under the ribs.
+  roundedMass(ctx, -15, -31, 32, 20, JAGRAS_INK);
+  roundedMass(ctx, -14, -30, 30, 18, JAGRAS_SKIN.base);
+  torsoBands(ctx, -14, -30, 30, 18, JAGRAS_SKIN);
+  pixel(ctx, -14, -30, 20, 2, JAGRAS_SKIN.light);
+  pixel(ctx, -14, -15, 30, 3, JAGRAS_SKIN.dark);
+  roundedMass(ctx, -9, -21, 19, 7, JAGRAS_INK);
+  roundedMass(ctx, -8, -20, 17, 5, JAGRAS_BELLY.base);
+  pixel(ctx, -8, -20, 12, 2, JAGRAS_BELLY.light);
+  pixel(ctx, -8, -16, 17, 1, JAGRAS_BELLY.dark);
+  // Dorsal ridge: spines from the neck to the hips.
+  for (let i = 0; i < 5; i++) {
+    const sx2 = -12 + i * 6;
+    const rise = 3 + (i % 3);
+    pixel(ctx, sx2, -31 - rise, 3, rise, JAGRAS_INK);
+    pixel(ctx, sx2 + 1, -31 - rise, 1, rise - 1, JAGRAS_SKIN.mid);
+  }
+  // Neck: thick, carried forward, with the shoulder muscle under it.
+  pixel(ctx, 10, -40, 9, 11, JAGRAS_INK);
+  pixel(ctx, 11, -39, 7, 10, JAGRAS_SKIN.base);
+  pixel(ctx, 11, -39, 2, 9, JAGRAS_SKIN.light);
+  pixel(ctx, 15, -33, 4, 6, JAGRAS_SKIN.mid);
+  // Head: a broad wedge with a heavy brow, an amber eye and the jaw open.
+  roundedMass(ctx, 11, -44, 22, 13, JAGRAS_INK);
+  roundedMass(ctx, 12, -43, 20, 11, JAGRAS_SKIN.base);
+  pixel(ctx, 12, -43, 14, 3, JAGRAS_SKIN.light);
+  pixel(ctx, 12, -36, 20, 2, JAGRAS_SKIN.dark);
+  pixel(ctx, 18, -40, 6, 3, JAGRAS_SKIN.dark);
+  pixel(ctx, 26, -40, 3, 3, '#f2c14e');
+  pixel(ctx, 27, -39, 1, 1, JAGRAS_INK);
+  // Upper jaw over a red mouth, lower jaw hanging with the teeth showing.
+  pixel(ctx, 31, -42, 7, 5, JAGRAS_INK);
+  pixel(ctx, 32, -41, 6, 3, JAGRAS_SKIN.mid);
+  pixel(ctx, 32, -41, 4, 1, JAGRAS_SKIN.light);
+  pixel(ctx, 15, -35, 21, 5, JAGRAS_INK);
+  pixel(ctx, 17, -34, 18, 3, JAGRAS_MOUTH);
+  for (let i = 0; i < 4; i++) pixel(ctx, 18 + i * 4, -35, 1, 2, JAGRAS_FANG);
+  for (let i = 0; i < 4; i++) pixel(ctx, 20 + i * 4, -32, 1, 2, JAGRAS_FANG);
+  pixel(ctx, 13, -31, 9, 3, JAGRAS_INK);
+  pixel(ctx, 14, -30, 7, 2, JAGRAS_SKIN.mid);
+  // Two horn nubs behind the eye.
+  pixel(ctx, 14, -46, 3, 5, JAGRAS_INK);
+  pixel(ctx, 15, -45, 1, 3, JAGRAS_SKIN.dark);
+  pixel(ctx, 20, -45, 2, 4, JAGRAS_SKIN.dark);
+  ctx.restore();
+}
+
+const VESPOID_INK = '#1a1710';
+const VESPOID_SHELL = { light: '#f5d95f', base: '#d9ad2c', mid: '#a6801c', dark: '#6d5311' };
+const VESPOID_WING = { light: '#dff1f6', base: '#b4d6e2', dark: '#7fa8b8' };
+
+// Wave 1. Vespoid: the wasp that flanks. It hovers, so its body never touches
+// the floor: the shadow below is the only thing on the ground.
+export function drawVespoid(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const flap = Math.floor(time * 16 + seed) % 2;
+  const hover = Math.floor(time * 2 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -9, 0, 19, 2, '#131a20');
+  // Wings: a membrane hanging from a bone that climbs away from the thorax. Each
+  // segment drops further than the last, which is what makes a fan instead of a
+  // row of speed lines.
+  for (const side of [-1, 1]) {
+    for (let row = 0; row < 4; row++) {
+      const wx = side < 0 ? -4 - row * 5 : 4 + row * 5;
+      const wy = -36 - row * 3 + (flap ? row : -row);
+      const drop = 5 + row * 2;
+      pixel(ctx, wx, wy, 5, 2, VESPOID_WING.dark);
+      pixel(ctx, wx + (side < 0 ? 0 : 1), wy + 2, 4, drop, VESPOID_WING.base);
+      pixel(ctx, wx + (side < 0 ? 0 : 1), wy + 2, 1, drop, VESPOID_WING.light);
+      pixel(ctx, wx + (side < 0 ? 3 : 4), wy + 2, 1, drop, VESPOID_WING.dark);
+    }
+  }
+  // Abdomen with the black bands and the stinger.
+  roundedMass(ctx, -7, -26 - hover, 13, 15, VESPOID_INK);
+  roundedMass(ctx, -6, -25 - hover, 11, 13, VESPOID_SHELL.base);
+  pixel(ctx, -6, -25 - hover, 8, 2, VESPOID_SHELL.light);
+  pixel(ctx, -6, -20 - hover, 11, 2, VESPOID_INK);
+  pixel(ctx, -6, -16 - hover, 11, 2, VESPOID_INK);
+  pixel(ctx, -3, -11 - hover, 5, 3, VESPOID_INK);
+  pixel(ctx, -2, -9 - hover, 3, 2, VESPOID_SHELL.dark);
+  // Thorax and head, with the antennae and the two black eyes.
+  roundedMass(ctx, -6, -34 - hover, 11, 9, VESPOID_INK);
+  roundedMass(ctx, -5, -33 - hover, 9, 7, VESPOID_SHELL.mid);
+  pixel(ctx, -5, -33 - hover, 5, 2, VESPOID_SHELL.base);
+  pixel(ctx, -3, -37 - hover, 2, 5, VESPOID_INK);
+  pixel(ctx, -7, -39 - hover, 3, 2, VESPOID_SHELL.dark);
+  pixel(ctx, 2, -39 - hover, 3, 2, VESPOID_SHELL.dark);
+  pixel(ctx, -4, -32 - hover, 2, 2, '#2a1f12');
+  pixel(ctx, 1, -32 - hover, 2, 2, '#2a1f12');
+  // Legs tucked under, drawn as short hooks.
+  pixel(ctx, -8, -22 - hover, 4, 2, VESPOID_INK);
+  pixel(ctx, 4, -22 - hover, 4, 2, VESPOID_INK);
+  pixel(ctx, -7, -18 - hover, 3, 2, VESPOID_INK);
+  pixel(ctx, 4, -18 - hover, 3, 2, VESPOID_INK);
+  ctx.restore();
+}
+
+const KESTODON_INK = '#20160f';
+const KESTODON_HIDE = { light: '#dda25a', base: '#bb7c3c', mid: '#8e5926', dark: '#5f3a18' };
+const KESTODON_CREST = { light: '#f0dca8', base: '#d3ba7c', mid: '#a08c58', dark: '#6c5c34' };
+
+// Wave 1. Kestodon: the short telegraphed charge. A stocky four-legged herbivore
+// whose head plate is the widest shape on the body, because the plate is what
+// the player has to read before it charges.
+export function drawKestodon(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 4 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -18, 0, 37, 2, '#131a20');
+  // Tail: a short club of scales.
+  pixel(ctx, -26, -18, 11, 4, KESTODON_INK);
+  pixel(ctx, -25, -17, 9, 2, KESTODON_HIDE.mid);
+  pixel(ctx, -28, -19, 4, 6, KESTODON_INK);
+  pixel(ctx, -27, -18, 2, 4, KESTODON_HIDE.dark);
+  // Four legs: the back pair plants, the front pair steps.
+  for (const [lx, dir] of [[-14, stride], [-9, 1 - stride], [8, 1 - stride], [13, stride]]) {
+    pixel(ctx, lx, -12 + dir, 6, 12 - dir, KESTODON_INK);
+    pixel(ctx, lx + 1, -11 + dir, 4, 10 - dir, KESTODON_HIDE.mid);
+    pixel(ctx, lx + 1, -11 + dir, 1, 9 - dir, KESTODON_HIDE.base);
+    pixel(ctx, lx - 1, -2 + dir, 8, 3, KESTODON_INK);
+    pixel(ctx, lx, -1 + dir, 6, 2, KESTODON_HIDE.dark);
+  }
+  // Barrel body with a lit back and a darker flank.
+  roundedMass(ctx, -16, -32, 32, 21, KESTODON_INK);
+  roundedMass(ctx, -15, -31, 30, 19, KESTODON_HIDE.base);
+  torsoBands(ctx, -15, -31, 30, 19, KESTODON_HIDE);
+  pixel(ctx, -15, -31, 22, 2, KESTODON_HIDE.light);
+  pixel(ctx, -15, -15, 30, 3, KESTODON_HIDE.dark);
+  pixel(ctx, -13, -24, 26, 2, KESTODON_HIDE.mid);
+  for (let i = 0; i < 4; i++) pixel(ctx, -10 + i * 6, -33, 4, 3, KESTODON_HIDE.dark);
+  // Neck and the head plate: a broad crested skull, the charge's telegraph. The
+  // neck is visible so the crest does not read as a second body on top.
+  pixel(ctx, 7, -38, 12, 13, KESTODON_INK);
+  pixel(ctx, 8, -37, 10, 12, KESTODON_HIDE.base);
+  pixel(ctx, 8, -37, 3, 10, KESTODON_HIDE.light);
+  pixel(ctx, 15, -37, 3, 10, KESTODON_HIDE.mid);
+  pixel(ctx, 6, -33, 5, 9, KESTODON_HIDE.dark);
+  roundedMass(ctx, 7, -46, 23, 13, KESTODON_INK);
+  roundedMass(ctx, 8, -45, 21, 11, KESTODON_CREST.base);
+  torsoBands(ctx, 8, -45, 21, 11, KESTODON_CREST);
+  pixel(ctx, 8, -45, 14, 3, KESTODON_CREST.light);
+  pixel(ctx, 8, -36, 21, 2, KESTODON_CREST.dark);
+  pixel(ctx, 26, -42, 8, 10, KESTODON_INK);
+  pixel(ctx, 27, -41, 6, 8, KESTODON_CREST.mid);
+  pixel(ctx, 27, -41, 2, 7, KESTODON_CREST.light);
+  pixel(ctx, 28, -38, 5, 3, KESTODON_INK);
+  pixel(ctx, 29, -37, 3, 1, KESTODON_HIDE.dark);
+  pixel(ctx, 22, -41, 3, 3, '#f2c14e');
+  pixel(ctx, 23, -40, 1, 1, KESTODON_INK);
+  // Two horns off the crest, the itch that reads as the charge.
+  pixel(ctx, 11, -44, 2, 4, KESTODON_CREST.light);
+  pixel(ctx, 10, -45, 3, 3, KESTODON_CREST.base);
+  pixel(ctx, 21, -44, 2, 4, KESTODON_CREST.light);
+  pixel(ctx, 20, -45, 3, 3, KESTODON_CREST.base);
+  ctx.restore();
+}
+
+const MERNOS_INK = '#10201f';
+const MERNOS_HIDE = { light: '#9fe0d6', base: '#5fb2a6', mid: '#3d847c', dark: '#275853' };
+const MERNOS_WING = { light: '#d3ede6', base: '#9ccbc2', mid: '#6d9a92', dark: '#426b64' };
+
+// Wave 2. Mernos: the flyer that crosses the clearing and dives. Wings spread
+// wide on purpose: it is the shape that warns the wave has a second angle.
+export function drawMernos(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const flap = Math.floor(time * 8 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -10, 0, 21, 2, '#131a20');
+  // Wings: one fan per side. The bone climbs outward and the membrane hangs
+  // from it, so the silhouette is a bird with wings instead of a body over bars.
+  for (const side of [-1, 1]) {
+    for (let row = 0; row < 4; row++) {
+      const wx = side < 0 ? -4 - row * 6 : 4 + row * 6;
+      const wy = -36 - row * 3 + (flap ? row : 0);
+      const drop = 12 - row * 3;
+      pixel(ctx, wx, wy, 7, 3, MERNOS_WING.dark);
+      pixel(ctx, wx + (side < 0 ? 1 : 0), wy + 3, 6, drop, MERNOS_WING.base);
+      pixel(ctx, wx + (side < 0 ? 1 : 0), wy + 3, 2, drop, MERNOS_WING.light);
+      pixel(ctx, wx + (side < 0 ? 4 : 5), wy + 3, 2, drop, MERNOS_WING.mid);
+      if (row === 3) pixel(ctx, wx + (side < 0 ? 1 : 0), wy + 3 + drop, 6, 2, MERNOS_WING.dark);
+    }
+  }
+  // Body slung under the wings, with the throat in light.
+  roundedMass(ctx, -8, -38, 17, 22, MERNOS_INK);
+  roundedMass(ctx, -7, -37, 15, 20, MERNOS_HIDE.base);
+  torsoBands(ctx, -7, -37, 15, 20, MERNOS_HIDE);
+  pixel(ctx, -7, -37, 9, 2, MERNOS_HIDE.light);
+  pixel(ctx, -7, -22, 15, 4, MERNOS_HIDE.mid);
+  pixel(ctx, -2, -19, 7, 3, MERNOS_HIDE.dark);
+  // Long tail streamer behind.
+  pixel(ctx, -14, -24, 9, 3, MERNOS_INK);
+  pixel(ctx, -13, -23, 8, 1, MERNOS_HIDE.mid);
+  pixel(ctx, -22, -26, 9, 2, MERNOS_INK);
+  pixel(ctx, -21, -25, 8, 1, MERNOS_HIDE.dark);
+  // Head with the long beak and the crest.
+  roundedMass(ctx, 3, -44, 15, 12, MERNOS_INK);
+  roundedMass(ctx, 4, -43, 13, 10, MERNOS_HIDE.base);
+  pixel(ctx, 4, -43, 8, 2, MERNOS_HIDE.light);
+  pixel(ctx, 17, -42, 11, 4, MERNOS_INK);
+  pixel(ctx, 18, -41, 10, 2, MERNOS_HIDE.mid);
+  pixel(ctx, 19, -41, 8, 1, MERNOS_HIDE.light);
+  pixel(ctx, 9, -45, 3, 3, '#f2c14e');
+  pixel(ctx, 10, -44, 1, 1, MERNOS_INK);
+  pixel(ctx, 6, -42, 3, 5, MERNOS_HIDE.mid);
+  pixel(ctx, 5, -44, 3, 3, MERNOS_HIDE.dark);
+  // Two tucked legs.
+  pixel(ctx, -4, -20, 3, 6, MERNOS_INK);
+  pixel(ctx, 2, -20, 3, 6, MERNOS_INK);
+  ctx.restore();
+}
+
+const HORNETAUR_INK = '#14101c';
+const HORNETAUR_SHELL = { light: '#a48fce', base: '#75619f', mid: '#514277', dark: '#352a54' };
+
+// Wave 3. Hornetaur: the resistant insect. It is the wall of the wave: a low,
+// wide carapace that walks into the group and takes hits instead of dodging.
+export function drawHornetaur(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const step = Math.floor(time * 5 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -19, 0, 39, 2, '#131a20');
+  // Six legs, three per side, alternating in two groups.
+  for (let i = 0; i < 3; i++) {
+    const lx = -16 + i * 13;
+    const lift = (i + step) % 2 ? 2 : 0;
+    pixel(ctx, lx, -10 + lift, 4, 11 - lift, HORNETAUR_INK);
+    pixel(ctx, lx + 1, -9 + lift, 2, 9 - lift, HORNETAUR_SHELL.dark);
+    pixel(ctx, lx + 3, -2 + lift, 4, 2, HORNETAUR_INK);
+  }
+  // Shell: a stepped dome, widest at the floor and narrowing row by row.
+  for (let row = 0; row < 5; row++) {
+    const inset = (4 - row) * 4;
+    const yy = -28 + row * 3;
+    pixel(ctx, -20 + inset, yy, 41 - inset * 2, 3, HORNETAUR_INK);
+    pixel(ctx, -19 + inset, yy + 1, 39 - inset * 2, 2, row < 2 ? HORNETAUR_SHELL.light : HORNETAUR_SHELL.base);
+    pixel(ctx, 10 - inset, yy + 1, 9, 2, HORNETAUR_SHELL.mid);
+  }
+  pixel(ctx, -4, -29, 9, 3, HORNETAUR_SHELL.light);
+  pixel(ctx, -4, -26, 9, 2, HORNETAUR_SHELL.mid);
+  pixel(ctx, -20, -9, 41, 3, HORNETAUR_SHELL.dark);
+  pixel(ctx, -8, -24, 2, 15, HORNETAUR_SHELL.dark);
+  pixel(ctx, 6, -24, 2, 15, HORNETAUR_SHELL.dark);
+  // Head in front: a small armored plate with mandibles and a pair of antennae.
+  roundedMass(ctx, 10, -24, 18, 13, HORNETAUR_INK);
+  roundedMass(ctx, 11, -23, 16, 11, HORNETAUR_SHELL.mid);
+  pixel(ctx, 11, -23, 11, 2, HORNETAUR_SHELL.base);
+  pixel(ctx, 26, -19, 5, 4, HORNETAUR_INK);
+  pixel(ctx, 27, -18, 3, 2, HORNETAUR_SHELL.light);
+  pixel(ctx, 12, -12, 5, 3, HORNETAUR_INK);
+  pixel(ctx, 20, -12, 5, 3, HORNETAUR_INK);
+  pixel(ctx, 13, -11, 3, 1, HORNETAUR_SHELL.light);
+  pixel(ctx, 21, -11, 3, 1, HORNETAUR_SHELL.light);
+  pixel(ctx, 14, -27, 2, 5, HORNETAUR_INK);
+  pixel(ctx, 13, -29, 3, 2, HORNETAUR_SHELL.dark);
+  pixel(ctx, 22, -27, 2, 5, HORNETAUR_INK);
+  pixel(ctx, 21, -29, 3, 2, HORNETAUR_SHELL.dark);
+  pixel(ctx, 15, -20, 2, 2, '#e2c96a');
+  pixel(ctx, 21, -20, 2, 2, '#e2c96a');
+  ctx.restore();
+}
+
+const GREAT_HIDE = { light: '#8fae5a', base: '#67883c', mid: '#48652b', dark: '#2e441c' };
+const GREAT_MANE = { light: '#f2df9a', base: '#d9be5f', mid: '#a98f38', dark: '#77631f' };
+
+// Wave 2. Great Jagras: the elite of the forest and the one body in the act that
+// is not a common. It is the same family as the pack lizard — heavy jaw, dorsal
+// ridge, thick tail — but it carries a mane of long spines, a swallowed bulge
+// and enough mass to be twice the little one on screen. The difference has to be
+// obvious at a glance, because wave 2 fields both.
+export function drawGreatJagras(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 3 + seed) % 2;
+  const breath = Math.floor(time * 2) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -30, 0, 61, 3, '#131a20');
+  // Tail: a heavy club sweeping back, each segment with its own spine.
+  for (let i = 0; i < 4; i++) {
+    const tx = -28 - i * 9;
+    const ty = -24 - i * 3;
+    const h = 11 - i * 2;
+    pixel(ctx, tx, ty, 12, h, JAGRAS_INK);
+    pixel(ctx, tx + 1, ty + 1, 10, h - 2, i < 2 ? GREAT_HIDE.base : GREAT_HIDE.mid);
+    pixel(ctx, tx + 1, ty + 1, 7, 1, GREAT_HIDE.light);
+    pixel(ctx, tx + 3, ty - 4, 3, 5, GREAT_MANE.base);
+    pixel(ctx, tx + 4, ty - 4, 1, 3, GREAT_MANE.light);
+  }
+  // Hind legs: a heavy thigh, a shin and a clawed foot.
+  for (const [lx, dir] of [[-22, stride], [18, 1 - stride]]) {
+    pixel(ctx, lx, -22 + dir, 13, 22 - dir, JAGRAS_INK);
+    pixel(ctx, lx + 1, -21 + dir, 11, 20 - dir, GREAT_HIDE.mid);
+    pixel(ctx, lx + 1, -21 + dir, 4, 18 - dir, GREAT_HIDE.base);
+    pixel(ctx, lx + 2, -10 + dir, 9, 9 - dir, JAGRAS_INK);
+    pixel(ctx, lx + 3, -9 + dir, 7, 7 - dir, GREAT_HIDE.dark);
+    pixel(ctx, lx - 3, -3 + dir, 18, 5, JAGRAS_INK);
+    pixel(ctx, lx - 2, -2 + dir, 16, 3, GREAT_HIDE.dark);
+    for (let claw = 0; claw < 3; claw++) pixel(ctx, lx - 2 + claw * 5, -1 + dir, 3, 2, JAGRAS_FANG);
+  }
+  // Body: a broad barrel, lit along the back, with the swallowed bulge below.
+  roundedMass(ctx, -30, -46, 60, 32, JAGRAS_INK);
+  roundedMass(ctx, -29, -45, 58, 30, GREAT_HIDE.base);
+  torsoBands(ctx, -29, -45, 58, 30, GREAT_HIDE);
+  pixel(ctx, -29, -45, 40, 4, GREAT_HIDE.light);
+  pixel(ctx, -29, -18, 58, 4, GREAT_HIDE.dark);
+  roundedMass(ctx, -22, -30, 44, 15, JAGRAS_INK);
+  roundedMass(ctx, -21, -29, 42, 13, JAGRAS_BELLY.base);
+  pixel(ctx, -21, -29, 30, 3, JAGRAS_BELLY.light);
+  for (let i = 0; i < 4; i++) pixel(ctx, -17 + i * 10, -25, 3, 8, JAGRAS_BELLY.dark);
+  // Mane: a ridge of long spines from the neck to the tail. This is what tells
+  // the elite apart from the pack even before the size registers.
+  for (let i = 0; i < 7; i++) {
+    const sx2 = -24 + i * 8;
+    const rise = 9 + (i % 3) * 3 + (breath ? 1 : 0);
+    // A stepped plate: wide at the back, narrowing to the point.
+    pixel(ctx, sx2, -40 - rise, 7, rise + 2, JAGRAS_INK);
+    for (let step = 0; step < 4; step++) {
+      const inset = Math.round(step * 1.5);
+      pixel(ctx, sx2 + 1 + inset, -40 - rise + step * 3, 5 - inset * 2, 4, GREAT_MANE.base);
+      pixel(ctx, sx2 + 1 + inset, -40 - rise + step * 3, 2, 2, GREAT_MANE.light);
+    }
+    pixel(ctx, sx2 + 3, -40 - rise, 1, 4, GREAT_MANE.dark);
+  }
+  // Front arms with three claws each.
+  for (const [ax, dir] of [[8, 1 - stride], [26, stride]]) {
+    pixel(ctx, ax, -36 + dir, 9, 20 - dir, JAGRAS_INK);
+    pixel(ctx, ax + 1, -35 + dir, 7, 18 - dir, GREAT_HIDE.mid);
+    pixel(ctx, ax + 1, -35 + dir, 3, 15 - dir, GREAT_HIDE.base);
+    pixel(ctx, ax - 3, -19 + dir, 14, 6, JAGRAS_INK);
+    pixel(ctx, ax - 2, -18 + dir, 12, 4, GREAT_HIDE.dark);
+    for (let claw = 0; claw < 3; claw++) pixel(ctx, ax - 2 + claw * 4, -15 + dir, 2, 3, JAGRAS_FANG);
+  }
+  // Neck and head: a broad wedge over an open jaw, the eye under a heavy brow.
+  pixel(ctx, 16, -60, 14, 16, JAGRAS_INK);
+  pixel(ctx, 17, -59, 12, 15, GREAT_HIDE.base);
+  pixel(ctx, 17, -59, 4, 13, GREAT_HIDE.light);
+  pixel(ctx, 27, -58, 3, 12, GREAT_HIDE.mid);
+  roundedMass(ctx, 14, -72, 32, 20, JAGRAS_INK);
+  roundedMass(ctx, 15, -71, 30, 18, GREAT_HIDE.base);
+  pixel(ctx, 15, -71, 20, 4, GREAT_HIDE.light);
+  pixel(ctx, 15, -56, 30, 3, GREAT_HIDE.dark);
+  pixel(ctx, 22, -64, 8, 4, GREAT_HIDE.dark);
+  pixel(ctx, 34, -64, 5, 4, '#f2c14e');
+  pixel(ctx, 36, -63, 2, 2, JAGRAS_INK);
+  pixel(ctx, 42, -68, 10, 6, JAGRAS_INK);
+  pixel(ctx, 43, -67, 9, 4, GREAT_HIDE.mid);
+  pixel(ctx, 43, -67, 6, 1, GREAT_HIDE.light);
+  pixel(ctx, 18, -57, 28, 7, JAGRAS_INK);
+  pixel(ctx, 20, -56, 25, 5, JAGRAS_MOUTH);
+  for (let i = 0; i < 5; i++) pixel(ctx, 21 + i * 5, -57, 2, 2, JAGRAS_FANG);
+  for (let i = 0; i < 5; i++) pixel(ctx, 23 + i * 5, -53, 2, 2, JAGRAS_FANG);
+  pixel(ctx, 16, -51, 12, 4, JAGRAS_INK);
+  pixel(ctx, 17, -50, 10, 2, GREAT_HIDE.mid);
+  // Two horn nubs behind the eye.
+  pixel(ctx, 18, -77, 4, 6, JAGRAS_INK);
+  pixel(ctx, 19, -76, 2, 4, GREAT_MANE.mid);
+  pixel(ctx, 26, -76, 3, 5, GREAT_MANE.dark);
+  ctx.restore();
+}
+
+const KULU_INK = '#241a12';
+const KULU_FEATHER = { light: '#e8c877', base: '#c79f4b', mid: '#9a7530', dark: '#6b4f1e' };
+const KULU_BEAK = { light: '#f0d9a8', base: '#c9a86e', mid: '#9a7a46', dark: '#6a512a' };
+const KULU_ROCK = { light: '#b9b3ab', base: '#8d8880', mid: '#66625c', dark: '#45423e' };
+
+// Wave 3 mini-boss. Kulu-Ya-Ku: the bird wyvern that fights behind a rock. The
+// rock is a body part here, not a prop: it is the largest silhouette in the
+// frame because the fight is about going around it.
+export function drawKuluYaKu(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 3 + seed) % 2;
+  const bob = Math.floor(time * 2) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -34, 0, 69, 3, '#131a20');
+  // Tail feathers: three stepped plumes sweeping back.
+  for (let i = 0; i < 4; i++) {
+    pixel(ctx, -52 + i * 8, -34 + i * 3, 12, 9 - i, KULU_INK);
+    pixel(ctx, -51 + i * 8, -33 + i * 3, 10, 7 - i, i < 2 ? KULU_FEATHER.mid : KULU_FEATHER.dark);
+    pixel(ctx, -50 + i * 8, -32 + i * 3, 6, 2, KULU_FEATHER.base);
+  }
+  // Legs: a bird's thigh, a long shin and three forward talons.
+  for (const [lx, dir] of [[-16, stride], [12, 1 - stride]]) {
+    pixel(ctx, lx, -26 + dir, 12, 20 - dir, KULU_INK);
+    pixel(ctx, lx + 1, -25 + dir, 10, 18 - dir, KULU_FEATHER.base);
+    pixel(ctx, lx + 1, -25 + dir, 3, 16 - dir, KULU_FEATHER.light);
+    pixel(ctx, lx + 2, -8 + dir, 8, 8 - dir, KULU_INK);
+    pixel(ctx, lx + 3, -7 + dir, 6, 6 - dir, KULU_FEATHER.mid);
+    pixel(ctx, lx - 2, -2 + dir, 15, 4, KULU_INK);
+    for (let claw = 0; claw < 3; claw++) pixel(ctx, lx - 1 + claw * 5, -1 + dir, 3, 2, KULU_BEAK.light);
+    pixel(ctx, lx + 9, -5 + dir, 4, 3, KULU_INK);
+  }
+  // Body: a round feathered mass, lighter at the breast.
+  roundedMass(ctx, -26, -56 + bob, 51, 34, KULU_INK);
+  roundedMass(ctx, -25, -55 + bob, 49, 32, KULU_FEATHER.base);
+  torsoBands(ctx, -25, -55 + bob, 49, 32, KULU_FEATHER);
+  pixel(ctx, -25, -55 + bob, 30, 4, KULU_FEATHER.light);
+  pixel(ctx, -25, -27 + bob, 49, 4, KULU_FEATHER.dark);
+  roundedMass(ctx, -16, -42 + bob, 26, 18, KULU_FEATHER.mid);
+  pixel(ctx, -14, -40 + bob, 20, 3, KULU_FEATHER.light);
+  for (let i = 0; i < 4; i++) pixel(ctx, -18 + i * 8, -30 + bob, 5, 4, KULU_FEATHER.dark);
+  // Pearl-blue wing feathers folded along the flank.
+  for (let i = 0; i < 3; i++) {
+    pixel(ctx, -28 + i * 4, -50 + i * 7 + bob, 10, 5, KULU_INK);
+    pixel(ctx, -27 + i * 4, -49 + i * 7 + bob, 8, 3, '#7f9fb8');
+    pixel(ctx, -27 + i * 4, -49 + i * 7 + bob, 4, 1, '#b9d0de');
+  }
+  // Neck and head: long neck, sharp beak, crest feathers and a yellow eye.
+  pixel(ctx, 2, -72 + bob, 12, 18, KULU_INK);
+  pixel(ctx, 3, -71 + bob, 10, 16, KULU_FEATHER.base);
+  pixel(ctx, 3, -71 + bob, 3, 14, KULU_FEATHER.light);
+  roundedMass(ctx, 0, -86 + bob, 22, 16, KULU_INK);
+  roundedMass(ctx, 1, -85 + bob, 20, 14, KULU_FEATHER.base);
+  pixel(ctx, 1, -85 + bob, 12, 3, KULU_FEATHER.light);
+  pixel(ctx, 20, -82 + bob, 13, 6, KULU_INK);
+  pixel(ctx, 21, -81 + bob, 12, 4, KULU_BEAK.base);
+  pixel(ctx, 21, -81 + bob, 8, 2, KULU_BEAK.light);
+  pixel(ctx, 19, -77 + bob, 10, 4, KULU_INK);
+  pixel(ctx, 20, -76 + bob, 8, 2, KULU_BEAK.mid);
+  pixel(ctx, 21, -74 + bob, 6, 1, KULU_BEAK.dark);
+  pixel(ctx, 13, -84 + bob, 4, 4, '#f2c14e');
+  pixel(ctx, 14, -83 + bob, 2, 2, KULU_INK);
+  pixel(ctx, 4, -88 + bob, 10, 4, KULU_INK);
+  pixel(ctx, 5, -87 + bob, 8, 2, KULU_FEATHER.mid);
+  for (let i = 0; i < 4; i++) pixel(ctx, 3 + i * 4, -92 + bob, 2, 6, KULU_INK);
+  // The rock: a rounded boulder held in front, stepped in the cast's way.
+  roundedMass(ctx, 26, -40, 30, 34, KULU_INK);
+  roundedMass(ctx, 27, -39, 28, 32, KULU_ROCK.base);
+  roundedMass(ctx, 29, -41, 24, 8, KULU_INK);
+  roundedMass(ctx, 30, -40, 22, 7, KULU_ROCK.light);
+  pixel(ctx, 27, -9, 28, 3, KULU_ROCK.dark);
+  for (let i = 0; i < 4; i++) pixel(ctx, 31 + i * 5, -34 + (i % 2) * 8, 6, 5, KULU_ROCK.mid);
+  pixel(ctx, 33, -30, 3, 9, KULU_ROCK.dark);
+  // Arms gripping the boulder, so the rock belongs to the body.
+  for (const ay of [-38, -20]) {
+    pixel(ctx, 18, ay, 12, 7, KULU_INK);
+    pixel(ctx, 19, ay + 1, 10, 5, KULU_FEATHER.mid);
+    pixel(ctx, 19, ay + 1, 4, 1, KULU_FEATHER.light);
+  }
+  ctx.restore();
+}
+
+const PUKEI_INK = '#122018';
+const PUKEI_SCALE = { light: '#9fd08a', base: '#6fa95d', mid: '#4c803f', dark: '#325a2a' };
+const PUKEI_SAC = { light: '#c79ae0', base: '#9a62b8', mid: '#723f8d', dark: '#4d2762' };
+const PUKEI_WING = { light: '#c8e6b8', base: '#8fbe7e', mid: '#6a9860', dark: '#456b42' };
+
+// Wave 5 mini-boss. Pukei-Pukei: the poison bird wyvern. The venom sac under the
+// throat is the one saturated mass in the body, and the tongue hangs out of the
+// open beak because both of its attacks come out of the mouth.
+export function drawPukeiPukei(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const breathe = Math.floor(time * 2 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -36, 0, 73, 3, '#131a20');
+  // Tail: a scaled whip curling behind with barbs on the top edge.
+  for (let i = 0; i < 5; i++) {
+    const tx = -58 + i * 10;
+    const ty = -30 + i * 4;
+    const h = 9 - i;
+    pixel(ctx, tx, ty, 12, h, PUKEI_INK);
+    pixel(ctx, tx + 1, ty + 1, 10, h - 2, i < 2 ? PUKEI_SCALE.mid : PUKEI_SCALE.dark);
+    pixel(ctx, tx + 1, ty + 1, 6, 1, PUKEI_SCALE.base);
+    pixel(ctx, tx + 3, ty - 3, 3, 4, PUKEI_SAC.mid);
+  }
+  // Legs: two bird legs with long toes.
+  for (const [lx, dir] of [[-18, breathe], [14, 1 - breathe]]) {
+    pixel(ctx, lx, -24 + dir, 11, 19 - dir, PUKEI_INK);
+    pixel(ctx, lx + 1, -23 + dir, 9, 17 - dir, PUKEI_SCALE.base);
+    pixel(ctx, lx + 1, -23 + dir, 3, 15 - dir, PUKEI_SCALE.light);
+    pixel(ctx, lx + 2, -7 + dir, 8, 7 - dir, PUKEI_INK);
+    pixel(ctx, lx + 3, -6 + dir, 6, 5 - dir, PUKEI_SCALE.mid);
+    pixel(ctx, lx - 2, -2 + dir, 15, 4, PUKEI_INK);
+    for (let toe = 0; toe < 3; toe++) pixel(ctx, lx - 1 + toe * 5, -1 + dir, 3, 2, PUKEI_SAC.light);
+  }
+  // Body: scaled barrel with a darker back and a lit flank.
+  roundedMass(ctx, -24, -54, 48, 32, PUKEI_INK);
+  roundedMass(ctx, -23, -53, 46, 30, PUKEI_SCALE.base);
+  torsoBands(ctx, -23, -53, 46, 30, PUKEI_SCALE);
+  pixel(ctx, -23, -53, 30, 4, PUKEI_SCALE.light);
+  pixel(ctx, -23, -27, 46, 4, PUKEI_SCALE.dark);
+  for (let i = 0; i < 5; i++) pixel(ctx, -20 + i * 9, -46 + (i % 3) * 5, 4, 3, PUKEI_SCALE.dark);
+  // Folded wings with the membrane ribs.
+  for (let i = 0; i < 4; i++) {
+    const wx = -30 + i * 5;
+    pixel(ctx, wx, -50 + i * 7, 12, 6, PUKEI_INK);
+    pixel(ctx, wx + 1, -49 + i * 7, 10, 4, PUKEI_WING.base);
+    pixel(ctx, wx + 1, -49 + i * 7, 4, 1, PUKEI_WING.light);
+    pixel(ctx, wx + 7, -47 + i * 7, 3, 1, PUKEI_WING.dark);
+  }
+  // The venom sac under the throat, sagging with each breath.
+  roundedMass(ctx, -6, -32 - breathe, 20, 15, PUKEI_INK);
+  roundedMass(ctx, -5, -31 - breathe, 18, 13, PUKEI_SAC.base);
+  pixel(ctx, -5, -31 - breathe, 11, 3, PUKEI_SAC.light);
+  pixel(ctx, -5, -21 - breathe, 18, 2, PUKEI_SAC.dark);
+  pixel(ctx, 0, -28 - breathe, 3, 8, PUKEI_SAC.mid);
+  // Neck and head: hooked beak, huge round eye, three-way crest.
+  pixel(ctx, 12, -70 + breathe, 12, 20, PUKEI_INK);
+  pixel(ctx, 13, -69 + breathe, 10, 18, PUKEI_SCALE.base);
+  pixel(ctx, 13, -69 + breathe, 3, 16, PUKEI_SCALE.light);
+  roundedMass(ctx, 8, -84 + breathe, 24, 18, PUKEI_INK);
+  roundedMass(ctx, 9, -83 + breathe, 22, 16, PUKEI_SCALE.base);
+  pixel(ctx, 9, -83 + breathe, 13, 4, PUKEI_SCALE.light);
+  pixel(ctx, 30, -78 + breathe, 11, 6, PUKEI_INK);
+  pixel(ctx, 31, -77 + breathe, 10, 4, PUKEI_SAC.base);
+  pixel(ctx, 31, -77 + breathe, 7, 2, PUKEI_SAC.light);
+  pixel(ctx, 28, -72 + breathe, 11, 5, PUKEI_INK);
+  pixel(ctx, 29, -71 + breathe, 9, 3, PUKEI_SAC.mid);
+  // The tongue: a long purple strap hanging out of the beak.
+  pixel(ctx, 30, -70 + breathe, 6, 4, PUKEI_INK);
+  pixel(ctx, 31, -69 + breathe, 5, 3, PUKEI_SAC.mid);
+  pixel(ctx, 31, -66 + breathe, 4, 6, PUKEI_INK);
+  pixel(ctx, 32, -65 + breathe, 2, 6, PUKEI_SAC.base);
+  pixel(ctx, 32, -59 + breathe, 3, 3, PUKEI_SAC.light);
+  pixel(ctx, 20, -80 + breathe, 5, 5, '#f2e06a');
+  pixel(ctx, 21, -79 + breathe, 3, 3, PUKEI_INK);
+  pixel(ctx, 22, -78 + breathe, 1, 1, '#f2e06a');
+  // Crest: three feather horns over the skull.
+  for (let i = 0; i < 3; i++) {
+    pixel(ctx, 9 + i * 6, -90 - i * 2 + breathe, 3, 8 + i * 2, PUKEI_INK);
+    pixel(ctx, 10 + i * 6, -89 - i * 2 + breathe, 1, 6 + i * 2, PUKEI_SAC.mid);
+  }
+  ctx.restore();
+}
+
+const RATH_INK = '#21100e';
+const RATH_SCALE = { light: '#e0764a', base: '#b5472a', mid: '#8a2f1c', dark: '#5c1d12' };
+const RATH_MEMBRANE = { light: '#efe6cd', base: '#ded2b4', mid: '#bfb191', dark: '#8e8470' };
+const RATH_BELLY = { light: '#f4ecd6', base: '#ded2b4', mid: '#bfb191', dark: '#94896f' };
+const RATH_HORN = { light: '#5a3b38', base: '#41282a', mid: '#2e1b1d', dark: '#1c1012' };
+const RATH_EYE = '#f2c94c';
+const RATH_FIRE = { light: '#ffe9a0', base: '#ffb03a', mid: '#e8611e' };
+
+// Wave 6 boss. Rathalos: the act's wyvern, drawn front-on and symmetric like the
+// reference — a red horned head over a segmented cream chest, wings spread to
+// both sides with the membrane striped, and the tail hanging between the feet.
+// The three phases change what it does, never what it looks like, so the
+// silhouette carries the whole fight.
+export function drawRathalos(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const flap = Math.floor(time * 3 + seed) % 2;
+  const roar = Math.floor(time * 2) % 3 === 0;
+  const lift = flap ? 3 : 0;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -36, 0, 73, 4, '#131a20');
+  // Wings behind everything: two membranes spread from the shoulders, rising to
+  // the tips. Striped, because the reference's membrane is a striped fan, and
+  // with the red bone riding the leading edge.
+  for (const side of [-1, 1]) {
+    for (let step = 0; step < 12; step++) {
+      const t = (step + 0.5) / 12;
+      const outer = 14 + t * 62;
+      const top = -84 - t * 72 - lift;
+      const bottom = -80 - t * 66 + Math.sin(Math.PI * t) * 32 - lift;
+      const height = Math.max(5, Math.round(bottom - top));
+      const x0 = side < 0 ? -Math.round(outer) - 8 : Math.round(outer);
+      pixel(ctx, x0, Math.round(top), 8, height, RATH_MEMBRANE.base);
+      pixel(ctx, x0, Math.round(top), 8, 2, RATH_MEMBRANE.light);
+      if (step % 2 === 0) {
+        pixel(ctx, x0 + (side < 0 ? 1 : 4), Math.round(top) + 3, 3, Math.max(2, height - 6), RATH_MEMBRANE.mid);
+      }
+      if (step % 2 === 1) {
+        pixel(ctx, x0 + (side < 0 ? 0 : 1), Math.round(top) + height, 7, 4, RATH_MEMBRANE.dark);
+      }
+      pixel(ctx, x0, Math.round(top) - 3, 8, 4, RATH_SCALE.base);
+      pixel(ctx, x0, Math.round(top) - 3, 8, 1, RATH_SCALE.light);
+    }
+    // The claw at the wing tip.
+    const tipX = side < 0 ? -84 : 76;
+    pixel(ctx, tipX, -160 - lift, 9, 7, RATH_INK);
+    pixel(ctx, tipX + 2, -164 - lift, 5, 6, RATH_HORN.base);
+    pixel(ctx, tipX + 3, -164 - lift, 2, 3, RATH_HORN.light);
+  }
+  // Tail: hangs between the feet, red segments narrowing to a point.
+  for (let i = 0; i < 6; i++) {
+    const w = 21 - i * 3;
+    const ty = -40 + i * 7;
+    pixel(ctx, -Math.round(w / 2) - 1, ty, w + 2, 9, RATH_INK);
+    pixel(ctx, -Math.round(w / 2), ty + 1, w, 7, i < 3 ? RATH_SCALE.base : RATH_SCALE.mid);
+    pixel(ctx, -Math.round(w / 2), ty + 1, Math.max(2, w - 5), 1, RATH_SCALE.light);
+    if (i < 4) {
+      pixel(ctx, -Math.round(w / 2) - 3, ty + 3, 3, 3, RATH_HORN.base);
+      pixel(ctx, Math.round(w / 2), ty + 3, 3, 3, RATH_HORN.base);
+    }
+  }
+  // Legs behind the arms: red thighs and cream shins with grey talons.
+  for (const side of [-1, 1]) {
+    const lx = side < 0 ? -17 : 9;
+    pixel(ctx, lx, -46 + lift, 9, 30, RATH_INK);
+    pixel(ctx, lx + 1, -45 + lift, 7, 28, RATH_SCALE.mid);
+    pixel(ctx, lx + 1, -45 + lift, 3, 26, RATH_SCALE.base);
+    pixel(ctx, lx - 2, -18 + lift, 13, 14, RATH_INK);
+    pixel(ctx, lx - 1, -17 + lift, 11, 12, RATH_BELLY.base);
+    pixel(ctx, lx - 1, -17 + lift, 3, 10, RATH_BELLY.light);
+    pixel(ctx, lx - 4, -6 + lift, 17, 6, RATH_INK);
+    for (let claw = 0; claw < 3; claw++) {
+      pixel(ctx, lx - 4 + claw * 5, -5 + lift, 4, 4, RATH_MEMBRANE.light);
+      pixel(ctx, lx - 4 + claw * 5, -2 + lift, 4, 3, RATH_MEMBRANE.dark);
+    }
+  }
+  // Body: red shoulders framing a segmented cream chest, the reference's read.
+  roundedMass(ctx, -18, -84, 37, 46, RATH_INK);
+  roundedMass(ctx, -17, -83, 35, 44, RATH_SCALE.base);
+  torsoBands(ctx, -17, -83, 35, 44, RATH_SCALE);
+  pixel(ctx, -17, -83, 23, 4, RATH_SCALE.light);
+  pixel(ctx, -17, -41, 35, 4, RATH_SCALE.dark);
+  roundedMass(ctx, -12, -76, 25, 38, RATH_INK);
+  roundedMass(ctx, -11, -75, 23, 36, RATH_BELLY.base);
+  pixel(ctx, -11, -75, 16, 3, RATH_BELLY.light);
+  for (let i = 0; i < 5; i++) {
+    pixel(ctx, -9, -68 + i * 7, 19, 3, RATH_BELLY.mid);
+    pixel(ctx, -9, -65 + i * 7, 19, 1, RATH_BELLY.dark);
+  }
+  // Shoulders: a wyvern has no arms. The forelimbs are the wings, so the only
+  // thing between the chest and the membrane is the red root of the wing.
+  for (const side of [-1, 1]) {
+    const sx2 = side < 0 ? -19 : 11;
+    pixel(ctx, sx2, -82, 10, 14, RATH_INK);
+    pixel(ctx, sx2 + 1, -81, 8, 12, RATH_SCALE.mid);
+    pixel(ctx, sx2 + 1, -81, 3, 9, RATH_SCALE.base);
+    pixel(ctx, sx2 + 1, -70, 8, 3, RATH_SCALE.dark);
+  }
+  // Neck and head: red skull with a cream face, two bent horns, the forehead
+  // spine, the yellow eyes and the open jaw. The head is narrower than the body
+  // and the mouth is a dark opening with a few fangs, never a grid of teeth:
+  // that grid is what made the first pass read as a mask.
+  pixel(ctx, -8, -100, 16, 18, RATH_INK);
+  pixel(ctx, -7, -99, 14, 16, RATH_SCALE.base);
+  pixel(ctx, -7, -99, 4, 13, RATH_SCALE.light);
+  roundedMass(ctx, -20, -132, 41, 36, RATH_INK);
+  roundedMass(ctx, -19, -131, 39, 34, RATH_SCALE.base);
+  pixel(ctx, -19, -131, 26, 4, RATH_SCALE.light);
+  pixel(ctx, -19, -99, 39, 3, RATH_SCALE.dark);
+  // Cream face plates: two cheeks and the brow over each eye.
+  pixel(ctx, -17, -121, 10, 10, RATH_BELLY.base);
+  pixel(ctx, -17, -121, 7, 2, RATH_BELLY.light);
+  pixel(ctx, 7, -121, 10, 10, RATH_BELLY.base);
+  pixel(ctx, 7, -121, 7, 2, RATH_BELLY.light);
+  pixel(ctx, -12, -127, 7, 4, RATH_BELLY.base);
+  pixel(ctx, 5, -127, 7, 4, RATH_BELLY.base);
+  // Eyes: yellow with a dark slit, set under the brow.
+  pixel(ctx, -13, -118, 7, 4, RATH_EYE);
+  pixel(ctx, -10, -117, 3, 2, RATH_INK);
+  pixel(ctx, 6, -118, 7, 4, RATH_EYE);
+  pixel(ctx, 8, -117, 3, 2, RATH_INK);
+  // Mouth: a dark opening with three fangs above and two below.
+  pixel(ctx, -8, -111, 17, 10, RATH_INK);
+  pixel(ctx, -7, -110, 15, 8, roar ? RATH_FIRE.base : '#40161a');
+  if (roar) {
+    pixel(ctx, -6, -109, 13, 2, RATH_FIRE.light);
+    pixel(ctx, -3, -106, 8, 1, RATH_FIRE.mid);
+  }
+  pixel(ctx, -6, -111, 2, 4, RATH_BELLY.light);
+  pixel(ctx, -1, -111, 2, 4, RATH_BELLY.light);
+  pixel(ctx, 4, -111, 2, 4, RATH_BELLY.light);
+  pixel(ctx, -4, -104, 2, 3, RATH_BELLY.light);
+  pixel(ctx, 2, -104, 2, 3, RATH_BELLY.light);
+  // Lower jaw in cream.
+  pixel(ctx, -9, -102, 19, 5, RATH_INK);
+  pixel(ctx, -8, -101, 17, 3, RATH_BELLY.base);
+  pixel(ctx, -8, -101, 11, 1, RATH_BELLY.light);
+  // Forehead spine and the two horns: each horn bends outward in two steps.
+  pixel(ctx, -4, -142, 8, 18, RATH_HORN.base);
+  pixel(ctx, -2, -142, 3, 14, RATH_HORN.light);
+  pixel(ctx, -13, -132, 6, 10, RATH_HORN.base);
+  pixel(ctx, -17, -140, 6, 10, RATH_HORN.base);
+  pixel(ctx, -16, -140, 3, 7, RATH_HORN.light);
+  pixel(ctx, 7, -132, 6, 10, RATH_HORN.base);
+  pixel(ctx, 11, -140, 6, 10, RATH_HORN.base);
+  pixel(ctx, 13, -140, 3, 7, RATH_HORN.light);
   ctx.restore();
 }

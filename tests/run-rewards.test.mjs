@@ -37,7 +37,7 @@ test('approved XP curve carries overflow and queues each earned level without st
 
 test('each copy of an item costs more than the one before, and later waves charge more', () => {
   const item = { price: 40 };
-  assert.deepEqual([0, 1, 2, 3].map(owned => itemPrice(item, owned)), [40, 120, 200, 280]);
+  assert.deepEqual([0, 1, 2, 3].map(owned => itemPrice(item, owned)), [40, 280, 520, 760]);
   assert.equal(itemPrice(item, 0, 3), 56, 'the shelf inflates with the campaign');
 });
 
@@ -89,7 +89,7 @@ test('shop purchases are blocked until all level choices are resolved', () => {
 test('empty eligible level pools explicitly advance without granting or spending anything', () => {
   const catalog = createCatalog({ items: [], upgrades: [] });
   const run = setup({ catalog });
-  awardXP(run, 50);
+  awardXP(run, 70);
   run.phase = 'shop';
   beginRewards(run);
   assert.deepEqual(run.levelChoices, []);
@@ -108,7 +108,6 @@ test('shop offers are distinct and stable and purchases never replace a sold off
   beginRewards(run);
   const ids = run.shopOffers.map(offer => offer.id);
   assert.equal(new Set(ids).size, 4);
-  assert.ok(!ids.includes('chicken'));
   const item = run.rewardCatalog.items.find(entry => entry.id === ids[0]);
   assert.equal(buyItem(run, item.id), true);
   assert.equal(run.coins, 1000 - item.price);
@@ -151,8 +150,8 @@ test('items can reappear next wave until their own cap; fewer or no offers are v
   beginRewards(run);
   assert.deepEqual(run.shopOffers, []);
   assert.equal(run.items.health, 2);
-  // The second copy triples: 10 + 30.
-  assert.equal(run.coins, 60);
+  // The second copy costs seven times: 10 + 70.
+  assert.equal(run.coins, 20);
 });
 
 test('starting a later reward cycle preserves XP, items, ranks and other stat sources', () => {

@@ -19,13 +19,13 @@ test('Papazito is a registered heavy ranged bruiser running on the percentage co
   assert.equal(CHARACTERS.papazito.id, 'papazito');
   const p = createRun(Math.random, 'papazito').player;
   // Stat sheet from context/personajes/papazito_el_paraguayo_trucho.md §3:
-  // life +10% -> 110, damage 34, attackSpeed -10% -> 90
+  // life +10% -> 110, damage 27.2 (ranged pays 20% less), attackSpeed -10% -> 90
   // (interval ~1.11s), defense +10% -> 11 points (0.55 mitigation),
   // moveSpeed -10% -> 2970 (148.5 scaled px/s). Attack distance is
   // 280% (308px), slightly longer than El Negro's 260% (286px).
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.55);
-  assert.equal(p.damage, 34, 'heavier than El Negro: the cadence pays for it');
+  assert.equal(p.damage, 27.2, 'heavier than El Negro: the cadence pays for it');
   assert.equal(p.attackRange, 280 * UNIT_PX);
   assert.ok(p.attackRange > createRun(Math.random, 'negro').player.attackRange);
   assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-9);
@@ -45,7 +45,7 @@ test('Warrior is a registered controller running on the percentage core', () => 
   // attackDistance 300%, moveSpeed 3300% (normal game mobility).
   assert.equal(w.maxHp, 90);
   assert.equal(w.defense, 0.5);
-  assert.equal(w.damage, 15);
+  assert.equal(w.damage, 12);
   assert.equal(w.attackRange, 300 * UNIT_PX);
   assert.ok(Math.abs(w.shotInterval - 100 / 75) < 1e-9);
   assert.equal(CHARACTERS.warrior.attack.damageMultiplier, 3.25);
@@ -97,7 +97,7 @@ test('panic from La seña gallops him exactly +30% movement and -40% shot interv
   run.shotIn = 0;
   step(run, 0.05, {});
   assert.ok(Math.abs(run.shotIn - (100 / 90) * 0.6) < 1e-9, '+40% attack speed only');
-  assert.equal(p.damage, 34, 'no extra damage from the panic');
+  assert.equal(p.damage, 27.2, 'no extra damage from the panic');
 });
 
 test('penniless Papazito receives the panic buff with an unpaid bill', () => {
@@ -127,7 +127,7 @@ test('ANAMENCUÁ is a 25s-cooldown Q ultimate unleashing three radial brick burs
   run.shotIn = 100;
   run.enemies.push({ id: 1, x: run.player.x + 260, y: run.player.y, hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
   for (let i = 0; i < 25; i++) step(run, 0.05, {});
-  assert.ok(500 - run.enemies[0].hp >= 2 * 30, 'both circular bursts reach the enemy');
+  assert.ok(500 - run.enemies[0].hp >= 2 * run.player.damage - 1e-9, 'both circular bursts reach the enemy');
   assert.ok(run.effects.some(e => e.text === '¡ANAMENCUÁ!'), 'the fury shout is on screen');
 });
 
@@ -243,9 +243,9 @@ test('sale buffs expire: after their ttl the damage and debuffs stop applying', 
   run.enemies.push({ id: 1, x: p.x + p.speed, y: p.y, hp: 100, maxHp: 100, speed: 0, radius: 10, kind: 'zombie' });
   run.shotIn = 0.001;
   step(run, 0.05, {});
-  assert.equal(run.projectiles[0]?.damage, 34, 'the expired buff no longer strengthens the brick');
+  assert.equal(run.projectiles[0]?.damage, p.damage, 'the expired buff no longer strengthens the brick');
   assert.equal(p.soldItems.psp, true, 'sold stays sold; only the buff expired');
-  assert.equal(p.damage, 34, 'sheet damage never mutated');
+  assert.equal(p.damage, 27.2, 'sheet damage never mutated');
 });
 
 test('activateSpecial drives timers from the definition', () => {

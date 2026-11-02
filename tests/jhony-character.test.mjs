@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, activateSpecial, step } from '../src/engine.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
 import { CHARACTERS } from '../src/characters/index.mjs';
-import { DEFAULT_CATALOG } from '../src/reward-data.mjs';
-import { selectLevelOptions } from '../src/reward-catalog.mjs';
+import { DEFAULT_CATALOG, EFFECTS } from '../src/reward-data.mjs';
+import { describeReward, selectLevelOptions } from '../src/reward-catalog.mjs';
+import { applyUpgradeRank } from '../src/run-rewards.mjs';
+import { rewardEffectTotals } from '../src/game/reward-view.mjs';
 
 // `?playtest` style isolation: no spawner, no stray enemies, so every assertion
 // is about the ficha and not about the wave.
@@ -151,15 +153,24 @@ test('the Tilt bar is the HUD readout, with Furia as the boosted state', () => {
   assert.deepEqual(p.characterDef.taskHud(p), { percentage: 100, label: '¡TILT! · 3s', active: true });
 });
 
-test('the playable ficha draws the bottle and the Tilt face on the cast grid', () => {
-  const calls = [];
-  const ctx = new Proxy({}, {
-    get: (_, key) => key === 'getTransform' ? () => ({ a: 1, d: 1 }) : (...args) => { calls.push([key, ...args]); },
-    set: (_, key, value) => { calls.push(['set', key, value]); return true; },
-  });
-  CHARACTERS.jhony.draw(ctx, 100, 150, { time: 0, moving: false, facing: 1, player: { attackFlash: 0, tilt: 60, fury: 0 } });
-  assert.ok(calls.some(([kind, key, value]) => kind === 'set' && key === 'fillStyle' && value === '#b4543c'), 'red cheeks at 60 Tilt');
-  assert.ok(calls.some(([kind, key, value]) => kind === 'set' && key === 'fillStyle' && value === '#e6d9b4'), 'the bottle label is drawn');
+test('the playable ficha draws the bottle, and the red cheeks belong to the whisky', () => {
+  const drawFicha = player => {
+    const calls = [];
+    const ctx = new Proxy({}, {
+      get: (_, key) => key === 'getTransform' ? () => ({ a: 1, d: 1 }) : (...args) => { calls.push([key, ...args]); },
+      set: (_, key, value) => { calls.push(['set', key, value]); return true; },
+    });
+    CHARACTERS.jhony.draw(ctx, 100, 150, { time: 0, moving: false, facing: 1, player });
+    return calls;
+  };
+  const painted = (calls, color) => calls.some(([kind, key, value]) => kind === 'set' && key === 'fillStyle' && value === color);
+
+  const tilted = drawFicha({ attackFlash: 0, tilt: 60, fury: 0 });
+  assert.equal(painted(tilted, '#c4634a'), false, '60 Tilt no longer reddens the cheeks');
+  assert.ok(painted(tilted, '#e6d9b4'), 'the bottle label is drawn');
+
+  assert.ok(painted(drawFicha({ attackFlash: 0, tilt: 0, fury: 0, drink: 4 }), '#c4634a'),
+    '«Un traguito más» is what flushes his face');
 });
 
 // The engine hands the ficha a small toolbox; these fakes stand in for it when
@@ -206,7 +217,7 @@ test('«¡ERA UN CÍRCULO!» clears the area when Furia starts, and the evolutio
   assert.ok(crowd.hp < before, 'and it keeps damaging whoever stands in it');
 });
 
-test('«¡CERRÁ EL CULO!» shouts forward, and the evolution shouts in every direction', () => {
+test('«¡CERRÁ EL ORTO!» shouts forward, and the evolution shouts in every direction', () => {
   const run = solo();
   const p = run.player;
   p.lastMoveX = 1;
@@ -225,7 +236,7 @@ test('«¡CERRÁ EL CULO!» shouts forward, and the evolution shouts in every di
   p.shoutIn = 0;
   p.characterDef.onTick(run, p, 0.05, ctx);
   assert.ok(behind.hp < 300, 'the evolved shout is a 360 ring');
-  assert.ok(run.effects.some(effect => effect.text === '¡CERRÁ EL CULO!'));
+  assert.ok(run.effects.some(effect => effect.text === '¡CERRÁ EL ORTO!'));
 });
 
 test('«BOTELLA ROTA» sprays glass past the botellazo, in every direction when evolved', () => {
@@ -308,18 +319,71 @@ test('«LA BUILD ESTÁ ROTÍSIMA» speeds up the ultimate volley and the evoluti
   assert.ok(Math.abs(plain.guideIn - 0.45) < 1e-9, 'without the upgrade it keeps the base cadence');
 });
 
-test('the six signatures and their evolutions live in the level catalogue, gated by their base', () => {
+test('the six signatures are six entries, each one carrying its evolution as a second rank', () => {
   const own = DEFAULT_CATALOG.upgrades.filter(entry => entry.characters === 'jhony');
   assert.deepEqual(own.map(entry => entry.id).sort(), [
-    'beer-round', 'broken-bottle', 'broken-build', 'build-updated', 'closed-mouth',
-    'glass-everywhere', 'one-more-beer', 'shout-360', 'stomp-wave', 'tilt-circle',
-    'tilt-circle-floor', 'zomboid-stomp',
+    'broken-bottle', 'broken-build', 'closed-mouth', 'one-more-beer', 'tilt-circle', 'zomboid-stomp',
   ]);
+  for (const entry of own) {
+    assert.equal(entry.ranks.length, 2, `${entry.id} is the base form and its evolution`);
+    assert.deepEqual(entry.requires, [], `${entry.id} evolves from its own first rank, not from another card`);
+    assert.equal(entry.ranks[0].effects[0].type, entry.ranks[1].effects[0].type, `${entry.id} keeps its shape`);
+  }
   const options = (level, ranks, random = () => 0) =>
     selectLevelOptions(DEFAULT_CATALOG, { character: 'jhony', level, ranks }, random).map(entry => entry.id);
-  const atThree = options(3, {});
-  assert.equal(atThree[0], 'tilt-circle', 'the circle is the level-3 milestone');
-  assert.equal(atThree.includes('tilt-circle-floor'), false, 'the evolution never precedes its base');
-  assert.ok(options(4, { 'tilt-circle': 1 }).includes('tilt-circle-floor')
-    || options(4, { 'tilt-circle': 1 }, () => 0.5).includes('tilt-circle-floor'), 'and opens once taken');
+  assert.equal(options(3, {})[0], 'tilt-circle', 'the circle is the level-3 milestone');
+});
+
+test('rank II names the evolution instead of repeating the first form', () => {
+  const run = createRun(() => 0.5, 'jhony');
+  const own = DEFAULT_CATALOG.upgrades.filter(entry => entry.characters === 'jhony');
+  for (const entry of own) {
+    const type = entry.ranks[0].effects[0].type;
+    const first = describeReward(entry.ranks[0], EFFECTS,
+      rewardEffectTotals(run, `level:${entry.id}:0`, entry.ranks[0]));
+    assert.equal(applyUpgradeRank(run, entry), true, `${entry.id} takes its first rank`);
+    assert.equal(run.player.rewardBonuses[type], 1, `${entry.id} starts as its first form`);
+    const second = describeReward(entry.ranks[1], EFFECTS,
+      rewardEffectTotals(run, `level:${entry.id}:1`, entry.ranks[1]));
+    assert.notDeepEqual(second, first, `${entry.id} sells a different shape on rank II`);
+    assert.equal(applyUpgradeRank(run, entry), true, `${entry.id} takes its evolution`);
+    assert.equal(run.player.rewardBonuses[type], 2, `${entry.id} reaches its evolved form`);
+  }
+  const circle = DEFAULT_CATALOG.upgrades.find(entry => entry.id === 'tilt-circle');
+  const fresh = createRun(() => 0.5, 'jhony');
+  assert.deepEqual(describeReward(circle.ranks[0], EFFECTS, rewardEffectTotals(fresh, 'level:tilt-circle:0', circle.ranks[0])),
+    ['Onda de Tilt al entrar en Furia']);
+  assert.deepEqual(describeReward(circle.ranks[1], EFFECTS, { tiltWave: 2 }),
+    ['Onda de Tilt y el círculo queda en el piso']);
+});
+
+test('a melee swing turns the body towards the enemy it hits', () => {
+  for (const character of ['jhony', 'solago']) {
+    const right = createRun(() => 0.5, character);
+    right.spawnIn = 100;
+    right.enemies.push({ id: 1, x: right.player.x + right.player.attackRange - 6, y: right.player.y,
+      hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+    step(right, 0.05, {});
+    assert.equal(right.player.swingFacing, 1, `${character} turns right`);
+
+    const left = createRun(() => 0.5, character);
+    left.spawnIn = 100;
+    left.enemies.push({ id: 1, x: left.player.x - left.player.attackRange + 6, y: left.player.y,
+      hp: 500, maxHp: 500, speed: 0, radius: 10, kind: 'zombie' });
+    step(left, 0.05, {});
+    assert.equal(left.player.swingFacing, -1, `${character} turns left`);
+  }
+});
+
+test('standing still, the shout turns to the enemy instead of a fixed heading', () => {
+  const run = solo();
+  const p = run.player;
+  const left = { id: 99, x: p.x - 90, y: p.y, hp: 300, maxHp: 300, speed: 0, radius: 10, kind: 'zombie' };
+  run.enemies.push(left);
+  p.rewardBonuses = { shout: 1 };
+  p.shoutIn = 0;
+  assert.equal(p.lastMoveX, 0, 'he has not walked anywhere yet');
+  assert.equal(p.lastMoveY, 0);
+  p.characterDef.onTick(run, p, 0.05, toolbox(run));
+  assert.ok(left.hp < 300, 'the cone follows the body at his left');
 });
