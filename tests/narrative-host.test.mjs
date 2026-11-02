@@ -91,3 +91,26 @@ test('keyboard controls consume scene input and stop being consumed on completio
   assert.equal(h.blocked, false);
   assert.equal(h.key('q'), false);
 });
+
+test('a non-persistent attach plays the scenes without reading or writing progress', async () => {
+  const seen = {
+    has() { assert.fail('a lab run read the story progress'); },
+    add() { assert.fail('a lab run wrote the story progress'); },
+  };
+  const once = { ...catalog, entries: [{ ...catalog.entries[0], scene: { ...catalog.entries[0].scene, repeat: 'once' } }] };
+  const h = new NarrativeHost({ load: async () => once, makeView: view, audio: audio(), seen });
+  await h.attach({ phase: 'playing', time: 0, wave: 1 }, root(), { persist: false });
+  assert.equal(h.director.player.active, true, 'the boundary scene still plays');
+  h.skip();
+  assert.equal(h.director.seen.has('test'), true, 'the scene is remembered for this attach only');
+  h.detach();
+
+  const written = [];
+  const persistent = new NarrativeHost({
+    load: async () => once, makeView: view, audio: audio(),
+    seen: { has: () => false, add: id => { written.push(id); } },
+  });
+  await persistent.attach({ phase: 'playing', time: 0, wave: 1 }, root());
+  persistent.skip();
+  assert.deepEqual(written, ['test'], 'a campaign attach still records the scene it played');
+});

@@ -64,10 +64,15 @@ function show(name, previousRun = null) {
   if (name === 'story') story();
   if (name === 'game') {
     game(previousRun);
-    // The lab measures a wave, not the story: a lab run skips every cinematic,
-    // arrival and wave boundaries included. `leaveNarrative()` above already
-    // cleared whatever the previous screen owned.
-    if (!state.run?.lab) narrative.attach(state.run, document.querySelector('#narrative-layer'));
+    // A lab run measures a wave, not the story: it skips every cinematic unless
+    // the lab's own switch asks for them. When it does, the scenes play with a
+    // throwaway memory (`persist: false`), so previewing a boundary can neither
+    // burn a `repeat: once` scene nor unlock the character it would have
+    // unlocked on a real playthrough.
+    const lab = state.run?.lab === true;
+    if (!lab || state.balanceCinematics) {
+      narrative.attach(state.run, document.querySelector('#narrative-layer'), lab ? { persist: false } : {});
+    }
   }
   if (name === 'narrative') showNarrativeViewer(state.content);
   state.content.focus({ preventScroll: true });

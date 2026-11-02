@@ -19,10 +19,13 @@ export const state = {
   enemyPreviewReach: true,
   // Balance lab (?dev=balance): the chosen wave and the build spent inside its
   // budget. `pendingRun` is the seeded run the game screen picks up.
+  // `balanceCinematics` replays the act's scenes and banter on that wave; it is
+  // off by default because the lab measures a wave, not the story.
   balanceCharacter: 'negro',
   balanceAct: 'act-01',
   balanceWave: 1,
   balanceMode: 'real',
+  balanceCinematics: false,
   balancePicks: {},
   balanceItems: {},
   pendingRun: null,

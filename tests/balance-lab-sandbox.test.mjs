@@ -141,11 +141,12 @@ test('back reopens the lab and keeps the build, not the spent run', async () => 
   assert.equal(state.balanceWave, 2);
 });
 
-test('a lab run skips the cinematics, a campaign run still plays them', async () => {
+test('a lab run skips the cinematics by default, a campaign run still plays them', async () => {
   let loads = 0;
   const catalog = () => { loads++; return { characters: {}, sounds: {}, entries: [], bindings: [] }; };
   narrative.load = async () => catalog();
 
+  state.balanceCinematics = false;
   await openLab({ wave: 2 });
   assert.equal(loads, 0, 'the lab never even asks for the narrative catalog');
   assert.equal(narrative.blocked, false, 'no scene owns the screen of a lab wave');
@@ -154,6 +155,36 @@ test('a lab run skips the cinematics, a campaign run still plays them', async ()
   dom.click('play');
   await settle();
   assert.equal(loads, 1, 'a normal run still attaches the story');
+});
+
+test('the lab can switch the cinematics on for the wave it is measuring', async () => {
+  let loads = 0;
+  const waveScene = {
+    characters: { guide: { name: 'Guide', sprite: 'negro', expressions: { neutral: 'sample.svg' } } }, sounds: {},
+    entries: [{ id: 'lab-wave', actions: {}, scene: { id: 'lab-wave', steps: [{ type: 'dialogue', lines: [{ speaker: 'guide', text: 'Two thousand hours' }] }] } }],
+    bindings: [{ when: 'before_wave', wave: 2, scene: 'lab-wave' }],
+  };
+  narrative.load = async () => { loads++; return waveScene; };
+
+  state.balanceCinematics = true;
+  await openLab({ wave: 2 });
+  assert.equal(loads, 1, 'the toggle asks for the act catalog the wave belongs to');
+  assert.equal(narrative.director?.player?.scene.id, 'lab-wave', 'the scene bound to that wave opens on it');
+  assert.equal(narrative.blocked, true, 'the wave waits for the scene like a campaign wave does');
+  assert.ok(narrative.director?.seen instanceof Set, 'the lab remembers scenes in memory, never in the player progress');
+  narrative.skip();
+  assert.equal(narrative.blocked, false, 'skipping hands the wave back to the player');
+
+  // The switch survives a trip back to the build screen but stays opt-in.
+  dom.click('balance-back');
+  await settle();
+  assert.equal(state.balanceCinematics, true, 'going back does not silently turn the story off');
+
+  state.balanceCinematics = false;
+  loads = 0;
+  await openLab({ wave: 2 });
+  assert.equal(loads, 0, 'turning it off skips the cinematics again');
+  narrative.load = async () => ({ characters: {}, sounds: {}, entries: [], bindings: [] });
 });
 
 test('an ordinary run keeps the campaign exits', async () => {

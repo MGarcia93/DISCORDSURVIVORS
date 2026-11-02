@@ -20,7 +20,7 @@ export class NarrativeHost {
     this.generation = 0; this.director = null; this.loading = false; this.error = null;
   }
   get blocked() { return this.loading || Boolean(this.director?.blocked); }
-  async attach(run, root, { preview = false } = {}) {
+  async attach(run, root, { preview = false, persist = true } = {}) {
     this.detach();
     const generation = this.generation;
     this.root = root; this.previewMode = preview; this.loading = true;
@@ -29,7 +29,10 @@ export class NarrativeHost {
       const catalog = await this.load(run?.act ?? DEFAULT_ACT);
       if (this.generation !== generation) return;
       this.catalog = catalog;
-      this.director = new WaveDirector(catalog, { seen: this.seen, onSound: id => this.audio.play(catalog.sounds[id], message => {
+      // `persist: false` keeps the same scenes on screen and the same boundaries,
+      // but remembers them in a throwaway set: a preview must not unlock a
+      // character or burn a `repeat: once` scene for the real playthrough.
+      this.director = new WaveDirector(catalog, { seen: persist ? this.seen : null, onSound: id => this.audio.play(catalog.sounds[id], message => {
         if (this.generation === generation) this.error = message;
       }) });
       this.view = this.makeView(root, catalog, message => {

@@ -168,6 +168,19 @@ test('a blocked card refuses the left click and keeps the right one', () => {
   assert.deepEqual(state.balancePicks, {}, 'the blocked card does not add');
 });
 
+test('the lab offers the cinematics switch and remembers it', () => {
+  state.balanceAct = 'act-01';
+  state.balanceCinematics = false;
+  balance();
+  assert.match(content.innerHTML, /id="balance-cinematics"/, 'the build screen can turn the story on');
+  assert.doesNotMatch(content.innerHTML, /id="balance-cinematics"[^>]* checked/, 'off is the default');
+  press('selector=#balance-cinematics|change', { target: { checked: true } });
+  assert.equal(state.balanceCinematics, true, 'the switch is state, not markup');
+  balance();
+  assert.match(content.innerHTML, /id="balance-cinematics"[^>]* checked/, 'the switch survives a re-render');
+  state.balanceCinematics = false;
+});
+
 test('Jhony owns six cards, one per signature, and each one states its own rank', () => {
   state.balanceCharacter = 'jhony';
   state.balanceAct = 'act-01';

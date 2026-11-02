@@ -118,7 +118,7 @@ export function balance() {
   const waveOptions = Array.from({ length: act.boss.wave }, (_, index) => index + 1);
   state.content.innerHTML = `<section class="screen world-viewer balance-lab">
     <div class="screen-heading"><h1>Balance lab</h1><button class="secondary" data-action="home">Back to game menu</button></div>
-    <p class="world-viewer-intro">A real run, thrown away afterwards: the wave plays with its own HUD, shop and abilities. The budget is what the campaign would have paid you by then. No progress is saved. Left click a card to add, <b>right click</b> or its <b>−1</b> to take one back and return its budget.</p>
+    <p class="world-viewer-intro">A real run, thrown away afterwards: the wave plays with its own HUD, shop and abilities. The budget is what the campaign would have paid you by then. No progress is saved. Left click a card to add, <b>right click</b> or its <b>−1</b> to take one back and return its budget. The <b>Cinematics</b> switch plays this wave's scenes and banter instead of skipping them, and still writes nothing.</p>
     <div class="actions">
       <label>Character <select id="balance-character" aria-label="Character">${ROSTER.map(character => `<option value="${character.id}"${character.id === state.balanceCharacter ? ' selected' : ''}>${escapeText(character.name)}</option>`).join('')}</select></label>
       <label>World <select id="balance-act" aria-label="World">${PLAYABLE_ACTS.map(candidate => `<option value="${candidate.id}"${candidate.id === state.balanceAct ? ' selected' : ''}>${escapeText(candidate.title)}</option>`).join('')}</select></label>
@@ -130,6 +130,7 @@ export function balance() {
     <section class="balance-group"><h2>Items <small>${run.coins} of ${entry.coins} ◈ left</small></h2><div class="balance-cards">${itemCards(run)}</div></section>
     <div class="actions">
       <button class="secondary" data-reset>Clear the build</button>
+      <label class="balance-cinematics" title="Play this wave's scenes, banter and wave boundaries instead of skipping them"><input type="checkbox" id="balance-cinematics"${state.balanceCinematics ? ' checked' : ''}> Cinematics</label>
       <button class="primary" data-action="balance-play">PLAY THIS WAVE</button>
     </div>
   </section>`;
@@ -159,6 +160,11 @@ export function balance() {
     state.balanceMode = event.target.value;
     event.target.blur();
     balance();
+  });
+  // The switch is state, not a per-run option: it survives the trip into the
+  // wave, the repeat and the way back to the build screen.
+  bind('#balance-cinematics', 'change', event => {
+    state.balanceCinematics = event.target.checked === true;
   });
   bind('[data-reset]', 'click', () => {
     state.balancePicks = {};

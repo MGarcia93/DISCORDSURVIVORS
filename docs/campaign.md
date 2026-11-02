@@ -201,9 +201,11 @@ environment decides:
   click adds a rank or an item, a right click (or the card's `−1`) takes one back
   and returns the budget, and each group counts what is left, so the build is
   editable until the wave starts. A card at its cap reads `RANK 5/5` or `2/2`, not
-  a refusal. A lab run never advances the campaign and never plays a cinematic:
-  its shop and its death screen offer repeat and back to the build screen, and the
-  pause menu is the way out of a wave that is still running.
+  a refusal. A lab run never advances the campaign. Its cinematics are an opt-in
+  switch: off, the wave plays no scene at all; on, it replays that wave's scenes,
+  banter and boundaries from a throwaway memory, so nothing is recorded and
+  nothing unlocks. Its shop and its death screen offer repeat and back to the
+  build screen, and the pause menu is the way out of a wave that is still running.
 
 `balanceFor(search)` in `src/reward-data.mjs` resolves both flags; the shipped
 `BALANCE` object is the real one.
