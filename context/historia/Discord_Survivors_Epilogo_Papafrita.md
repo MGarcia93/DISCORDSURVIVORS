@@ -857,31 +857,15 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 *El grupo llega al nido de Rathalos.*
 
-**PAPAFRITA:** Ahí está. Bueno, escuchen. No se manden todavía. Primero esperamos que baje y después le pegamos todos juntos.
+**PAPAFRITA:** Ahí está.
+
+**PAPAFRITA:** Bueno, escuchen. No se manden todavía. Primero esperamos que baje y después le pegamos todos juntos.
 
 **NEGRO:** Dale, avisá cuándo.
 
 **WARRIOR:** Dale, ura.
 
 *Rathalos aterriza y ruge.*
-
-**PAPAFRITA:** Como les decía, este bicho tiene varios ataques importantes, así que—
-
-**RATHALOS:** ¡ROAAAAAR!
-
-**PAPAFRITA:** Como les decía—
-
-**RATHALOS:** ¡ROAAAAAR!
-
-**NEGRO:** ¡JAJAJAJA! ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!
-
-**PAPAFRITA:** Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—
-
-**RATHALOS:** ¡ROAAAAAR!
-
-**PAPAFRITA:** ¡LA CONCHA DE TU MADRE!
-
-**PAPAFRITA:** Escuchame una cosa, dragón de mierda.
 
 *Warrior sale corriendo directamente hacia él.*
 
@@ -906,6 +890,24 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 **NEGRO:** JAJAJAJA. ¡EL HIJO DE PUTA SE MANDÓ SOLO Y NOS ECHA LA CULPA!
 
 *Warrior se levanta, sacudiéndose la ropa.*
+
+**PAPAFRITA:** Bueno, ahora escuchen lo que les voy a decir para que no vuelva a pasar—
+
+**RATHALOS:** ¡ROAAAAAR!
+
+**PAPAFRITA:** Como les decía—
+
+**RATHALOS:** ¡ROAAAAAR!
+
+**NEGRO:** ¡JAJAJAJA! ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!
+
+**PAPAFRITA:** Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—
+
+**RATHALOS:** ¡ROAAAAAR!
+
+**PAPAFRITA:** ¡LA CONCHA DE TU MADRE!
+
+**PAPAFRITA:** Escuchame una cosa, dragón de mierda.
 
 *Comienza la pelea.*
 

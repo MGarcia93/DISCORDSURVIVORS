@@ -92,7 +92,12 @@
         {
           "speaker": "papafrita",
           "expression": "neutral",
-          "text": "Ahí está. Bueno, escuchen. No se manden todavía. Primero esperamos que baje y después le pegamos todos juntos."
+          "text": "Ahí está."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, escuchen. No se manden todavía. Primero esperamos que baje y después le pegamos todos juntos."
         },
         {
           "speaker": "maxi-negro",
@@ -130,80 +135,6 @@
         "¡ROAAAAAR!"
       ],
       "duration": 2.2
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "papafrita",
-          "expression": "neutral",
-          "text": "Como les decía, este bicho tiene varios ataques importantes, así que—"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "RATHALOS",
-      "lines": [
-        "¡ROAAAAAR!"
-      ],
-      "duration": 2.2
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "papafrita",
-          "expression": "neutral",
-          "text": "Como les decía—"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "RATHALOS",
-      "lines": [
-        "¡ROAAAAAR!"
-      ],
-      "duration": 2.2
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "maxi-negro",
-          "expression": "happy",
-          "text": "¡JAJAJAJA! ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!"
-        },
-        {
-          "speaker": "papafrita",
-          "expression": "annoyed",
-          "text": "Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "RATHALOS",
-      "lines": [
-        "¡ROAAAAAR!"
-      ],
-      "duration": 2.2
-    },
-    {
-      "type": "dialogue",
-      "lines": [
-        {
-          "speaker": "papafrita",
-          "expression": "angry",
-          "text": "¡LA CONCHA DE TU MADRE!"
-        },
-        {
-          "speaker": "papafrita",
-          "expression": "angry",
-          "text": "Escuchame una cosa, dragón de mierda."
-        }
-      ]
     },
     {
       "type": "dialogue",
@@ -300,6 +231,80 @@
       "actor": "warrior",
       "to": "warrior",
       "duration": 0.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, ahora escuchen lo que les voy a decir para que no vuelva a pasar—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Como les decía—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJAJA! ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "annoyed",
+          "text": "Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡LA CONCHA DE TU MADRE!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "Escuchame una cosa, dragón de mierda."
+        }
+      ]
     }
   ]
 }
