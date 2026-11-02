@@ -1,0 +1,92 @@
+{
+  "id": "act-06-wave-4-end",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "wide": [
+        600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Ura, ¿falta mucho?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "No. Estamos cerca del territorio de Rathalos."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Gracias a Dios."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Primero tenemos que atravesar la zona del Pukei-Pukei."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO LA CONCHA DE TU MADRE!"
+        }
+      ]
+    }
+  ]
+}

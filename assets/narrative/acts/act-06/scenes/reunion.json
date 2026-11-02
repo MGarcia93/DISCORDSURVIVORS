@@ -75,6 +75,31 @@
       "duration": 4
     },
     {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¡AY, LA CONCHA DE MI MADRE!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡QUÉ HIJO DE PUTA QUE ES MAXI!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Dónde estamos ahora?"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Ura, en el bosque ese."
+        }
+      ]
+    },
+    {
       "type": "camera",
       "to": "wide",
       "zoom": 1.05,

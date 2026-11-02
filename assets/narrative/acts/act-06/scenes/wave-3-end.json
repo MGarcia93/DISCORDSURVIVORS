@@ -1,0 +1,102 @@
+{
+  "id": "act-06-wave-3-end",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "wide": [
+        600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, ¿ya tenés todo?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Sí, ahora tenemos suficientes provisiones."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno. Rathalos."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Todavía tenemos que atravesar una parte del bosque. Por ahí anda un Pukei-Pukei."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿OTRO BICHO?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Negro, hay monstruos en Monster Hunter. No sé qué esperabas."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "Que cierres el orto y nos vayamos."
+        }
+      ]
+    }
+  ]
+}

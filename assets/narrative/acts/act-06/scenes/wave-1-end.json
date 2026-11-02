@@ -1,0 +1,112 @@
+{
+  "id": "act-06-wave-1-end",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "wide": [
+        600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, listo. Agarramos a Papafrita y nos vamos."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "No, Negro. No me voy hasta terminar la armadura."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Y qué te falta?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Una pieza de Rathalos."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Y dónde está?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Más adentro del bosque."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, vamos, matamos al dragón y nos vamos a la mierda."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Dale. Pero tenemos que preparar la cacería, porque hay varios materiales que—"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Sí, sí. Nos explicás en el camino."
+        }
+      ]
+    }
+  ]
+}

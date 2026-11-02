@@ -10,16 +10,17 @@ const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await rea
 const catalogFor = () => loadCatalog({ urls: [manifestURL, actManifestURL(act06)], fetcher });
 const SCRIPT = new URL('../context/historia/Discord_Survivors_Epilogo_Papafrita.md', import.meta.url);
 const ACT_SCENES = [
-  'act-06-prologue', 'act-06-reunion', 'act-06-explain', 'act-06-item', 'act-06-path',
-  'act-06-venom', 'act-06-boss', 'act-06-defeat', 'act-06-expulsion', 'act-06-final',
-  'act-06-credits',
+  'act-06-prologue', 'act-06-reunion', 'act-06-wave-1-end', 'act-06-explain',
+  'act-06-wave-2-end', 'act-06-item', 'act-06-wave-3-end', 'act-06-path',
+  'act-06-wave-4-end', 'act-06-venom', 'act-06-wave-5-end', 'act-06-boss',
+  'act-06-defeat', 'act-06-expulsion', 'act-06-final', 'act-06-credits',
 ];
 
-test('the epilogue registers its eleven cinematics and every scene validates', async () => {
+test('the epilogue registers its sixteen cinematics and every scene validates', async () => {
   const catalog = await catalogFor();
   assert.deepEqual(catalog.entries.filter(entry => entry.id.startsWith('act-06-')).map(entry => entry.id), ACT_SCENES);
   assert.ok(catalog.entries.every(entry => !entry.error), catalog.entries.map(entry => entry.error).filter(Boolean).join('; '));
-  assert.equal(catalog.bindings.length, 11);
+  assert.equal(catalog.bindings.length, 16);
   assert.ok(catalog.sounds.roar, 'the act brings its own roar');
   assert.ok(catalog.banter.length > 60, 'the act carries its combat banter');
   assert.deepEqual([...new Set(catalog.banter.map(line => line.wave))], [1, 2, 3, 4, 5, 6]);
@@ -54,7 +55,10 @@ test('the wave bindings walk the script in order', async () => {
     [6, 'act-06-boss'],
   ]);
   const after = catalog.bindings.filter(binding => binding.when === 'after_wave').map(binding => binding.scene);
-  assert.deepEqual(after, ['act-06-defeat', 'act-06-expulsion', 'act-06-final', 'act-06-credits']);
+  assert.deepEqual(after, [
+    'act-06-wave-1-end', 'act-06-wave-2-end', 'act-06-wave-3-end', 'act-06-wave-4-end',
+    'act-06-wave-5-end', 'act-06-defeat', 'act-06-expulsion', 'act-06-final', 'act-06-credits',
+  ]);
 });
 
 test('the parental punchline appears only once, in the reunion', async () => {

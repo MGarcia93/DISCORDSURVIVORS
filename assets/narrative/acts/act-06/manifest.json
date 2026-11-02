@@ -30,9 +30,19 @@
       "file": "scenes/reunion.json"
     },
     {
+      "id": "act-06-wave-1-end",
+      "title": "Epílogo: Fin de la oleada 1",
+      "file": "scenes/wave-1-end.json"
+    },
+    {
       "id": "act-06-explain",
       "title": "Epílogo: Te explico",
       "file": "scenes/explain.json"
+    },
+    {
+      "id": "act-06-wave-2-end",
+      "title": "Epílogo: Fin de la oleada 2",
+      "file": "scenes/wave-2-end.json"
     },
     {
       "id": "act-06-item",
@@ -40,14 +50,29 @@
       "file": "scenes/item.json"
     },
     {
+      "id": "act-06-wave-3-end",
+      "title": "Epílogo: Fin de la oleada 3",
+      "file": "scenes/wave-3-end.json"
+    },
+    {
       "id": "act-06-path",
       "title": "Epílogo: Una más y nos vamos",
       "file": "scenes/path.json"
     },
     {
+      "id": "act-06-wave-4-end",
+      "title": "Epílogo: Fin de la oleada 4",
+      "file": "scenes/wave-4-end.json"
+    },
+    {
       "id": "act-06-venom",
       "title": "Epílogo: ¿Y sabés qué más?",
       "file": "scenes/venom.json"
+    },
+    {
+      "id": "act-06-wave-5-end",
+      "title": "Epílogo: Fin de la oleada 5",
+      "file": "scenes/wave-5-end.json"
     },
     {
       "id": "act-06-boss",
@@ -87,9 +112,19 @@
       "scene": "act-06-reunion"
     },
     {
+      "when": "after_wave",
+      "wave": 1,
+      "scene": "act-06-wave-1-end"
+    },
+    {
       "when": "before_wave",
       "wave": 2,
       "scene": "act-06-explain"
+    },
+    {
+      "when": "after_wave",
+      "wave": 2,
+      "scene": "act-06-wave-2-end"
     },
     {
       "when": "before_wave",
@@ -97,14 +132,29 @@
       "scene": "act-06-item"
     },
     {
+      "when": "after_wave",
+      "wave": 3,
+      "scene": "act-06-wave-3-end"
+    },
+    {
       "when": "before_wave",
       "wave": 4,
       "scene": "act-06-path"
     },
     {
+      "when": "after_wave",
+      "wave": 4,
+      "scene": "act-06-wave-4-end"
+    },
+    {
       "when": "before_wave",
       "wave": 5,
       "scene": "act-06-venom"
+    },
+    {
+      "when": "after_wave",
+      "wave": 5,
+      "scene": "act-06-wave-5-end"
     },
     {
       "when": "before_wave",
@@ -351,6 +401,34 @@
       "text": "¡Ura, se viene otra vez!"
     },
     {
+      "wave": 2,
+      "at": 28.5,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡ESQUIVEN!"
+    },
+    {
+      "wave": 2,
+      "at": 29.9,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, ¿y si dejamos que se coma a Papafrita?"
+    },
+    {
+      "wave": 2,
+      "at": 31.3,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, CONCENTRATE!"
+    },
+    {
+      "wave": 2,
+      "at": 32.7,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Capaz queda tan lleno que nos deja pasar."
+    },
+    {
       "wave": 3,
       "at": 2,
       "speaker": "papafrita",
@@ -569,10 +647,108 @@
     },
     {
       "wave": 4,
+      "at": 26.5,
+      "speaker": "solago",
+      "expression": "annoyed",
+      "text": "¿DE QUÉ SE RÍEN?"
+    },
+    {
+      "wave": 4,
+      "at": 27.9,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Nada, dientudo. Ojalá se los deje bien acomodados."
+    },
+    {
+      "wave": 4,
+      "at": 29.3,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, ¿y vos no tenés que ir también? Capaz te alinean los cuernos."
+    },
+    {
+      "wave": 4,
+      "at": 30.7,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡LA RE CONCHA DE TU MADRE, NEGRO!"
+    },
+    {
+      "wave": 4,
+      "at": 32.1,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡VOS TAMBIÉN, WARRIOR!"
+    },
+    {
+      "wave": 4,
+      "at": 33.6,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡Ayuden acá, que son muchos!"
+    },
+    {
+      "wave": 4,
       "at": 34,
       "speaker": "warrior",
       "expression": "neutral",
       "text": "Ura, ¿falta mucho?"
+    },
+    {
+      "wave": 4,
+      "at": 35,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, Papasito."
+    },
+    {
+      "wave": 4,
+      "at": 36.4,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¿Qué pasó?"
+    },
+    {
+      "wave": 4,
+      "at": 37.8,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¿Te trajiste la cuchara de albañil?"
+    },
+    {
+      "wave": 4,
+      "at": 39.2,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "No, Negro."
+    },
+    {
+      "wave": 4,
+      "at": 40.6,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Porque podríamos levantar una pared para que no pasen."
+    },
+    {
+      "wave": 4,
+      "at": 42,
+      "speaker": "papasito",
+      "expression": "happy",
+      "text": "JAJAJA. Y bueno, conseguime los materiales."
+    },
+    {
+      "wave": 4,
+      "at": 43.4,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, AYUDALO EN VEZ DE DECIR BOLUDECES!"
+    },
+    {
+      "wave": 4,
+      "at": 44.8,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Bueno, bueno, qué sensibles que están."
     },
     {
       "wave": 5,
@@ -729,6 +905,69 @@
       "text": "¡SOY DE JUJUY, URA!"
     },
     {
+      "wave": 5,
+      "at": 34.5,
+      "speaker": "papasito",
+      "expression": "surprised",
+      "text": "¡Se está escapando!"
+    },
+    {
+      "wave": 5,
+      "at": 35.9,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NO LO DEJEN IR!"
+    },
+    {
+      "wave": 5,
+      "at": 37.3,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡WARRIOR, TIRALE HUMO!"
+    },
+    {
+      "wave": 5,
+      "at": 38.7,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¡Ahora, ahora!"
+    },
+    {
+      "wave": 5,
+      "at": 40.1,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Che, Papasito, ¿cuánto sale un pasaje para ir a verlo a Tomi?"
+    },
+    {
+      "wave": 5,
+      "at": 41.5,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡Negro, estamos peleando!"
+    },
+    {
+      "wave": 5,
+      "at": 42.9,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Preguntaba nomás, capaz vendés el monitor otra vez."
+    },
+    {
+      "wave": 5,
+      "at": 44.3,
+      "speaker": "papafrita",
+      "expression": "happy",
+      "text": "JAJAJA. ¡NEGRO, PEGÁLE AL BICHO!"
+    },
+    {
+      "wave": 5,
+      "at": 45.7,
+      "speaker": "papasito",
+      "expression": "angry",
+      "text": "¡UUUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA, NEGRO!"
+    },
+    {
       "wave": 6,
       "at": 2,
       "speaker": "papafrita",
@@ -867,6 +1106,132 @@
       "speaker": "warrior",
       "expression": "happy",
       "text": "¡Dale, ura, dale!"
+    },
+    {
+      "wave": 6,
+      "at": 35,
+      "speaker": "papafrita",
+      "expression": "neutral",
+      "text": "Bueno, primero hay que—"
+    },
+    {
+      "wave": 6,
+      "at": 36.4,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡AHORA, CUANDO ABRA LAS ALAS, TIENEN QUE—!"
+    },
+    {
+      "wave": 6,
+      "at": 37.8,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡PERO ME VAS A DEJAR HABLAR, HIJO DE PUTA!"
+    },
+    {
+      "wave": 6,
+      "at": 39.2,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "¡JAJAJAJA! ¡POR FIN ENCONTRAMOS UNO QUE TE HACE CALLAR!"
+    },
+    {
+      "wave": 6,
+      "at": 40.6,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "¡POR FIN!"
+    },
+    {
+      "wave": 6,
+      "at": 42,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡Y VOS CERRÁ EL ORTO TAMBIÉN, DIENTUDO!"
+    },
+    {
+      "wave": 6,
+      "at": 43.4,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡DEJAME TERMINAR, LA CONCHA DE TU MADRE!"
+    },
+    {
+      "wave": 6,
+      "at": 44.8,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "¡MIRÁ, PAPAFRITA! ¡POR FIN TU BOCA SIRVE PARA ALGO!"
+    },
+    {
+      "wave": 6,
+      "at": 46.2,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡NEGRO, PEGÁLE ANTES DE QUE SE LEVANTE!"
+    },
+    {
+      "wave": 6,
+      "at": 47.6,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡AHORA, AHORA! ¡APROVECHEN QUE ESTÁ EN EL SUELO!"
+    },
+    {
+      "wave": 6,
+      "at": 49,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡NO VEO UNA MIERDA CON TUS ATAQUES!"
+    },
+    {
+      "wave": 6,
+      "at": 50.4,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡BUENO, NEGRO, PEGÁLE IGUAL!"
+    },
+    {
+      "wave": 6,
+      "at": 51.8,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡PAPAFRITA, TUS ONDAS TAPAN TODO!"
+    },
+    {
+      "wave": 6,
+      "at": 53.2,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡YA SÉ, PERO LE ESTAMOS GANANDO!"
+    },
+    {
+      "wave": 6,
+      "at": 54.6,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¡Ya está por caer!"
+    },
+    {
+      "wave": 6,
+      "at": 56,
+      "speaker": "papafrita",
+      "expression": "angry",
+      "text": "¡¿SABÉS QUÉ?! ¡ME TENÉS LOS HUEVOS LLENOS!"
+    },
+    {
+      "wave": 6,
+      "at": 57.4,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "¡AL FIN USÁS LA BOCA PARA ALGO ÚTIL!"
+    },
+    {
+      "wave": 6,
+      "at": 58.8,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¡PERO SI TE ESTOY FELICITANDO!"
     }
   ]
 }

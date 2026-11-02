@@ -1,0 +1,102 @@
+{
+  "id": "act-06-wave-2-end",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "wide": [
+        600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "¿Vieron? Si prestan atención es fácil."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡CASI ME MATA!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Y bueno, Negro, yo te avisé."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Eso sí, te avisó."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Vos de qué lado estás, paraguayo?"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Del lado del que escucha, Negro."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, Einstein del cemento, sigamos."
+        }
+      ]
+    }
+  ]
+}

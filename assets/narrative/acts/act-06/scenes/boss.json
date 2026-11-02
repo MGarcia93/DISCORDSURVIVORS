@@ -61,6 +61,24 @@
   },
   "steps": [
     {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Ahí está."
+        }
+      ]
+    },
+    {
       "type": "camera",
       "to": "boss",
       "zoom": 1.1,

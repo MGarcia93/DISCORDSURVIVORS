@@ -1,0 +1,102 @@
+{
+  "id": "act-06-wave-5-end",
+  "stage": {
+    "background": "monster-hunter",
+    "points": {
+      "left": [
+        400,
+        470
+      ],
+      "mid-left": [
+        470,
+        540
+      ],
+      "mid-right": [
+        610,
+        540
+      ],
+      "right": [
+        690,
+        470
+      ],
+      "papafrita": [
+        830,
+        470
+      ],
+      "wide": [
+        600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "left"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "mid-left"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "mid-right"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "right"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Listo. ¿Ahora sí podemos ir por el Rathalos?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Sí, tenemos todo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Seguro?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Sí, Negro."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿No te falta ninguna piedra, planta o gallina?"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "No."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Porque te juro que—"
+        }
+      ]
+    }
+  ]
+}

@@ -67,57 +67,9 @@ Maxi ya le abrió un portal a Papafrita y le escribió repetidas veces; Papafrit
 
 *El Administrador desaparece. Los errores del escenario comienzan a corregirse y aparece Maxi, el programador.*
 
-**MAXI:** Bueno, ¿qué les pareció?
-
-**NEGRO:** ¿Vos hiciste todo esto, hijo de puta?
-
-**MAXI:** Y sí, boludo. Nunca se ponen de acuerdo para jugar a nada.
-
-**SOLAGO:** ¡¿Y PARA ESO NOS HICISTE CAGAR A PALOS CINCO MUNDOS?!
-
-**MAXI:** Bueno, pero jugaron.
-
-**PAPASITO:** Y sí, estuvo bueno al final.
-
-**NEGRO:** ¿QUÉ ESTUVO BUENO, PARAGUAYO? ¡CASI NOS MATAN!
-
-**PAPASITO:** Pero terminamos, ¿o no?
-
-**MAXI:** ¿Viste? Por lo menos uno no se queja.
-
-**NEGRO:** Ah, bueno. Chúpense una pija los dos.
-
-*Los personajes regresan al Discord restaurado.*
-
-**SOLAGO:** Bueno, ¿ahora qué jugamos?
-
-**NEGRO:** ¿Un LoL?
-
-**SOLAGO:** ¡NO, NEGRO! ¡LA CONCHA DE TU MADRE!
-
-**PAPASITO:** Podemos jugar Diablo otra vez.
-
-**NEGRO:** Vos querés jugar con Tomi, paraguayo.
-
-**PAPASITO:** ¡No empieces, Negro!
-
-**NEGRO:** JAJAJAJA.
-
-**WARRIOR:** Ura, ¿y un Conan?
-
-**NEGRO:** Che, ¿y si jugamos al Buscaminas?
-
-**SOLAGO:** ¿QUÉ?
-
-**NEGRO:** Un Buscaminas competitivo, boludo. El que pierde desinstala Discord.
-
-**SOLAGO:** ¡NEGRO, DECÍ ALGO EN SERIO!
-
-**NEGRO:** Bueno, juguemos al LoL.
-
-**SOLAGO:** ¡PERO LA RE CONCHA DE TU MADRE!
-
-**MAXI:** Bueno, mañana hago otro juego.
+*El cierre del acto 5 ya juega esta conversación: qué les pareció el juego,
+qué quieren jugar y la promesa de Maxi de programar otro. El epílogo arranca
+después, cuando Maxi empieza a cerrar los mundos.*
 
 *Maxi comienza a cerrar los mundos utilizados durante la partida.*
 
