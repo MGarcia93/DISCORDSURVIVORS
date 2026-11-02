@@ -228,6 +228,15 @@ export function createPresenter(root, catalog, onError) {
           ctx.fillRect(x - 1, y - 26, 2, 8); ctx.fillRect(x - 1, y + 18, 2, 8);
         }
         ctx.restore();
+        if (player.fade > 0) {
+          // A cut to black covers the whole viewport, camera or not.
+          ctx.save();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.globalAlpha = Math.min(1, player.fade);
+          ctx.fillStyle = '#07060b';
+          ctx.fillRect(0, 0, 1144, 748);
+          ctx.restore();
+        }
       }
       const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, player?.notice, player?.flash, banter]);
       if (signature !== previous) {

@@ -1,7 +1,7 @@
 // Pure scene execution. No DOM, combat imports, storage, or wall-clock timers.
 const animations = new Set(['idle', 'walk', 'point', 'celebrate', 'kneel']);
 const stageFields = new Set(['points', 'actors', 'props', 'background', 'size']);
-const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'flash']);
+const timedTypes = new Set(['move', 'camera', 'animate', 'wait', 'flash', 'fade']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
 // The viewport stays fixed; a scene may provide a larger world behind it.
 // Clamp the visible frame to that world, including during zoom interpolation.
@@ -110,6 +110,9 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
         case 'camera':
           requireValue(finite(step.zoom ?? 1) && (step.zoom ?? 1) >= 1 && (step.zoom ?? 1) <= 4, 'Invalid camera zoom');
           resources.push('camera'); break;
+        case 'fade':
+          requireValue(step.to === undefined || ['black', 'clear'].includes(step.to), 'Invalid fade target');
+          break;
         case 'exit':
           requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
           resources.push(`actor:${step.actor}`); break;
@@ -174,6 +177,7 @@ export class ScenePlayer {
     this.time = 0;
     this.dialogue = null;
     this.splash = null;
+    this.fade = 0;
     const [width, height] = this.scene.stage?.size ?? [STAGE_WIDTH, STAGE_HEIGHT];
     this.stageSize = { width, height };
     this.camera = { x: 572, y: 374, zoom: 1 };
@@ -302,6 +306,12 @@ export class ScenePlayer {
       this.actors[step.actor].hidden = true;
       return { tick: () => true, skip() {} };
     }
+    if (step.type === 'fade') {
+      // A real cut: the stage goes black (or comes back) over its duration.
+      const to = step.to === 'clear' ? 0 : 1;
+      const from = this.fade ?? 0;
+      return this._timed(step.duration, t => { this.fade = from + (to - from) * t; });
+    }
     if (step.type === 'flash') {
       const [x, y] = points[step.at] ?? [0, 0];
       this.flash = step.actor ? { actor: step.actor } : { x, y };
@@ -371,7 +381,7 @@ export class ScenePlayer {
 
   _finish(status) {
     this.status = status;
-    this.dialogue = null; this.splash = null; this.notice = null; this.flash = null;
+    this.dialogue = null; this.splash = null; this.notice = null; this.flash = null; this.fade = 0;
     this.camera = { x: 572, y: 374, zoom: 1 };
     for (const actor of Object.values(this.actors)) actor.animation = 'idle';
     if (['completed', 'skipped'].includes(status)) {

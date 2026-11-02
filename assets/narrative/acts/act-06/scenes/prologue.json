@@ -431,12 +431,9 @@
       ]
     },
     {
-      "type": "notice",
-      "title": "CORTE",
-      "lines": [
-        "CORTE A NEGRO"
-      ],
-      "duration": 1.6
+      "type": "fade",
+      "to": "black",
+      "duration": 0.8
     }
   ]
 }
