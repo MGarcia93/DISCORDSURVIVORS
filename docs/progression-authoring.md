@@ -139,6 +139,18 @@ Second batch, assigned to later levels with their own probability:
 | `panicExtend` | Kills during panic extend it, up to a 12-second ceiling. |
 | `senaBurst` | The bill landing also detonates a burst around Papazito. |
 
+Jhony's six signatures (each one adds or reshapes an attack, and its evolution
+only opens after the base was taken):
+
+| Effect | What it does |
+|---|---|
+| `tiltWave` | A radial wave when Furia triggers; the second rank also leaves the circle damaging the floor. |
+| `shout` | A periodic shout that damages what he faces; the second rank makes it 360°. |
+| `bottleShards` | Glass shards fly past the botellazo target; the second rank sends them in every direction. |
+| `extraBottle` | A bottle is thrown every four botellazos and bursts on impact; the second rank throws two. |
+| `stomp` | Periodically finishes a weakened enemy in reach; the second rank adds an impact wave. |
+| `buildCombo` | The ultimate volley comes faster; the second rank adds a bounce to its bottles. |
+
 ## When an upgrade is offered
 
 An upgrade entry may declare two extra fields:
@@ -157,8 +169,8 @@ exist per character and level, otherwise they would compete for the single own
 slot. The current milestones are: Negro `remote-bounce` (3) and
 `waifu-pierce` (4); Solago `bite-arc` (3) and `patrona-final` (4); Warrior
 `deeper-confusion` (3) and `extra-shroom` (4); Papazito `brick-pierce` (3) and
-`sena-burst` (4). Every other entry keeps a probability, so no run sees
-everything.
+`sena-burst` (4); Jhony `tilt-circle` (3). Every other entry keeps a
+probability, so no run sees everything.
 
 Still unimplemented: nothing from the approved path list; new ideas need their
 own reusable effect before they can be authored.

@@ -36,15 +36,17 @@ export default {
     {
       wave: 4,
       perMinute: 90,
-      // The spike arrives as a slope and ends as a siege: half the wave is
-      // skeletons and shamans, then the burning elites take over the last
-      // third. Measured on Negro: 88% campaigns instead of 46% with the wall.
+      // The spike arrives as a slope that ends at the wave's own maximum: half
+      // the wave never has an elite, then they climb to the declared 30%.
+      // Every kind is on the table from the first second; the ramp only makes
+      // the elites more likely as the clock runs.
       ramp: [
-        { until: 0.5, mix: { skeleton: 0.6, shaman: 0.4 } },
+        { until: 0.5, mix: { skeleton: 0.6, shaman: 0.32, burningElite: 0.08 } },
         { until: 0.7, mix: { skeleton: 0.45, shaman: 0.35, burningElite: 0.2 } },
         { until: 1, mix: { burningElite: 0.8, skeleton: 0.1, shaman: 0.1 } },
       ],
-      mix: { burningElite: 0.3, skeleton: 0.35, shaman: 0.35 },
+      // The wave's own total: the ramp only decides when they arrive.
+      mix: { burningElite: 0.32, skeleton: 0.42, shaman: 0.26 },
       life: { burningElite: 174, skeleton: 52, shaman: 44 },
     },
     // Lord Zir arrives once at the start of this wave; his court of bats keeps

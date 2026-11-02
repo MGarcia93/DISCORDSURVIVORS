@@ -24,6 +24,30 @@ function validateWaves(act) {
     if (config.perMinute > 0) {
       if (kinds.length === 0) throw Error(`${id}: wave ${wave} needs at least one enemy`);
       const share = kinds.reduce((sum, kind) => sum + config.mix[kind], 0);
+      // A ramp distributes the wave's own mix over time: the stages, weighted by
+      // how long each lasts, must average exactly the declared percentages. The
+      // wave keeps saying what the wave spawns; the ramp only decides when.
+      if (config.ramp !== undefined) {
+        if (!Array.isArray(config.ramp) || !config.ramp.length) throw Error(`${id}: wave ${wave} ramp must be a nonempty array`);
+        let previous = 0;
+        const average = {};
+        for (const stage of config.ramp) {
+          if (!(stage.until > previous && stage.until <= 1)) throw Error(`${id}: wave ${wave} ramp stages must close in order`);
+          const length = stage.until - previous;
+          previous = stage.until;
+          const total = Object.values(stage.mix ?? {}).reduce((sum, weight) => sum + weight, 0);
+          if (Math.abs(total - 1) > 1e-9) throw Error(`${id}: wave ${wave} ramp stage must share one roll`);
+          for (const [kind, weight] of Object.entries(stage.mix ?? {})) {
+            if (!(kind in config.mix)) throw Error(`${id}: wave ${wave} ramp stage names ${kind}, not in the wave mix`);
+            average[kind] = (average[kind] ?? 0) + weight * length;
+          }
+        }
+        for (const kind of kinds) {
+          if (Math.abs((average[kind] ?? 0) - config.mix[kind]) > 1e-6) {
+            throw Error(`${id}: wave ${wave} ramp must average the declared ${kind} share`);
+          }
+        }
+      }
       if (Math.abs(share - 1) > 1e-9) throw Error(`${id}: wave ${wave} mix must share one roll`);
     }
     for (const kind of kinds) {
