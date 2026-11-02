@@ -41,7 +41,7 @@ test('the resistant zombie is a slow wall: more life, mitigation and punch, less
   assert.equal(enemyContactDamage('brute', 3), 42);
   assert.equal(enemyAttackInterval('brute', 3), 1);
   assert.equal(enemyAttackRange('brute', 3), 0);
-  assert.equal(enemySpeed('brute', 3), 490 * 5 / 100 * WORLD_SCALE);
+  assert.equal(enemySpeed('brute', 3), 430 * 5 / 100 * WORLD_SCALE);
   assert.equal(enemyBounty('brute'), 5);
 });
 
@@ -49,8 +49,9 @@ test('enemy sheets are percentages over the base stats, with life as one number'
   assert.equal(enemyHp('zombie', 1), 46);
   assert.equal(enemyHp('zombie', 10), 46, 'life is one value: the wave never re-authors it');
   assert.equal(enemyHp('runner', 2), 38);
-  assert.equal(enemySpeed('zombie', 5), 60 * WORLD_SCALE);
-  assert.equal(enemySpeed('runner', 5), 108 * WORLD_SCALE);
+  // Speed is one number like life: the wave never re-authors it.
+  assert.equal(enemySpeed('zombie', 5), enemySpeed('zombie', 1));
+  assert.equal(enemySpeed('runner', 5), enemySpeed('runner', 1));
   assert.equal(enemyHp('alarmZombie', 4), 2200);
   assert.equal(ENEMY_KINDS.zombie.radius, 17);
   assert.equal(ENEMY_KINDS.runner.radius, 13);
@@ -72,7 +73,7 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   assert.equal(zombie.kind, 'zombie');
   assert.equal(zombie.hp, enemyHp('zombie', 1));
   assert.equal(zombie.radius, 17 * 1.1);
-  assert.equal(zombie.speed, 45 * 1.1);
+  assert.equal(zombie.speed, enemySpeed('zombie', 1) + 1.1);
 
   const runnerRun = createRun(() => 0.1);
   runnerRun.wave = 2;
@@ -87,7 +88,7 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   assert.equal(runner.kind, 'runner');
   assert.equal(runner.hp, enemyHp('runner', 2));
   assert.equal(runner.radius, 13 * 1.1);
-  assert.equal(runner.speed, 97 * 1.1);
+  assert.equal(runner.speed, enemySpeed('runner', 2) + 1.1);
 });
 
 test('an act without multipliers takes every stat from the sheet, untouched', () => {
@@ -171,7 +172,7 @@ test('the Rift minions keep the same six-stat sheet, each with its own numbers',
   assert.equal(enemyContactDamage('meleeMinion'), 16);
   assert.equal(enemyAttackRange('meleeMinion'), 0, 'the soldier has to touch');
   assert.equal(enemyAttackInterval('meleeMinion'), 100 / 154);
-  assert.equal(enemySpeed('meleeMinion', 1), 1010 * 5 / 100 * WORLD_SCALE);
+  assert.equal(enemySpeed('meleeMinion', 1), 1311 * 5 / 100 * WORLD_SCALE);
   assert.equal(ENEMY_KINDS.meleeMinion.radius, 13);
   assert.equal(enemyBounty('meleeMinion'), 1);
 

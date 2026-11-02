@@ -12,7 +12,7 @@ const barbarian = {
     attack: 240,                         // 240% -> 24 contact damage
     attackSpeed: 130,                    // 130% -> one swing every 0.77 s
     attackDistance: 0,
-    moveSpeed: wave => 900 + 60 * wave,
+    moveSpeed: 1248,   // +30%: a raider that never arrives is scenery
   },
   radius: 14,
   bounty: 2,

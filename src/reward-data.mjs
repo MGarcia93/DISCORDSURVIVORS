@@ -13,12 +13,12 @@ export const BALANCE = {
   // Wave length, density and the boss belong to the act (src/campaign/). This
   // object only carries economy plus an optional length override.
   xp: {
-    // The curve used to hand out twelve levels inside act one, before the first
-    // boss: an exponent of 0.5 makes the early levels almost free while the act
-    // already pays four hundred experience. A flatter exponent spreads the same
-    // campaign over a shorter, more even ladder (act one ends at level 8, the
-    // campaign at 23) so the first world is not where the build is won.
-    factor: 30, exponent: 0.4, multiplier: 1,
+    // The first two waves of the campaign pay two levels each and everything
+    // after them settles at one: the cost curve grows faster than a wave's own
+    // haul, so the early waves are the generous ones instead of the middle.
+    // Later acts pay more experience per kill (`perAct`), which is what lets the
+    // same steep curve keep paying a level a wave up to the fifth world.
+    factor: 9, exponent: 1.1, perAct: 0.6, multiplier: 1,
     // An ordinary enemy pays one point; an elite pays like three, and the
     // mini-boss like a milestone. The act boss closes the run, so it pays none.
     rewards: {

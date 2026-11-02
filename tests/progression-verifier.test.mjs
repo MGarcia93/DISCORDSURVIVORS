@@ -69,14 +69,14 @@ test('S2: a legacy purchase after an item keeps both sources', () => {
   const run = createRun(() => 0, 'negro', { catalog: catalogWith([statItem('atk10', 'attack', 'percent', 10, 2)]) });
   endWave(run); run.coins = 500;
   assert.equal(buyItem(run, 'atk10'), true);
-  assert.ok(Math.abs(run.player.damage - 26.4) < 1e-9);
+  assert.ok(Math.abs(run.player.damage - 23.76) < 1e-9);
   assert.equal(chooseUpgrade(run, 'damage'), true);
   assert.equal(run.coins, 480);
-  assert.ok(Math.abs(run.player.damage - 34.32) < 1e-9, `${run.player.damage}`);
+  assert.ok(Math.abs(run.player.damage - 30.888) < 1e-9, `${run.player.damage}`);
   assert.equal(startNextWave(run), true);
   endWave(run);
   assert.equal(buyItem(run, 'atk10'), true);
-  assert.ok(Math.abs(run.player.damage - 37.44) < 1e-9, `${run.player.damage}`);
+  assert.ok(Math.abs(run.player.damage - 33.696) < 1e-9, `${run.player.damage}`);
 });
 
 test('S4: exact XP examples; income and sales never award XP', () => {

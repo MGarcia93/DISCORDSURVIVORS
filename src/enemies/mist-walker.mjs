@@ -11,7 +11,7 @@ const mistWalker = {
     attack: 130,                         // 130% -> 13 contact damage
     attackSpeed: 130,                   // 130% -> one swing every 0.77 s
     attackDistance: 0,
-    moveSpeed: wave => 980 + 90 * wave, // it runs: the pack is the pressure
+    moveSpeed: 1070, // it runs: the pack is the pressure
   },
   radius: 12,
   bounty: 2,

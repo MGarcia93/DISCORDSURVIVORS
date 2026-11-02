@@ -11,7 +11,7 @@ const mernos = {
     attack: 310,                        // 31 damage
     attackSpeed: 120,                   // 120% -> one hit every 0.83 s
     attackDistance: 0,
-    moveSpeed: wave => 1100 + 60 * wave,
+    moveSpeed: 1160,
   },
   radius: 13,
   bounty: 2,

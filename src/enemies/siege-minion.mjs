@@ -11,7 +11,7 @@ const siegeMinion = {
     attack: 230,                        // 230% -> 23 damage per shell
     attackSpeed: 60,                    // 60% -> one shell every 1.67 s
     attackDistance: 180,                // 180% -> 198 px of reach
-    moveSpeed: wave => 640 + 25 * wave,
+    moveSpeed: 665,
   },
   radius: 18,
   bounty: 3,

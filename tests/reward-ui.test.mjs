@@ -84,7 +84,7 @@ test('shop renders exactly four stored items and a separate healing service with
 
 test('rendered level controls advance consecutive choices and then show the shop', () => {
   const run = createRun(() => 0.5);
-  awardXP(run, 70); endWave(run);
+  awardXP(run, 29); endWave(run);
   const coins = run.coins;
   render(run);
   assert.equal(ids('level').length, 4);
@@ -103,7 +103,7 @@ test('rendered level controls advance consecutive choices and then show the shop
 test('rendered empty-choice continuation reaches an empty shop without blocking', () => {
   const catalog = createCatalog({ items: [], upgrades: [] });
   const run = createRun(() => 0.5, 'negro', { catalog });
-  awardXP(run, 70); endWave(run); render(run);
+  awardXP(run, 29); endWave(run); render(run);
   assert.match(box.innerHTML, /data-action="skip-level"/);
   assert.equal(activate(run, { action: 'skip-level' }), true);
   assert.equal(activate(run, { action: 'skip-level' }), true);
@@ -193,5 +193,5 @@ test('valid catalog IDs matching object properties render and acquire their firs
   assert.match(box.innerHTML, /RANGO 1\/1/);
   assert.equal(activate(run, { level: ids('level')[0] }), true);
   assert.equal(run.levelRanks.constructor, 1);
-  assert.equal(run.player.damage, 26.4);
+  assert.equal(run.player.damage, 23.76);
 });

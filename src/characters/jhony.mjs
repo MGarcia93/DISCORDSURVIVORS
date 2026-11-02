@@ -220,7 +220,7 @@ const jhony = {
     ...resolveEntityStats({
       life: 110,
       defense: 90,
-      attack: 800,
+      attack: 440,           // 44: just under a walker's 46, so one attack upgrade finishes it
       attackSpeed: 105,
       attackDistance: 85,
       moveSpeed: 3300,

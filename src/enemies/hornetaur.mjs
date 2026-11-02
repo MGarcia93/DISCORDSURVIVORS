@@ -12,7 +12,7 @@ const hornetaur = {
     attack: 220,                        // 22 damage
     attackSpeed: 70,                    // 70% -> one bite every 1.43 s
     attackDistance: 0,
-    moveSpeed: wave => 650 + 30 * wave,
+    moveSpeed: 680,
   },
   radius: 17,
   bounty: 4,

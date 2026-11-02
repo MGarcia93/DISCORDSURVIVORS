@@ -1,5 +1,5 @@
 import { enemyBounty } from '../enemies/index.mjs';
-import { nextLevelXPFor } from '../run-rewards.mjs';
+import { actXpMultiplier, nextLevelXPFor } from '../run-rewards.mjs';
 import { waveBudget as spawnBudgetFor, waveConfig } from '../waves.mjs';
 import { PLAYABLE_ACTS } from '../campaign/acts.mjs';
 
@@ -58,7 +58,8 @@ export function waveEntryBudget(act, wave, balance) {
     }
     for (const [kind, weight] of mix) {
       const kills = spawns * weight / share;
-      entry.xp += kills * (balance.xp.rewards?.[kind] ?? 0) * multiplier;
+      entry.xp += kills * (balance.xp.rewards?.[kind] ?? 0) * multiplier
+        * actXpMultiplier(balance, row.order ?? 1);
       entry.coins += kills * (balance.gold?.rewards?.[kind] ?? enemyBounty(kind));
     }
     entry.coins += balance.gold?.survival ?? 20;

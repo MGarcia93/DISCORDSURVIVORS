@@ -11,7 +11,7 @@ const mageMinion = {
     attack: 140,                        // 140% -> 14 damage per bolt
     attackSpeed: 100,                   // 100% -> one bolt per second
     attackDistance: 170,                // 170% of 100 units -> 187 px of reach
-    moveSpeed: wave => 760 + 40 * wave,
+    moveSpeed: 800,
   },
   radius: 12,
   bounty: 2,

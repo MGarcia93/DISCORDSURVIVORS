@@ -12,7 +12,7 @@ const kestodon = {
     attack: 410,                        // 41 damage
     attackSpeed: 90,                    // 90% -> one gore every 1.11 s
     attackDistance: 0,
-    moveSpeed: wave => 800 + 40 * wave,
+    moveSpeed: 840,
   },
   radius: 20,
   bounty: 3,

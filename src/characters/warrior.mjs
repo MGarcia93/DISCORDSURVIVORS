@@ -43,8 +43,8 @@ const warrior = {
     ...resolveEntityStats({
       life: 90,              // 90 hp: frágil, sobrevive controlando
       defense: 100,          // defensa estándar: 10 puntos -> 50% de mitigación
-      attack: 120,           // 12 damage: ranged pays 20% less, the blast is the rest
-      attackSpeed: 75,       // 0.75 bombs/s: one deliberate bomb every 1.33s
+      attack: 108,           // 10.8 damage: ranged pays twice, the blast is the rest
+      attackSpeed: 60,       // 0.6 bombs/s: -20%, one deliberate bomb every 1.67s
       attackDistance: 300,   // 330px: about 15% farther than El Negro's 286px reach
       moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
     }),

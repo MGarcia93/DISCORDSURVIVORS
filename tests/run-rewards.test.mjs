@@ -89,7 +89,7 @@ test('shop purchases are blocked until all level choices are resolved', () => {
 test('empty eligible level pools explicitly advance without granting or spending anything', () => {
   const catalog = createCatalog({ items: [], upgrades: [] });
   const run = setup({ catalog });
-  awardXP(run, 70);
+  awardXP(run, 29);
   run.phase = 'shop';
   beginRewards(run);
   assert.deepEqual(run.levelChoices, []);

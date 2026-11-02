@@ -11,7 +11,7 @@ const runner = {
     attack: 110,                          // 110% -> 11 contact damage
     attackSpeed: 154,                     // 154% -> one swing every 0.65 s
     attackDistance: 0,                    // melee: contact, measured from the edge
-    moveSpeed: wave => 1760 + 80 * wave,  // 1760% + 80 pp per wave
+    moveSpeed: 1840,  // 1840% -> 92 scaled px/s
   },
   radius: 13,
   bounty: 2,

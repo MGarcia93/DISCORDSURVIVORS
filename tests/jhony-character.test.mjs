@@ -29,12 +29,12 @@ test('Jhony runs on the percentage core with the sheet from the character doc', 
   // context/personajes/Discord_Survivors_Jhony_El_Metalero_Tilteado.md §3:
   // Vida +10% -> 110, Defensa -10% -> 9 points (0.45 mitigation),
   // Distancia de ataque -15% -> 85, Atk/s +5% -> 1.05, movimiento normal
-  // -> 3300% of the cast's calibrated scale. Attack is tuned up to 800 (80 per
+  // -> 3300% of the cast's calibrated scale. Attack sits at 440 (44 per
   // botellazo) because the doc's "+15%" dies on the first wave; see the sheet's
   // comment and the balance table in odd/tasks/jhony-playable.md.
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.45);
-  assert.equal(p.damage, 80);
+  assert.equal(p.damage, 44);
   assert.equal(p.attackRange, 85 * UNIT_PX);
   assert.ok(Math.abs(p.shotInterval - 100 / 105) < 1e-9);
   assert.equal(p.speed, 165 * WORLD_SCALE);
@@ -50,7 +50,7 @@ test('the botellazo hits one enemy in reach, reads as glass and pushes', () => {
   const far = dummy(run, 400);
   run.shotIn = 0.001;
   step(run, 0.016);
-  assert.equal(near.hp, 200 - 80, 'sheet damage, one target');
+  assert.equal(near.hp, 200 - 44, 'sheet damage, one target');
   assert.equal(far.hp, 200, 'out of reach is out of reach');
   assert.ok(near.x > p.x + 40, 'the bottle shoves what it hits');
   assert.ok(run.effects.some(effect => effect.kind === 'glass'), 'the hit is drawn as the bottle, not a bite');
@@ -102,8 +102,8 @@ test('Furia trades defence for +40% damage and +25% attack speed', () => {
   const enemy = dummy(run, 40, 500);
   run.shotIn = 0.001;
   step(run, 0.016);
-  assert.equal(enemy.hp, 500 - 80 * 1.4, 'the sheet damage never mutates; the multiplier applies on the hit');
-  assert.equal(p.damage, 80);
+  assert.equal(enemy.hp, 500 - 44 * 1.4, 'the sheet damage never mutates; the multiplier applies on the hit');
+  assert.equal(p.damage, 44);
 });
 
 test('«Un traguito más» quickens the botellazos and amplifies the Tilt gain', () => {
@@ -285,7 +285,7 @@ test('«2.000 HORAS AL PEDO» finishes weak enemies, and the evolution shakes th
   p.rewardBonuses = { stomp: 1 };
   p.stompIn = 0;
   p.characterDef.onTick(run, p, 0.05, ctx);
-  assert.equal(weak.hp, 20 - 80 * 1.8, 'the stomp lands on the weak one');
+  assert.equal(weak.hp, 20 - 44 * 1.8, 'the stomp lands on the weak one');
   assert.equal(healthy.hp, 200, 'and never on a healthy body');
 
   const evolved = solo();

@@ -11,7 +11,7 @@ const meleeMinion = {
     attack: 160,                        // 160% -> 16 contact damage
     attackSpeed: 154,                   // 154% -> one swing every 0.65 s
     attackDistance: 0,                  // melee: contact, measured from the edge
-    moveSpeed: wave => 940 + 70 * wave,
+    moveSpeed: 1311,   // +30%: it has to reach the body to matter
   },
   radius: 13,
   bounty: 1,

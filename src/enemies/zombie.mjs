@@ -10,7 +10,9 @@ const zombie = {
     attack: 120,                        // 120% -> 12 contact damage
     attackSpeed: 154,                   // 154% -> one swing every 0.65 s
     attackDistance: 0,                  // melee: contact, measured from the edge
-    moveSpeed: wave => 800 + 80 * wave, // 800% + 80 pp per wave
+    // The baseline walker closes the gap: +30% over the old pace, still far
+    // slower than the runner, so a ranged body has less time to pick it off.
+    moveSpeed: 1144,
   },
   radius: 17,
   bounty: 2,

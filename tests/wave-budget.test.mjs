@@ -15,11 +15,11 @@ test('the first wave starts with the character sheet and nothing else', () => {
 test('the budget is the act itself: density and rewards of the waves before it', () => {
   const entry = waveEntryBudget(act1, 3, BALANCE);
   // Wave 1 fields 48 walkers and wave 2 another 60, one XP each at the real
-  // pacing. 108 XP lands on level 3: the curve asks 30 and 40 for the first two.
+  // pacing. 108 XP lands on level 5: the curve asks 9, 20, 31 and 42.
   assert.equal(entry.duration, 60);
   assert.equal(entry.xp, 108);
-  assert.equal(entry.level, 3);
-  assert.equal(entry.choices, 2);
+  assert.equal(entry.level, 5);
+  assert.equal(entry.choices, 4);
   // One coin per walker plus the survival payout of the two cleared waves.
   assert.equal(entry.coins, 108 + 2 * BALANCE.gold.survival);
 });
@@ -58,8 +58,8 @@ test('a mini-boss pays into the waves that come after its own', () => {
 
 test('the level curve is the engine curve', () => {
   assert.equal(levelForXP(BALANCE, 0), 1);
-  assert.equal(levelForXP(BALANCE, 29), 1);
-  assert.equal(levelForXP(BALANCE, 30), 2);
-  assert.equal(levelForXP(BALANCE, 69), 2);
-  assert.equal(levelForXP(BALANCE, 70), 3);
+  assert.equal(levelForXP(BALANCE, 8), 1);
+  assert.equal(levelForXP(BALANCE, 9), 2);
+  assert.equal(levelForXP(BALANCE, 28), 2);
+  assert.equal(levelForXP(BALANCE, 29), 3);
 });

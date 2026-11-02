@@ -46,8 +46,10 @@ test('?waves forces only the wave length, in either mode', () => {
 test('the multiplier scales what a kill pays and leaves the curve alone', () => {
   const fast = createRun(() => 0.5, 'negro', { balance: playtestBalance() });
   assert.equal(awardXP(fast, 1), true);
-  assert.equal(fast.xp, 10, 'one ordinary kill pays ten in the test mode');
-  assert.equal(fast.level, 1, 'and the curve still costs what it costs');
+  // Ten experience is one kill in the test mode, and the first level costs 9:
+  // the multiplier scales the payout, the curve stays the curve.
+  assert.equal(fast.xp, 1, 'one ordinary kill pays ten in the test mode');
+  assert.equal(fast.level, 2, 'the curve still costs what it costs');
   // A fractional award is still rejected after scaling.
   const real = createRun(() => 0.5);
   const before = JSON.stringify(real);

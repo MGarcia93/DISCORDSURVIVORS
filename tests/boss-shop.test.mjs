@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyUpgradeRank, buyItem } from '../src/run-rewards.mjs';
+import { applyUpgradeRank, beginRewards, buyItem, chooseLevelReward, skipEmptyChoice } from '../src/run-rewards.mjs';
 import { createRun, startNextWave, step } from '../src/engine.mjs';
 import { PLAYABLE_ACTS } from '../src/campaign/acts.mjs';
 import { createNextWorldRun } from '../src/game/campaign-run.mjs';
@@ -18,7 +18,13 @@ function atBoss(act) {
       step(run, 0.016);
     }
     assert.equal(run.phase, 'shop', `wave ${run.wave} closes`);
-    startNextWave(run);
+    // A wave can hand out levels: the shop refuses to advance until they are
+    // spent, and this helper only cares about the boss.
+    while (run.pendingLevels.length) {
+      beginRewards(run);
+      if (!chooseLevelReward(run, run.levelChoices[0]?.id)) skipEmptyChoice(run);
+    }
+    assert.equal(startNextWave(run), true, `wave ${run.wave} advances`);
   }
   return run;
 }

@@ -16,7 +16,7 @@ const jagras = {
     attack: 370,                        // 37 damage
     attackSpeed: 140,                   // 140% -> one bite every 0.71 s
     attackDistance: 0,
-    moveSpeed: wave => 780 + 60 * wave,
+    moveSpeed: 840,
   },
   radius: 18,
   bounty: 2,

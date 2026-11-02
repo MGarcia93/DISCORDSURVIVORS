@@ -11,7 +11,7 @@ const vespoid = {
     attack: 260,                        // 26 damage
     attackSpeed: 150,                   // 150% -> one sting every 0.67 s
     attackDistance: 0,
-    moveSpeed: wave => 1050 + 70 * wave,
+    moveSpeed: 1120,
   },
   radius: 12,
   bounty: 2,

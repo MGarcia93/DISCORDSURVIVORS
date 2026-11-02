@@ -32,8 +32,16 @@ export function nextLevelXPFor(balance, level) {
   return Math.ceil(balance.xp.factor * level ** balance.xp.exponent);
 }
 
+// A later world pays more experience per kill: the cost curve is steeper than a
+// single act's haul, so without this the campaign would stop levelling by act
+// three. Act one stays the reference (multiplier 1).
+export function actXpMultiplier(balance, order = 1) {
+  return 1 + (balance.xp?.perAct ?? 0) * Math.max(0, order - 1);
+}
+
 export function awardXP(run, amount) {
-  const scaled = amount * (run.rewardBalance.xp.multiplier ?? 1);
+  const scaled = amount * (run.rewardBalance.xp.multiplier ?? 1)
+    * actXpMultiplier(run.rewardBalance, run.act?.order ?? 1);
   if (run.phase !== 'playing' || !Number.isSafeInteger(scaled) || scaled < 0) return false;
   let xp = run.xp + scaled, level = run.level;
   if (!Number.isSafeInteger(xp)) return false;

@@ -11,7 +11,7 @@ const skeleton = {
     attack: 200,                          // 200% -> 20 contact damage
     attackSpeed: 140,                    // 140% -> one swing every 0.71 s
     attackDistance: 0,
-    moveSpeed: 1250,                     // 62.5 scaled px/s: light on its feet
+    moveSpeed: 1625,                     // 81.25 scaled px/s: +30%, light on its feet
   },
   radius: 13,
   bounty: 2,

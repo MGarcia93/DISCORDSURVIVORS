@@ -43,8 +43,8 @@ test('all six common stats and each character have initial data-authored options
 });
 
 test('XP configuration matches approved initial pacing and remains separate from gold', () => {
-  assert.equal(BALANCE.xp.factor, 30);
-  assert.equal(BALANCE.xp.exponent, 0.4);
+  assert.equal(BALANCE.xp.factor, 9);
+  assert.equal(BALANCE.xp.exponent, 1.1);
   assert.ok(BALANCE.xp.rewards.zombie >= 1);
   assert.ok(BALANCE.xp.rewards.runner >= 1);
   assert.equal(BALANCE.shopSize, 4);

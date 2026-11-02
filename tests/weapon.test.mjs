@@ -32,7 +32,7 @@ test('enemy defense mitigates the damage enemies receive, the same rule for ever
 
   for (let i = 0; i < 24; i++) step(run, 0.05, {}); // ~1.2s: enough for two shots (~0.45s apart) to land
 
-  assert.ok(Math.abs(run.enemies[0].hp - (1000 - 2 * 24 * 0.8)) < 1e-6);
+  assert.ok(Math.abs(run.enemies[0].hp - (1000 - 2 * 21.6 * 0.8)) < 1e-6);
 });
 
 test('EL NEGRO canonically holds a quarter-of-screen attack range from his sheet', () => {
@@ -60,7 +60,7 @@ test('Papazito ladrillazos carry the brick device for their own projectile art',
   step(run, 0.05, {});
 
   assert.equal(run.projectiles[0]?.device, 'brick');
-  assert.equal(run.projectiles[0]?.damage, 27.2, 'one heavy brick, no multiplier');
+  assert.equal(run.projectiles[0]?.damage, 24.5, 'one heavy brick, no multiplier');
 });
 
 test('a Warrior mushroom bomb deals its weighted damage before the area splash', () => {
