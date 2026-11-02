@@ -22,6 +22,7 @@ import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, na
 import { audio } from './audio/index.mjs';
 import { musicCue, SFX, UI } from './audio/mix.mjs';
 import { warpToWorld } from './game/world-transition.mjs';
+import { waveConfig } from './waves.mjs';
 
 // Refresh availability after a world victory. Encounter cinematics own unlock
 // announcements; an unrelated boss victory must not repeat a legacy reward.
@@ -132,6 +133,13 @@ function frame(timestamp) {
       if (!sceneWasBlocking && !narrative.blocked) step(state.run, dt, input);
       narrative.observe();
     }
+    // A wave may declare its own noise: the depot fight keeps the car alarm
+    // ringing every couple of seconds while it lasts.
+    const alarm = waveConfig(state.run.act, state.run.wave)?.alarm;
+    if (alarm && state.run.phase === 'playing' && !state.paused && !narrative.blocked) {
+      state.alarmIn = (state.alarmIn ?? alarm) - dt;
+      if (state.alarmIn <= 0) { audio.playSound(SFX.alarm, 'alarm'); state.alarmIn = alarm; }
+    } else state.alarmIn = null;
     if (narrative.blocked) state.keys.clear();
     draw();
     state.hudElapsed += dt;

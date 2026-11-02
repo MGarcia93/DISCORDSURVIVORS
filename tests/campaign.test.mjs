@@ -12,11 +12,12 @@ import { validateAct, validateCampaign } from '../src/campaign/validate.mjs';
 const planned = () => ({ id: 'act-99', order: 99, title: 'Probe', status: 'planned', world: 'rift' });
 const playable = () => structuredClone(act01);
 
-test('the campaign registers six worlds in order and all six are playable', () => {
-  assert.equal(ACTS.length, 6);
-  assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5, 6]);
-  assert.equal(new Set(ACTS.map(act => act.id)).size, 6);
-  assert.equal(PLAYABLE_ACTS.length, 6);
+test('the campaign registers six playable worlds in order and the next slot', () => {
+  assert.equal(ACTS.length, 7);
+  assert.deepEqual(ACTS.map(act => act.order), [1, 2, 3, 4, 5, 6, 7]);
+  assert.equal(new Set(ACTS.map(act => act.id)).size, 7);
+  assert.equal(PLAYABLE_ACTS.length, 7);
+  assert.equal(getAct('act-07').status, 'playable', 'the Jhony epilogue closes the campaign');
   assert.equal(DEFAULT_ACT.id, 'act-01');
   assert.equal(getAct('act-03').status, 'playable');
   assert.equal(getAct('act-04').status, 'playable');

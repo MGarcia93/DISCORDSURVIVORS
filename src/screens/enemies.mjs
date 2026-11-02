@@ -43,6 +43,12 @@ function resetArena() {
 }
 
 function spawnAtEdge(run, kind) {
+  // A body that never walks would sit off-screen forever, so the sandbox puts it
+  // where it can be looked at: the truck is inspected, not chased.
+  if (enemySpeed(kind, run.wave) === 0) {
+    run.enemies.push(createEnemy(run, kind, WIDTH * 0.72, HEIGHT * 0.5));
+    return;
+  }
   const edge = Math.floor(Math.random() * 4);
   run.enemies.push(createEnemy(run, kind,
     edge === 0 ? -20 * WORLD_SCALE : edge === 1 ? WIDTH + 20 * WORLD_SCALE : Math.random() * WIDTH,
