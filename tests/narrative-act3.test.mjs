@@ -219,7 +219,9 @@ test('the search banter is visible in order during the first two short preview w
     const run = { phase: 'playing', wave, time: 0 };
     director.attach(run);
     let previous;
-    for (let time = 0; time < 15; time += 0.1) {
+    // The mute exchange runs to ~14 s and the estática gag follows it, so the
+    // preview window has to reach the end of wave two's banter, not 15 s.
+    for (let time = 0; time < 28; time += 0.1) {
       run.time = time;
       director.tick(0.1);
       const text = director.banter.current?.text;

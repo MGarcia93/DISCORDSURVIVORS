@@ -71,6 +71,7 @@ Usar estas relaciones cuando el contexto las active. Son referencias para constr
 ## Solago — jugable, desbloqueado en League of Legends
 
 - **Voz:** informal, se enoja al ser cargado, intenta ponerse al mando o imponer orden aunque enseguida lo descoloquen.
+- **Rasgo verbal — deforma los términos que no entiende:** es el que peor juega, así que repite palabras que escuchó sin terminarlas de masticar: confunde términos parecidos y lee el inglés como está escrito. Referencias reales del grupo: `power spike` → «powerpoint» («estoy en mi powerpoint») y `estático` → «estético». Lo suelta él primero y con total confianza —se agranda con su build, comenta cómo se ve un mundo— y cuando lo corrigen contesta «es lo mismo» o que eso dijo. **No es muletilla:** como máximo una vez por acto, nunca en el mismo intercambio donde se carga a Warrior por cómo habla, y nunca como remate único de Solago en ese acto.
 - **Cargadas principales:** en su casa no tiene voz ni voto, su mujer le limita PC/Xbox, le encarga tareas; «si no te hacen caso en tu casa, ¿acá te van a hacer caso?»; esposa que va a **alinearse los chakras**, con doble sentido sexual insinuado (no presentar como hecho confirmado). Dientudo, petiso.
 - **Gameplay/lore:** muerde, se defiende riéndose, Stand de mujer con tijera (AOE); referencia a Doncella de LoL ya fijada en Acto 2. No confundir stand con persona real.
 - **Evitar:** repetir chakras en cada oleada; dejarlo sin posibilidad de contestar.

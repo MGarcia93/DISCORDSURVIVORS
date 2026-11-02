@@ -157,6 +157,41 @@
       "speaker": "maxi-negro",
       "expression": "tired",
       "text": "No, si este hijo de puta es increíble."
+    },
+    {
+      "wave": 2,
+      "at": 13,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Che, ¿por qué ese bicho se quedó estética?"
+    },
+    {
+      "wave": 2,
+      "at": 15,
+      "speaker": "maxi-negro",
+      "expression": "surprised",
+      "text": "¿Estética?"
+    },
+    {
+      "wave": 2,
+      "at": 16.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Si no se mueve."
+    },
+    {
+      "wave": 2,
+      "at": 18,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "JAJAJA. Si no se mueve es estático, pelotudo."
+    },
+    {
+      "wave": 2,
+      "at": 19.5,
+      "speaker": "solago",
+      "expression": "annoyed",
+      "text": "Es lo mismo."
     }
   ]
 }

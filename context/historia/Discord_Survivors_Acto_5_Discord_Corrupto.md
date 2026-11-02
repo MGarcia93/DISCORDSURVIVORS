@@ -128,6 +128,12 @@ El Administrador comienza a mezclar elementos de todos los juegos.
 
 **Papasito:** Bueno, bueno. Ni mirar se puede.
 
+**Solago:** Dejámelo a mí, que ya estoy en mi powerpoint.
+
+**Maxi Negro:** JAJAJA. ¿Powerpoint?
+
+**Solago:** ¡Es lo mismo! ¡Te da poder!
+
 De repente, aparece un esclavista y corre directamente hacia Warrior.
 
 **ESCLAVISTA:** ¡AHÍ ESTÁ EL ESCLAVO FUGITIVO!
@@ -315,6 +321,12 @@ El servidor comienza a producir más errores.
 **ADMINISTRADOR:** No es un error. Es una característica.
 
 **Maxi Negro:** ¡LA CONCHA DE TU MADRE!
+
+**Solago:** Está roto.
+
+**Maxi Negro:** Como tu culo.
+
+**Solago:** ¡LA CONCHA DE TU MADRE, NEGRO!
 
 ---
 
