@@ -601,6 +601,18 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 *Comienza la oleada.*
 
+### Durante la oleada — El manco
+
+*Warrior acepta el plan de Solago y se adelanta solo.*
+
+**WARRIOR:** Ura, dale, los distraigo.
+
+*Lo rodean y lo empujan de vuelta.*
+
+**WARRIOR:** ¡Ura, manco, por qué no avisaste!
+
+**SOLAGO:** ¡TE DIJE QUE NO NOS SEPAREMOS!
+
 ### Durante la oleada — El sillón
 
 *El Negro activa «Me da paja» y aparece sentado en su sillón.*
