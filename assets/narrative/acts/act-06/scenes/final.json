@@ -3,37 +3,37 @@
   "stage": {
     "background": "creator-desk",
     "points": {
-      "negro": [
-        1180,
-        470
-      ],
       "solago": [
-        1180,
-        560
+        1120,
+        410
       ],
       "papasito": [
-        1290,
-        470
+        1120,
+        570
       ],
       "warrior": [
         1290,
-        560
-      ],
-      "maxi": [
-        1690,
-        460
-      ],
-      "papafrita": [
-        1420,
         470
       ],
+      "negro": [
+        1270,
+        630
+      ],
+      "papafrita": [
+        1520,
+        540
+      ],
+      "maxi": [
+        1720,
+        460
+      ],
       "sky": [
-        1420,
+        1520,
         -140
       ],
       "wide": [
-        1450,
-        420
+        1430,
+        430
       ]
     },
     "actors": {
@@ -59,8 +59,7 @@
       },
       "papafrita": {
         "character": "papafrita",
-        "at": "sky",
-        "outfit": "casual"
+        "at": "sky"
       }
     },
     "size": [
