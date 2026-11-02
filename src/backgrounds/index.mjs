@@ -2,6 +2,9 @@ import arena from './arena.mjs';
 import room from './room.mjs';
 import zomboid from './zomboid.mjs';
 import zomboidCombat from './zomboid-combat.mjs';
+import zomboidBase from './zomboid-base.mjs';
+import zomboidSiege from './zomboid-siege.mjs';
+import zomboidApproach from './zomboid-approach.mjs';
 import jhonyStreet from './jhony-street.mjs';
 import rift from './rift.mjs';
 import inferno from './inferno.mjs';
@@ -20,7 +23,7 @@ import monsterHunter from './monster-hunter.mjs';
 // Each world is painted ONCE into an offscreen canvas and then blitted, so the
 // per-frame cost of any world is a single drawImage no matter how many tiles
 // it paints. Only what a world declares in `animate` runs every frame.
-const WORLDS = Object.freeze({ arena, room, zomboid, 'zomboid-combat': zomboidCombat, 'jhony-street': jhonyStreet, rift, inferno, exiles, 'warrior-camp': warriorCamp, laboratory, discord, 'discord-voice': discordVoice, 'creator-desk': creatorDesk, 'monster-hunter': monsterHunter });
+const WORLDS = Object.freeze({ arena, room, zomboid, 'zomboid-combat': zomboidCombat, 'zomboid-base': zomboidBase, 'zomboid-siege': zomboidSiege, 'zomboid-approach': zomboidApproach, 'jhony-street': jhonyStreet, rift, inferno, exiles, 'warrior-camp': warriorCamp, laboratory, discord, 'discord-voice': discordVoice, 'creator-desk': creatorDesk, 'monster-hunter': monsterHunter });
 
 export const worldIds = Object.freeze(Object.keys(WORLDS));
 export const defaultWorld = 'arena';
