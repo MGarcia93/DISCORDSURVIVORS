@@ -3,7 +3,19 @@ import { worldIds } from '../backgrounds/index.mjs';
 import { ACTS, actForWorld } from '../campaign/acts.mjs';
 import { ENEMY_KINDS } from '../enemies/index.mjs';
 
-export const manifestURL = new URL('../../assets/narrative/manifest.json', import.meta.url);
+// The production bundle moves this module into a hashed chunk, so
+// `import.meta.url` stops sitting under `src/`. The narrative tree is copied
+// verbatim next to the page (`assets/narrative/...`), so a browser resolves it
+// against the document — base path included — while Node keeps resolving it
+// against the source file, which is what the scene tests rely on.
+const moduleURL = import.meta.url;
+export const narrativeBase = (() => {
+  const documentBase = globalThis.document?.baseURI;
+  return documentBase
+    ? new URL('assets/narrative/', documentBase)
+    : new URL('../../assets/narrative/', moduleURL);
+})();
+export const manifestURL = new URL('manifest.json', narrativeBase);
 const BACKGROUNDS = Object.freeze(Object.fromEntries(worldIds.map(id => [id, true])));
 
 // The act owns its scenes: `narrative` is a path relative to the shared

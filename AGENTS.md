@@ -1,10 +1,15 @@
 # Agent notes — Discord Survivors
 
-Vanilla ES modules in the browser: no build step, no package manager, no
-dependencies. Serve the repository over HTTP (`file://` breaks module loading).
+Vanilla ES modules in the browser, served over HTTP (`file://` breaks module
+loading). Vite builds the deployable artifact; the source stays plain ESM with no
+framework, no TypeScript and no `src/`-path aliases, so `node --test`, `node
+--check` and `tools/balance.mjs` keep importing `src/` directly.
 
 ```sh
-node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
+npm run dev                 # Vite dev server, same module paths as the source
+node tools/serve.mjs        # the same game, no install, no-store
+npm run build               # dist/: hashed JS/CSS plus a verbatim copy of assets/
+npm run preview             # serve dist/ to check the real artifact
 ```
 
 ## Checks

@@ -4,13 +4,24 @@ A playable pixel-art browser prototype based on the supplied Discord Survivors c
 
 ## Play locally
 
-From this directory, run:
+Two ways in. Without installing anything:
 
 ```sh
 node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
 ```
 
-Open **http://localhost:5173** in a current browser. No build, package install, account, or backend is required. Serve the directory over HTTP rather than opening `index.html` directly; the game uses JavaScript modules.
+Or with Vite, which is what the production build uses:
+
+```sh
+npm install
+npm run dev                 # http://127.0.0.1:5173, same paths as the static server
+npm run build               # emits dist/ with hashed code and the copied asset tree
+npm run preview             # serves dist/ to check the real artifact
+```
+
+Open **http://localhost:5173** in a current browser. Serving the directory over HTTP is required either way: opening `index.html` directly breaks module loading.
+
+The build hashes the JavaScript and CSS so a deploy cannot be served stale, and copies `assets/` verbatim because the game fetches that tree by document-relative path at runtime. `dist/` is the deployable artifact; nothing under `src/` is.
 
 ### Narrative development viewer
 
