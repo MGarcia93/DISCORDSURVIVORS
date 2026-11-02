@@ -2866,7 +2866,7 @@ export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, ti
 // compact beard). `talking` opens the mouth and `voice` adds the sound ring
 // that his attacks throw; with both off the rectangle sequence is exactly the
 // approved NPC drawing.
-export function drawPapafrita(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0, talking = false, voice = false } = {}) {
+export function drawPapafrita(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0, talking = false, voice = false, armor = false } = {}) {
   const step = moving ? Math.floor(time * 8) % 2 : 0;
   const ink = '#171526';
   const skin = '#c58f68';
@@ -2936,6 +2936,67 @@ export function drawPapafrita(ctx, x, y, { scale = 2, facing = 1, moving = false
   p(15, 27, 3, 9, skin);
   p(-18, 28, 1, 7, skinLight);
   p(17, 28, 1, 7, skinShade);
+
+  // The Monster Hunter cameo wears the insect armour the cinematic portrait
+  // already uses: maroon carapace over the tee, pauldrons with spikes, forearm
+  // guards, and the little kinsect hovering at his shoulder. Off by default so
+  // the playable and roster art keep the approved casual outfit.
+  if (armor) {
+    const a = {
+      ink: '#1b1923', dark: '#34313b', base: '#7d343b', light: '#a64b49',
+      hi: '#c46959', shade: '#5e2b35', trim: '#ad9678',
+    };
+    // Carapace over the whole tee, plate seams and the central breastplate.
+    p(-17, 19, 34, 16, a.ink);
+    p(-16, 20, 32, 14, a.base);
+    p(-16, 20, 10, 14, a.light);
+    p(13, 20, 3, 14, a.shade);
+    p(-16, 25, 32, 1, a.ink);
+    p(-7, 20, 1, 14, a.shade);
+    p(5, 20, 1, 14, a.shade);
+    p(-6, 21, 13, 12, a.ink);
+    p(-5, 22, 11, 10, a.light);
+    p(-5, 22, 4, 10, a.hi);
+    p(-1, 26, 4, 6, a.base);
+    p(-5, 31, 11, 1, a.shade);
+    // Waist band over the belt line.
+    p(-17, 33, 34, 3, a.ink);
+    p(-16, 34, 32, 2, a.dark);
+    p(-16, 34, 32, 1, a.base);
+    // Pauldrons with their spikes, then the forearm guards.
+    p(-21, 18, 8, 6, a.ink);
+    p(-20, 19, 6, 4, a.base);
+    p(-20, 19, 3, 4, a.light);
+    p(-20, 15, 3, 4, a.ink);
+    p(-19, 15, 2, 3, a.trim);
+    p(13, 18, 8, 6, a.ink);
+    p(14, 19, 6, 4, a.shade);
+    p(16, 15, 3, 4, a.ink);
+    p(17, 15, 2, 3, a.trim);
+    p(-20, 28, 6, 6, a.ink);
+    p(-19, 29, 4, 4, a.base);
+    p(14, 28, 6, 6, a.ink);
+    p(15, 29, 4, 4, a.shade);
+  }
+  // The kinsect rides on his head, the way the cinematic portrait has it: a
+  // small carapace with two teal eyes and a pair of side fins, gripping the hair.
+  if (armor) {
+    const bob = Math.round(Math.sin((time || 0) * 3));
+    p(-7, -11 + bob, 14, 10, '#1b1923');
+    p(-6, -10 + bob, 12, 8, '#7c7e87');
+    p(-6, -10 + bob, 7, 3, '#a4a2a2');
+    p(-6, -4 + bob, 12, 1, '#5c6976');
+    p(-6, -8 + bob, 3, 3, '#35d1c8');
+    p(3, -8 + bob, 3, 3, '#35d1c8');
+    p(-5, -7 + bob, 2, 2, '#86f0d8');
+    p(4, -7 + bob, 2, 2, '#86f0d8');
+    p(-10, -9 + bob, 4, 2, '#bccbd0');
+    p(6, -9 + bob, 4, 2, '#bccbd0');
+    p(-10, -4 + bob, 4, 2, '#1b1923');
+    p(6, -4 + bob, 4, 2, '#1b1923');
+    p(-4, -1 + bob, 3, 2, '#242630');
+    p(1, -1 + bob, 3, 2, '#242630');
+  }
 
   // Same full cheeks, compact beard and ponytail as the approved identity.
   p(-12, 0, 24, 4, ink);
