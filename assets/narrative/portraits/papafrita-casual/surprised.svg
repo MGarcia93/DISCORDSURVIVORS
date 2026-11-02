@@ -1,30 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="552" height="714" viewBox="-12 -38 184 238" shape-rendering="crispEdges" data-expression="surprised">
   <title>Papafrita — surprised</title>
-  <desc>Casual outfit: a short-sleeved black tee over bare forearms, cropped at the waist. No armour, no spikes and no creature; the face, hair and expressions are the approved ones.</desc>
+  <desc>Casual outfit: Negro-sized body with a short-sleeved black tee over bare forearms. No armour, no spikes and no creature; the face, hair and expressions are the approved ones.</desc>
   <g id="neck" transform="translate(0 -20)">
     <path fill="#97644e" d="M56 118h58v24h7v16H49v-16h7z" />
     <path fill="#c58f68" d="M62 126h45v17h7v8H56v-8h6z" />
     <path fill="#dda67b" d="M66 134h35v10h7v3H66z" />
   </g>
-  <g id="casual-body" transform="translate(0 4)">
-    <path fill="#1b1923" d="M47 112h68v5h12v5h10v7h7v10h5v15h5v15h4v31H2v-33h4v-14h5v-16h6v-10h8v-7h10v-5h12z" />
-    <path fill="#20212a" d="M49 116h18v8h39v-8h14v5h13v9h9v17h7v19h6v34H5v-33h6v-18h7v-17h9v-10h12v-6h10z" />
-    <path fill="#20212a" d="M40 125h19v12h11v6h28v-6h13v-10h16v8h9v22h6v29h5v14H14v-30h6v-22h8v-13h12z" />
-    <path fill="#20212a" d="M39 127h13v8H39zM70 137h29v4H70zM114 126h12v9h-12zM24 144h6v18h-6z" />
-    <path fill="#20212a" d="M52 141h11v10h10v7h24v-7h10v-11h9v17h-9v43H57v-40h-5zM18 178h8v22h-8zM140 174h9v26h-9z" />
-    <path fill="#20212a" d="M67 159h31v6H67zM60 187h48v5H60zM30 163h15v5H30z" />
-    <rect x="31" y="134" width="9" height="60" fill="#343440" />
-    <rect x="123" y="134" width="9" height="60" fill="#15161e" />
-    <rect x="9" y="154" width="32" height="50" fill="#1b1923" />
-    <rect x="121" y="154" width="32" height="50" fill="#1b1923" />
-    <rect x="9" y="154" width="32" height="3" fill="#101118" />
-    <rect x="121" y="154" width="32" height="3" fill="#101118" />
-    <rect x="12" y="158" width="25" height="46" fill="#c58f68" />
-    <rect x="12" y="158" width="7" height="46" fill="#e0aa7b" />
-    <rect x="124" y="158" width="25" height="46" fill="#97644e" />
-    <rect x="145" y="158" width="4" height="46" fill="#b47d5c" />
-    <rect x="52" y="112" width="70" height="14" fill="#101118" />
-    <rect x="56" y="126" width="62" height="4" fill="#15161e" />
+  <g id="casual-body">
+    <path d="M52 108h60v4h16v6h13v9h7v14h5v19h3v40H5v-35h3v-22h5v-16h8v-11h13v-8h18z" />
+    <path fill="#20212a" d="M36 119h15v12h24v-4h17v5h22v-9h14v5h12v11h7v20h5v41H8v-35h3v-22h6v-13h10v-6h9z" />
+    <path fill="#20212a" d="M31 126h16v12h27v-5h23v6h27v-9h10v14h7v22h5v34H31v-9h-9v-20h-5v-21h5v-14h9z" />
+    <path fill="#20212a" d="M48 137h20v-3h8v5h20v4h14v14H96v7H71v-5H51v-8h-8v-8h5z" />
+    <path fill="#20212a" d="M54 138h12v3h-12zM45 144h8v7h-5v-4h-3zM72 140h20v3H72z" />
+    <path fill="#20212a" d="M21 131h8v12h-6v20h5v19h8v18H10v-34h4v-23h7zM132 139h7v22h7v39h-17v-19h-4v-16h7z" />
+    <path fill="#20212a" d="M16 143h5v21h-5zM12 170h8v16h6v14H9v-25h3zM140 170h6v30h-7v-17h-4v-10h5z" />
+    <path fill="#20212a" d="M27 135h6v20h5v17h-4v10h-6v-19h-4v-16h3zM119 145h9v17h-6v19h-6v-19h3z" />
+    <path fill="#20212a" d="M32 133h6v19h-4v-10h-2zM38 160h6v16h-4v-9h-2zM127 134h5v12h-4v-5h-1z" />
+    <path fill="#20212a" d="M48 165h15v4H49v4H37v-4h11zM90 168h24v4H93v3H71v-4h19zM45 183h30v4H55v4H37v-4h8zM107 186h19v5h-12v4H85v-4h22z" />
+    <path fill="#20212a" d="M48 174h20v3H48zM76 177h30v3H76zM51 192h29v3H51zM100 182h12v3h-12z" />
+    <path fill="#20212a" d="M33 193h7v7h-7zM120 193h9v7h-9zM80 197h29v3H80z" />
+    <rect x="24" y="134" width="9" height="60" fill="#343440" />
+    <rect x="118" y="134" width="9" height="60" fill="#15161e" />
+    <rect x="10" y="150" width="34" height="4" fill="#101118" />
+    <rect x="120" y="150" width="34" height="4" fill="#101118" />
+    <rect x="8" y="154" width="36" height="48" fill="#1b1923" />
+    <rect x="120" y="154" width="36" height="48" fill="#1b1923" />
+    <rect x="12" y="156" width="29" height="46" fill="#c58f68" />
+    <rect x="12" y="156" width="8" height="46" fill="#e0aa7b" />
+    <rect x="124" y="156" width="29" height="46" fill="#97644e" />
+    <rect x="148" y="156" width="5" height="46" fill="#b47d5c" />
+    <rect x="50" y="114" width="76" height="16" fill="#101118" />
+    <rect x="56" y="130" width="64" height="4" fill="#15161e" />
   </g>
   <g id="hair-back" transform="translate(0 -38)">
     <path fill="#211e26" d="M45 69h15v-7h40v6h17v12h8v27h-7v16h-9v7H51v-7H40v-17h-5V85h10z" />
