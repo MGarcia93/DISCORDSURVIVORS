@@ -1,11 +1,12 @@
 import { NarrativeHost } from './host.mjs';
 import { openViewer } from './viewer.mjs';
 import { sceneSeenStore } from '../progression.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // Gameplay remembers which cinematics were already played; the development
 // viewer never writes, because a preview is not progress.
 export const narrative = new NarrativeHost({ seen: sceneSeenStore() });
-export const isNarrativeDevelopment = () => new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'narrative';
+export const isNarrativeDevelopment = () => DEV && new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'narrative';
 let viewer = null;
 
 export function leaveNarrative() { viewer?.dispose(); viewer = null; narrative.detach(); }

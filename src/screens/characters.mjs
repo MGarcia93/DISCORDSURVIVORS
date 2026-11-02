@@ -3,6 +3,7 @@ import { isCharacterUnlocked, isDebugUnlockAll, UNLOCK_CHAIN } from '../progress
 import { rounded } from '../game/renderer.mjs';
 import { state } from '../app/state.mjs';
 import { PLAYABLE_ACTS, getAct } from '../campaign/acts.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // Selection screen: roster grid, profile panel and the animated preview.
 // Fully data-driven: every card, profile, preview and progress note comes
@@ -29,10 +30,17 @@ export function characters() {
   const rosterNote = state.debugUnlockAll
     ? 'MODO PRUEBA · PERSONAJES IMPLEMENTADOS DESBLOQUEADOS'
     : nextEncounter?.unlockNote.locked ?? 'TODOS LOS PERSONAJES IMPLEMENTADOS DESBLOQUEADOS';
-  state.selectedAct = getAct(state.selectedAct).status === 'playable' ? getAct(state.selectedAct).id : PLAYABLE_ACTS[0].id;
-  const actOptions = PLAYABLE_ACTS
-    .map(act => `<option value="${act.id}"${act.id === state.selectedAct ? ' selected' : ''}>Mundo 0${act.order} · ${act.title}</option>`)
-    .join('');
+  // The world picker is a development surface: the shipped campaign always
+  // starts at the first world, so a new run cannot skip ahead. `DEV` is a
+  // literal in a production bundle, so the markup never leaves the source.
+  state.selectedAct = DEV && getAct(state.selectedAct).status === 'playable'
+    ? getAct(state.selectedAct).id
+    : PLAYABLE_ACTS[0].id;
+  const actOptions = DEV
+    ? PLAYABLE_ACTS
+      .map(act => `<option value="${act.id}"${act.id === state.selectedAct ? ' selected' : ''}>Mundo 0${act.order} · ${act.title}</option>`)
+      .join('')
+    : '';
   const placeholders = ROSTER_PLACEHOLDERS.slice(0, Math.max(0, GRID_SLOTS - ROSTER.length));
   const roster = ROSTER.map(entry => rosterButton(entry, isCharacterUnlocked(entry.id), entry.id === state.selectedCharacter)).join('')
     + placeholders.map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('');
@@ -42,7 +50,7 @@ export function characters() {
     <div class="character-layout"><section aria-label="Personajes">
       <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${ficha.previewAria}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${ficha.detailLabel.toUpperCase()}</span></div>
       <div class="roster">${roster}</div>
-      <label class="act-picker">MUNDO <select id="act-select" aria-label="Mundo">${actOptions}</select></label>
+      ${DEV ? `<label class="act-picker">MUNDO <select id="act-select" aria-label="Mundo">${actOptions}</select></label>` : ''}
       <p class="roster-note">${rosterNote}</p>
     </section><section class="detail-panel" aria-label="Habilidades de ${ficha.detailLabel}"><div class="detail-body" tabindex="0">${ficha.profile}</div></section></div>
     <div class="bottom-actions"><button class="secondary" data-action="home">← VOLVER</button><button class="primary" data-action="story-start">QUE EMPIECE EL DESASTRE ▶</button></div></section>`;
@@ -50,11 +58,13 @@ export function characters() {
     const portrait = document.querySelector(`#roster-${entry.id}`);
     if (portrait) entry.drawRoster(portrait.getContext('2d'));
   }
-  const actSelect = document.querySelector('#act-select');
-  actSelect?.addEventListener?.('change', () => {
-    state.selectedAct = actSelect.value;
-    actSelect.blur?.();
-  });
+  if (DEV) {
+    const actSelect = document.querySelector('#act-select');
+    actSelect?.addEventListener?.('change', () => {
+      state.selectedAct = actSelect.value;
+      actSelect.blur?.();
+    });
+  }
   drawPreview(0);
 }
 

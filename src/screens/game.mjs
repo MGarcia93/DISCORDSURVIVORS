@@ -5,11 +5,14 @@ import { state } from '../app/state.mjs';
 import { updateHUD } from '../game/hud.mjs';
 import { audio } from '../audio/index.mjs';
 import { createNextWorldRun } from '../game/campaign-run.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // Arena DOM builder: built once per run; HUD values update separately.
 export function game(previousRun = null) {
   state.run = previousRun ? createNextWorldRun(previousRun) : state.pendingRun ?? createRun(Math.random, state.selectedCharacter, {
-    balance: balanceFor(globalThis.location?.search),
+    // The playtest pacing and the wave-length override are development
+    // surfaces: the shipped game always runs the real balance.
+    balance: balanceFor(DEV ? globalThis.location?.search : ''),
   }, getAct(state.selectedAct));
   state.pendingRun = null;
   state.facing = 1;

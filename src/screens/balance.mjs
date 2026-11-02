@@ -7,13 +7,14 @@ import { state } from '../app/state.mjs';
 import { balanceForMode, itemBlocked, pickBlocked, removeOne, seedRun } from '../game/balance-seed.mjs';
 import { rewardEffectTotals } from '../game/reward-view.mjs';
 import { drawItemIcon } from '../game/item-icons.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // Development-only lab. One wave of the campaign, seeded with the build a
 // player would already own arriving there, played for real: same engine, same
 // HUD, same shop after it. Reachable at ?dev=balance, and it never writes
 // progress.
-export const isBalanceDevelopment = () =>
-  new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'balance';
+export const isBalanceDevelopment = () => DEV
+  && new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'balance';
 
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 

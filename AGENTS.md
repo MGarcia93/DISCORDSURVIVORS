@@ -98,6 +98,12 @@ Read `docs/audio.md` before adding a sound. The rules that keep it listenable:
 
 ## Dev screens
 
+Everything in this table, plus `?playtest`, the world selector on the character
+screen and the `Alt+Shift+U` unlock-all shortcut, reads `DEV` from
+`src/dev-flags.mjs`. A production build inlines that to `false` and the minifier
+drops the branches, so the surfaces stay in the source and never ship: nothing
+here is deleted, and `npm run dev` keeps all of it.
+
 | URL | What it does |
 | --- | --- |
 | `?dev=worlds` | every world at stage size with the cast; pick an actor and walk it with WASD or the arrow keys |

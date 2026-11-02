@@ -2,12 +2,13 @@ import { worldIds, worlds } from '../backgrounds/index.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
 import { drawCast, STAGE_CAST } from './world-cast.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // Development-only viewer: every world at full stage size, animating, with the
 // playable cast and NPCs standing at the same scale scenes use. The selected
 // ficha walks with WASD or the arrow keys so staging can be tried in place.
 // Reachable at ?dev=worlds and it never writes progress.
-export const isWorldDevelopment = () => new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'worlds';
+export const isWorldDevelopment = () => DEV && new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'worlds';
 
 const MOVE = { x: 0.26, y: 0.18 };
 // Top-down maps: the whole canvas is walkable. No horizon, no facade to bump into.

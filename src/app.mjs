@@ -5,6 +5,7 @@ import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
 import { isCharacterUnlocked, unlockAllForTesting, UNLOCK_CHAIN } from './progression.mjs';
+import { DEV } from './dev-flags.mjs';
 import { on } from './bus.mjs';
 import { state } from './app/state.mjs';
 import { updateHUD } from './game/hud.mjs';
@@ -275,7 +276,7 @@ document.addEventListener('keydown', event => {
       return;
     }
     if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeMenuOverlay();
-    if (state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
+    if (DEV && state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
       if (unlockAllForTesting()) {
         state.debugUnlockAll = true;
         for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = true;
@@ -337,7 +338,7 @@ show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds'
   : isEnemyDevelopment() ? 'enemies' : isBalanceDevelopment() ? 'balance' : 'home');
 // ?dev=warp replays the world transfer on the menu, so it can be looked at
 // without winning a world first.
-if (['warp', 'portal'].includes(new URLSearchParams(globalThis.location?.search ?? '').get('dev'))) {
+if (DEV && ['warp', 'portal'].includes(new URLSearchParams(globalThis.location?.search ?? '').get('dev'))) {
   warpToWorld(state.content, PLAYABLE_ACTS[1]?.id ?? state.selectedAct);
 }
 requestAnimationFrame(frame);

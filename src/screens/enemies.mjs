@@ -6,12 +6,13 @@ import {
 import { worldIds, worlds } from '../backgrounds/index.mjs';
 import { drawRunScene } from '../game/renderer.mjs';
 import { state } from '../app/state.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // Development-only sandbox. It runs a real throwaway run: the selected kind
 // spawns at an edge, walks, stops at its own attack distance and swings on its
 // own cadence against a dummy that never moves and never attacks. No progress
 // is written. Reachable at ?dev=enemies.
-export const isEnemyDevelopment = () => new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'enemies';
+export const isEnemyDevelopment = () => DEV && new URLSearchParams(globalThis.location?.search ?? '').get('dev') === 'enemies';
 
 const KINDS = Object.keys(ENEMY_KINDS);
 // A crowd is what you want for a walker; a boss is looked at one at a time, with
