@@ -6,7 +6,7 @@
     <path fill="#c58f68" d="M62 126h45v17h7v8H56v-8h6z" />
     <path fill="#dda67b" d="M66 134h35v10h7v3H66z" />
   </g>
-  <g id="casual-body">
+  <g id="casual-body" transform="translate(-10 0) scale(1.12 1)">
     <path d="M52 108h60v4h16v6h13v9h7v14h5v19h3v40H5v-35h3v-22h5v-16h8v-11h13v-8h18z" />
     <path fill="#20212a" d="M36 119h15v12h24v-4h17v5h22v-9h14v5h12v11h7v20h5v41H8v-35h3v-22h6v-13h10v-6h9z" />
     <path fill="#20212a" d="M31 126h16v12h27v-5h23v6h27v-9h10v14h7v22h5v34H31v-9h-9v-20h-5v-21h5v-14h9z" />

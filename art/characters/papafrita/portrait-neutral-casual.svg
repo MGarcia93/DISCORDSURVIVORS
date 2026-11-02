@@ -10,7 +10,7 @@
   <!-- Casual body: Negro's body size and distribution, flattened to the black
        tee, with the collar covering the neck's base and the forearms painted
        over the lower sleeves. -->
-  <g id="casual-body">
+  <g id="casual-body" transform="translate(-10 0) scale(1.12 1)">
     
     <path d="M52 108h60v4h16v6h13v9h7v14h5v19h3v40H5v-35h3v-22h5v-16h8v-11h13v-8h18z" />
   
