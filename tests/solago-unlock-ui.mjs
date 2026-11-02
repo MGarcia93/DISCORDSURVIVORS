@@ -15,7 +15,7 @@ try {
   await page.keyboard.up('Shift');
   await page.keyboard.up('Alt');
   assert.equal(await page.locator('[data-character="solago"]').isEnabled(), true, 'The debug key unlocks Solago');
-  assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('discord-survivors.progress.v1'))), { version: 1, debugUnlockAll: true });
+  assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('discord-survivors.progress.v1'))), { version: 2, debugUnlockAll: true });
   assert.match(await page.locator('.roster-note').innerText(), /MODO PRUEBA/);
   await page.locator('[data-character="solago"]').click();
   assert.equal(await page.locator('.detail-panel h2').innerText(), 'SOLAGO');

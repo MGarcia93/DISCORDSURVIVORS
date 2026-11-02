@@ -256,8 +256,8 @@ test('the HUD reads the collection, and Act 5 is the unlock', () => {
   assert.equal(CHARACTERS.papafrita.unlock.scene, 'act-05-final');
   const store = value => ({ getItem: () => value, setItem: () => {} });
   assert.equal(isCharacterUnlocked('papafrita', store(null)), false);
-  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 1, seenScenes: ['act-05-final'] }))), true);
-  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 1, seenScenes: ['act-05-administrator'] }))), false,
+  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 2, seenScenes: ['act-05-final'] }))), true);
+  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 2, seenScenes: ['act-05-administrator'] }))), false,
     'the Administrator monologue is not the unlock');
 });
 
