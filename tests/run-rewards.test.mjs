@@ -35,9 +35,10 @@ test('approved XP curve carries overflow and queues each earned level without st
   }
 });
 
-test('each copy of an item costs more than the one before', () => {
+test('each copy of an item costs more than the one before, and later waves charge more', () => {
   const item = { price: 40 };
-  assert.deepEqual([0, 1, 2, 3].map(owned => itemPrice(item, owned)), [40, 60, 80, 100]);
+  assert.deepEqual([0, 1, 2, 3].map(owned => itemPrice(item, owned)), [40, 80, 120, 160]);
+  assert.equal(itemPrice(item, 0, 3), 46, 'the shelf inflates with the campaign');
 });
 
 test('invalid XP awards leave every state field unchanged', () => {
@@ -150,8 +151,8 @@ test('items can reappear next wave until their own cap; fewer or no offers are v
   beginRewards(run);
   assert.deepEqual(run.shopOffers, []);
   assert.equal(run.items.health, 2);
-  // The second copy costs half again: 10 + 15.
-  assert.equal(run.coins, 75);
+  // The second copy doubles: 10 + 20.
+  assert.equal(run.coins, 70);
 });
 
 test('starting a later reward cycle preserves XP, items, ranks and other stat sources', () => {

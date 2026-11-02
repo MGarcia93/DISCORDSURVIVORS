@@ -62,13 +62,13 @@ function levelCards(run, entry) {
 function itemCards(run) {
   return DEFAULT_CATALOG.items.map(item => {
     const owned = countOf(state.balanceItems, item.id);
-    const blocked = itemBlocked(item, { coins: run.coins, items: state.balanceItems });
+    const blocked = itemBlocked(item, { coins: run.coins, items: state.balanceItems, wave: state.balanceWave });
     const preview = blocked ? null : previewReward(run, `balance-item:${item.id}`, item);
     const reason = blocked ?? (preview ? null : 'incompatible');
     return `<button class="upgrade" data-item="${escapeText(item.id)}" ${reason ? 'disabled' : ''}>
       <b><canvas data-art="${escapeText(item.id)}" width="24" height="24" aria-hidden="true"></canvas>${escapeText(item.name)}</b>
       <span>${escapeText(describeReward(item, EFFECTS).join(' · '))}</span>
-      <small>${reason ? REASONS[reason] : `${owned}/${item.maxCopies} · ${itemPrice(item, owned)} ◈`}</small>
+      <small>${reason ? REASONS[reason] : `${owned}/${item.maxCopies} · ${itemPrice(item, owned, state.balanceWave)} ◈`}</small>
     </button>`;
   }).join('');
 }

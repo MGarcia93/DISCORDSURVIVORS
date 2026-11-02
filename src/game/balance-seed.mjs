@@ -23,11 +23,11 @@ export function pickBlocked(upgrade, { character, level, choices, picks = {} }) 
 }
 
 // Why one more copy cannot be bought right now, or null when it can.
-export function itemBlocked(item, { coins, items = {} }) {
+export function itemBlocked(item, { coins, items = {}, wave = 1 }) {
   if (!item) return 'unknown';
   if (item.enabled === false) return 'disabled';
   if (countOf(items, item.id) >= item.maxCopies) return 'maxed';
-  if (coins < itemPrice(item, countOf(items, item.id))) return 'coins';
+  if (coins < itemPrice(item, countOf(items, item.id), wave)) return 'coins';
   return null;
 }
 
@@ -70,7 +70,7 @@ export function seedRun({
   for (const [id, wanted] of Object.entries(items)) {
     const item = run.rewardCatalog.items.find(candidate => candidate.id === id);
     for (let bought = 0; bought < wanted; bought++) {
-      const price = item ? itemPrice(item, countOf(run.items, id)) : Infinity;
+      const price = item ? itemPrice(item, countOf(run.items, id), wave) : Infinity;
       if (!item || run.coins < price || !grantItem(run, id)) break;
       run.coins -= price;
     }

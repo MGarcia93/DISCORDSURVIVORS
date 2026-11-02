@@ -137,11 +137,18 @@ export function skipEmptyChoice(run) {
   return true;
 }
 
-// Every copy of an item costs more than the one before it: the shop stays a
-// decision instead of a shopping spree once a boss pays. The base price is the
-// first copy; each owned copy adds half of it again.
-export function itemPrice(item, owned = 0) {
-  return Math.round(item.price * (1 + 0.5 * Math.max(0, owned)));
+// Every copy of an item costs more than the one before, and the shelf gets
+// pricier as the campaign goes on: the shop stays a decision instead of a
+// shopping spree once a boss pays. The base price is the first copy in the
+// first world; each owned copy doubles it again and every wave adds the
+// campaign's inflation.
+export const COPY_MARKUP = 1;
+export const WAVE_MARKUP = 0.08;
+
+export function itemPrice(item, owned = 0, wave = 1) {
+  const copies = 1 + COPY_MARKUP * Math.max(0, owned);
+  const inflation = 1 + WAVE_MARKUP * Math.max(0, wave - 1);
+  return Math.round(item.price * copies * inflation);
 }
 
 // One item copy, with no shop around it: the balance lab grants the items a
@@ -160,9 +167,11 @@ export function buyItem(run, id) {
   const offer = run.shopOffers?.find(entry => entry.id === id && !entry.bought);
   const item = run.rewardCatalog.items.find(entry => entry.id === id);
   const count = countOf(run.items, id);
-  if (!offer || !item || count >= item.maxCopies || run.coins < itemPrice(item, count)) return false;
+  if (!offer || !item || count >= item.maxCopies) return false;
+  const price = itemPrice(item, count, run.wave);
+  if (run.coins < price) return false;
   if (!grantItem(run, id)) return false;
-  run.coins -= itemPrice(item, count);
+  run.coins -= price;
   offer.bought = true;
   return true;
 }
