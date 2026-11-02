@@ -25,16 +25,38 @@ const seed = Number(args.seed ?? 11);
 const step = Number(args.step ?? 7);
 const policy = args.policy ?? 'optimal';
 const spend = args.spend ?? 'normal';
+const skill = args.skill ?? 'perfect';
+const buy = args.buy ?? 'smart';
 const only = args.character;
 
 const characters = only ? [only] : ['negro', 'solago', 'warrior', 'papazito'];
 const pad = (value, width) => String(value).padEnd(width);
 const pct = value => `${Math.round(value * 100)}%`;
 
-function measure(modePolicy, modeSpend) {
+function measure(modePolicy, modeSpend, modeSkill = skill, modeBuy = buy) {
   return only
-    ? [measureCharacter(only, { runs, seed, step, policy: modePolicy, spend: modeSpend, ownIds: OWN_PRIORITY[only] ?? [] })]
-    : measureRoster({ characters, runs, seed, ownByCharacter: OWN_PRIORITY, policy: modePolicy, spend: modeSpend });
+    ? [measureCharacter(only, { runs, seed, step, policy: modePolicy, spend: modeSpend, skill: modeSkill, buy: modeBuy, ownIds: OWN_PRIORITY[only] ?? [] })]
+    : measureRoster({ characters, runs, seed, ownByCharacter: OWN_PRIORITY, policy: modePolicy, spend: modeSpend, skill: modeSkill, buy: modeBuy });
+}
+
+if (args.compare) {
+  // The same seeds, played once without a mistake and once like a person.
+  process.stderr.write('midiendo ejecución perfecta…\n');
+  const perfect = measure(policy, spend, 'perfect', buy);
+  process.stderr.write('midiendo jugador promedio…\n');
+  const average = measure(policy, spend, 'average', buy);
+  console.log(`\n${runs} campañas por personaje · semilla ${seed} · ${policy}/${spend}/${buy}\n`);
+  console.log(`${pad('personaje', 10)} ${pad('perfecto', 26)} ${pad('promedio', 26)} resultados (perfecto / promedio)`);
+  console.log('-'.repeat(96));
+  for (let index = 0; index < perfect.length; index++) {
+    const exact = perfect[index];
+    const human = average[index];
+    const cell = row => `${row.wins}/${row.runs} ${pct(row.rate)} · nivel ${row.level}`;
+    console.log(`${pad(exact.character, 10)} ${pad(cell(exact), 26)} ${pad(cell(human), 26)}`);
+    console.log(`${pad('', 10)} ${exact.outcomes.join(' ')}`);
+    console.log(`${pad('', 10)} ${human.outcomes.join(' ')}`);
+  }
+  process.exit(0);
 }
 
 if (args.matrix) {
@@ -63,7 +85,7 @@ if (args.matrix) {
 }
 
 const rows = measure(policy, spend);
-console.log(`\n${runs} campañas por personaje · semilla ${seed} · ${policy}/${spend}\n`);
+console.log(`\n${runs} campañas por personaje · semilla ${seed} · ${policy}/${spend}/${skill}/${buy}\n`);
 console.log(`${pad('personaje', 10)} ${pad('campañas', 10)} ${pad('nivel', 7)} ${pad('propias', 9)} dónde muere`);
 console.log('-'.repeat(72));
 let total = 0;

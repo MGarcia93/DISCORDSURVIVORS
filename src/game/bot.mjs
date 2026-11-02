@@ -8,21 +8,29 @@ import { HEIGHT, WIDTH } from '../constants.mjs';
 // Pure: it reads a run and returns an input vector or an action, exactly what
 // the shell would produce from a keyboard.
 
-const CANDIDATES = 16;
 const LOOKAHEAD = 95;
 const WALL_MARGIN = 80;
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-function directions() {
+function directions(count) {
   const list = [];
-  for (let index = 0; index < CANDIDATES; index++) {
-    const angle = index / CANDIDATES * Math.PI * 2;
+  for (let index = 0; index < count; index++) {
+    const angle = index / count * Math.PI * 2;
     list.push({ x: Math.cos(angle), y: Math.sin(angle) });
   }
   return list;
 }
-const DIRECTIONS = directions();
+const DIRECTIONS = new Map([[16, directions(16)], [8, directions(8)], [4, directions(4)]]);
+
+// Two ways to hold the controls. `perfect` re-plans every frame and never eats
+// a ring on purpose; `average` reacts four times a second, picks from a coarser
+// wheel and sometimes misjudges a ring, which is exactly how a person takes
+// damage that was avoidable.
+export const SKILLS = {
+  perfect: { reactionFrames: 1, candidates: 16, ringIgnore: 0, lookahead: LOOKAHEAD },
+  average: { reactionFrames: 12, candidates: 8, ringIgnore: 0.35, lookahead: LOOKAHEAD },
+};
 
 function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -30,7 +38,7 @@ function distance(a, b) {
 
 // How good it is to stand at (x, y): stay just inside the distance the attack
 // lands, away from bodies that are too close, away from the walls, out of rings.
-export function scoreSpot(run, x, y) {
+export function scoreSpot(run, x, y, { dodgeRings = true } = {}) {
   const p = run.player;
   const reach = p.attackRange || 1;
   let score = 0;
@@ -42,17 +50,19 @@ export function scoreSpot(run, x, y) {
       // Inside the body: the worst place to be, and worse with a boss.
       score -= (1 - gap / (reach * 0.75)) * weight;
     } else if (gap <= reach * 1.05) {
-      // The pocket: close enough for the attack to land. The far edge of it is
-      // worth more, so a tie never resolves by walking through the body.
+      // The pocket: in range for the attack. The far edge is worth more, so a
+      // tie never resolves by walking through a body.
       score += 0.2 + 0.6 * Math.min(1, Math.max(0, (gap - reach * 0.75) / (reach * 0.3)));
     } else {
       // Out of range: no damage, so it is only mildly wrong.
       score -= Math.min(2, (gap - reach) / reach) * 0.15;
     }
   }
-  for (const wave of run.shockwaves ?? []) {
-    const gap = Math.hypot(x - wave.x, y - wave.y);
-    if (gap < wave.maxRadius + p.hitRadius) score -= 4;
+  if (dodgeRings) {
+    for (const wave of run.shockwaves ?? []) {
+      const gap = Math.hypot(x - wave.x, y - wave.y);
+      if (gap < wave.maxRadius + p.hitRadius) score -= 4;
+    }
   }
   if (x < WALL_MARGIN || x > WIDTH - WALL_MARGIN) score -= 1.6;
   if (y < WALL_MARGIN || y > HEIGHT - WALL_MARGIN) score -= 1.6;
@@ -60,15 +70,19 @@ export function scoreSpot(run, x, y) {
 }
 
 // The best of sixteen headings, plus staying put when it is already good.
-export function botInput(run) {
+export function botInput(run, profile = SKILLS.perfect, random = () => 1) {
   const p = run.player;
-  const stand = scoreSpot(run, p.x, p.y);
+  // The bot's own dice: a sloppy hand must not shift the game's spawns, or the
+  // two runs stop being the same campaign.
+  const dodgeRings = !(profile.ringIgnore > 0 && random() < profile.ringIgnore);
+  const options = { dodgeRings };
+  const stand = scoreSpot(run, p.x, p.y, options);
   let best = { x: 0, y: 0 };
   let bestScore = stand;
-  for (const direction of DIRECTIONS) {
-    const x = clamp(p.x + direction.x * LOOKAHEAD, 30, WIDTH - 30);
-    const y = clamp(p.y + direction.y * LOOKAHEAD, 30, HEIGHT - 30);
-    const score = scoreSpot(run, x, y);
+  for (const direction of DIRECTIONS.get(profile.candidates) ?? DIRECTIONS.get(16)) {
+    const x = clamp(p.x + direction.x * profile.lookahead, 30, WIDTH - 30);
+    const y = clamp(p.y + direction.y * profile.lookahead, 30, HEIGHT - 30);
+    const score = scoreSpot(run, x, y, options);
     if (score > bestScore) { bestScore = score; best = direction; }
   }
   return best;
@@ -127,6 +141,22 @@ export const pickLevelReward = (run, character) => POLICIES.optimal(run, charact
 // How a player spends. `min` is the survival floor (heals only), `max` takes
 // every offer it can pay for, and `adaptive` saves through ordinary waves and
 // opens the wallet before a boss.
+// Is this offer worth a purchase? A player looks at what it does, not at a
+// priority list: a bad item stays on the shelf.
+export function offerValue(item) {
+  let value = 0;
+  for (const modifier of item.modifiers ?? []) {
+    const weight = modifier.operation === 'percent' ? modifier.value / 10 : modifier.value / 5;
+    value += modifier.value > 0 ? weight : weight * 2;
+  }
+  for (const effect of item.effects ?? []) value += 0.6;
+  return value;
+}
+
+// Keeps a purse for heals: buying the shelf empty is how a run dies in the next
+// wave with no coins to patch itself.
+export const HEAL_RESERVE = 3;
+
 export const SPENDING = {
   min: () => ({ heal: true, items: false }),
   normal: (run, character, { beforeBoss }) => ({ heal: true, items: true, beforeBoss }),
