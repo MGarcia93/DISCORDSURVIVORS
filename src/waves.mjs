@@ -27,8 +27,17 @@ export function waveLife(act, wave, kind) {
 
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave
 // that only fields zombies keeps a deterministic spawn sequence.
-export function pickKind(config, random) {
-  const entries = Object.entries(config?.mix ?? {}).filter(([, weight]) => weight > 0);
+// A wave may declare `ramp`: stages of its own mix, each with the share of the
+// clock it covers (`until`, 0..1). A wave without it keeps one mix all the way.
+export function mixAt(config, progress = 0) {
+  const ramp = config?.ramp;
+  if (!Array.isArray(ramp) || !ramp.length) return config?.mix ?? {};
+  for (const stage of ramp) if (progress < stage.until) return stage.mix ?? {};
+  return config.mix ?? {};
+}
+
+export function pickKind(config, random, progress = 0) {
+  const entries = Object.entries(mixAt(config, progress)).filter(([, weight]) => weight > 0);
   if (entries.length === 1) return entries[0][0];
   if (!entries.length) return null;
   const share = entries.reduce((sum, [, weight]) => sum + weight, 0);

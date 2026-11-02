@@ -325,7 +325,8 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
   if (!target) return;
   const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3]
     : kind === 'brick' ? 'brick'
-    : kind === 'shroom' ? 'shroom' : 'magic';
+    : kind === 'shroom' ? 'shroom'
+    : kind === 'bottle' ? 'bottle' : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
     damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
   // One shot, one sound: the event fires where the projectile exists, so an
@@ -374,8 +375,9 @@ function fireRadial(run, source, damage, { count, speed, radius }) {
 // can never drift apart.
 function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } = {}) {
   const p = run.player;
+  const defenseMult = p.characterDef.passiveDefenseMult?.(p) ?? 1;
   let incoming = damage
-    * (1 - Math.min(0.75, p.defense * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
+    * (1 - Math.min(0.75, p.defense * defenseMult * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
     * contactFactor;
   if ((p.shield ?? 0) > 0 && incoming > 0) {
     const absorbed = Math.min(p.shield, incoming);
@@ -383,6 +385,10 @@ function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } 
     incoming -= absorbed;
     run.effects.push({ x: p.x, y: p.y - 70 * WORLD_SCALE, text: 'BLOQUEO', ttl: 0.6, kind: 'shield' });
   }
+  // A hit that reaches the body may feed the ficha's own mechanic (Jhony's
+  // Tilt); every other sheet simply declares no hook.
+  if (incoming > 0) p.characterDef.onDamaged?.(run, p, incoming,
+    { hit, distance, nearest, fireRadial });
   p.hp = Math.max(0, p.hp - incoming);
   p.immune = 0.65;
   const counter = p.rewardBonuses.smileCounter ?? 0;
@@ -431,7 +437,8 @@ function attackMelee(run) {
     .sort((a, b) => distance(a, p) - distance(b, p));
   if (!inReach.length) return;
   const combat = p.characterDef.combat || {};
-  const damage = p.damage * (p.permissionActive > 0 ? (combat.permissionDamageMult ?? 1) : 1);
+  const damage = p.damage * (p.permissionActive > 0 ? (combat.permissionDamageMult ?? 1) : 1)
+    * (p.characterDef.passiveDamageMult?.(p) ?? 1);
   const extra = Math.min(inReach.length - 1, p.rewardBonuses.biteTargets ?? 0);
   hit(run, inReach[0], damage, 'bite');
   for (let index = 1; index <= extra; index++) hit(run, inReach[index], damage * 0.7, 'bite');
@@ -448,7 +455,11 @@ function attackMelee(run) {
     }
   }
   p.attackFlash = 0.22;
-  run.effects.push({ x: inReach[0].x, y: inReach[0].y - inReach[0].radius - 12, text: '✦', ttl: 0.35, kind: 'bite' });
+  run.effects.push({ x: inReach[0].x, y: inReach[0].y - inReach[0].radius - 12,
+    text: combat.hitText ?? '✦', ttl: 0.35, kind: combat.hitKind ?? 'bite' });
+  // The sheet may hang its own follow-ups on the swing (glass shards, a thrown
+  // bottle); the engine only says that a botellazo landed.
+  p.characterDef.onMeleeHit?.(run, p, inReach[0], { hit, distance, nearest, fireRadial });
 }
 
 export function step(run, seconds, input = {}) {
@@ -478,6 +489,9 @@ export function step(run, seconds, input = {}) {
   const wasActive = def.specials.map(special => p[special.key] > 0);
   for (const key of decayKeys) p[key] = Math.max(0, p[key] - dt);
   for (const passive of def.passives) passive.tick?.(run, p, dt, ctx);
+  // A sheet with its own per-frame mechanic (Jhony's Tilt) asks here; the
+  // engine owns the clock, the ficha owns the rule.
+  def.onTick?.(run, p, dt, ctx);
   def.specials.forEach((special, i) => {
     if (wasActive[i] && p[special.key] <= 0) special.onExpire?.(run, p, ctx);
   });
@@ -532,7 +546,7 @@ export function step(run, seconds, input = {}) {
   run.spawnIn -= dt;
   const spawnConfig = waveConfig(run.act, run.wave);
   if (spawnConfig && run.spawnBudget > 0 && run.spawnIn <= 0 && run.enemies.length < ALIVE_CAP) {
-    const kind = pickKind(spawnConfig, run.random);
+    const kind = pickKind(spawnConfig, run.random, run.duration ? run.time / run.duration : 0);
     if (kind) {
       spawn(run, kind);
       run.spawnBudget--;
@@ -545,7 +559,8 @@ export function step(run, seconds, input = {}) {
     else {
       const empowered = p.sellNextMult ?? 1;
       fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
-        * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1) * empowered,
+        * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1) * empowered
+        * (def.passiveDamageMult?.(p) ?? 1),
         def.attack.device, p.attackRange, def.attack);
       p.sellNextMult = 1;
     }
@@ -697,6 +712,16 @@ export function step(run, seconds, input = {}) {
           shot.attack.blast.ttl ?? 5.4);
         shroomBlast(run, shot, target);
       }
+      // A thrown bottle may carry its own small blast: the ficha says how big
+      // and how hard, the engine only applies it once, on impact.
+      if (shot.blast) {
+        for (const other of run.enemies) {
+          if (other.hp <= 0 || other.id === target.id) continue;
+          if (distance(other, target) > shot.blast.radius) continue;
+          hit(run, other, shot.blast.damage, 'glass');
+        }
+        run.effects.push({ x: target.x, y: target.y, kind: 'glassBlast', r: shot.blast.radius, ttl: 0.4, duration: 0.4 });
+      }
       if (shot.kind === 'brick') {
         const fragments = p.rewardBonuses.brickFragments ?? 0;
         if (fragments > 0) {
@@ -705,9 +730,11 @@ export function step(run, seconds, input = {}) {
         }
       }
       const next = nearest(run, shot, shot.hit);
-      const pierce = shot.kind === 'remote' ? (p.rewardBonuses.bounce ?? 0)
+      // A projectile may carry its own bounce budget (the ultimate's bottles);
+      // otherwise the device kind owns it, as always.
+      const pierce = shot.pierce ?? (shot.kind === 'remote' ? (p.rewardBonuses.bounce ?? 0)
         : shot.kind === 'magic' ? (p.rewardBonuses.waifuPierce ?? 0)
-        : shot.kind === 'brick' ? (p.rewardBonuses.brickPierce ?? 0) : 0;
+        : shot.kind === 'brick' ? (p.rewardBonuses.brickPierce ?? 0) : 0);
       if (shot.hit.length <= pierce && next && distance(next, shot) < 300 * WORLD_SCALE) {
         shot.target = next.id;
         shot.damage *= 0.85;

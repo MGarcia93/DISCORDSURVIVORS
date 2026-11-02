@@ -36,6 +36,10 @@ export default {
     {
       wave: 4,
       perMinute: 90,
+      // A wave may declare `ramp` (see src/waves.mjs) to bring its mix in
+      // stages. Measured on Negro: any ramp that softens the first half of this
+      // wave takes him from 46% to 88-100% campaigns, so it stays flat until the
+      // rest of the campaign has pressure to spare.
       mix: { burningElite: 0.3, skeleton: 0.35, shaman: 0.35 },
       life: { burningElite: 174, skeleton: 52, shaman: 44 },
     },
