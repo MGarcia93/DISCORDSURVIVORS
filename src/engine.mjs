@@ -25,7 +25,7 @@ import { DEFENSE_MITIGATION_CAP } from './stats.mjs';
 import { pickKind, spawnInterval, waveBudget, waveConfig } from './waves.mjs';
 import { DEFAULT_ACT } from './campaign/acts.mjs';
 import { emit } from './bus.mjs';
-import { createStatState } from './stat-modifiers.mjs';
+import { createStatState, applyLiveStats } from './stat-modifiers.mjs';
 import { initializeRewards, awardXP, beginRewards, finishRewards, recordLegacyUpgrade } from './run-rewards.mjs';
 export { chooseLevelReward, skipEmptyChoice, buyItem, nextLevelXP } from './run-rewards.mjs';
 
@@ -111,48 +111,41 @@ export function chooseUpgrade(run, id) {
   return true;
 }
 
-// Cap lines for the stacked sale economy (ficha §4.3: the balance asks for
-// sensibleness; the engine holds the generically safe maximums).
-const SELL_DAMAGE_BUFF_CAP = 0.5;  // +50% daño total por liquidación
-const SELL_MOVE_SLOW_CAP = 0.5;   // hasta -50% de velocidad por ventas apiladas
-const SELL_ATK_SLOW_CAP = 0.6;    // hasta -60% de cadencia
-const SELL_DEF_LOSS_CAP = 0.4;    // hasta -40% de defensa base
-
 export function salePrice(run, item) {
   return Math.floor(item.coins * (1 + (run.player.rewardBonuses?.saleBonus ?? 0)));
 }
 
 // «Liquido todo, me voy de putas»: the character-agnostic sale routine. The
 // owned belongings and every number live in the sheet (special.items); this
-// engine routine applies a sale's shape: coins now, a temp damage buff and
-// the item's temp debuff, each sold exactly once per run.
+// engine routine applies a sale's shape: coins now and a temporary stat source
+// with the sheet's own signed modifiers. There is no sale-only ceiling: the
+// system already resolves every statistic against the body's declared caps and
+// refuses a combination that would make one impossible, the same way it refuses
+// an item that would.
 export function sellBelonging(run, key) {
   if (run.phase !== 'playing') return false;
   const p = run.player;
   const item = p.characterDef.specials?.find(s => s.key === 'sell')?.items?.[key];
   if (!item || p.soldItems?.[key]) return false;
+  // «Penalizaciones de venta reducidas» softens what the sheet charges, never
+  // what it pays: buffs keep their value, penalties shrink.
+  const penalty = 1 - Math.min(0.4, p.rewardBonuses?.salePenalty ?? 0);
+  const modifiers = (item.modifiers ?? []).map(modifier =>
+    (modifier.value < 0 ? { ...modifier, value: modifier.value * penalty } : modifier));
+  const sources = { ...(p.tempSources ?? {}), [key]: modifiers };
+  // Resolve before touching the body: an impossible sale is refused, not clamped.
+  try {
+    applyLiveStats(p, run.statState, sources);
+  } catch {
+    return false;
+  }
   p.soldItems = p.soldItems ?? {};
   p.soldItems[key] = true;
+  p.tempSources = sources;
+  p.tempTtls = { ...(p.tempTtls ?? {}), [key]: item.ttl };
   const proceeds = salePrice(run, item);
   run.coins += proceeds;
   p.characterDef.onSaleIncome?.(run, p, proceeds);
-  const penaltyScale = 1 - Math.min(0.4, p.rewardBonuses?.salePenalty ?? 0);
-  if (item.damageFrac) {
-    p.sellDamageFrac = Math.min(SELL_DAMAGE_BUFF_CAP, (p.sellDamageFrac ?? 0) + item.damageFrac);
-    p.sellDamageTtl = Math.max(p.sellDamageTtl ?? 0, item.damageTtl);
-  }
-  if (item.moveSlowFrac) {
-    p.sellMoveSlowFrac = Math.min(SELL_MOVE_SLOW_CAP, (p.sellMoveSlowFrac ?? 0) + item.moveSlowFrac * penaltyScale);
-    p.sellMoveSlowTtl = Math.max(p.sellMoveSlowTtl ?? 0, item.moveSlowTtl);
-  }
-  if (item.atkSlowFrac) {
-    p.sellAtkSlowFrac = Math.min(SELL_ATK_SLOW_CAP, (p.sellAtkSlowFrac ?? 0) + item.atkSlowFrac * penaltyScale);
-    p.sellAtkSlowTtl = Math.max(p.sellAtkSlowTtl ?? 0, item.atkSlowTtl);
-  }
-  if (item.defFrac) {
-    p.sellDefLossFrac = Math.min(SELL_DEF_LOSS_CAP, (p.sellDefLossFrac ?? 0) + item.defFrac * penaltyScale);
-    p.sellDefLossTtl = Math.max(p.sellDefLossTtl ?? 0, item.defTtl);
-  }
   if (item.visionTtl) p.sellVisionTtl = Math.max(p.sellVisionTtl ?? 0, item.visionTtl);
   if ((p.rewardBonuses?.saleNext ?? 0) > 0) p.sellNextMult = 1 + p.rewardBonuses.saleNext;
   run.effects.push({ x: p.x, y: p.y - 66 * WORLD_SCALE, text: item.quote, ttl: 1.5, kind: 'sale' });
@@ -416,7 +409,7 @@ function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } 
   if (invulnerable(p)) return 0;
   const defenseMult = p.characterDef.passiveDefenseMult?.(p) ?? 1;
   let incoming = damage
-    * (1 - Math.min(0.75, p.defense * defenseMult * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
+    * (1 - Math.min(0.75, p.defense * defenseMult + defenseBonus))
     * contactFactor;
   if ((p.shield ?? 0) > 0 && incoming > 0) {
     const absorbed = Math.min(p.shield, incoming);
@@ -543,6 +536,21 @@ export function step(run, seconds, input = {}) {
   ];
   const wasActive = def.specials.map(special => p[special.key] > 0);
   for (const key of decayKeys) p[key] = Math.max(0, p[key] - dt);
+  // Temporary stat sources expire on the engine's clock. Dropping one reapplies
+  // the permanent build plus whatever is still alive, so the body never keeps a
+  // debuff whose window closed.
+  if (p.tempTtls) {
+    let expired = false;
+    for (const key of Object.keys(p.tempTtls)) {
+      p.tempTtls[key] = Math.max(0, p.tempTtls[key] - dt);
+      if (p.tempTtls[key] <= 0) {
+        delete p.tempSources[key];
+        delete p.tempTtls[key];
+        expired = true;
+      }
+    }
+    if (expired) applyLiveStats(p, run.statState, p.tempSources);
+  }
   for (const passive of def.passives) passive.tick?.(run, p, dt, ctx);
   // A sheet with its own per-frame mechanic (Jhony's Tilt) asks here; the
   // engine owns the clock, the ficha owns the rule.
@@ -566,8 +574,7 @@ export function step(run, seconds, input = {}) {
   if (magnitude) {
     p.lastMoveX = mx / magnitude;
     p.lastMoveY = my / magnitude;
-    const speed = p.speed * speedFactor * (def.passiveSpeedMult?.(p) ?? 1)
-      * (p.sellMoveSlowTtl > 0 ? 1 - (p.sellMoveSlowFrac ?? 0) : 1);
+    const speed = p.speed * speedFactor * (def.passiveSpeedMult?.(p) ?? 1);
     p.x = Math.max(24 * WORLD_SCALE, Math.min(WIDTH - 24 * WORLD_SCALE, p.x + mx / magnitude * speed * dt));
     p.y = Math.max(28 * WORLD_SCALE, Math.min(HEIGHT - 24 * WORLD_SCALE, p.y + my / magnitude * speed * dt));
     if (run.prison) {
@@ -614,7 +621,7 @@ export function step(run, seconds, input = {}) {
     else {
       const empowered = p.sellNextMult ?? 1;
       const fired = fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
-        * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1) * empowered
+        * empowered
         * (def.passiveDamageMult?.(p) ?? 1),
         def.attack.device, p.attackRange, def.attack);
       // A sheet that hangs extra waves off its own cadence counts real shots
@@ -624,8 +631,7 @@ export function step(run, seconds, input = {}) {
     }
     const combat = def.combat || {};
     run.shotIn = p.shotInterval * (p.permissionActive > 0 ? (combat.permissionRateMult ?? 1) : 1)
-      * (def.passiveRateMult?.(p) ?? 1)
-      * (p.sellAtkSlowTtl > 0 ? 1 + (p.sellAtkSlowFrac ?? 0) : 1);
+      * (def.passiveRateMult?.(p) ?? 1);
   }
   for (const special of def.specials) {
     if (p[special.key] > 0) special.onTick?.(run, p, dt, ctx);

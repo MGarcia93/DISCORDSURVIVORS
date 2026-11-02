@@ -84,12 +84,13 @@ test('sale income settles debt before crediting the wallet, preserving sale buff
     const run = arena();
     run.player.senaDebt = debt;
     run.coins = 7;
+    const damage = run.player.damage, speed = run.player.speed;
     assert.equal(run.player.characterDef.saleHud(run, { coins: 20 }), `${Math.min(20, debt)} fichas a deuda · ${coins} fichas disponibles`);
     assert.equal(sellBelonging(run, 'psp'), true);
     assert.equal(run.player.senaDebt, remainingDebt);
     assert.equal(run.coins, coins + 7, 'previous wallet is not spent again to settle sale debt');
-    assert.equal(run.player.sellMoveSlowFrac, 0.15);
-    assert.equal(run.player.sellDamageFrac, 0.1);
+    assert.ok(Math.abs(run.player.speed - speed * 0.85) < 1e-9, 'the -15% of movement is real');
+    assert.ok(Math.abs(run.player.damage - damage * 1.1) < 1e-9, 'the +10% of damage is real');
     assert.match(run.player.characterDef.buffs(run.player).map(buff => buff.name).join(' '), /−15% VELOCIDAD/);
     const snapshot = JSON.stringify(run);
     assert.equal(sellBelonging(run, 'psp'), false);
@@ -132,11 +133,11 @@ test('sale penalties have visible countdowns and disappear when expired', () => 
   for (const key of ['psp', 'keyboard', 'chair', 'monitor']) sellBelonging(run, key);
   const hud = () => run.player.characterDef.buffs(run.player, run)
     .map(buff => `${buff.name} · ${Math.ceil(buff.seconds)}s`).join(' | ');
-  for (const expected of [/−15% VELOCIDAD · 10s/, /INTERVALO DE TIRO · 10s/, /−15% DEFENSA · 10s/, /VISIÓN REDUCIDA · 10s/]) {
+  for (const expected of [/−15% VELOCIDAD · 10s/, /−20% VELOCIDAD DE ATAQUE · 10s/, /−15% DEFENSA · 10s/, /VISIÓN REDUCIDA · 10s/]) {
     assert.match(hud(), expected);
   }
   advance(run, 10.1);
-  assert.doesNotMatch(hud(), /VELOCIDAD|INTERVALO DE TIRO|DEFENSA|VISIÓN REDUCIDA/);
+  assert.doesNotMatch(hud(), /VELOCIDAD|DEFENSA|VISIÓN REDUCIDA/);
 });
 
 test('paying debt with a sale still slows movement, slows firing and reduces defense', () => {
@@ -148,24 +149,34 @@ test('paying debt with a sale still slows movement, slows firing and reduces def
   step(base, 0.05, { x: 1 });
   step(slow, 0.05, { x: 1 });
   assert.ok(Math.abs((slow.player.x - startX) / (base.player.x - startX) - 0.85) < 1e-9);
-  for (const [item, multiplier] of [['keyboard', 1.2], ['pc', 1.3]]) {
+  // A penalty is a percentage of the statistic, so -20% of attack speed leaves
+  // an interval of base / 0.8: the reading the sheet authored, and the cadence
+  // reads the debuffed stat instead of multiplying it a second time.
+  for (const [item, speedFactor] of [['keyboard', 0.8], ['pc', 0.7]]) {
     const run = arena();
     run.player.senaDebt = 200;
+    const baseInterval = run.player.shotInterval;
     sellBelonging(run, item);
+    assert.ok(Math.abs(run.player.shotInterval - baseInterval / speedFactor) < 1e-9, `${item} slows attack speed`);
     run.shotIn = 0;
     step(run, 0.05);
-    assert.ok(Math.abs(run.shotIn - run.player.shotInterval * multiplier) < 1e-9);
+    assert.equal(run.shotIn, run.player.shotInterval, `${item}: the cadence uses the debuffed stat`);
     assert.equal(run.coins, 0);
   }
   const run = arena();
-  run.player.senaDebt = 50;
-  sellBelonging(run, 'chair');
-  run.enemies.push({ id: ++run.serial, kind: 'zombie', x: run.player.x, y: run.player.y,
-    hp: 1000, maxHp: 1000, speed: 0, radius: 10 });
-  step(run, 0.05);
+  const shielded = arena();
+  shielded.player.senaDebt = 50;
+  sellBelonging(shielded, 'chair');
+  for (const target of [run, shielded]) {
+    target.enemies.push({ id: ++target.serial, kind: 'zombie', x: target.player.x, y: target.player.y,
+      hp: 1000, maxHp: 1000, speed: 0, radius: 10 });
+    step(target, 0.05);
+  }
   // A zombie hits for 26 now, softened by defence and by the sold shield.
   const taken = 110 - run.player.hp;
+  const takenAfterSale = 110 - shielded.player.hp;
   assert.ok(taken > 0 && taken < 26, `the hit lands softened (${taken})`);
+  assert.ok(takenAfterSale > taken, `the sold chair makes the same hit hurt more (${takenAfterSale} > ${taken})`);
 });
 
 test('ordinary bounties stay spendable without automatically settling sale-only debt', () => {

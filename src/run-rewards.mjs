@@ -1,6 +1,6 @@
 import { BALANCE, DEFAULT_CATALOG, EFFECTS } from './reward-data.mjs';
 import { selectLevelOptions, sampleEntries } from './reward-catalog.mjs';
-import { createStatState, withStatSource, applyStatState } from './stat-modifiers.mjs';
+import { createStatState, withStatSource, applyStatState, applyLiveStats } from './stat-modifiers.mjs';
 
 // Catalog IDs are author data: "constructor" or "toString" must not resolve to
 // inherited object properties when counting owned copies or ranks.
@@ -79,6 +79,9 @@ function applyReward(run, source, reward) {
   run.statState = preview.statState;
   run.effectSources = preview.effectSources;
   run.player.rewardBonuses = preview.bonuses;
+  // A permanent acquisition rebuilds the body from the build alone; whatever
+  // temporary source was alive (a sale's window) has to come back with it.
+  applyLiveStats(run.player, run.statState, run.player.tempSources);
   return true;
 }
 

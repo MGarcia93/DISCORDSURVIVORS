@@ -100,8 +100,12 @@ test('Papazito sale-penalty upgrade softens real debuffs and stays capped', () =
   const base = createRun(() => 0.5, 'papazito'), upgraded = createRun(() => 0.5, 'papazito');
   take(upgraded, 'softer-sale', 2);
   for (const run of [base, upgraded]) sellBelonging(run, 'psp');
-  assert.ok(Math.abs(base.player.sellMoveSlowFrac - 0.15) < 1e-9);
-  assert.ok(Math.abs(upgraded.player.sellMoveSlowFrac - 0.15 * 0.8) < 1e-9);
+  const penalty = run => run.player.tempSources.psp.find(modifier => modifier.stat === 'moveSpeed').value;
+  assert.ok(Math.abs(penalty(base) + 15) < 1e-9, 'the sheet charges -15% of movement');
+  assert.ok(Math.abs(penalty(upgraded) + 15 * 0.8) < 1e-9, 'the upgrade softens the charge, never the payout');
+  const buff = run => run.player.tempSources.psp.find(modifier => modifier.stat === 'attack').value;
+  assert.equal(buff(base), 10, 'what a sale pays is never softened');
+  assert.equal(buff(upgraded), 10);
   const capped = createRun(() => 0.5, 'papazito');
   take(capped, 'softer-sale', upgrade('softer-sale').ranks.length);
   assert.equal(capped.player.rewardBonuses.salePenalty, 0.2);

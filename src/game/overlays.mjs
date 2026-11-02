@@ -1,5 +1,5 @@
 import { HEAL_COST, HEAL_AMOUNT, salePrice } from '../engine.mjs';
-import { describeReward } from '../reward-catalog.mjs';
+import { describeReward, STAT_LABELS } from '../reward-catalog.mjs';
 import { EFFECTS } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { formatTime } from './hud.mjs';
@@ -32,10 +32,14 @@ export function overlay() {
       const boost = [`+${salePrice(state.run, item)} fichas`];
       if (item.damageFrac) boost.push(`+${Math.round(item.damageFrac * 100)}% daño ${item.damageTtl}s`);
       const penalty = [];
-      if (item.moveSlowFrac) penalty.push(`−${Math.round(item.moveSlowFrac * 100)}% velocidad ${item.moveSlowTtl}s`);
-      if (item.atkSlowFrac) penalty.push(`−${Math.round(item.atkSlowFrac * 100)}% cadencia ${item.atkSlowTtl}s`);
-      if (item.defFrac) penalty.push(`−${Math.round(item.defFrac * 100)}% defensa ${item.defTtl}s`);
-      if (item.visionTtl) penalty.push(`visión borrosa ${item.visionTtl}s`);
+      // The card prints the same signed modifiers the engine resolves: a sale is
+      // an item with a deadline, so it is described like an item.
+      for (const modifier of item.modifiers ?? []) {
+        const value = `${modifier.value < 0 ? '−' : '+'}${Math.abs(Math.round(modifier.value))}%`;
+        const line = `${STAT_LABELS[modifier.stat]} ${value} (${item.ttl}s)`;
+        (modifier.value < 0 ? penalty : boost).push(line);
+      }
+      if (item.visionTtl) penalty.push(`visión borrosa (${item.visionTtl}s)`);
       return { boost: boost.join(' · '), penalty: penalty.join(' · ') };
     };
     const cards = Object.entries(stock).map(([key, item]) => {

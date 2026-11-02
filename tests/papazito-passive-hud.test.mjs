@@ -54,6 +54,7 @@ test('arena labels Papazito passive bar without changing Solago panel', async ()
     state.lastPhase = '';
     overlay();
     assert.match(getNode('#game-overlay').innerHTML, /10 fichas a deuda · 15 fichas disponibles/);
+    assert.match(getNode('#game-overlay').innerHTML, /Velocidad de ataque −20% \(10s\)/, 'the card names the signed modifier');
     state.sellMenuOpen = false;
     state.selectedCharacter = 'solago';
     game();

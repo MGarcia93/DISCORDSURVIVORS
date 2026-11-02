@@ -80,6 +80,25 @@ export function resolveStatState(state, changedSource = 'base') {
   return resolveEntityStats(percentages);
 }
 
+// Temporary sources: the same modifier set every permanent acquisition uses,
+// plus a deadline the caller owns (a sale's debuff, a boss's curse). They never
+// enter `run.statState`, the permanent snapshot cloned across worlds; the live
+// body is always the build plus whatever temporary sources are still alive.
+export function withTemporarySources(state, sources = {}) {
+  let next = state;
+  for (const [source, modifiers] of Object.entries(sources)) {
+    next = withStatSource(next, `temp:${source}`, modifiers);
+  }
+  return next;
+}
+
+// The player's resolved stats: the permanent build with its fichas' ceilings,
+// plus the live temporary sources. An impossible combination throws here, the
+// same way an impossible item does, instead of being clamped into a playable lie.
+export function applyLiveStats(player, state, sources = {}) {
+  return applyStatState(player, withTemporarySources(state, sources));
+}
+
 export function previewStatSource(state, source, modifiers) {
   return {
     before: resolveStatState(state),

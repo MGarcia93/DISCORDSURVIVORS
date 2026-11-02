@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, activateSpecial, sellBelonging, step } from '../src/engine.mjs';
 import { CHARACTERS, getCharacter } from '../src/characters/index.mjs';
+import { grantItem } from '../src/run-rewards.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
 
 test('characters are registered data objects with behavior, and the engine resolves unknown ids to negro', () => {
@@ -136,12 +137,17 @@ test('the sell table lives in the sheet, once per belonging, reset by every new 
   const items = spec.items;
   assert.deepEqual(Object.keys(items), ['psp', 'monitor', 'keyboard', 'chair', 'pc']);
   assert.equal(items.psp.coins, 20);
-  assert.equal(items.psp.damageFrac, 0.1);
+  // A sale speaks the same signed modifier language as an item or an upgrade.
+  assert.deepEqual(items.psp.modifiers, [
+    { stat: 'attack', operation: 'percent', value: 10 },
+    { stat: 'moveSpeed', operation: 'percent', value: -15 },
+  ]);
+  assert.equal(items.psp.ttl, 10);
   assert.equal(items.monitor.visionTtl, 10, 'the monitor sale blinds for its 10s');
-  assert.equal(items.keyboard.atkSlowFrac, 0.2);
-  assert.equal(items.chair.defFrac, 0.15);
+  assert.deepEqual(items.keyboard.modifiers.map(modifier => modifier.stat), ['attack', 'attackSpeed']);
+  assert.deepEqual(items.chair.modifiers.map(modifier => modifier.stat), ['attack', 'defense']);
   assert.equal(items.pc.coins, 100);
-  assert.equal(items.pc.damageTtl, 15);
+  assert.equal(items.pc.ttl, 15);
   assert.equal(items.psp.quote, 'Vendió la PSP');
   assert.equal(items.pc.quote, 'Vendió hasta la PC');
 });
@@ -149,12 +155,13 @@ test('the sell table lives in the sheet, once per belonging, reset by every new 
 test('selling a belonging pays its coins, applies its buffs/debuffs and marks it sold once', () => {
   const run = createRun(() => 0.5, 'papazito');
   const p = run.player;
+  const baseDamage = p.damage, baseSpeed = p.speed;
   assert.equal(sellBelonging(run, 'psp'), true);
   assert.equal(run.coins, 20);
-  assert.equal(p.sellDamageFrac, 0.1, '+10% temporal de daño');
-  assert.equal(p.sellDamageTtl, 10);
-  assert.equal(p.sellMoveSlowFrac, 0.15, '-15% temporal de velocidad');
-  assert.equal(p.sellMoveSlowTtl, 10);
+  assert.ok(Math.abs(p.damage - baseDamage * 1.1) < 1e-9, '+10% temporal de daño');
+  assert.ok(Math.abs(p.speed - baseSpeed * 0.85) < 1e-9, '-15% temporal de velocidad');
+  assert.deepEqual(Object.keys(p.tempSources), ['psp']);
+  assert.equal(p.tempTtls.psp, 10);
   assert.equal(p.soldItems.psp, true, 'sold once');
   assert.ok(run.effects.some(e => e.text === 'Vendió la PSP'));
 
@@ -162,17 +169,51 @@ test('selling a belonging pays its coins, applies its buffs/debuffs and marks it
   assert.equal(run.coins, 20, 'no double pay');
 });
 
-test('sell buffs and debuffs are capped and never touch the real build', () => {
+test('sale modifiers stack additively like every other source and never touch the real build', () => {
   const run = createRun(() => 0.5, 'papazito');
   const p = run.player;
+  const baseDamage = p.damage, baseSpeed = p.speed, baseInterval = p.shotInterval;
   sellBelonging(run, 'psp');
   sellBelonging(run, 'pc');
   const baselineUpgrades = { ...run.upgrades };
-  assert.equal(p.sellDamageFrac, 0.5, 'stacked sale damage caps at +50%');
-  assert.ok(Math.abs(p.sellMoveSlowFrac - 0.45) < 1e-9, 'the PC stacks 30% over the 15% pendiente');
-  assert.equal(p.sellAtkSlowFrac, 0.3, 'the PC slows the attack rate 30%');
+  // Percent modifiers add up in points, the rule the whole system follows:
+  // +10 + +50 of attack, -15 + -30 of movement and -30 of attack speed.
+  assert.ok(Math.abs(p.damage - baseDamage * 1.6) < 1e-9, 'stacked sale damage adds up, no arbitrary ceiling');
+  assert.ok(Math.abs(p.speed - baseSpeed * 0.55) < 1e-9, 'the PC stacks 30% over the 15% pendiente');
+  assert.ok(Math.abs(p.shotInterval - baseInterval / 0.7) < 1e-9, 'the PC slows attack speed 30%');
   assert.deepEqual(baselineUpgrades, run.upgrades, 'sales never remove real upgrades');
   assert.equal(sellBelonging(run, 'keyboard'), true, 'the other belongings remain sellable');
+});
+
+test('a permanent purchase never wipes a sale that is still alive', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  const p = run.player;
+  const baseSpeed = p.speed;
+  sellBelonging(run, 'psp');
+  // Buying rebuilds the body from the permanent build; the live temporary
+  // source has to survive that rebuild or the debuff would vanish silently.
+  assert.equal(grantItem(run, 'scissors'), true);
+  assert.ok(Math.abs(p.speed - baseSpeed * 0.85) < 1e-9, 'the -15% is still on the body');
+  assert.deepEqual(Object.keys(p.tempSources), ['psp']);
+});
+
+test('an impossible sale is refused instead of clamped into a playable lie', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  const def = run.player.characterDef;
+  const sell = def.specials.find(s => s.key === 'sell');
+  // A ficha that authors a movement penalty past -100% would make the body walk
+  // backwards. The system rejects it at the sale, exactly like an impossible
+  // item is rejected when the catalog is built: nothing is paid, nothing stays.
+  run.player.characterDef = { ...def, specials: [{ ...sell, items: {
+    ...sell.items,
+    impossible: { label: 'Imposible', coins: 10, ttl: 5, quote: 'Vendió lo imposible',
+      modifiers: [{ stat: 'moveSpeed', operation: 'percent', value: -120 }] },
+  } }] };
+  const speed = run.player.speed;
+  assert.equal(sellBelonging(run, 'impossible'), false);
+  assert.equal(run.coins, 0, 'a refused sale pays nothing');
+  assert.equal(run.player.soldItems?.impossible, undefined, 'it stays sellable-or-not, never marked');
+  assert.equal(run.player.speed, speed, 'the body keeps the build it had');
 });
 
 test('the sheet can relabel its ability HUD per state, so an empty change stays visible', () => {
@@ -190,12 +231,15 @@ test('the sheet can relabel its ability HUD per state, so an empty change stays 
 test('sale buffs expire: after their ttl the damage and debuffs stop applying', () => {
   const run = createRun(() => 0.5, 'papazito');
   const p = run.player;
+  const baseDamage = p.damage, baseSpeed = p.speed;
   sellBelonging(run, 'psp');
   for (let i = 0; i < 220; i++) run.time += 0; // no free stepping: we drive the arena
   run.spawnIn = 100;
   for (let i = 0; i < 202; i++) step(run, 0.05, { x: 1, y: 0 }); // ~10.1s > 10s ttls
-  assert.equal(p.sellDamageTtl, 0, 'the damage window spent out');
-  assert.equal(p.sellMoveSlowTtl, 0, 'the move debuff window spent out');
+  assert.deepEqual(p.tempSources, {}, 'every temporary source dropped');
+  assert.deepEqual(p.tempTtls, {});
+  assert.equal(p.damage, baseDamage, 'the damage buff spent out');
+  assert.equal(p.speed, baseSpeed, 'the move debuff spent out');
   run.enemies.push({ id: 1, x: p.x + p.speed, y: p.y, hp: 100, maxHp: 100, speed: 0, radius: 10, kind: 'zombie' });
   run.shotIn = 0.001;
   step(run, 0.05, {});

@@ -50,6 +50,14 @@ Reductions only clamp excess current life: 60/100 minus 20 becomes 60/80;
 90/100 becomes 80/80. Do not use this acquisition API to implement temporary
 maximum-life buffs; their lifecycle policy remains undecided.
 
+Temporary modifications use the dedicated pair in `src/stat-modifiers.mjs`:
+`withTemporarySources(state, sources)` folds `{ id: modifiers }` over the
+permanent snapshot without storing them in it, and `applyLiveStats(player,
+state, sources)` resolves the build plus whatever is still alive. The caller
+owns each source's deadline and removes it when it expires, so the permanent
+snapshot stays clean and safe to clone into the next wave or world. This covers
+statistics only: a temporary maximum-life effect still needs its own policy.
+
 Unknown stats or operations, non-finite values and invalid resulting stats
 fail before a new snapshot is returned. Life and attack speed must remain
 positive; other finite stats must remain nonnegative. Existing unlimited

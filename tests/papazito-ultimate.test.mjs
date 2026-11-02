@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, activateSpecial, step, WORLD_SCALE as WS } from '../src/engine.mjs';
+import { createRun, activateSpecial, step, sellBelonging, WORLD_SCALE as WS } from '../src/engine.mjs';
 
 function arena() {
   const run = createRun(() => 0.5, 'papazito');
@@ -47,8 +47,9 @@ test('ANAMENCUÁ emits exactly three dense, evenly spaced outward rings without 
 
 test('three brick rings hit enemies in every direction with defense and sale damage applied', () => {
   const run = arena();
-  run.player.sellDamageTtl = 10;
-  run.player.sellDamageFrac = 0.5;
+  // The sale's +50% is a stat source now: the ring reads the same `p.damage`
+  // the brick does, so no attack path can forget it.
+  assert.equal(sellBelonging(run, 'pc'), true);
   for (let i = 0; i < 4; i++) {
     const angle = i * Math.PI / 2;
     run.enemies.push({ id: ++run.serial, kind: 'zombie', x: run.player.x + Math.cos(angle) * 100 * WS,
@@ -56,7 +57,7 @@ test('three brick rings hit enemies in every direction with defense and sale dam
   }
   activateSpecial(run, 'anamencua');
   for (let i = 0; i < 150; i++) step(run, 0.01);
-  for (const enemy of run.enemies) assert.ok(Math.abs(enemy.hp - (200 - 3 * 34 * 1.5 * 0.8)) < 1e-8);
+  for (const enemy of run.enemies) assert.ok(Math.abs(enemy.hp - (200 - 3 * run.player.damage * 0.8)) < 1e-8);
   assert.equal(run.enemies.length, 4);
 });
 

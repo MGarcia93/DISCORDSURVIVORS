@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun } from '../src/engine.mjs';
+import { createRun, sellBelonging } from '../src/engine.mjs';
 import { activeBuffs } from '../src/game/buffs.mjs';
 
 const named = buffs => buffs.map(buff => buff.name);
@@ -57,15 +57,17 @@ test('Warrior reports the smoke cloud while one is on the floor', () => {
 test('Papazito moves panic and the sale penalties into the buff list', () => {
   const run = createRun(() => 0.5, 'papazito');
   run.player.panicTtl = 5;
-  run.player.sellMoveSlowTtl = 10;
-  run.player.sellMoveSlowFrac = 0.15;
+  assert.equal(sellBelonging(run, 'psp'), true);
   const buffs = activeBuffs(run.player, run);
   const panic = buffs.find(buff => buff.id === 'panic');
-  const slow = buffs.find(buff => buff.id === 'sellMoveSlowTtl');
+  const slow = buffs.find(buff => buff.id === 'sale:moveSpeed');
+  const buff = buffs.find(entry => entry.id === 'sale:attack');
   assert.equal(panic.name, 'PÁNICO');
   assert.match(panic.detail, /\+30% MOVIMIENTO/);
+  // The panel prints the live temporary sources, never a stored copy of them.
   assert.equal(slow.name, '−15% VELOCIDAD');
   assert.equal(Math.ceil(slow.seconds), 10);
+  assert.equal(buff.name, '+10% DAÑO');
   assert.doesNotMatch(run.player.characterDef.statusHud(run.player), /PÁNICO|VELOCIDAD/, 'the status panel keeps only the debt ledger');
 });
 

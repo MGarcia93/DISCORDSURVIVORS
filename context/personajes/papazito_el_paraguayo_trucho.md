@@ -86,7 +86,7 @@ Se activa el estado **«¡ME RE CAGARON!»** durante **5 segundos**:
 - El inventario de pertenencias se restablece al comenzar una nueva partida.
 - Las ventas **no eliminan armas, mejoras ni objetos reales de la build**.
 - Los debuffs deben notarse sin impedir jugar: en particular, la pérdida de visión del monitor no puede ocultar información crítica de la interfaz.
-- Las bonificaciones de ventas simultáneas podrán acumularse, pero el balance debe establecer límites para evitar efectos excesivos.
+- Las bonificaciones de ventas simultáneas podrán acumularse. Cada venta se expresa como un modificador con signo — `percent('attack', 10)`, `percent('moveSpeed', -15)` — y se suma en puntos como cualquier ítem o mejora. No hay techos propios de la venta: un valor que dejaría una estadística en cero o negativa se rechaza en la venta en lugar de recortarse en silencio.
 - La interacción de venta debe integrarse al ritmo de un survivor: preferiblemente entre oleadas o en una interfaz breve que pause la acción, según el flujo general del juego.
 
 **Chistes al vender:** «Total, no lo usaba», «Vendió la PSP», «Vendió el monitor», «Vendió hasta la PC».

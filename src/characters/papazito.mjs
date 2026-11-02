@@ -2,6 +2,15 @@ import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawPapazito } from '../sprites.mjs';
 
+// A sale authors the same signed modifier shape every item and upgrade uses:
+// `percent('attack', 10)` is a buff, `percent('moveSpeed', -15)` a penalty. The
+// engine resolves them as temporary stat sources, so no sale needs a bespoke
+// multiplier or a ceiling of its own.
+const percent = (stat, value) => ({ stat, operation: 'percent', value });
+// Panel wording for the statistics a sale can move. The ficha owns the labels,
+// the way it owns every other name it prints.
+const SALE_LABELS = { attack: 'DAÑO', moveSpeed: 'VELOCIDAD', attackSpeed: 'VELOCIDAD DE ATAQUE', defense: 'DEFENSA' };
+
 // Papazito — El Paraguayo Trucho. Stat sheet: percentual values over
 // BASE_STATS (src/stats.mjs) per context/personajes/papazito_el_paraguayo_trucho.md §3
 // and the playtesting balance so far: life 110, ranged damage 30 (like El Negro),
@@ -54,7 +63,9 @@ const papazito = {
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   attack: { type: 'ranged', device: 'brick' },
-  decays: ['panicTtl', 'sellDamageTtl', 'sellMoveSlowTtl', 'sellAtkSlowTtl', 'sellDefLossTtl', 'sellVisionTtl'],
+  // A sale's penalties are temporary stat sources, so the engine's clock only
+  // owns the panic window and the monitor's blur. Nothing else needs a timer.
+  decays: ['panicTtl', 'sellVisionTtl'],
   // Schedule each bill once so the HUD reveals its exact cost and deadline.
   passives: [{
     key: 'sena', kind: 'sena',
@@ -92,6 +103,10 @@ const papazito = {
   },
   onStageStart(run, p) {
     p.senaCharges = p.senaDebt = p.senaLastCost = p.senaLastPaid = p.panicTtl = 0;
+    // A sale's window never crosses a stage boundary, and neither does the blur.
+    p.tempSources = {};
+    p.tempTtls = {};
+    p.sellVisionTtl = 0;
     this.scheduleSena(run, p);
   },
   // Kills during panic keep the panic alive, up to a hard ceiling.
@@ -141,19 +156,30 @@ const papazito = {
     return lines.join('\n');
   },
   // Panic and the sale penalties expire on their own, so they are buffs; the
-  // status panel keeps the ledger that does not tick down.
+  // status panel keeps the ledger that does not tick down. The penalties are
+  // read from the live temporary sources, so the panel prints what the body is
+  // really carrying: the sum of every sale still alive, never a stored copy.
   buffs(p) {
     const list = [];
     if (p.panicTtl > 0) {
       list.push({ id: 'panic', name: 'PÁNICO', seconds: p.panicTtl, detail: '+30% MOVIMIENTO · −40% INTERVALO' });
     }
-    const penalties = [
-      ['sellMoveSlowTtl', `−${Math.round((p.sellMoveSlowFrac ?? 0) * 100)}% VELOCIDAD`],
-      ['sellAtkSlowTtl', `+${Math.round((p.sellAtkSlowFrac ?? 0) * 100)}% INTERVALO DE TIRO`],
-      ['sellDefLossTtl', `−${Math.round((p.sellDefLossFrac ?? 0) * 100)}% DEFENSA`],
-      ['sellVisionTtl', 'VISIÓN REDUCIDA'],
-    ];
-    for (const [key, label] of penalties) if (p[key] > 0) list.push({ id: key, name: label, seconds: p[key] });
+    const totals = {};
+    for (const [key, modifiers] of Object.entries(p.tempSources ?? {})) {
+      const seconds = p.tempTtls?.[key] ?? 0;
+      for (const modifier of modifiers) {
+        const entry = totals[modifier.stat] ?? { value: 0, seconds: 0 };
+        entry.value += modifier.value;
+        entry.seconds = Math.max(entry.seconds, seconds);
+        totals[modifier.stat] = entry;
+      }
+    }
+    for (const [stat, entry] of Object.entries(totals)) {
+      if (entry.seconds <= 0) continue;
+      const sign = entry.value < 0 ? '−' : '+';
+      list.push({ id: `sale:${stat}`, name: `${sign}${Math.abs(Math.round(entry.value))}% ${SALE_LABELS[stat] ?? stat}`, seconds: entry.seconds });
+    }
+    if (p.sellVisionTtl > 0) list.push({ id: 'sellVisionTtl', name: 'VISIÓN REDUCIDA', seconds: p.sellVisionTtl });
     return list;
   },
   passiveSpeedMult: p => (p.panicTtl > 0 ? 1.3 : 1),
@@ -169,11 +195,16 @@ const papazito = {
   specials: [{
     key: 'sell', name: 'Liquidó todo', hotkey: 'e', duration: 0, cooldown: 0,
     items: {
-      psp: { label: 'PSP', coins: 20, damageFrac: 0.1, damageTtl: 10, moveSlowFrac: 0.15, moveSlowTtl: 10, quote: 'Vendió la PSP' },
-      monitor: { label: 'Monitor', coins: 35, damageFrac: 0.15, damageTtl: 10, visionTtl: 10, quote: 'Vendió el monitor' },
-      keyboard: { label: 'Teclado', coins: 25, damageFrac: 0.15, damageTtl: 10, atkSlowFrac: 0.2, atkSlowTtl: 10, quote: 'Vendió el teclado' },
-      chair: { label: 'Silla gamer', coins: 30, damageFrac: 0.2, damageTtl: 10, defFrac: 0.15, defTtl: 10, quote: 'Vendió la silla gamer', flavor: 'Con lo que tenía de trono improvisado' },
-      pc: { label: 'PC completa', coins: 100, damageFrac: 0.5, damageTtl: 15, moveSlowFrac: 0.3, moveSlowTtl: 15, atkSlowFrac: 0.3, atkSlowTtl: 15, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa' },
+      psp: { label: 'PSP', coins: 20, ttl: 10, quote: 'Vendió la PSP',
+        modifiers: [percent('attack', 10), percent('moveSpeed', -15)] },
+      monitor: { label: 'Monitor', coins: 35, ttl: 10, quote: 'Vendió el monitor', visionTtl: 10,
+        modifiers: [percent('attack', 15)] },
+      keyboard: { label: 'Teclado', coins: 25, ttl: 10, quote: 'Vendió el teclado',
+        modifiers: [percent('attack', 15), percent('attackSpeed', -20)] },
+      chair: { label: 'Silla gamer', coins: 30, ttl: 10, quote: 'Vendió la silla gamer', flavor: 'Con lo que tenía de trono improvisado',
+        modifiers: [percent('attack', 20), percent('defense', -15)] },
+      pc: { label: 'PC completa', coins: 100, ttl: 15, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa',
+        modifiers: [percent('attack', 50), percent('moveSpeed', -30), percent('attackSpeed', -30)] },
     },
   }, {
     // Three dense expanding rings, not a continuous homing rain.
@@ -190,8 +221,9 @@ const papazito = {
       if (run.anamencuaBursts >= this.burstCount) return;
       run.anamencuaIn -= dt;
       if (run.anamencuaIn > 0) return;
-      const saleBonus = p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1;
-      ctx.fireRadial(run, p, p.damage * this.damageMult * saleBonus,
+      // The sale's damage buff is already in `p.damage` (it is a stat source),
+      // so every path that swings uses it: the brick, the ring and the burst.
+      ctx.fireRadial(run, p, p.damage * this.damageMult,
         { count: this.bricksPerBurst, speed: this.speed, radius: this.spawnRadius });
       run.anamencuaBursts++;
       run.anamencuaIn += this.burstInterval;

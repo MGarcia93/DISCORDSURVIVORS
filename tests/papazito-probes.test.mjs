@@ -51,23 +51,26 @@ test('S3 probe: La seña leaves early bounties alone until the timed charge', ()
   assert.equal(p.panicTtl, 0, 'earning coins does not activate panic');
 });
 
-test('S4 probe: the sale table, the once-per-run stock and the +50% damage ceiling', () => {
+test('S4 probe: the sale table, the once-per-run stock and the shared stat rules', () => {
   const table = {
-    psp: [20, 0.10, 0.15], monitor: [35, 0.15, 0], keyboard: [25, 0.15, 0],
-    chair: [30, 0.20, 0], pc: [100, 0.50, 0.30],
+    psp: [20, 10, -15], monitor: [35, 15, 0], keyboard: [25, 15, 0],
+    chair: [30, 20, 0], pc: [100, 50, -30],
   };
-  for (const [key, [coins, damageFrac, moveSlowFrac]] of Object.entries(table)) {
-    const r = createRun(Math.random, 'papazito');
+  for (const [key, [coins, attack, moveSpeed]] of Object.entries(table)) {    const r = createRun(Math.random, 'papazito');
     const p = r.player;
+    const baseDamage = p.damage, baseSpeed = p.speed;
     assert.equal(sellBelonging(r, key), true, key);
     assert.equal(r.coins, coins);
-    assert.ok(Math.abs((p.sellDamageFrac ?? 0) - damageFrac) < 1e-12);
-    assert.ok(Math.abs((p.sellMoveSlowFrac ?? 0) - moveSlowFrac) < 1e-12);
+    assert.ok(Math.abs(p.damage - baseDamage * (1 + attack / 100)) < 1e-9, `${key} damage`);
+    assert.ok(Math.abs(p.speed - baseSpeed * (1 + moveSpeed / 100)) < 1e-9, `${key} movement`);
     assert.equal(sellBelonging(r, key), false, `${key} sells exactly once`);
   }
+  // Nothing is clamped: percent modifiers add up in points, the system's rule.
   const r = createRun(Math.random, 'papazito');
+  const baseDamage = r.player.damage, baseSpeed = r.player.speed;
   for (const key of Object.keys(table)) sellBelonging(r, key);
-  assert.ok(Math.abs(r.player.sellDamageFrac - 0.5) < 1e-9, 'damage stack caps at +50%');
+  assert.ok(Math.abs(r.player.damage - baseDamage * 2.1) < 1e-9, 'every sale pays its damage: 10+15+15+20+50 points');
+  assert.ok(Math.abs(r.player.speed - baseSpeed * 0.55) < 1e-9, 'every sale charges its movement');
   const next = createRun(Math.random, 'papazito');
   for (const key of Object.keys(table)) assert.ok(sellBelonging(next, key), 'inventory resets per run');
 });

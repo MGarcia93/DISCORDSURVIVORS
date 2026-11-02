@@ -40,7 +40,6 @@ test('the new engine hooks stay undefined for every ficha but Jhony', () => {
 test('damage intake keeps the original formula when passiveDefenseMult is absent', () => {
   const setups = [
     ['plain', () => {}],
-    ['sold defence', p => { p.sellDefLossTtl = 5; p.sellDefLossFrac = 0.4; }],
     ['mitigation cap', p => { p.defense = 0.75; }],
     ['no mitigation', p => { p.defense = 0; }],
   ];
@@ -49,13 +48,14 @@ test('damage intake keeps the original formula when passiveDefenseMult is absent
     // from it instead of double-applying the character's own defence.
     const raw = contactDamage(id, p => { p.defense = 0; });
     for (const [label, setup] of setups) {
-      let defense = 0, sell = 1;
+      let defense = 0;
       const delta = contactDamage(id, p => {
         setup(p);
         defense = p.defense;
-        sell = p.sellDefLossTtl > 0 ? 1 - p.sellDefLossFrac : 1;
       });
-      const expected = raw * (1 - Math.min(0.75, defense * sell));
+      // A sale's defence loss is a stat source now, so it arrives already
+      // resolved in `p.defense` and intake keeps exactly one formula.
+      const expected = raw * (1 - Math.min(0.75, defense));
       assert.ok(Math.abs(delta - expected) < 1e-9, `${id} ${label}: ${delta} vs ${expected}`);
     }
   }
