@@ -55,25 +55,26 @@ test('Papafrita runs on the percentage core and throws voice waves, not weapons'
   assert.ok(Math.abs(p.shotInterval - 100 / 240) < 1e-9);
   assert.equal(p.speed, 165 * WORLD_SCALE);
   assert.equal(CHARACTERS.papafrita.attack.device, 'voice', 'his voice is the weapon');
-  assert.equal(CHARACTERS.papafrita.attack.pierce, 2, 'a wave crosses several bodies');
-  assert.equal(CHARACTERS.papafrita.attack.spin, false, 'a wave points, it does not tumble');
+  assert.equal(CHARACTERS.papafrita.attack.straight, true, 'the wave keeps one heading, it never re-targets');
+  assert.equal(CHARACTERS.papafrita.attack.pierce, undefined, 'no bounce: it is a wall of sound, not a shot');
 });
 
-test('the wave pierces the row in front of him', () => {
+test('the wave travels one way and hits every edge it touches', () => {
   const run = solo();
   const p = run.player;
   const first = dummy(run, 120);
   const second = dummy(run, 180);
-  const third = dummy(run, 240);
+  const behind = dummy(run, -180);
   run.shotIn = 0.001;
   step(run, 0.016);
   const shot = run.projectiles[0];
   assert.equal(shot.kind, 'voice');
-  assert.equal(shot.pierce, 2);
+  assert.equal(shot.through, true, 'it crosses bodies instead of bouncing off them');
+  assert.ok(shot.vx > 0 && shot.vy === 0, 'it keeps the heading it was thrown on');
   for (let frame = 0; frame < 60 && run.projectiles.length; frame++) step(run, 0.05);
   assert.ok(first.hp < 400, 'the first body takes it');
-  assert.ok(second.hp < 400, 'and the wave keeps going');
-  assert.ok(third.hp < 400, 'three bodies for pierce 2');
+  assert.ok(second.hp < 400, 'and the wave keeps going through it');
+  assert.equal(behind.hp, 400, 'nothing behind him is touched: there is no bounce');
 });
 
 test('the collection counts different upgrades, never copies', () => {
@@ -94,9 +95,9 @@ test('2/6 adds a body to every wave, 4/6 sends a secondary wave and 6/6 doubles 
   dummy(two, 120);
   step(two, 0.016);
   const blessed = two.projectiles[0];
-  blessed.hit.push(99);
+  const before = blessed.radius;
   papafrita.onProjectileHit(two, blessed);
-  assert.equal(blessed.pierce, 3, '2/6 crosses one more');
+  assert.ok(blessed.radius > before, '2/6 widens the wave so it reaches one more body');
 
   const four = solo();
   own(four, 'and-what-else', 'fishing', 'other-console', 'not-done-yet');
@@ -121,15 +122,16 @@ test('«¿Y sabés qué más?» widens the same wave with every listener', () =>
   const run = solo();
   const p = run.player;
   p.rewardBonuses = { waveGrowth: 3 };
-  const shot = { kind: 'voice', width: 10, pierce: 1, hit: [1], echo: false };
-  papafrita.onProjectileHit(run, shot);
-  assert.ok(shot.width > 10, 'the wave grows');
-  assert.equal(shot.pierce, 2, 'and crosses one more body per rank, capped');
+  const shot = { kind: 'voice', width: 16, hit: [1], echo: false, radius: 8 * WORLD_SCALE };
+  const wide = [];
   for (let hit = 0; hit < 6; hit++) {
-    shot.hit.push(100 + hit);
     papafrita.onProjectileHit(run, shot);
+    wide.push(shot.width);
   }
-  assert.ok(shot.pierce <= 1 + 3, 'the growth is capped by the rank');
+  assert.ok(wide[0] > 16, 'the wave grows with the first listener');
+  assert.ok(wide.at(-1) > wide[0], 'and keeps growing');
+  assert.equal(Math.max(...wide), 20 + 3 * 12, 'up to the rank cap');
+  assert.equal(shot.radius, Math.max(4, shot.width / 2) * WORLD_SCALE, 'the hit box follows the drawing');
 });
 
 test('«Lo compré en otra consola» copies the wave to another target', () => {
@@ -144,16 +146,17 @@ test('«Lo compré en otra consola» copies the wave to another target', () => {
   assert.notEqual(run.projectiles[0].target, 1, 'never the body the main wave is on');
 });
 
-test('«Todavía no terminé» bursts the bubble when the monologue ends', () => {
+test('«Todavía no terminé» bursts when the last wave is gone', () => {
   const run = solo();
   const p = run.player;
   p.rewardBonuses = { bubbleBurst: 3 };
   const ctx = toolbox(run);
   const victim = dummy(run, 30);
   activateSpecial(run, 'monologo');
-  run.monologue.ttl = 0.01;
+  p.monologo = 0;
+  run.monologue.rings.length = 0;
   papafrita.onTick(run, p, 0.05, ctx);
-  assert.equal(run.monologue, null, 'the bubble is gone');
+  assert.equal(run.monologue, null, 'the monologue is over');
   assert.ok(victim.hp < 400, 'and it burst on the way out');
   assert.ok(run.effects.some(effect => effect.kind === 'voiceRing'));
 });
@@ -197,20 +200,27 @@ test('«Edición definitiva» sends a delayed echo on the same heading', () => {
   assert.ok(run.projectiles.some(shot => shot.vx !== undefined && shot.echo === true), 'the echo travels straight');
 });
 
-test('the monologue is a zone: it ticks, it pulls the ordinary walkers, never the boss', () => {
+test('the monologue is an expanding wave: it opens, it hits who it crosses', () => {
   const run = solo();
   const p = run.player;
   passivate(run, p);
   assert.equal(activateSpecial(run, 'monologo'), true);
-  assert.ok(run.monologue, 'the bubble exists');
-  const walker = { id: 1, x: p.x + 100, y: p.y, hp: 400, maxHp: 400, speed: 0, radius: 10, kind: 'zombie' };
-  const boss = { id: 2, x: p.x + 100, y: p.y + 40, hp: 400, maxHp: 400, speed: 0, radius: 20, kind: 'boss', boss: true };
-  run.enemies.push(walker, boss);
-  const walkerX = walker.x, bossX = boss.x;
-  for (let i = 0; i < 6; i++) papafrita.onTick(run, p, 0.1, toolbox(run));
-  assert.ok(walker.x < walkerX, 'the walker drifts toward the talk');
-  assert.equal(boss.x, bossX, 'the boss does not lose control');
-  assert.ok(walker.hp < 400, 'and the zone burns');
+  const near = dummy(run, 60);
+  const far = dummy(run, 230);
+  papafrita.onTick(run, p, 0.016, toolbox(run));
+  const wave = run.monologue.rings[0];
+  assert.ok(wave, 'a wave left the mouth');
+  const start = wave.radius;
+  papafrita.onTick(run, p, 0.1, toolbox(run));
+  assert.ok(wave.radius > start, 'and it keeps opening');
+  assert.equal(near.hp, 400, 'a body is only hit when the edge actually reaches it');
+  p.monologo = 0; // one wave only, so every hit can be counted
+  for (let i = 0; i < 8; i++) papafrita.onTick(run, p, 0.1, toolbox(run));
+  assert.ok(near.hp < 400, 'the closest body takes it as the edge crosses it');
+  assert.equal(far.hp, 400, 'the far one waits for the edge');
+  for (let i = 0; i < 20; i++) papafrita.onTick(run, p, 0.1, toolbox(run));
+  assert.ok(far.hp < 400, 'until the wave opens that far');
+  assert.equal(near.hp, 400 - 30 * 0.8, 'each body is hit exactly once per wave');
 });
 
 function passivate(run, p) {
@@ -275,16 +285,17 @@ test('6/6 keeps the 4/6 wave and sends the two echoes to different bodies', () =
   p.waves = 14; // the fifteenth attack is a multiple of 3 and of 5
   for (let i = 0; i < 4; i++) dummy(run, 100 + i * 60);
   papafrita.onShot(run, p, toolbox(run), { target: 1 });
-  const targets = run.projectiles.map(shot => shot.target);
-  assert.equal(targets.length, 3, 'the secondary wave still fires at 6/6, plus the two echoes');
-  assert.equal(new Set(targets).size, 3, 'and every one goes to a different body');
+  const angles = run.projectiles.map(shot => Math.round(shot.angle * 100) / 100);
+  assert.equal(angles.length, 3, 'the secondary wave still fires at 6/6, plus the two echoes');
+  assert.equal(new Set(angles).size, 3, 'and every wave leaves on its own heading');
 });
 
-test('the bubble clears itself even when the burst upgrade is not owned', () => {
+test('the waves clear themselves even when the burst upgrade is not owned', () => {
   const run = solo();
   const p = run.player;
   p.rewardBonuses = {};
-  run.monologue = { x: p.x, y: p.y, r: 132 * WORLD_SCALE, ttl: 0.01, tick: 0 };
+  p.monologo = 0;
+  run.monologue = { x: p.x, y: p.y, rings: [{ x: p.x, y: p.y, radius: 1, max: 1, hit: new Set() }], emitIn: 99 };
   papafrita.onTick(run, p, 0.05, toolbox(run));
-  assert.equal(run.monologue, null, 'no ghost bubble left on the run');
+  assert.equal(run.monologue, null, 'no ghost wave left on the run');
 });

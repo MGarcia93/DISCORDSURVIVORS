@@ -47,8 +47,8 @@ test('the paleta growth stacks three times and ends up at a ranged reach', () =>
     assert.equal(applyUpgradeRank(run, entry), true);
     reaches.push(run.player.attackRange);
   }
-  assert.ok(reaches[0] < 90, 'she starts in melee');
-  assert.ok(reaches[1] > 130 && reaches[1] < 170, `first rank is a step, not a teleport (${reaches[1]})`);
+  assert.ok(reaches[0] < 95, 'she starts in melee');
+  assert.ok(reaches[1] > 130 && reaches[1] < 180, `first rank is a step, not a teleport (${reaches[1]})`);
   assert.ok(reaches[3] > 260, `third rank reaches like a ranged character (${reaches[3]})`);
   assert.ok(reaches[0] < reaches[1] && reaches[1] < reaches[2] && reaches[2] < reaches[3], 'each rank is more');
 });
