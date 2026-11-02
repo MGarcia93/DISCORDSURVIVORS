@@ -34,20 +34,20 @@
       <path fill="#15161e" d="M78 179h12v8h11v13H72v-11h-8v-6h14zM109 187h6v13h-12v-7h6z" />
       <path fill="#101118" d="M63 157h5v8h11v5h14v-5h11v-8h5v11h-13v7H76v-7H63zM78 187h16v4H78z" />
       <path fill="#55565e" d="M52 159h4v8h9v5h13v7h13v-7h14v-5h7v-8h3v11h-8v6H94v7H76v-7H63v-5H52z" />
-      <path fill="#e1c9a0" d="M54 160h2v8h9v4h13v7h13v-7h14v-4h8v3h-6v5H94v7H76v-7H63v-5H54z" />
-      <path fill="#7c6d64" d="M42 183h4v17h-4zM121 181h3v19h-3z" />
+      <path fill="#3d3d4a" d="M54 160h2v8h9v4h13v7h13v-7h14v-4h8v3h-6v5H94v7H76v-7H63v-5H54z" />
+      <path fill="#2a2b36" d="M42 183h4v17h-4zM121 181h3v19h-3z" />
     </g>
     <g id="carapace-shoulders" transform="translate(0 -20)">
       <path fill="#15161e" d="M32 137h16v7h9v10h-7v14H37v11H10v-10H4v-13h9v-10h19zM116 141h17v7h13v11h9v16h-11v8h-23v-10h-12v-18h7z" />
-      <path fill="#87373e" d="M29 144h15v6h9v5h-8v10H34v10H14v-8H8v-7h10v-10h11zM120 147h11v7h12v10h8v8h-11v7h-15v-11h-11v-10h6z" />
-      <path fill="#af504c" d="M29 145h11v7H29v6H18v6h-6v-4h9v-10h8zM123 150h7v7h11v9h-7v-5h-11z" />
-      <path fill="#c96d5a" d="M30 146h8v3h-8zM22 153h6v3h-6zM124 152h4v5h-4z" />
-      <path fill="#602a35" d="M32 159h13v7H33v7H17v-4h15zM118 164h8v8h13v6h-15v-8h-6z" />
-      <path fill="#b29a7c" d="M10 166h13v3h11v-4h10v4h-8v4H23v-3H10zM124 172h11v-3h13v4h-11v4h-13z" />
-      <path fill="#e1c9a0" d="M12 166h11v2H12zM25 170h9v2h-9zM137 170h9v2h-9z" />
+      <path fill="#20212a" d="M29 144h15v6h9v5h-8v10H34v10H14v-8H8v-7h10v-10h11zM120 147h11v7h12v10h8v8h-11v7h-15v-11h-11v-10h6z" />
+      <path fill="#343440" d="M29 145h11v7H29v6H18v6h-6v-4h9v-10h8zM123 150h7v7h11v9h-7v-5h-11z" />
+      <path fill="#3d3d4a" d="M30 146h8v3h-8zM22 153h6v3h-6zM124 152h4v5h-4z" />
+      <path fill="#15161e" d="M32 159h13v7H33v7H17v-4h15zM118 164h8v8h13v6h-15v-8h-6z" />
+      <path fill="#2a2b36" d="M10 166h13v3h11v-4h10v4h-8v4H23v-3H10zM124 172h11v-3h13v4h-11v4h-13z" />
+      <path fill="#3d3d4a" d="M12 166h11v2H12zM25 170h9v2h-9zM137 170h9v2h-9z" />
       <path fill="#15161e" d="M17 177h14v7h9v16H10v-12h7zM129 181h14v8h9v11h-28v-12h5z" />
-      <path fill="#84373f" d="M11 185h17v7h10v8H5v-8h6zM133 187h12v6h9v7h-29v-8h8z" />
-      <path fill="#b15a50" d="M12 186h12v3H12zM135 188h7v3h-7z" />
+      <path fill="#20212a" d="M11 185h17v7h10v8H5v-8h6zM133 187h12v6h9v7h-29v-8h8z" />
+      <path fill="#343440" d="M12 186h12v3H12zM135 188h7v3h-7z" />
     </g>
   </g>
   <g id="hair-back" transform="translate(0 -38)">
