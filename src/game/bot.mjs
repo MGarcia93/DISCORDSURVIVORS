@@ -61,6 +61,12 @@ export function scoreSpot(run, x, y, { dodgeRings = true } = {}) {
       score -= Math.min(2, (gap - reach) / reach) * 0.15;
     }
   }
+  // Enemy fire is dodgeable: keep the body off the line the shot is taking.
+  for (const shot of run.projectiles ?? []) {
+    if (shot.team !== 'enemy') continue;
+    const gap = Math.hypot(x - shot.x, y - shot.y);
+    if (gap < 70) score -= (1 - gap / 70) * 2.5;
+  }
   if (dodgeRings) {
     for (const wave of run.shockwaves ?? []) {
       const gap = Math.hypot(x - wave.x, y - wave.y);
@@ -85,10 +91,24 @@ export function botInput(run, profile = SKILLS.perfect, random = () => 1, previo
     const y = clamp(p.y + direction.y * profile.lookahead, 30, HEIGHT - 30);
     return scoreSpot(run, x, y, options);
   };
+  let nearest = null, nearestGap = Infinity;
+  for (const enemy of run.enemies) {
+    if (enemy.hp <= 0) continue;
+    const gap = Math.hypot(p.x - enemy.x, p.y - enemy.y);
+    if (gap < nearestGap) { nearestGap = gap; nearest = enemy; }
+  }
+  // Hit and run: while the attack is on cooldown there is no reason to stay
+  // inside the reach that gets bitten back.
+  const cooling = p.attackRange < 160 && (run.shotIn ?? 0) > 0.12;
   let best = { x: 0, y: 0 };
   let bestScore = scoreSpot(run, p.x, p.y, options);
   for (const direction of DIRECTIONS.get(profile.candidates) ?? DIRECTIONS.get(16)) {
-    const value = score(direction);
+    let value = score(direction);
+    if (cooling) {
+      const gap = Math.hypot(p.x + direction.x * profile.lookahead - (nearest?.x ?? p.x),
+        p.y + direction.y * profile.lookahead - (nearest?.y ?? p.y));
+      if (gap < p.attackRange * 0.9) value -= 0.5;
+    }
     if (value > bestScore) { bestScore = value; best = direction; }
   }
   // Hysteresis: re-deciding sixty times a second on a sixteen-way wheel makes a
