@@ -25,6 +25,12 @@ export function waveLife(act, wave, kind) {
   return waveConfig(act, wave)?.life?.[kind];
 }
 
+// Same shape as life: a wave says what its kinds hit for, so the act can use a
+// body from another world at its own tier. Without a row the sheet speaks.
+export function waveDamage(act, wave, kind) {
+  return waveConfig(act, wave)?.damage?.[kind];
+}
+
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave
 // that only fields zombies keeps a deterministic spawn sequence.
 // A wave may declare `ramp`: stages of its own mix, each with the share of the

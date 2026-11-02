@@ -20,18 +20,18 @@ export default {
   miniboss: { wave: 5, kind: 'lordZir', name: 'LORD ZIR' },
   boss: { wave: 6, kind: 'lilith', name: 'LILITH' },
   waves: [
-    { wave: 1, perMinute: 54, mix: { skeleton: 0.7, lesserDemon: 0.3 }, life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 } },
+    { wave: 1, perMinute: 54, mix: { skeleton: 0.7, lesserDemon: 0.3 }, life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 }, damage: { skeleton: 14, lesserDemon: 20, shaman: 15, burningElite: 26, batSwarm: 9 } },
     {
       wave: 2,
       perMinute: 66,
       mix: { skeleton: 0.4, lesserDemon: 0.35, shaman: 0.25 },
-      life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 },
+      life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 }, damage: { skeleton: 14, lesserDemon: 20, shaman: 15, burningElite: 26, batSwarm: 9 },
     },
     {
       wave: 3,
       perMinute: 78,
       mix: { skeleton: 0.4, lesserDemon: 0.35, shaman: 0.25 },
-      life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 },
+      life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 }, damage: { skeleton: 14, lesserDemon: 20, shaman: 15, burningElite: 26, batSwarm: 9 },
     },
     {
       wave: 4,
@@ -47,14 +47,14 @@ export default {
       ],
       // The wave's own total: the ramp only decides when they arrive.
       mix: { burningElite: 0.32, skeleton: 0.42, shaman: 0.26 },
-      life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 },
+      life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 }, damage: { skeleton: 14, lesserDemon: 20, shaman: 15, burningElite: 26, batSwarm: 9 },
     },
     // Lord Zir arrives once at the start of this wave; his court of bats keeps
     // him company and gives the wave its pressure. His death closes the wave,
     // not the clock or the remaining bats.
-    { wave: 5, untimed: true, perMinute: 24, mix: { batSwarm: 1 }, life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 } },
+    { wave: 5, untimed: true, perMinute: 24, mix: { batSwarm: 1 }, life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 }, damage: { skeleton: 14, lesserDemon: 20, shaman: 15, burningElite: 26, batSwarm: 9 } },
     // The boss wave is untimed and carries no budget of its own: Lilith brings
     // her echo with her, not a horde.
-    { wave: 6, perMinute: 0, mix: {}, life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 } },
+    { wave: 6, perMinute: 0, mix: {}, life: { skeleton: 49, lesserDemon: 70, shaman: 49, burningElite: 252, batSwarm: 29 }, damage: { skeleton: 14, lesserDemon: 20, shaman: 15, burningElite: 26, batSwarm: 9 } },
   ],
 };

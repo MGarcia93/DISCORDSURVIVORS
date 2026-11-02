@@ -22,7 +22,7 @@ export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
 import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies/index.mjs';
 import { DEFENSE_MITIGATION_CAP, resolveLifePercent } from './stats.mjs';
-import { pickKind, spawnInterval, waveBudget, waveConfig, waveLife } from './waves.mjs';
+import { pickKind, spawnInterval, waveBudget, waveConfig, waveDamage, waveLife } from './waves.mjs';
 import { DEFAULT_ACT } from './campaign/acts.mjs';
 import { emit } from './bus.mjs';
 import { createStatState } from './stat-modifiers.mjs';
@@ -175,11 +175,10 @@ export function createEnemy(run, kind, x, y) {
   // A wave may declare a speed boost: the Administrator's hotfix makes the wave
   // it touches faster without any sheet knowing about it.
   const boost = waveConfig(run.act, run.wave)?.speedBoost ?? 1;
-  // Each world hits harder than the one before: the act says how much.
-  const power = run.act?.power ?? {};
+  // The wave declares what its kinds hit for, like it declares their life.
   return { id: ++run.serial, kind, x, y,
     hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
-    contactDamage: enemyContactDamage(kind, run.wave) * (power.damage ?? 1),
+    contactDamage: waveDamage(run.act, run.wave, kind) ?? enemyContactDamage(kind, run.wave),
     radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) * boost,
     attackRange: enemyAttackRange(kind, run.wave),
     attackInterval: enemyAttackInterval(kind, run.wave),
@@ -345,10 +344,10 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     const angle = Math.atan2(target.y - source.y, target.x - source.x);
     const speed = (attack.speed ?? 520) * WORLD_SCALE;
     const width = attack.width ?? 12;
-    const wave = { x: source.x + Math.cos(angle) * 18, y: source.y + Math.sin(angle) * 18,
+    const wave = { x: source.x, y: source.y,
       vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
       damage, kind, device, hit: [], ttl: Math.max(0.5, maxDistance / speed + 0.25),
-      angle, spin: false, through: true, lift: attack.lift ?? 0,
+      angle, spin: false, through: true, lift: attack.lift ?? 0, lead: attack.lead ?? 0,
       radius: Math.max(4, width / 2) * WORLD_SCALE, width };
     run.projectiles.push(wave);
     emit('shot', { run, kind });

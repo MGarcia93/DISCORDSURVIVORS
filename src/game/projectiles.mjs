@@ -8,7 +8,13 @@ const CAST_DEVICES = new Set(['remote', 'joystick', 'phone', 'shroom', 'brick', 
 export function drawProjectiles(ctx, projectiles) {
   for (const shot of projectiles) {
     ctx.save();
-    ctx.translate(Math.round(shot.x), Math.round(shot.y - (shot.lift ?? 0)));
+    // `lift` and `lead` move only the drawing: the hitbox keeps its own place,
+    // so an enemy at contact distance is never skipped.
+    const lead = shot.lead ?? 0;
+    ctx.translate(
+      Math.round(shot.x + Math.cos(shot.angle) * lead),
+      Math.round(shot.y - (shot.lift ?? 0) + Math.sin(shot.angle) * lead),
+    );
     // Four readable headings instead of free rotation: the pixel art is drawn on
     // the grid and a smooth angle blurs it.
     // A voice wave turns with its heading: the loud end leads, so going left
