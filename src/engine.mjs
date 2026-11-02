@@ -20,9 +20,9 @@ export const HEAL_AMOUNT = 60;
 import { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 export { WORLD_SCALE, WIDTH, HEIGHT } from './constants.mjs';
 import { getCharacter } from './characters/index.mjs';
-import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from './enemies/index.mjs';
-import { DEFENSE_MITIGATION_CAP, resolveLifePercent } from './stats.mjs';
-import { pickKind, spawnInterval, waveBudget, waveConfig, waveDamage, waveLife } from './waves.mjs';
+import { ENEMY_KINDS, enemyBounty, enemyCombatStats } from './enemies/index.mjs';
+import { DEFENSE_MITIGATION_CAP } from './stats.mjs';
+import { pickKind, spawnInterval, waveBudget, waveConfig } from './waves.mjs';
 import { DEFAULT_ACT } from './campaign/acts.mjs';
 import { emit } from './bus.mjs';
 import { createStatState } from './stat-modifiers.mjs';
@@ -170,18 +170,17 @@ export function buyHeal(run) {
 // to place a named kind without running a whole wave.
 export function createEnemy(run, kind, x, y) {
   const def = ENEMY_KINDS[kind];
-  const percent = waveLife(run.act, run.wave, kind);
-  const hp = percent === undefined ? enemyHp(kind, run.wave) : resolveLifePercent(percent);
+  // The sheet owns the six combat stats at the run's wave; the act only scales
+  // them with the tier it declares for THIS kind, stat by stat.
+  const stats = enemyCombatStats(kind, run.wave, run.act.statMultipliers?.[kind]);
   // A wave may declare a speed boost: the Administrator's hotfix makes the wave
   // it touches faster without any sheet knowing about it.
   const boost = waveConfig(run.act, run.wave)?.speedBoost ?? 1;
-  // The wave declares what its kinds hit for, like it declares their life.
   return { id: ++run.serial, kind, x, y,
-    hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
-    contactDamage: waveDamage(run.act, run.wave, kind) ?? enemyContactDamage(kind, run.wave),
-    radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) * boost,
-    attackRange: enemyAttackRange(kind, run.wave),
-    attackInterval: enemyAttackInterval(kind, run.wave),
+    hp: stats.hp, maxHp: stats.hp, defense: stats.defense,
+    contactDamage: stats.contactDamage,
+    radius: def.radius * WORLD_SCALE, speed: stats.speed * boost,
+    attackRange: stats.attackRange, attackInterval: stats.attackInterval,
     projectile: def.projectile,
     actions: def.actions, boss: def.boss === true };
 }
@@ -440,6 +439,13 @@ function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } 
   return incoming;
 }
 
+// A body built by hand (tests, dev viewers) may skip the sheet lookup. When it
+// does, the fallback still reads the sheet at the act's tier: an act-5 body
+// cannot silently land with its act-1 damage.
+function contactDamageOf(run, enemy) {
+  return enemy.contactDamage ?? enemyCombatStats(enemy.kind, run.wave, run.act?.statMultipliers?.[enemy.kind]).contactDamage;
+}
+
 // A ranged enemy's shot is the player's projectile with another owner: it leaves
 // the enemy toward where the player stands and flies straight, so stepping out
 // of it works. The ficha only names the art and the damage it carries.
@@ -453,7 +459,7 @@ function fireEnemyShot(run, enemy) {
     x: enemy.x, y: enemy.y,
     vx: dx / length * speed, vy: dy / length * speed,
     team: 'enemy', device: enemy.projectile ?? 'bolt',
-    damage: enemy.contactDamage ?? enemyContactDamage(enemy.kind, run.wave),
+    damage: contactDamageOf(run, enemy),
     radius: 5 * WORLD_SCALE, ttl: 3, angle: Math.atan2(dy, dx), hit: [],
   });
 }
@@ -685,7 +691,7 @@ export function step(run, seconds, input = {}) {
       if ((enemy.attackRange ?? 0) > 0) fireEnemyShot(run, enemy);
       // A melee action may declare its own damage: the boss's cleave is not the
       // contact swing, and the ficha says so instead of the engine knowing it.
-      else hurtPlayer(run, enemy, action.damage ?? enemy.contactDamage ?? enemyContactDamage(enemy.kind, run.wave), {
+      else hurtPlayer(run, enemy, action.damage ?? contactDamageOf(run, enemy), {
         defenseBonus: def.contactDefenseBonus?.(p) ?? 0, contactFactor,
       });
       // A confused mind swings slower; otherwise the sheet owns the cadence.

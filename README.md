@@ -27,11 +27,18 @@ Each world's scenery lives in `src/backgrounds/` and is selected per scene with 
 | Move | WASD, arrow keys, or touch direction buttons |
 | Attack | Automatic alternating remote, joystick, and phone shots; a shot locks its target in flight and vanishes if it dies, while a successful remote hit can bounce to up to two more enemies |
 | Regenerate health | Stand still for two seconds |
-| Modo Otaku | Q or the ability button; smaller eight-second waifu summon, eighteen-second cooldown |
-| Me da paja | E or the ability button; six-second chair aura, twenty-five-second cooldown |
+| Modo Otaku | E or the ability button; smaller eight-second waifu summon, eighteen-second cooldown |
+| Me da paja | Q or the ability button; six-second chair aura, twenty-two-second cooldown |
 | Solago's Mordida de paleta | Automatic short-range melee attack |
 | Sonrisa blindada | Automatic temporary defense boost |
-| STAND: ¡LA PATRONA! | E or the ability button; Solago crouches and stays still while she attacks for seven seconds, then takes one scissors hit |
+| STAND: ¡LA PATRONA! | Q or the ability button; Solago crouches and stays still while she attacks for seven seconds, then takes one scissors hit |
+| Jhony's Botellazo | Automatic short-range swing with the beer bottle; the bottle is never consumed |
+| Un traguito más | E or the ability button; six seconds of faster botellazos and faster Tilt |
+| ME VI UNA GUÍA | Q or the ability button; ten seconds of thrown bottles that bounce between enemies |
+| Papafrita's No te callás más | Automatic voice waves that cross several enemies |
+| Me falta un ítem | Automatic: the collection counts different signature upgrades, never copies; 2/6, 4/6 and 6/6 add waves |
+| Monólogo interminable | E or the ability button; a bubble zone that burns and pulls ordinary enemies for six seconds |
+| AHORA SÍ COMPLETÉ LA BUILD | Q or the ability button; six seconds of waves in several directions plus extra bubbles |
 | Test-unlock characters | At the main menu press **Alt+Shift+U**; writes one global debug-unlock flag to local storage |
 | Pause / resume | Escape or the pause / resume buttons |
 
@@ -41,13 +48,37 @@ The title menu supports Up/Down to choose and Enter to confirm. Open **CONTROLES
 
 Solago's chore meter fills every eight kills. When full, it grants +30% damage and attack speed for eight seconds. **Alt+Shift+U** on the title screen sets one `debugUnlockAll` flag in the versioned local-storage record. The shared character-unlock check uses that same flag for every implemented character and future characters registered through it. Normal character unlocks follow completed or manually skipped campaign encounters, not victories with different survivors. Existing encounter history and legacy unlock flags remain valid, so previously met characters become available without replaying. This is local browser progress, not account sync. The cheat only changes local storage; it does not edit the run or character data.
 
-Solago plays as a short-range fighter: an animated palette-bite attack, a slightly extended melee reach and narrower hitbox, timed Smile Armor defense, and the E-key Patrona Stand ultimate with a scissors slash. Every eight kills fill the chore-task meter; the temporary buff starts automatically. While the Stand is active Solago crouches and cannot move; when it expires he takes a scissors hit but remains where the player left him.
+Solago plays as a short-range fighter: an animated palette-bite attack, a slightly extended melee reach and narrower hitbox, timed Smile Armor defense, and the Q-key Patrona Stand ultimate with a scissors slash. Every eight kills fill the chore-task meter; the temporary buff starts automatically. While the Stand is active Solago crouches and cannot move; when it expires he takes a scissors hit but remains where the player left him.
 
 ## Papazito's economy
 
 La Seña runs on a combat timer, not coin pickups. Each stage starts with a random bill of 8–12 coins due in 8–12 seconds. Each bill adds at least 4 coins to the next randomized charge and shortens the next interval by at least 1 second, down to a 4-second minimum. Random variation never makes a later bill cheaper or its interval longer. The HUD reveals the next exact bill and countdown, the last payment, and outstanding debt. An empty wallet does not cancel the bill: unpaid amounts accumulate as debt. Sales repay that debt before adding any remaining proceeds to the wallet, while still granting their temporary damage bonus and penalties. Debt, escalation and panic reset at the next stage; sold belongings remain sold for the run.
 
-Every bill grants the existing five-second panic buff (+30% movement and a 40% shorter firing interval). Active sale penalties and their remaining time appear under the passive bar. **Q** opens the sale menu; **R** fires three rings of 48 bricks with a 40-second cooldown.
+Every bill grants the existing five-second panic buff (+30% movement and a 40% shorter firing interval). Active sale penalties and their remaining time appear in the buff list at the top right. **E** opens the sale menu; **Q** fires three rings of 48 bricks with a 25-second cooldown.
+
+## Jhony's Tilt
+
+Jhony joins the roster after meeting him at the end of Act 1, and the Act 1
+scene still keeps him out of the group: the roster only borrows the ficha. His
+bar runs from 0 to 100 and fills with damage taken and with the horde standing
+on top of him, so camping in a corner never charges it. At 100 he snaps into
+Furia for six seconds: +40% attack, +25% attack speed and −30% defence, plus a
+mouthful of health back. The bar restarts from zero and cannot refill while
+Furia lasts. Six exclusive level upgrades give him the circle, the shout, the
+glass, the thrown bottles, the Zomboid stomp and the broken build; each one has
+an evolution that only appears after its base was taken.
+
+## Papafrita's collection
+
+Papafrita unlocks by finishing Act 5, and he fights with his voice: ranged waves
+that cross several bodies, with the highest cadence in the roster and the
+frailest body. His passive, «Me falta un ítem», counts **different** exclusive
+upgrades, never copies: three levels of «¿Y sabés qué más?» are still 1/6. At 2/6
+every wave crosses one more enemy, at 4/6 every fifth attack throws a secondary
+wave at another target, and at 6/6 every third attack fires two short echoes.
+Each of the six signatures has levels I, II and III, and a copy never advances
+the collection. His own slot opens more often than the rest of the roster's,
+because a collector who never sees his shelf cannot collect anything.
 
 ## Visual direction
 

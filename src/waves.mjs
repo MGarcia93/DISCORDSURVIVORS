@@ -9,8 +9,10 @@
 // kills slowly.
 //
 // Mix weights are shares of a single roll, so { zombie: 0.7, runner: 0.3 } means
-// every spawn is a 70/30 draw. Life percentages are over BASE_STATS
-// (src/stats.mjs): 46 == 46 hp for that wave.
+// every spawn is a 70/30 draw. A wave says WHO arrives and how often; it never
+// says how hard they hit. Every statistic belongs to the enemy sheet
+// (src/enemies/), and the act's `statMultipliers` is the only place that scales
+// one for its own tier.
 export function waveConfig(act, wave) {
   return act?.waves?.[wave - 1] ?? null;
 }
@@ -19,16 +21,6 @@ export function waveBudget(act, wave, duration) {
   const config = waveConfig(act, wave);
   if (!config || !Number.isFinite(duration)) return 0;
   return Math.round(config.perMinute * duration / 60);
-}
-
-export function waveLife(act, wave, kind) {
-  return waveConfig(act, wave)?.life?.[kind];
-}
-
-// Same shape as life: a wave says what its kinds hit for, so the act can use a
-// body from another world at its own tier. Without a row the sheet speaks.
-export function waveDamage(act, wave, kind) {
-  return waveConfig(act, wave)?.damage?.[kind];
 }
 
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave

@@ -19,11 +19,11 @@ export default {
   narrative: 'acts/act-01/manifest.json',
   boss: { wave: 6, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' },
   waves: [
-    { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46, runner: 38, brute: 156 }, damage: { zombie: 26, runner: 24, brute: 90 } },
-    { wave: 2, perMinute: 60, mix: { zombie: 0.7, runner: 0.3 }, life: { zombie: 46, runner: 38, brute: 156 }, damage: { zombie: 26, runner: 24, brute: 90 } },
-    { wave: 3, perMinute: 72, mix: { zombie: 0.55, runner: 0.25, brute: 0.2 }, life: { zombie: 46, runner: 38, brute: 156 }, damage: { zombie: 26, runner: 24, brute: 90 } },
-    { wave: 4, perMinute: 84, mix: { zombie: 0.45, runner: 0.35, brute: 0.2 }, life: { zombie: 46, runner: 38, brute: 156 }, damage: { zombie: 26, runner: 24, brute: 90 } },
-    { wave: 5, perMinute: 96, mix: { zombie: 0.35, runner: 0.4, brute: 0.25 }, life: { zombie: 46, runner: 38, brute: 156 }, damage: { zombie: 26, runner: 24, brute: 90 } },
-    { wave: 6, perMinute: 0, mix: {}, life: { zombie: 46, runner: 38, brute: 156 }, damage: { zombie: 26, runner: 24, brute: 90 } },
+    { wave: 1, perMinute: 48, mix: { zombie: 1 } },
+    { wave: 2, perMinute: 60, mix: { zombie: 0.7, runner: 0.3 } },
+    { wave: 3, perMinute: 72, mix: { zombie: 0.55, runner: 0.25, brute: 0.2 } },
+    { wave: 4, perMinute: 84, mix: { zombie: 0.45, runner: 0.35, brute: 0.2 } },
+    { wave: 5, perMinute: 96, mix: { zombie: 0.35, runner: 0.4, brute: 0.25 } },
+    { wave: 6, perMinute: 0, mix: {} },
   ],
 };

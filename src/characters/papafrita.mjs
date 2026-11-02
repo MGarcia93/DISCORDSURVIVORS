@@ -57,7 +57,7 @@ function voiceWave(run, p, target, damage, width = 16) {
   run.projectiles.push({
     x: p.x, y: p.y,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-    damage, kind: 'voice', device: 'voice', hit: [], through: true, lift: 46, lead: 0,
+    damage, kind: 'voice', device: 'voice', hit: [], through: true, lift: 46, lead: -8,
     ttl: Math.max(0.5, p.attackRange / speed + 0.25),
     angle, spin: false, radius: Math.max(4, width / 2) * WORLD_SCALE, width,
   });
@@ -76,7 +76,7 @@ function spawnEcho(run, p, angle, damage, width) {
   run.projectiles.push({
     x: p.x, y: p.y,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-    damage, kind: 'voice', device: 'voice', hit: [], ttl: 1.6, through: true, lift: 46, lead: 0,
+    damage, kind: 'voice', device: 'voice', hit: [], ttl: 1.6, through: true, lift: 46, lead: -8,
     angle, radius: Math.max(4, width / 2) * WORLD_SCALE, width, echo: true,
   });
 }
@@ -189,7 +189,7 @@ const papafrita = {
     }),
   },
   // «No te callás más»: a straight wave of sound, not a homing shot.
-  attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560, lift: 46, lead: 0 },
+  attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560, lift: 46, lead: -8 },
   ownOfferChance: 0.45,
   combat: {},
   decays: [],

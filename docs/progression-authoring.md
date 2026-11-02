@@ -151,6 +151,23 @@ only opens after the base was taken):
 | `stomp` | Periodically finishes a weakened enemy in reach; the second rank adds an impact wave. |
 | `buildCombo` | The ultimate volley comes faster; the second rank adds a bounce to its bottles. |
 
+Papafrita's six signatures are the only ones with three levels (I/II/III). His
+passive counts how many DIFFERENT ids he owns, so the effect values are read as
+levels, not as independent bonuses:
+
+| Effect | What it does |
+|---|---|
+| `waveGrowth` | Each enemy crossed widens the wave, and every rank allows one more body through it. |
+| `copyWave` | Every 6/5/4 attacks a copy leaves toward another target; a copy never copies itself. |
+| `bubbleBurst` | The monologue bubble bursts when it expires, bigger per rank; level III adds an expanding ring. |
+| `escape` | Surrounded, he blinks out and leaves a decoy that lures ordinary enemies; level III adds a damage ring. |
+| `companion` | One animal strikes secondary targets; level II chains to a second, level III adds a small area hit. |
+| `echo` | A delayed echo travels the same heading every 6/5/4 attacks, wider at level III. |
+
+A character sheet may declare `ownOfferChance` to open its own upgrade slot more
+often than the default quarter; Papafrita uses it so a collector can actually
+collect in a run.
+
 ## When an upgrade is offered
 
 An upgrade entry may declare two extra fields:

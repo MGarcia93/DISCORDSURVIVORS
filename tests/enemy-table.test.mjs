@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { WORLD_SCALE, createRun, startNextWave, step } from '../src/engine.mjs';
+import { WORLD_SCALE, createEnemy, createRun, startNextWave, step } from '../src/engine.mjs';
 import { getAct } from '../src/campaign/acts.mjs';
-import { waveLife } from '../src/waves.mjs';
-import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from '../src/enemies/index.mjs';
+import act05 from '../src/campaign/act-05-discord.mjs';
+import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyCombatStats, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from '../src/enemies/index.mjs';
 
 test('every enemy kind authors all six combat stats plus its body and bounty', () => {
   const six = ['life', 'defense', 'attack', 'attackSpeed', 'attackDistance', 'moveSpeed'];
@@ -70,7 +70,7 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   step(zombieRun, 0.016);
   const zombie = zombieRun.enemies[0];
   assert.equal(zombie.kind, 'zombie');
-  assert.equal(zombie.hp, waveLife(getAct('act-01'), 1, 'zombie'));
+  assert.equal(zombie.hp, enemyHp('zombie', 1));
   assert.equal(zombie.radius, 17 * 1.1);
   assert.equal(zombie.speed, 45 * 1.1);
 
@@ -85,9 +85,53 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   step(runnerRun, 0.016);
   const runner = runnerRun.enemies[0];
   assert.equal(runner.kind, 'runner');
-  assert.equal(runner.hp, waveLife(getAct('act-01'), 2, 'runner'));
+  assert.equal(runner.hp, enemyHp('runner', 2));
   assert.equal(runner.radius, 13 * 1.1);
   assert.equal(runner.speed, 97 * 1.1);
+});
+
+test('an act without multipliers takes every stat from the sheet, untouched', () => {
+  const run = createRun(() => 0.5);
+  run.wave = 3;
+  const enemy = createEnemy(run, 'zombie', 0, 0);
+  assert.equal(run.act.statMultipliers, undefined, 'act 1 declares no tier of its own');
+  assert.equal(enemy.maxHp, enemyHp('zombie', 3));
+  assert.equal(enemy.defense, enemyDefense('zombie', 3));
+  assert.equal(enemy.contactDamage, enemyContactDamage('zombie', 3));
+  assert.equal(enemy.attackInterval, enemyAttackInterval('zombie', 3));
+  assert.equal(enemy.attackRange, enemyAttackRange('zombie', 3));
+  assert.equal(enemy.speed, enemySpeed('zombie', 3));
+  // The same six values the aggregate helper resolves with no multiplier at all.
+  assert.deepEqual(enemyCombatStats('zombie', 3), {
+    hp: enemyHp('zombie', 3),
+    defense: enemyDefense('zombie', 3),
+    contactDamage: enemyContactDamage('zombie', 3),
+    attackRange: enemyAttackRange('zombie', 3),
+    attackInterval: enemyAttackInterval('zombie', 3),
+    speed: enemySpeed('zombie', 3),
+  });
+});
+
+test('a multiplier scales the authored sheet, and only the statistics it names', () => {
+  const run = createRun(() => 0.5, 'negro', {}, act05);
+  run.wave = 3;
+  const enemy = createEnemy(run, 'zombie', 0, 0);
+  // The tier is per kind: this act's zombie and its archer do not have to grow
+  // at the same rate, and a kind without an entry keeps its sheet untouched.
+  const tier = run.act.statMultipliers.zombie;
+  assert.ok(tier.life > 1 && tier.attack > 1);
+  assert.equal(enemy.maxHp, enemyHp('zombie', 3, tier.life), 'life is the sheet scaled, not a new table');
+  assert.equal(enemy.contactDamage, enemyContactDamage('zombie', 3, tier.attack));
+  assert.equal(enemy.speed, enemySpeed('zombie', 3), 'an unnamed statistic keeps its authored value');
+  assert.equal(enemy.attackInterval, enemyAttackInterval('zombie', 3));
+  const untiered = createEnemy(run, 'taskmaster', 0, 0);
+  assert.equal(untiered.maxHp, enemyHp('taskmaster', 3), 'a kind outside the tier reads its sheet whole');
+  // Scaling happens on percentages, before the resolvers: the defense cap and
+  // every unit conversion stay exactly where they were.
+  assert.equal(enemyCombatStats('zombie', 3, { attackSpeed: 2 }).attackInterval,
+    enemyAttackInterval('zombie', 3) / 2, 'a faster sheet means a shorter interval');
+  assert.equal(enemyCombatStats('brute', 3, { defense: 8 }).defense, 0.75, 'the cap still wins');
+  assert.equal(enemyCombatStats('zombie', 3, { life: 1 }).hp, enemyHp('zombie', 3), '1 is the neutral tier');
 });
 
 test('the act boss takes its stats from the table on its own wave', () => {

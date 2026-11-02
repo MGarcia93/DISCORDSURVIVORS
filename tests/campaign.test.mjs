@@ -44,6 +44,11 @@ test('act five is the corrupted Discord with the four old bosses and the adminis
   // The hotfix wave is faster and mutes the cast for a moment.
   assert.ok(act05.waves[3].speedBoost > 1);
   assert.ok(act05.waves[3].specialLock > 0);
+  // Act five fields the whole shipped cast at its own tier. That tier is one
+  // multiplier per kind and per statistic over the sheets, never a table.
+  const tiered = Object.keys(act05.statMultipliers ?? {});
+  const mixed = new Set(act05.waves.flatMap(row => Object.keys(row.mix)));
+  assert.deepEqual(new Set(tiered), mixed, 'act five tiers exactly the kinds it fields');
   assert.equal(act05.waves[4].perMinute, 0, 'the gauntlet brings its own pressure');
   assert.equal(act05.waves[5].perMinute, 0, 'the boss wave fields the boss, not a clock budget');
 });
@@ -91,9 +96,15 @@ test('the validator names what an incomplete act is missing', () => {
     ['missing duration', { duration: 0 }, /invalid duration/],
     ['no waves', { waves: [] }, /waves are required/],
     ['wave numbering gap', { waves: act01.waves.slice(0, 1) }, /boss must be on the last wave/],
-    ['unknown enemy in a mix', { waves: act01.waves.map((row, i) => (i === 0 ? { ...row, mix: { dragon: 1 }, life: { dragon: 10 } } : row)) }, /unknown enemy: dragon/],
+    ['unknown enemy in a mix', { waves: act01.waves.map((row, i) => (i === 0 ? { ...row, mix: { dragon: 1 } } : row)) }, /unknown enemy: dragon/],
     ['mix that does not share one roll', { waves: act01.waves.map((row, i) => (i === 1 ? { ...row, mix: { zombie: 0.5, runner: 0.2 } } : row)) }, /mix must share one roll/],
-    ['missing life for a kind', { waves: act01.waves.map((row, i) => (i === 2 ? { ...row, life: { zombie: 58, runner: 43 } } : row)) }, /must declare brute life/],
+    ['a wave that re-authors a statistic', { waves: act01.waves.map((row, i) => (i === 2 ? { ...row, life: { zombie: 58, runner: 43 } } : row)) }, /must not declare life/],
+    ['a wave that re-authors the damage', { waves: act01.waves.map((row, i) => (i === 2 ? { ...row, damage: { brute: 90 } } : row)) }, /must not declare damage/],
+    ['a tier for an unknown enemy', { statMultipliers: { dragon: { life: 2 } } }, /statMultipliers names an unknown enemy: dragon/],
+    ['unknown statistic in the tier', { statMultipliers: { zombie: { luck: 2 } } }, /statMultipliers\.zombie: unknown statistic: luck/],
+    ['a tier that is not a positive number', { statMultipliers: { zombie: { life: 0 } } }, /statMultipliers\.zombie\.life must be a positive number/],
+    ['a tier that is not an object', { statMultipliers: 2 }, /statMultipliers must be an object/],
+    ['a kind whose tier is not an object', { statMultipliers: { zombie: 2 } }, /statMultipliers\.zombie must be an object/],
     ['unknown boss kind', { boss: { ...act01.boss, kind: 'nope' } }, /unknown boss kind/],
     ['boss before the last wave', { boss: { ...act01.boss, wave: 3 } }, /boss must be on the last wave/],
   ];

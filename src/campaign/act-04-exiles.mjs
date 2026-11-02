@@ -25,32 +25,29 @@ export default {
   miniboss: { wave: 5, kind: 'lotusAlchemist', name: 'EL ALQUIMISTA DEL LOTO' },
   boss: { wave: 6, kind: 'taskmaster', name: 'EL CAPATAZ DE LA RUEDA DEL DOLOR' },
   waves: [
-    { wave: 1, perMinute: 54, mix: { barbarian: 1 }, life: { barbarian: 66, slaver: 70, archer: 51, alchemist: 75 }, damage: { barbarian: 19, slaver: 18, archer: 16, alchemist: 17 } },
+    { wave: 1, perMinute: 54, mix: { barbarian: 1 } },
     {
       wave: 2,
       perMinute: 66,
       mix: { slaver: 0.55, archer: 0.45 },
-      life: { barbarian: 66, slaver: 70, archer: 51, alchemist: 75 }, damage: { barbarian: 19, slaver: 18, archer: 16, alchemist: 17 },
     },
     {
       wave: 3,
       perMinute: 78,
       mix: { barbarian: 0.45, slaver: 0.3, archer: 0.25 },
-      life: { barbarian: 66, slaver: 70, archer: 51, alchemist: 75 }, damage: { barbarian: 19, slaver: 18, archer: 16, alchemist: 17 },
     },
     {
       wave: 4,
       world: 'laboratory',
       perMinute: 90,
       mix: { barbarian: 0.35, archer: 0.35, alchemist: 0.3 },
-      life: { barbarian: 66, slaver: 70, archer: 51, alchemist: 75 }, damage: { barbarian: 19, slaver: 18, archer: 16, alchemist: 17 },
     },
     // El Alquimista arrives once at the start of this wave; his own alchemists
     // keep him company and give the wave its pressure.
     // The Alchemist does not run on a clock: the wave closes when he falls.
-    { wave: 5, world: 'laboratory', untimed: true, perMinute: 24, mix: { alchemist: 1 }, life: { barbarian: 66, slaver: 70, archer: 51, alchemist: 75 }, damage: { barbarian: 19, slaver: 18, archer: 16, alchemist: 17 } },
+    { wave: 5, world: 'laboratory', untimed: true, perMinute: 24, mix: { alchemist: 1 } },
     // The boss wave is untimed and carries no budget of its own: the Capataz
     // calls his own guards, not a horde.
-    { wave: 6, perMinute: 0, mix: {}, life: { barbarian: 66, slaver: 70, archer: 51, alchemist: 75 }, damage: { barbarian: 19, slaver: 18, archer: 16, alchemist: 17 } },
+    { wave: 6, perMinute: 0, mix: {} },
   ],
 };

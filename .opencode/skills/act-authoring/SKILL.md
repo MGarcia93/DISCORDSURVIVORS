@@ -31,7 +31,7 @@ Load when adding or finishing a campaign act: a world that runs as one playthrou
 | Kind missing from `src/enemies/` | Author it with `enemy-authoring`, visual approval first |
 | Boss or mini-boss | `boss: true` on the ficha, `boss.wave` last, cast-detail sprite |
 | Slower than the player | Ranged `actions` with `range`, not contact |
-| Wave rows | One per wave; `mix` shares one roll, `life` declared for every kind |
+| Wave rows | One per wave; `mix` shares one roll and no row re-authors a statistic |
 | Scene beat | Blocking scene at a wave boundary; `banter` for lines that must not stop combat |
 | Character unlock | Ask first: the guide says encounter, `progression.mjs` still unlocks by victory |
 

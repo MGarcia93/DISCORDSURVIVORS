@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pickKind, spawnInterval, waveBudget, waveConfig, waveLife } from '../src/waves.mjs';
+import { pickKind, spawnInterval, waveBudget, waveConfig } from '../src/waves.mjs';
+import { enemyHp } from '../src/enemies/index.mjs';
 import { createRun, startNextWave, step } from '../src/engine.mjs';
 import { BALANCE, balanceFor } from '../src/reward-data.mjs';
 import act01 from '../src/campaign/act-01-zomboid.mjs';
@@ -8,16 +9,17 @@ import act01 from '../src/campaign/act-01-zomboid.mjs';
 // Deterministic draw queue: each call returns the next value and wraps around.
 const sequence = (...values) => { let index = 0; return () => values[index++ % values.length]; };
 
-test('every wave of the act declares its pool, its density and the life each kind uses', () => {
+test('every wave of the act declares its pool and its density, and no statistic of its own', () => {
   assert.equal(act01.waves.length, 6);
   act01.waves.forEach((config, index) => {
     assert.equal(config.wave, index + 1);
     assert.ok(Number.isInteger(config.perMinute) && config.perMinute >= 0);
     const share = Object.values(config.mix).reduce((sum, weight) => sum + weight, 0);
     if (config.perMinute > 0) assert.ok(Math.abs(share - 1) < 1e-9, `wave ${config.wave} mix shares one roll`);
-    for (const kind of Object.keys(config.mix)) {
-      assert.equal(typeof config.life[kind], 'number', `wave ${config.wave} declares ${kind} life`);
-    }
+    // The enemy sheet is the only owner of the six combat stats: a wave that
+    // brought its own table is exactly the duplication this rule removed.
+    assert.equal(config.life, undefined, `wave ${config.wave} authors no life table`);
+    assert.equal(config.damage, undefined, `wave ${config.wave} authors no damage table`);
   });
   assert.equal(waveConfig(act01, 99), null);
 });
@@ -35,7 +37,7 @@ test('each spawn rolls the wave pool instead of a hardcoded coin toss', () => {
 test('wave three fields the resistant zombie the act script asks for', () => {
   const wave3 = waveConfig(act01, 3);
   assert.equal(wave3.mix.brute, 0.2);
-  assert.equal(wave3.life.brute, 156);
+  assert.equal(enemyHp('brute', 3), 156, 'the brute reads its life from its own sheet');
   assert.equal(pickKind(wave3, () => 0), 'zombie');
   assert.equal(pickKind(wave3, () => 0.999), 'brute');
 });
@@ -71,7 +73,7 @@ test('the cadence spreads the budget over the remaining time', () => {
   assert.equal(spawnInterval(10, 0), Infinity);
 });
 
-test('spawned enemies take their life percentage from the wave table', () => {
+test('spawned enemies hang their life off their own sheet', () => {
   const run = createRun(() => 0.1);
   run.wave = 2;
   run.random = sequence(0.9, 0.1, 0.1, 0.1);
@@ -79,10 +81,10 @@ test('spawned enemies take their life percentage from the wave table', () => {
   step(run, 0.016);
   const [runner] = run.enemies;
   assert.equal(runner.kind, 'runner');
-  assert.equal(runner.hp, waveLife(act01, 2, 'runner'), 'one life per world');
+  assert.equal(runner.hp, enemyHp('runner', 2), 'one life per world, authored by the sheet');
 });
 
-test('a wave three spawn rolls the brute and reads its life from the wave table', () => {
+test('a wave three spawn rolls the brute and reads its life from its sheet', () => {
   const run = createRun(() => 0.1);
   run.wave = 3;
   run.random = sequence(0.9, 0.1, 0.1, 0.1);
@@ -90,7 +92,7 @@ test('a wave three spawn rolls the brute and reads its life from the wave table'
   step(run, 0.016);
   const [brute] = run.enemies;
   assert.equal(brute.kind, 'brute');
-  assert.equal(brute.hp, waveLife(act01, 3, 'brute'), 'the brute reads its life from the world value');
+  assert.equal(brute.hp, enemyHp('brute', 3), 'the brute reads its life from its own sheet');
   assert.equal(brute.attackInterval, 1);
   assert.equal(brute.attackRange, 0);
 });

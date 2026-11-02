@@ -1,10 +1,12 @@
 import { worldIds } from '../backgrounds/index.mjs';
 import { ENEMY_KINDS } from '../enemies/index.mjs';
+import { BASE_STATS } from '../stats.mjs';
 
 // The campaign contract. A world is authoring data, so the only thing that can
 // go wrong is an incomplete descriptor; this module is the one place that knows
 // what "complete" means and says exactly which field is missing.
 const STATUSES = new Set(['playable', 'planned']);
+const STAT_KEYS = Object.keys(BASE_STATS);
 const own = (object, key) => Object.hasOwn(object ?? {}, key);
 const text = value => typeof value === 'string' && value.trim().length > 0;
 
@@ -52,8 +54,13 @@ function validateWaves(act) {
     }
     for (const kind of kinds) {
       if (!own(ENEMY_KINDS, kind)) throw Error(`${id}: wave ${wave} unknown enemy: ${kind}`);
-      if (typeof config.life?.[kind] !== 'number' || !Number.isFinite(config.life[kind])) {
-        throw Error(`${id}: wave ${wave} must declare ${kind} life`);
+      // A wave never re-authors a statistic: the sheet owns all six and the act
+      // owns its tier. A leftover table here is the duplication that was removed,
+      // so it fails loudly instead of quietly winning over the sheet.
+      for (const field of ['life', 'damage']) {
+        if (own(config, field)) {
+          throw Error(`${id}: wave ${wave} must not declare ${field}: the enemy sheet owns every statistic`);
+        }
       }
     }
     // An untimed wave waits for something that is not the clock: only a wave
@@ -65,6 +72,30 @@ function validateWaves(act) {
       }
     }
   });
+}
+
+// An act may field a kind at its own tier: `statMultipliers[kind][stat]` is the
+// multiplier for that one statistic of that one body. It lands on the authored
+// percentage, never on an already resolved value, so 1 and a missing entry mean
+// the same thing: the sheet speaks untouched.
+function validateStatMultipliers(act) {
+  const { id, statMultipliers } = act;
+  if (statMultipliers === undefined) return;
+  if (!statMultipliers || typeof statMultipliers !== 'object' || Array.isArray(statMultipliers)) {
+    throw Error(`${id}: statMultipliers must be an object keyed by enemy kind`);
+  }
+  for (const [kind, tier] of Object.entries(statMultipliers)) {
+    if (!own(ENEMY_KINDS, kind)) throw Error(`${id}: statMultipliers names an unknown enemy: ${kind}`);
+    if (!tier || typeof tier !== 'object' || Array.isArray(tier)) {
+      throw Error(`${id}: statMultipliers.${kind} must be an object keyed by statistic`);
+    }
+    for (const [stat, value] of Object.entries(tier)) {
+      if (!STAT_KEYS.includes(stat)) throw Error(`${id}: statMultipliers.${kind}: unknown statistic: ${stat}`);
+      if (!Number.isFinite(value) || value <= 0) {
+        throw Error(`${id}: statMultipliers.${kind}.${stat} must be a positive number`);
+      }
+    }
+  }
 }
 
 // An act may carry one mini-boss, or a line of them, on an earlier wave. They
@@ -113,6 +144,7 @@ export function validateAct(act, { expectedOrder } = {}) {
   validateWaves(act);
   validateBoss(act);
   validateMiniboss(act);
+  validateStatMultipliers(act);
   return act;
 }
 

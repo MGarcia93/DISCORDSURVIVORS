@@ -32,6 +32,23 @@ combate: `radius` (tamaño de colisión, en píxeles sin escalar) y `bounty`
 Los valores por ola se siguen declarando como funciones del número de ola que
 devuelven el porcentaje de esa ola, igual que hoy.
 
+La ficha es la **única** dueña de las seis estadísticas. Una ola dice quién
+aparece y con qué frecuencia, nunca cuánto aguanta ni cuánto pega. Si un acto
+quiere usar un cuerpo ya existente en su propio nivel (el acto 5 recicla todo el
+elenco anterior), lo declara una vez en `statMultipliers`:
+
+```js
+statMultipliers: {
+  zombie: { life: 2.6, attack: 2 },
+  archer: { life: 4.7 },
+}
+```
+
+El multiplicador se aplica **por enemigo y por estadística**, sobre el porcentaje
+autorado, antes de cualquier resolver: `1` es el nivel neutral, y una estadística
+o un cuerpo que no aparezcan ahí conservan la ficha tal cual. Sumar una tabla de
+vida o daño a una ola es un error de validación, no una alternativa.
+
 ## Comportamiento genérico: uno solo, para todos
 
 La regla base es una y se aplica a todo enemigo, incluidos los que ya existen:
@@ -125,7 +142,8 @@ recarga.
 |---|---|
 | Ficha de un enemigo | `src/enemies/<kind>.mjs`, un archivo por enemigo |
 | Registro y resolución de porcentajes | `src/enemies/index.mjs` |
-| Aparición, peso en el mix y vida por ola | `src/waves.mjs` (`WAVES`) |
+| Aparición y peso en el mix | `src/waves.mjs` (`WAVES`) |
+| Nivel de un acto sobre las fichas | `statMultipliers` en `src/campaign/act-0N-*.mjs` |
 | Receta de dibujo de cada cuerpo | `src/sprites.mjs` (`drawZombie`, `drawRunner`, `drawBrute`, `drawAdministrator`) |
 | Props del jugador en el canvas | `src/game/renderer.mjs` (`FIGURE_DRAWERS`) |
 | Comportamiento genérico | `src/engine.mjs` (`step`) |

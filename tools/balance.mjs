@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { OWN_PRIORITY } from '../src/game/bot.mjs';
+import { ROSTER } from '../src/characters/index.mjs';
 import { measureCharacter, measureRoster } from '../src/game/campaign-sim.mjs';
 
 // Headless balance run. Every character plays the same campaign with the same
@@ -29,7 +30,7 @@ const skill = args.skill ?? 'perfect';
 const buy = args.buy ?? 'smart';
 const only = args.character;
 
-const characters = only ? [only] : ['negro', 'solago', 'warrior', 'papazito', 'jhony'];
+const characters = only ? [only] : ROSTER.map(character => character.id);
 const pad = (value, width) => String(value).padEnd(width);
 const pct = value => `${Math.round(value * 100)}%`;
 const range = row => `${Math.round((row.spread.high - row.spread.low) * 50)}`;

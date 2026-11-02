@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Maxi Blanco — game sprite draft</title>
+<style>
+  body { margin: 0; background: #191724; color: #e1dac0; font: 16px monospace; text-align: center; }
+  canvas { display: block; margin: 24px auto; max-width: 100%; image-rendering: pixelated; }
+  label { display: inline-block; margin: 12px; }
+</style>
+<h1>Maxi Blanco — game sprite draft 04</h1>
+<p>Gray hood and sleeves · navy hoodie · gray joggers · slippers · no glasses</p>
+<section aria-label="Face reference comparison" style="display:flex;justify-content:center;align-items:center;gap:24px;flex-wrap:wrap">
+  <img src="../../../context/yo/Captura de pantalla 2026-10-30 123524.png" height="280" alt="Provided facial reference">
+  <canvas id="face" width="300" height="280" aria-label="Revised sprite face close-up" style="margin:0"></canvas>
+</section>
+<canvas width="900" height="400" aria-label="Maxi Blanco idle and walking, both facings"></canvas>
+<label><input type="checkbox" checked> Animate walking</label>
+<h2>Cast style comparison</h2>
+<canvas id="cast" width="900" height="330" aria-label="Jhony, Maxi Blanco and Papafrita at the same scale"></canvas>
+<script type="module">
+  import { drawMaxiBlanco } from '../../../src/npcs/maxi-blanco.mjs?v=4';
+  import { drawJhony } from '../../../src/npcs/jhony.mjs';
+  import { drawPapafrita } from '../../../src/npcs/papafrita.mjs';
+  const cast = document.querySelector('#cast').getContext('2d');
+  cast.fillStyle = '#242131'; cast.fillRect(0, 0, 900, 330);
+  [drawJhony, drawMaxiBlanco, drawPapafrita].forEach((draw, i) => {
+    const x = 150 + i * 300;
+    draw(cast, x, 260, { scale: 5 });
+    cast.fillStyle = '#e1dac0'; cast.font = '18px monospace'; cast.textAlign = 'center';
+    cast.fillText(['Jhony', 'Maxi Blanco', 'Papafrita'][i], x, 305);
+  });
+  const face = document.querySelector('#face').getContext('2d');
+  face.fillStyle = '#242131'; face.fillRect(0, 0, 300, 280);
+  drawMaxiBlanco(face, 150, 564, { scale: 12 });
+  const ctx = document.querySelector('canvas:not(#face)').getContext('2d');
+  const animate = document.querySelector('input');
+  function frame(ms) {
+    ctx.fillStyle = '#242131'; ctx.fillRect(0, 0, 900, 400);
+    const poses = [
+      { facing: 1, moving: false, label: 'Idle / right' },
+      { facing: -1, moving: false, label: 'Idle / left' },
+      { facing: 1, moving: true, label: 'Walk / right' },
+      { facing: -1, moving: true, label: 'Walk / left' },
+    ];
+    poses.forEach((pose, i) => {
+      const x = 115 + i * 225;
+      ctx.fillStyle = '#51475e'; ctx.fillRect(x - 85, 318, 170, 2);
+      drawMaxiBlanco(ctx, x, 318, { ...pose, scale: 5, time: animate.checked ? ms / 1000 : 0.125 });
+      ctx.fillStyle = '#e1dac0'; ctx.font = '16px monospace'; ctx.textAlign = 'center';
+      ctx.fillText(pose.label, x, 365);
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+</script>
+</html>

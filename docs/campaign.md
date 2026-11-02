@@ -28,7 +28,7 @@ or be skipped before continuing.
 | `src/campaign/act-04-exiles.mjs` | the fourth act: six waves, the Lotus Alchemist, the Taskmaster |
 | `src/campaign/act-05-discord.mjs` | the fifth act: six waves, four restored bosses, the Administrator |
 | `src/campaign/validate.mjs` | the contract an act must satisfy |
-| `src/waves.mjs` | interpretation only: budget, life and the spawn roll |
+| `src/waves.mjs` | interpretation only: budget and the spawn roll |
 
 `src/campaign/acts.mjs` is the **only** module that knows how many worlds exist
 or in what order they run. Everything else — engine, renderer, HUD, narrative —
@@ -57,18 +57,33 @@ export default {
   // A line of them is also allowed: same wave, spawned one at a time, and the
   // next one walks in when the previous one dies. Act 5 restores four that way.
   // miniboss: [{ wave: 5, kind: 'alarmZombie', name: 'EL ZOMBI DE LA ALARMA' }, ...],
+  // Optional: this act's tier over the enemy sheets. Every statistic belongs to
+  // the enemy's own ficha (src/enemies/); this block only multiplies the ones it
+  // names, per kind and per statistic, so act 5 can field shipped bodies at its
+  // own level without authoring a second table. A stat left out, or an act with
+  // no block at all, fields the sheet exactly as written.
+  statMultipliers: {
+    zombie: { life: 2.6, attack: 2 },
+    archer: { life: 4.7 },
+  },
   waves: [                   // one row per wave, numbered from 1
     // Optional per-wave modifiers: `speedBoost` multiplies the speed of that
     // wave's enemies, `specialLock` mutes the cast's specials for its first
     // seconds. Act 5's hotfix wave uses both.
-    { wave: 1, perMinute: 48, mix: { zombie: 1 }, life: { zombie: 46 }, speedBoost: 1.3, specialLock: 10 },
+    { wave: 1, perMinute: 48, mix: { zombie: 1 }, speedBoost: 1.3, specialLock: 10 },
     // ...
   ],
 };
 ```
 
+A wave says **who** arrives and **how often**, never how hard they hit: life,
+defense, attack, cadence, reach and speed all come from the enemy ficha at that
+wave number. An act that fields a body above or below its authored tier says so
+once, in `statMultipliers`.
+
 The validator rejects an unknown world, an unknown enemy kind, a wave whose mix
-does not share one roll, a kind with no declared life, a boss that is not on the
+does not share one roll, a wave that re-authors a statistic, a tier that names an
+unknown kind or statistic or a multiplier that is not positive, a boss that is not on the
 last wave, and a mini-boss (or any entry of a mini-boss line) that is unknown,
 unnamed or not before the boss. A `planned` act only needs its slot.
 

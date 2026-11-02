@@ -35,6 +35,10 @@ import administrator from './administrator.mjs';
 // Every kind authors the same six combat stats (life, defense, attack,
 // attackSpeed, attackDistance, moveSpeed). `radius` and `bounty` are body and
 // economy, so they stay as raw fields outside the sheet.
+//
+// The sheet is the ONLY owner of those six values. An act never re-authors
+// them: `act.statMultipliers[kind]` fields that one kind at the act's tier, and
+// the multiplier lands on the authored percentage (see scaled).
 export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
   skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith,
   barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster, administrator };
@@ -50,33 +54,61 @@ export function getEnemyKind(id) {
   return ENEMY_KINDS[id] ?? ENEMY_KINDS.zombie;
 }
 
-export function enemyHp(kind, wave = 1) {
-  return resolveLifePercent(statAt(getEnemyKind(kind).stats, 'life', wave));
+// An act may field a kind at its own tier instead of the tier the sheet was
+// authored for. The tier is per kind and per statistic: one body may hit twice
+// as hard while its neighbour only gets more life. The multiplier lands on the
+// authored percentage before any resolver runs, so the defense cap and every
+// unit conversion stay exactly where they are. A statistic the act never names
+// keeps percentage 1: the sheet speaks, untouched.
+function scaled(percent, multiplier) {
+  return typeof percent === 'number' ? percent * multiplier : percent;
 }
 
-export function enemySpeed(kind, wave = 1) {
-  return resolveMoveSpeedPercent(statAt(getEnemyKind(kind).stats, 'moveSpeed', wave));
+export function enemyHp(kind, wave = 1, multiplier = 1) {
+  return resolveLifePercent(scaled(statAt(getEnemyKind(kind).stats, 'life', wave), multiplier));
 }
 
-export function enemyContactDamage(kind, wave = 1) {
-  return resolveDamagePercent(statAt(getEnemyKind(kind).stats, 'attack', wave));
+export function enemySpeed(kind, wave = 1, multiplier = 1) {
+  return resolveMoveSpeedPercent(scaled(statAt(getEnemyKind(kind).stats, 'moveSpeed', wave), multiplier));
 }
 
-export function enemyDefense(kind, wave = 1) {
-  return resolveDefensePercent(statAt(getEnemyKind(kind).stats, 'defense', wave));
+export function enemyContactDamage(kind, wave = 1, multiplier = 1) {
+  return resolveDamagePercent(scaled(statAt(getEnemyKind(kind).stats, 'attack', wave), multiplier));
+}
+
+export function enemyDefense(kind, wave = 1, multiplier = 1) {
+  return resolveDefensePercent(scaled(statAt(getEnemyKind(kind).stats, 'defense', wave), multiplier));
 }
 
 // Reach in scaled pixels, measured from the collision edge. 0 means the enemy
 // has to touch: the engine adds both collision radii when it decides whether it
 // is close enough to stop and swing.
-export function enemyAttackRange(kind, wave = 1) {
-  return resolveAttackDistancePercent(statAt(getEnemyKind(kind).stats, 'attackDistance', wave));
+export function enemyAttackRange(kind, wave = 1, multiplier = 1) {
+  return resolveAttackDistancePercent(scaled(statAt(getEnemyKind(kind).stats, 'attackDistance', wave), multiplier));
 }
 
 // Seconds between two swings of this kind. The sheet names attacks per second
-// as a percentage, so the interval is the same 100 / P the core uses.
-export function enemyAttackInterval(kind, wave = 1) {
-  return 100 / statAt(getEnemyKind(kind).stats, 'attackSpeed', wave);
+// as a percentage, so the interval is the same 100 / P the core uses — which is
+// why a multiplier on attackSpeed shortens it instead of lengthening it.
+export function enemyAttackInterval(kind, wave = 1, multiplier = 1) {
+  return 100 / scaled(statAt(getEnemyKind(kind).stats, 'attackSpeed', wave), multiplier);
+}
+
+// The whole resolved block for one body, which is what the engine consumes.
+// `tier` is the multiplier that act declares for THIS kind ({} or undefined
+// when the act has no tier of its own). It is the one place that maps an
+// authored statistic to its resolver, so a new statistic cannot be scaled in
+// one path and forgotten in another.
+export function enemyCombatStats(kind, wave = 1, tier = {}) {
+  const multiplier = stat => tier?.[stat] ?? 1;
+  return {
+    hp: enemyHp(kind, wave, multiplier('life')),
+    defense: enemyDefense(kind, wave, multiplier('defense')),
+    contactDamage: enemyContactDamage(kind, wave, multiplier('attack')),
+    attackRange: enemyAttackRange(kind, wave, multiplier('attackDistance')),
+    attackInterval: enemyAttackInterval(kind, wave, multiplier('attackSpeed')),
+    speed: enemySpeed(kind, wave, multiplier('moveSpeed')),
+  };
 }
 
 export function enemyBounty(kind) {

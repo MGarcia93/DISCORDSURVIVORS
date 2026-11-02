@@ -32,7 +32,7 @@ Load when adding, reskinning or retuning an enemy, and when designing an act's b
 | Carries a rule of its own | Declare `actions` in its ficha; abilities get `ctx.spawnEnemy` and `ctx.shockwave` |
 | Boss or mini-boss | Cast detail, `boss: true`, and `BALANCE.waves.bossKind` points at it |
 | Only numbers change | Edit the sheet only, no drawing work |
-| Wave placement | Add it to the row's `mix` and declare its `life`, as the act script asks |
+| Wave placement | Add it to the row's `mix`, as the act script asks; no row re-authors a statistic |
 
 ## Execution Steps
 
@@ -41,7 +41,7 @@ Run from the repository root.
 1. Read `context/discord_survivors_enemigos.md` and the act script in `context/historia/`. Confirm role, wave and which abilities it declares.
 2. Ask whether it carries a specific behaviour.
 3. Create `src/enemies/<kind>.mjs` from `src/enemies/zombie.mjs`: sheet, radius, bounty, `draw`, and `actions` when it has them. Register it in `ENEMY_KINDS` and `ENEMY_IDS`.
-4. Add its `mix` weight and `life` override to `src/waves.mjs`, its `xp` / `gold` entries to `src/reward-data.mjs`, and point `BALANCE.waves.bossKind` at it when it closes a wave.
+4. Add its `mix` weight to the act's wave rows in `src/campaign/act-0N-*.mjs` — the six stats come from the ficha, and an act that fields it above or below its authored tier scales it in that act's `statMultipliers` — its `xp` / `gold` entries to `src/reward-data.mjs`, and point `BALANCE.waves.bossKind` at it when it closes a wave.
 5. Draw it in `src/sprites.mjs` at the density its level asks for, rounding every mass with `roundedMass`. Confirm the silhouette is connected and under the player's height.
 6. Serve `python3 -m http.server 5173 --bind 127.0.0.1` and open `?dev=enemies`: pick the kind and wave, watch it walk, stop and act. A boss spawns alone and needs ~11 s to reach the dummy, so wait before judging its abilities. Magnify true game pixels for detail.
 7. Show the user the result and wait for explicit approval.
