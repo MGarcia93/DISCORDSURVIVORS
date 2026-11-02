@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, startNextWave, step } from '../src/engine.mjs';
+import { getAct } from '../src/campaign/acts.mjs';
+import { waveLife } from '../src/waves.mjs';
 import { ENEMY_KINDS, enemyAttackInterval, enemyAttackRange, enemyBounty, enemyContactDamage, enemyDefense, enemyHp, enemySpeed } from '../src/enemies/index.mjs';
 
 test('every enemy kind authors all six combat stats plus its body and bounty', () => {
@@ -68,7 +70,7 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   step(zombieRun, 0.016);
   const zombie = zombieRun.enemies[0];
   assert.equal(zombie.kind, 'zombie');
-  assert.equal(zombie.hp, 46);
+  assert.equal(zombie.hp, waveLife(getAct('act-01'), 1, 'zombie'));
   assert.equal(zombie.radius, 17 * 1.1);
   assert.equal(zombie.speed, 45 * 1.1);
 
@@ -83,7 +85,7 @@ test('spawned zombies and runners read hp, radius and speed from the table', () 
   step(runnerRun, 0.016);
   const runner = runnerRun.enemies[0];
   assert.equal(runner.kind, 'runner');
-  assert.equal(runner.hp, 38);
+  assert.equal(runner.hp, waveLife(getAct('act-01'), 2, 'runner'));
   assert.equal(runner.radius, 13 * 1.1);
   assert.equal(runner.speed, 97 * 1.1);
 });

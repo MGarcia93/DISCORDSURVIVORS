@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pickKind, spawnInterval, waveBudget, waveConfig } from '../src/waves.mjs';
+import { pickKind, spawnInterval, waveBudget, waveConfig, waveLife } from '../src/waves.mjs';
 import { createRun, startNextWave, step } from '../src/engine.mjs';
 import { BALANCE, balanceFor } from '../src/reward-data.mjs';
 import act01 from '../src/campaign/act-01-zomboid.mjs';
@@ -79,7 +79,7 @@ test('spawned enemies take their life percentage from the wave table', () => {
   step(run, 0.016);
   const [runner] = run.enemies;
   assert.equal(runner.kind, 'runner');
-  assert.equal(runner.hp, waveConfig(act01, 2).life.runner);
+  assert.equal(runner.hp, waveLife(act01, 2, 'runner'), 'one life per world');
 });
 
 test('a wave three spawn rolls the brute and reads its life from the wave table', () => {
@@ -90,7 +90,7 @@ test('a wave three spawn rolls the brute and reads its life from the wave table'
   step(run, 0.016);
   const [brute] = run.enemies;
   assert.equal(brute.kind, 'brute');
-  assert.equal(brute.hp, 156);
+  assert.equal(brute.hp, waveLife(act01, 3, 'brute'), 'the brute reads its life from the world value');
   assert.equal(brute.attackInterval, 1);
   assert.equal(brute.attackRange, 0);
 });

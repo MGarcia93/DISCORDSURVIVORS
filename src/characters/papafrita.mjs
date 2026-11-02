@@ -47,7 +47,7 @@ function spawnWave(run, p, ctx, { to = null, exclude = [], damage, pierce, width
     x: p.x, y: p.y - 8 * WORLD_SCALE, target: target.id,
     damage, kind: 'voice', device: 'voice', hit: [], ttl: 3,
     angle: Math.atan2(target.y - p.y, target.x - p.x),
-    spin: false, pierce, width, echo,
+    spin: false, pierce, width,
   });
   return true;
 }
@@ -170,6 +170,7 @@ const papafrita = {
   },
   // «No te callás más»: a voice wave that crosses several bodies.
   attack: { type: 'ranged', device: 'voice', pierce: 2, width: 10, align: true, spin: false },
+  ownOfferChance: 0.5,
   combat: {},
   decays: [],
   passives: [],
@@ -238,12 +239,14 @@ const papafrita = {
   },
   // Every basic wave that actually left: the collector milestones and the two
   // attack-repeating upgrades count here.
-  onShot(run, p, ctx) {
+  onShot(run, p, ctx, primary = null) {
     p.waves += 1;
     p.collected = collectionOf(run);
+    // "hacia otro enemigo cercano": never the body the main wave is already on.
+    const spoken = primary?.target !== undefined ? [primary.target] : [];
     const copies = p.rewardBonuses.copyWave ?? 0;
     if (copies > 0 && p.waves % (7 - copies) === 0) {
-      spawnWave(run, p, ctx, { damage: power(p) * 0.7, pierce: 1, width: 10 });
+      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.7, pierce: 1, width: 10 });
     }
     const echoRank = p.rewardBonuses.echo ?? 0;
     if (echoRank > 0 && p.waves % (7 - echoRank) === 0) {
@@ -254,10 +257,10 @@ const papafrita = {
       }
     }
     if (p.collected >= ECHO_MILESTONE && p.waves % ECHO_EVERY === 0) {
-      spawnWave(run, p, ctx, { damage: power(p) * 0.5, pierce: 0, width: 8 });
-      spawnWave(run, p, ctx, { damage: power(p) * 0.5, pierce: 0, width: 8 });
+      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.5, pierce: 0, width: 8 });
+      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.5, pierce: 0, width: 8 });
     } else if (p.collected >= SECONDARY_MILESTONE && p.waves % SECONDARY_EVERY === 0) {
-      spawnWave(run, p, ctx, { damage: power(p) * 0.6, pierce: 1, width: 10 });
+      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.6, pierce: 1, width: 10 });
     }
   },
   // «¿Y sabés qué más?»: the wave widens with every listener, and its pierce

@@ -99,14 +99,20 @@ test('2/6 adds a body to every wave, 4/6 sends a secondary wave and 6/6 doubles 
 
   const four = solo();
   own(four, 'and-what-else', 'fishing', 'other-console', 'not-done-yet');
+  four.player.rewardBonuses = { copyWave: 1 };
   four.player.waves = 4;
-  papafrita.onShot(four, four.player, toolbox(four));
+  dummy(four, 120);
+  dummy(four, 220);
+  papafrita.onShot(four, four.player, toolbox(four), { target: 1 });
   assert.equal(four.projectiles.filter(shot => shot.kind === 'voice').length, 1, 'every fifth attack');
 
   const six = solo();
   own(six, 'and-what-else', 'fishing', 'other-console', 'not-done-yet', 'only-one', 'definitive-edition');
   six.player.waves = 2;
-  papafrita.onShot(six, six.player, toolbox(six));
+  dummy(six, 120);
+  dummy(six, 220);
+  dummy(six, 320);
+  papafrita.onShot(six, six.player, toolbox(six), { target: 1 });
   assert.equal(six.projectiles.filter(shot => shot.kind === 'voice').length, 2, 'two collection echoes');
 });
 
@@ -132,9 +138,9 @@ test('«Lo compré en otra consola» copies the wave to another target', () => {
   p.waves = 4; // next shot is the fifth
   dummy(run, 120);
   dummy(run, 220);
-  papafrita.onShot(run, p, toolbox(run));
+  papafrita.onShot(run, p, toolbox(run), { target: 1 });
   assert.equal(run.projectiles.length, 1, 'a copy went to a second enemy');
-  assert.notEqual(run.projectiles[0].target, 1);
+  assert.notEqual(run.projectiles[0].target, 1, 'never the body the main wave is on');
 });
 
 test('«Todavía no terminé» bursts the bubble when the monologue ends', () => {
@@ -143,8 +149,8 @@ test('«Todavía no terminé» bursts the bubble when the monologue ends', () =>
   p.rewardBonuses = { bubbleBurst: 3 };
   const ctx = toolbox(run);
   const victim = dummy(run, 30);
-  run.monologue = { x: p.x, y: p.y, r: 132 * WORLD_SCALE, ttl: 0.01, tick: 0 };
   activateSpecial(run, 'monologo');
+  run.monologue.ttl = 0.01;
   papafrita.specials[0].onTick(run, p, 0.05, ctx);
   assert.equal(run.monologue, null, 'the bubble is gone');
   assert.ok(victim.hp < 400, 'and it burst on the way out');
@@ -196,8 +202,8 @@ test('the monologue is a zone: it ticks, it pulls the ordinary walkers, never th
   passivate(run, p);
   assert.equal(activateSpecial(run, 'monologo'), true);
   assert.ok(run.monologue, 'the bubble exists');
-  const walker = { id: 1, x: p.x + 160, y: p.y, hp: 400, maxHp: 400, speed: 0, radius: 10, kind: 'zombie' };
-  const boss = { id: 2, x: p.x + 160, y: p.y + 40, hp: 400, maxHp: 400, speed: 0, radius: 20, kind: 'boss', boss: true };
+  const walker = { id: 1, x: p.x + 100, y: p.y, hp: 400, maxHp: 400, speed: 0, radius: 10, kind: 'zombie' };
+  const boss = { id: 2, x: p.x + 100, y: p.y + 40, hp: 400, maxHp: 400, speed: 0, radius: 20, kind: 'boss', boss: true };
   run.enemies.push(walker, boss);
   const walkerX = walker.x, bossX = boss.x;
   for (let i = 0; i < 6; i++) papafrita.specials[0].onTick(run, p, 0.1, toolbox(run));
