@@ -83,7 +83,7 @@
       }
     },
     "props": {
-      "swipe": {
+      "tailSwipe": {
         "at": "swipe",
         "state": "closed",
         "front": true
@@ -179,8 +179,26 @@
     },
     {
       "type": "prop",
-      "prop": "swipe",
-      "state": "hit"
+      "prop": "tailSwipe",
+      "state": "hit1"
+    },
+    {
+      "type": "wait",
+      "duration": 0.09
+    },
+    {
+      "type": "prop",
+      "prop": "tailSwipe",
+      "state": "hit2"
+    },
+    {
+      "type": "wait",
+      "duration": 0.12
+    },
+    {
+      "type": "prop",
+      "prop": "tailSwipe",
+      "state": "hit3"
     },
     {
       "type": "wait",
@@ -208,7 +226,7 @@
     },
     {
       "type": "prop",
-      "prop": "swipe",
+      "prop": "tailSwipe",
       "state": "closed"
     },
     {
