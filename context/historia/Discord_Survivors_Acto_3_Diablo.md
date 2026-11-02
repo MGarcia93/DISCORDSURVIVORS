@@ -96,6 +96,16 @@ Durante el combate, Maxi Negro intenta comunicarse con Papasito.
 
 **Maxi Negro:** No, si este hijo de puta es increíble.
 
+**Solago:** Che, ¿por qué ese bicho se quedó estética?
+
+**Maxi Negro:** ¿Estética?
+
+**Solago:** Si no se mueve.
+
+**Maxi Negro:** JAJAJA. Si no se mueve es estático, pelotudo.
+
+**Solago:** Es lo mismo.
+
 ---
 
 ## Escena 1 — El enfermo del farmeo

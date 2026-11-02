@@ -182,6 +182,48 @@
       "speaker": "papasito",
       "expression": "annoyed",
       "text": "Bueno, bueno. Ni mirar se puede."
+    },
+    {
+      "wave": 2,
+      "at": 13,
+      "speaker": "solago",
+      "expression": "happy",
+      "text": "Dejámelo a mí, que ya estoy en mi powerpoint."
+    },
+    {
+      "wave": 2,
+      "at": 15.5,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "JAJAJA. ¿Powerpoint?"
+    },
+    {
+      "wave": 2,
+      "at": 17.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡Es lo mismo! ¡Te da poder!"
+    },
+    {
+      "wave": 4,
+      "at": 20,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "Está roto."
+    },
+    {
+      "wave": 4,
+      "at": 22,
+      "speaker": "maxi-negro",
+      "expression": "happy",
+      "text": "Como tu culo."
+    },
+    {
+      "wave": 4,
+      "at": 24.5,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡LA CONCHA DE TU MADRE, NEGRO!"
     }
   ]
 }

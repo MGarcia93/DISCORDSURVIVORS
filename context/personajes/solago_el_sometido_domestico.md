@@ -82,6 +82,8 @@ Una figura espectral inspirada en su mujer aparece detrás de Solago, al estilo 
 
 **«Ya terminé todo»**: nombre alternativo de la mejora que potencia sus ataques temporalmente.
 
+**«Mi powerpoint»**: deforma los términos que no entiende. Lee el inglés como está escrito y confunde palabras parecidas: `power spike` → «powerpoint», `estático` → «estético». Lo dice con total confianza y, cuando lo corrigen, contesta «es lo mismo». Es un rasgo, no una muletilla: una vez por acto.
+
 ## 6. Frases del personaje
 
 - **Al seleccionarlo:** «¿Puedo jugar un ratito?»
