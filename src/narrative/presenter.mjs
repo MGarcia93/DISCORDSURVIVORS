@@ -204,7 +204,7 @@ export function createPresenter(root, catalog, onError) {
             ctx.translate(actor.x, actor.y);
             if (actor.dead) { ctx.rotate(-Math.PI / 2); ctx.globalAlpha = 0.6; }
             // A corpse does not walk: freeze its frame so it stays still.
-            drawEnemyFigure(ctx, { kind: actor.enemy, x: 0, y: 0, id: 1 }, actor.dead ? 0 : player.time);
+            drawEnemyFigure(ctx, { kind: actor.enemy, x: 0, y: 0, id: 1, variant: actor.variant, facing: actor.facing }, actor.dead ? 0 : player.time);
             ctx.restore();
             continue;
           }

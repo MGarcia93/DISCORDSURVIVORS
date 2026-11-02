@@ -216,6 +216,11 @@
       "duration": 0.3
     },
     {
+      "type": "variant",
+      "actor": "kulu",
+      "variant": "none"
+    },
+    {
       "type": "parallel",
       "steps": [
         {
@@ -264,6 +269,11 @@
           "text": "¡Callate la boca, Papafrita!"
         }
       ]
+    },
+    {
+      "type": "variant",
+      "actor": "kulu",
+      "variant": "big"
     },
     {
       "type": "parallel",

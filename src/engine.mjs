@@ -710,6 +710,9 @@ export function step(run, seconds, input = {}) {
       enemy.x += drift.x * stumble * dt;
       enemy.y += drift.y * stumble * dt;
     } else if (!inReach) {
+      // The sprite faces the way it walks: a body crossing the arena to the left
+      // must not keep looking right.
+      if (Math.abs(p.x - enemy.x) > 1) enemy.facing = p.x < enemy.x ? -1 : 1;
       enemy.x += (p.x - enemy.x) / dist * enemy.speed * charge * confusedSlow * dt;
       enemy.y += (p.y - enemy.y) / dist * enemy.speed * charge * confusedSlow * dt;
     }
