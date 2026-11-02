@@ -194,7 +194,7 @@ const jhony = {
   previewAria: 'Pixel art de Jhony: campera de cuero negra, pelo largo, anteojos, barba y una botella de cerveza en la mano',
   profile: `
       <div class="eyebrow">Berserker de botella · Dificultad media-alta</div><h2>JHONY</h2>
-      <p class="character-desc">Metalero, tryhard y con cero paciencia. Empieza jugando tranquilo, pero basta una provocación para que se tiltee y putee a todo el servidor. Jura que no vuelve al LoL, aunque cuando está tomado es él quien propone la partida.</p>
+      <p class="character-desc">Metalero y rushero con cero paciencia. Tryhard igual, pero no por el juego: le gusta ganar, y por eso vive buscando la build más rota. Arranca tranquilo hasta que alguien lo provoca; ahí putea a todo el servidor y jura que no vuelve al LoL, aunque cuando está tomado es él quien propone la partida.</p>
       <p class="character-quote">«Estoy jugando tranquilo. No rompan las pelotas».</p>
       ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>BOTELLAZO</b><p>Golpea con la botella de cerveza al enemigo más cercano. Corto y fuerte: hay que acercarse. La botella no se gasta, no hay inventario.</p></div></div>
