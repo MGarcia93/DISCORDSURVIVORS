@@ -125,6 +125,8 @@ export const OWN_PRIORITY = {
   warrior: ['extra-shroom', 'wider-blast', 'deeper-confusion', 'spore-zone', 'smoke-trail', 'confusion-chain', 'smoked-mushrooms', 'wider-smoke', 'smoke-time'],
   papazito: ['brick-fan', 'brick-shards', 'brick-pierce', 'sena-burst', 'sale-next', 'panic-extend', 'sale-value', 'softer-sale'],
   jhony: ['tilt-circle', 'tilt-circle-floor', 'one-more-beer', 'beer-round', 'broken-bottle', 'glass-everywhere', 'closed-mouth', 'shout-360', 'zomboid-stomp', 'stomp-wave', 'broken-build', 'build-updated'],
+  // The collector wants DIFFERENT signatures, never copies.
+  papafrita: ['and-what-else', 'other-console', 'not-done-yet', 'fishing', 'only-one', 'definitive-edition'],
 };
 
 export const STAT_PRIORITY = ['stat-life', 'stat-attack', 'stat-defense', 'stat-attackSpeed', 'stat-moveSpeed', 'stat-attackDistance'];

@@ -173,7 +173,7 @@ const jhony = {
       <div class="skill"><kbd>∞</kbd><div><b>BOTELLAZO</b><p>Golpea con la botella de cerveza al enemigo más cercano. Corto y fuerte: hay que acercarse. La botella no se gasta, no hay inventario.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>TILT</b><p>Barra de 0 a 100. La llena el daño recibido y la presión de la horda. Al llegar a 100 entra en Furia durante 6 segundos: +40% de ataque, +25% de velocidad de ataque y −30% de defensa. Después la barra arranca de cero.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>UN TRAGUITO MÁS</b><p>Saca el whisky: +33% de frecuencia de botellazos y la acumulación de Tilt sube la mitad durante 6 segundos. Recarga: 16 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>ME VI UNA GUÍA</b><p>Se frena, revisa la build más rota que encontró en internet y durante 10 segundos suma +30% de ataque y +50% de velocidad de ataque, además de tirar botellas que rebotan hasta 3 enemigos. Recarga: 30 segundos.</p></div></div>`,
+      <div class="skill"><kbd>E</kbd><div><b>ME VI UNA GUÍA</b><p>Revisa la build más rota que encontró en internet y durante 10 segundos suma +30% de ataque y +50% de velocidad de ataque, además de tirar botellas que rebotan hasta 3 enemigos. Recarga: 30 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'JHONY · BLOQUEADO · ENCUENTRO DEL ACTO 1',
     unlocked: 'JHONY DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -219,12 +219,14 @@ const jhony = {
   specials: [
     {
       key: 'drink', name: 'Un traguito más', hotkey: 'q', duration: 6, cooldown: 16,
+      buff: `+${Math.round((1 / DRINK_RATE - 1) * 100)}% cadencia · llena el tilt más rápido`,
       onStart(run, p) {
         run.effects.push({ x: p.x, y: p.y - 70 * WORLD_SCALE, text: '«Bueno, un traguito más»', ttl: 1.2, kind: 'drink' });
       },
     },
     {
       key: 'guide', name: 'Me vi una guía', hotkey: 'e', duration: 10, cooldown: 30,
+      buff: `+${Math.round((1 / GUIDE_RATE - 1) * 100)}% cadencia · ${GUIDE_BOUNCES} rebotes`,
       onStart(run, p) {
         run.guideIn = 0;
         run.effects.push({ x: p.x, y: p.y - 70 * WORLD_SCALE, text: '«Pará, que vi una guía»', ttl: 1.2, kind: 'guide' });
@@ -311,6 +313,18 @@ const jhony = {
         }
       }
     }
+  },
+  // The buff list names what the three multipliers are doing while they last;
+  // the numbers come from the same constants they apply, so the HUD cannot drift.
+  buffs(p) {
+    if (!(p.fury > 0)) return [];
+    const damage = Math.round((FURY_DAMAGE - 1) * 100);
+    const cadence = Math.round((1 / FURY_RATE - 1) * 100);
+    const defense = Math.round((1 - FURY_DEFENSE) * 100);
+    return [{
+      id: 'fury', name: 'FURIA', seconds: p.fury,
+      detail: `+${damage}% DAÑO · +${cadence}% CADENCIA · −${defense}% DEFENSA`,
+    }];
   },
   // Furia owns the multipliers; the whisky and the guide stack on top of them.
   passiveDamageMult(p) {

@@ -138,7 +138,7 @@ test('every world covers its whole canvas, so a bake never shows the stage throu
 });
 
 test('the dev viewer cast draws every playable ficha on the world', () => {
-  assert.equal(ROSTER.length, 5, 'the roster has the five fichas');
+  assert.equal(ROSTER.length, 6, 'the roster has the six fichas');
   const { ctx, calls } = recordingContext();
   assert.doesNotThrow(() => drawCast(ctx, 1144, 748, 1.7));
   const rects = calls.filter(([kind]) => kind === 'fillRect');

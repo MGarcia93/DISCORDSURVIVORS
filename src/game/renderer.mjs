@@ -1,5 +1,5 @@
 import { WIDTH, HEIGHT, WORLD_SCALE } from '../engine.mjs';
-import { drawAnime, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
+import { drawAnime, drawCompanion, drawSmokeCloud, drawShroomBlast, drawAstralAura } from '../sprites.mjs';
 import { drawProjectiles } from './projectiles.mjs';
 import { drawEnemyFigure } from './figures.mjs';
 import { pixelText } from '../scenes.mjs';
@@ -85,6 +85,27 @@ export function drawRunScene(ctx, run, {
   for (const wave of run.shockwaves ?? []) {
     pixelRing(ctx, wave.x, wave.y, wave.radius, '#ffb3c4', 1 - wave.radius / wave.maxRadius);
   }
+  // Papafrita's voice: the monologue bubble, his decoy and the animal that
+  // answers him. The run carries them, so the sandbox paints them too.
+  if (run.monologue) {
+    const bubble = run.monologue;
+    const width = bubble.r * 1.6, height = bubble.r * 0.95;
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, Math.max(0, bubble.ttl));
+    rounded(ctx, bubble.x - width / 2, bubble.y - height / 2, width, height, 8, 'rgba(22,19,30,0.55)');
+    pixelRing(ctx, bubble.x, bubble.y, bubble.r, '#f7efe2', 0.35);
+    pixelText(ctx, '...', bubble.x - 12, bubble.y + 6, 2, '#f7efe2');
+    ctx.restore();
+  }
+  if (run.decoy) {
+    const decoy = run.decoy;
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, Math.max(0, decoy.ttl));
+    rounded(ctx, decoy.x - 26, decoy.y - 34, 52, 26, 6, 'rgba(22,19,30,0.6)');
+    pixelRing(ctx, decoy.x, decoy.y - 21, 22, '#d9c4a8', 0.5);
+    ctx.restore();
+  }
+  if (run.companion) drawCompanion(ctx, run.companion.x, run.companion.y, { flash: (run.companion.flash ?? 0) > 0 });
   if (p.anime > 0) drawAnime(ctx, p.x + 48, p.y - 35, { time, scale: 1 });
   if (p.smile > 0) {
     // Solago's aura hugs his half-width, shorter frame instead of the tank-sized ring.
@@ -136,6 +157,27 @@ export function drawRunScene(ctx, run, {
     if (effect.kind === 'shroomBlast') {
       drawShroomBlast(ctx, effect.x, effect.y, effect.radius,
         1 - effect.ttl / effect.duration);
+      continue;
+    }
+    // Area effects a ficha hangs on the run (Jhony's circle, shout, stomp and
+    // bottle burst). They carry a radius and no text, so without this branch
+    // the ability would hit for real while painting nothing.
+    const AREA_RINGS = {
+      tiltWave: '#c4404e', tiltZone: '#8f2634', shoutWave: '#f0e6d8',
+      stompWave: '#b9a06a', glassBlast: '#cfe9dd',
+      voiceRing: '#f7efe2', biteWave: '#d9c4a8',
+    };
+    if (Object.hasOwn(AREA_RINGS, effect.kind)) {
+      const color = AREA_RINGS[effect.kind];
+      if (effect.kind === 'tiltZone') {
+        // The evolved circle stays on the floor for its whole life: two rings
+        // so it reads as a zone and not as a one-shot wave.
+        pixelRing(ctx, effect.x, effect.y, effect.r, color, 0.55);
+        pixelRing(ctx, effect.x, effect.y, effect.r * 0.7, color, 0.3);
+      } else {
+        const progress = effect.duration ? 1 - effect.ttl / effect.duration : 1;
+        pixelRing(ctx, effect.x, effect.y, effect.r * (0.35 + 0.65 * progress), color, 0.9 - 0.5 * progress);
+      }
       continue;
     }
     if (typeof effect.text !== 'string') continue;

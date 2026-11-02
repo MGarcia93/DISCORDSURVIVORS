@@ -9,7 +9,7 @@ test('Papazito passive bar shows readiness, cooldown progress and active panic',
   p.senaCooldown = 10;
   p.panicTtl = 5;
   assert.deepEqual(def.taskHud(p), { percentage: 0, label: '4 ◈ · 10s', active: true });
-  assert.match(def.statusHud(p), /PÁNICO · 5s/);
+  assert.match(def.buffs(p).find(buff => buff.id === 'panic').name, /PÁNICO/);
   p.senaCooldown = 5;
   p.panicTtl = 0;
   assert.deepEqual(def.taskHud(p), { percentage: 50, label: '4 ◈ · 5s', active: false });
@@ -46,7 +46,9 @@ test('arena labels Papazito passive bar without changing Solago panel', async ()
     sellBelonging(state.run, 'psp');
     updateHUD();
     assert.match(getNode('#character-status').textContent, /DEUDA: 10 ◈/);
-    assert.match(getNode('#character-status').textContent, /−15% VELOCIDAD · 10s/);
+    assert.match(getNode('#buff-panel').innerHTML, /−15% VELOCIDAD/);
+    assert.match(getNode('#buff-panel').innerHTML, /10s/);
+    assert.equal(getNode('#buff-panel').hidden, false);
     assert.match(getNode('#task-label').textContent, /◈ · \d+s/);
     state.sellMenuOpen = true;
     state.lastPhase = '';

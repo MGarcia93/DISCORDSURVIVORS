@@ -1,9 +1,29 @@
 import { state } from '../app/state.mjs';
 import { nextLevelXP } from '../run-rewards.mjs';
+import { activeBuffs } from './buffs.mjs';
 
 // Heads-up display: DOM reads/writes of the shared run state. No canvas
 // rendering lives here — the renderer owns every draw call.
 export const formatTime = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
+
+const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+// The buff list is rebuilt only when what it says changes: the frame loop asks
+// for the HUD many times a second and rewriting the same markup churns the DOM.
+let lastBuffs = null;
+let lastBuffPanel = null;
+
+function renderBuffs(p) {
+  const panel = document.querySelector('#buff-panel');
+  if (!panel) return;
+  const buffs = activeBuffs(p, state.run);
+  const signature = buffs.map(buff => `${buff.id}:${Math.ceil(buff.seconds ?? 0)}:${buff.detail ?? ''}`).join('|');
+  if (panel === lastBuffPanel && signature === lastBuffs) return;
+  lastBuffPanel = panel;
+  lastBuffs = signature;
+  panel.hidden = buffs.length === 0;
+  panel.innerHTML = buffs.length === 0 ? '' : `<b>BUFFS</b>${buffs.map(buff => `<span><b>${escape(buff.name)}</b>${buff.seconds > 0 ? `<i>${Math.ceil(buff.seconds)}s</i>` : ''}${buff.detail ? `<em>${escape(buff.detail)}</em>` : ''}</span>`).join('')}`;
+}
 
 export function updateHUD() {
   const p = state.run.player;
@@ -34,6 +54,7 @@ export function updateHUD() {
   }
   const statusPanel = document.querySelector('#character-status');
   if (statusPanel) statusPanel.textContent = p.characterDef.statusHud?.(p) ?? '';
+  renderBuffs(p);
   for (const special of p.characterDef.specials) {
     const button = document.querySelector(`[data-special="${special.key}"]`);
     const cooldown = p[`${special.key}Cooldown`];

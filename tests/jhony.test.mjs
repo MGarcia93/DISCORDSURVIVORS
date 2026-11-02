@@ -73,16 +73,12 @@ test('the playable Jhony carries a beer bottle that swings forward on attack', (
   assert.notEqual(bottled, idle, 'the bottle is drawn in his hand');
   assert.notEqual(swinging, bottled, 'the attack pose is its own drawing');
 
-  // The bottle lives in the right hand: the drawn pixels spread further left
-  // when idle and further right when the arm thrusts it forward.
+  // The bottle lives in the same hand in both poses: hanging forward when idle,
+  // thrust further forward when the botellazo lands.
   const bounds = draw => {
     const xs = [];
-    const ctx = new Proxy({}, {
-      get: (_, key) => key === 'getTransform' ? () => ({ a: 1, d: 1 }) : () => {},
-      set: () => true,
-    });
-    const recording = new Proxy(ctx, {
-      get: (target, key) => key === 'fillRect'
+    const recording = new Proxy({}, {
+      get: (_, key) => key === 'fillRect'
         ? (x, y, w) => xs.push(x, x + w)
         : key === 'getTransform' ? () => ({ a: 1, d: 1 }) : () => {},
       set: () => true,
@@ -90,8 +86,8 @@ test('the playable Jhony carries a beer bottle that swings forward on attack', (
     draw(recording);
     return [Math.min(...xs), Math.max(...xs)];
   };
-  assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true }))[0] < 0, 'the bottle hangs past the body');
-  assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true, attacking: true }))[1] > 30, 'the swing reaches forward');
+  assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true }))[1] > 20, 'the bottle hangs forward');
+  assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true, attacking: true }))[1] > 30, 'the swing reaches further');
 });
 
 test('Tilt shows on the face: knitted brows, red cheeks and anger ticks', () => {
@@ -106,7 +102,7 @@ test('Tilt shows on the face: knitted brows, red cheeks and anger ticks', () => 
 });
 
 test('Jhony is a playable ficha unlocked by his Act 1 encounter', () => {
-  assert.deepEqual(ROSTER.map(character => character.id), ['negro', 'solago', 'warrior', 'papazito', 'jhony']);
+  assert.deepEqual(ROSTER.map(character => character.id), ['negro', 'solago', 'warrior', 'papazito', 'jhony', 'papafrita']);
   assert.equal(CHARACTERS.jhony.id, 'jhony');
   assert.equal(CHARACTERS.jhony.unlock.flag, 'jhonyUnlocked');
   assert.equal(CHARACTERS.jhony.unlock.scene, 'act-01-jhony', 'meeting him in Act 1 is the unlock');
@@ -126,7 +122,10 @@ test('the world viewer draws the controlled Jhony with the approved movement and
   const expected = record(ctx => ficha.draw(ctx, 1144 * pos.x, 748 * pos.y, {
     time: 0.125, moving: true, facing: -1, player: {},
   }));
-  assert.deepEqual(cast.slice(-expected.length), expected);
+  // Jhony is no longer the last ficha, so the drawn block is found by shape.
+  const drawn = JSON.stringify(expected);
+  assert.ok(cast.some((_, index) => JSON.stringify(cast.slice(index, index + expected.length)) === drawn),
+    'the viewer draws the controlled Jhony exactly as his ficha does');
   assert.ok(expected.some(call => call[0] === 'scale' && call[1] === -2 && call[2] === 2));
   assert.ok(expected.some(call => call[0] === 'translate' && call[1] === 801 && call[2] === 598));
 });
@@ -145,4 +144,24 @@ test('adding the NPC leaves every existing world-viewer actor drawing unchanged'
     const actual = record(ctx => drawCast(ctx, 1144, 748, 1.1, options));
     assert.deepEqual(actual.slice(0, expected.length), expected, actor);
   }
+});
+
+// The pixel hash above pins the picture; this pins the drawing budget, so an
+// extra rectangle hidden behind existing ones still fails.
+function rects(options) {
+  const out = [];
+  const ctx = new Proxy({}, {
+    get: (_, key) => key === 'getTransform' ? () => ({ a: 1, d: 1 })
+      : (...args) => { if (key === 'fillRect') out.push(JSON.stringify(args)); },
+    set: () => true,
+  });
+  drawJhony(ctx, 100, 150, options);
+  return out;
+}
+
+test('the approved NPC rectangle set is never lost, and the bottle adds exactly thirteen', () => {
+  const pin = options => createHash('sha256').update(JSON.stringify([...rects(options)].sort())).digest('hex');
+  assert.equal(pin({}), 'ab24dcf79d7aff43652536fa9d086913ad34e7bccdd0bcd88b89bd3696e6f22e');
+  assert.equal(pin({ moving: true, time: 0.125 }), 'bc93f66a6eb8d686bdf7e8f622c0dae8f6f77bbdd1cfb4f9b085f98c970079c7');
+  assert.equal(rects({ bottle: true }).length - rects({}).length, 13, 'the bottle is the only added art');
 });

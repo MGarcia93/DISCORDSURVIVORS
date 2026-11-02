@@ -101,6 +101,8 @@ export function beginRewards(run) {
       });
       run.levelChoices = selectLevelOptions({ upgrades }, {
         character: run.character, level: run.pendingLevels[0], ranks: run.levelRanks,
+        // A collector has to see his own shelf more often than the rest.
+        ownChance: run.player.characterDef.ownOfferChance ?? undefined,
       }, run.random);
     }
   } else {

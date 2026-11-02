@@ -322,13 +322,19 @@ function nearest(run, origin, excluded = [], maxDistance = Infinity) {
 
 function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) {
   const target = nearest(run, source, [], maxDistance);
-  if (!target) return;
+  if (!target) return false;
   const device = kind === 'remote' ? ['remote', 'joystick', 'phone'][run.shotCount++ % 3]
     : kind === 'brick' ? 'brick'
     : kind === 'shroom' ? 'shroom'
-    : kind === 'bottle' ? 'bottle' : 'magic';
+    : kind === 'bottle' ? 'bottle'
+    : kind === 'voice' ? 'voice' : 'magic';
   run.projectiles.push({ x: source.x, y: source.y, target: target.id,
-    damage, kind, device, hit: [], ttl: 3, angle: 0, attack });
+    damage, kind, device, hit: [], ttl: 3, attack,
+    // A wave points where it was thrown and never tumbles; everything else
+    // keeps the cast's spinning shot.
+    angle: attack?.align ? Math.atan2(target.y - source.y, target.x - source.x) : 0,
+    spin: attack?.spin ?? true,
+    pierce: attack?.pierce, width: attack?.width });
   // One shot, one sound: the event fires where the projectile exists, so an
   // empty range stays silent instead of clicking at nothing.
   emit('shot', { run, kind });
@@ -342,6 +348,7 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
     run.projectiles.push({ x: source.x, y: source.y, target: alt.id,
       damage: damage * 0.6, kind, device, hit: [], ttl: 3, angle: 0, attack });
   }
+  return true;
 }
 
 // A ring that grows out of a point and hurts the player once as it passes them.
@@ -558,10 +565,13 @@ export function step(run, seconds, input = {}) {
     if (def.attack.type === 'melee') attackMelee(run);
     else {
       const empowered = p.sellNextMult ?? 1;
-      fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
+      const fired = fire(run, p, p.damage * (def.attack.damageMultiplier ?? 1)
         * (p.sellDamageTtl > 0 ? 1 + (p.sellDamageFrac ?? 0) : 1) * empowered
         * (def.passiveDamageMult?.(p) ?? 1),
         def.attack.device, p.attackRange, def.attack);
+      // A sheet that hangs extra waves off its own cadence counts real shots
+      // only: an empty arena never advances the collector's tally.
+      if (fired) def.onShot?.(run, p, ctx);
       p.sellNextMult = 1;
     }
     const combat = def.combat || {};
@@ -659,7 +669,7 @@ export function step(run, seconds, input = {}) {
     shot.ttl -= dt;
     // The cast's devices spin in flight; a shot aimed by an enemy keeps its
     // heading, or it would read as tumbling instead of flying at you.
-    if (shot.team !== 'enemy') shot.angle += dt * 12;
+    if (shot.team !== 'enemy' && shot.spin !== false) shot.angle += dt * 12;
     if (shot.vx !== undefined && shot.vy !== undefined) {
       const dx = shot.vx * dt, dy = shot.vy * dt;
       const lengthSquared = dx * dx + dy * dy;
@@ -707,6 +717,10 @@ export function step(run, seconds, input = {}) {
       shot.y = target.y;
       hit(run, target, shot.damage);
       shot.hit.push(target.id);
+      // The ficha may reshape its own wave on impact (a voice that widens with
+      // every listener); every other shot declares no hook.
+      p.characterDef.onProjectileHit?.(run, shot, target,
+        { hit, distance, nearest, fireRadial });
       if (shot.attack?.blast) {
         applyConfusion(target, (shot.attack.blast.stacks ?? 1) + (p.rewardBonuses.confusionStacks ?? 0),
           shot.attack.blast.ttl ?? 5.4);

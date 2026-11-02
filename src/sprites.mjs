@@ -2715,20 +2715,21 @@ export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, ti
     p(13, 35, 2, 1, '#a3333d');
     if (bottle) {
       // Beer bottle carried low in the right hand: glass body, paper label,
-      // metal cap. It never leaves the hand, so no inventory, only art.
-      p(-21, 32, 8, 11, ink);
-      p(-20, 33, 6, 9, '#6b3f1d');
-      p(-20, 33, 1, 9, '#9a6330');
-      p(-15, 33, 1, 9, '#4a2a12');
-      p(-19, 35, 4, 4, '#e6d9b4');
-      p(-19, 36, 4, 1, '#a8323c');
-      p(-19, 29, 4, 4, ink);
-      p(-18, 29, 2, 4, '#6b3f1d');
-      p(-18, 29, 1, 3, '#9a6330');
-      p(-19, 27, 4, 2, '#c9c6bf');
-      p(-19, 27, 4, 1, '#e8e5dd');
-      p(-15, 35, 2, 3, skin);
-      p(-15, 35, 1, 2, light);
+      // metal cap. It never leaves the hand, so no inventory, only art — and it
+      // is the same hand that thrusts it forward on the attack pose.
+      p(14, 32, 8, 11, ink);
+      p(15, 33, 6, 9, '#6b3f1d');
+      p(20, 33, 1, 9, '#9a6330');
+      p(15, 33, 1, 9, '#4a2a12');
+      p(16, 35, 4, 4, '#e6d9b4');
+      p(16, 36, 4, 1, '#a8323c');
+      p(16, 29, 4, 4, ink);
+      p(17, 29, 2, 4, '#6b3f1d');
+      p(18, 29, 1, 3, '#9a6330');
+      p(16, 27, 4, 2, '#c9c6bf');
+      p(16, 27, 4, 1, '#e8e5dd');
+      p(13, 35, 2, 3, skin);
+      p(14, 35, 1, 2, light);
     }
   }
 
@@ -2790,6 +2791,168 @@ export function drawJhony(ctx, x, y, { scale = 2, facing = 1, moving = false, ti
       p(8 + i * 3, -4 - dy, 2, 1, '#c4404e');
       p(9 + i * 3, -3 - dy, 1, 2, '#c4404e');
     }
+  }
+  ctx.restore();
+}
+
+// Papafrita: the approved casual sprite (black tee, blue bermuda, ponytail,
+// compact beard). `talking` opens the mouth and `voice` adds the sound ring
+// that his attacks throw; with both off the rectangle sequence is exactly the
+// approved NPC drawing.
+export function drawPapafrita(ctx, x, y, { scale = 2, facing = 1, moving = false, time = 0, talking = false, voice = false } = {}) {
+  const step = moving ? Math.floor(time * 8) % 2 : 0;
+  const ink = '#171526';
+  const skin = '#c58f68';
+  const skinLight = '#e0aa7b';
+  const skinShade = '#97644e';
+  const hair = '#29252c';
+  const p = (x, y, w, h, fill) => pixel(ctx, x, y, w, h, fill);
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.translate(Math.round(x), Math.round(y));
+  ctx.scale(scale * facing, scale);
+  p(-19, 0, 38, 2, '#11141c');
+  ctx.translate(0, -46 + step);
+
+  // Bare calves and black trainers with the white sole from the photographs.
+  p(-11, 37, 9, 7 - step, ink);
+  p(3, 37, 9, 7 + step, ink);
+  p(-10, 38, 7, 5 - step, skin);
+  p(4, 38, 7, 5 + step, skin);
+  p(-10, 38, 2, 5 - step, skinLight);
+  p(9, 39, 2, 4 + step, skinShade);
+  p(-14, 43 - step, 13, 3, ink);
+  p(2, 43 + step, 13, 3, ink);
+  p(-12, 43 - step, 9, 1, '#383844');
+  p(4, 43 + step, 8, 1, '#383844');
+  p(-13, 45 - step, 11, 1, '#deded6');
+  p(3, 45 + step, 11, 1, '#deded6');
+
+  // Light blue denim bermuda shorts, ending above the bare calves.
+  p(-14, 31, 28, 8, ink);
+  p(-13, 32, 12, 6, '#8095a5');
+  p(2, 32, 11, 6, '#708596');
+  p(-12, 33, 3, 4, '#a1b2bb');
+  p(10, 33, 2, 4, '#5c7285');
+  p(-2, 34, 4, 5, ink);
+  p(-13, 37, 12, 1, '#a1b2bb');
+  p(2, 37, 11, 1, '#91a4b0');
+  p(-11, 33, 4, 1, '#5c7285');
+  p(6, 33, 4, 1, '#5c7285');
+
+  // Plain black tee over a broad, stepped chest and belly like El Negro's.
+  p(-13, 19, 26, 3, ink);
+  p(-15, 22, 30, 6, ink);
+  p(-17, 28, 34, 6, ink);
+  p(-14, 33, 28, 2, ink);
+  p(-12, 20, 24, 3, '#1e1e27');
+  p(-14, 23, 28, 5, '#20212a');
+  p(-16, 28, 32, 5, '#20212a');
+  p(-13, 24, 3, 5, '#343440');
+  p(-15, 29, 3, 3, '#30313b');
+  p(12, 26, 2, 6, '#151720');
+  p(-7, 32, 18, 1, '#343440');
+  p(-13, 33, 26, 1, '#14151e');
+  p(-4, 20, 8, 2, '#14151e');
+  // Small muted chest mark, not a new readable slogan or invented brand.
+  p(6, 23, 2, 1, '#77767d');
+  p(7, 24, 1, 1, '#55565e');
+
+  // Short sleeves, exposed forearms and relaxed hands.
+  p(-18, 21, 5, 7, ink);
+  p(13, 21, 5, 7, ink);
+  p(-17, 22, 3, 5, '#292a34');
+  p(14, 22, 3, 5, '#20212a');
+  p(-19, 27, 5, 10, ink);
+  p(14, 27, 5, 10, ink);
+  p(-18, 27, 3, 9, skin);
+  p(15, 27, 3, 9, skin);
+  p(-18, 28, 1, 7, skinLight);
+  p(17, 28, 1, 7, skinShade);
+
+  // Same full cheeks, compact beard and ponytail as the approved identity.
+  p(-12, 0, 24, 4, ink);
+  p(-13, 3, 26, 14, ink);
+  p(-11, 16, 23, 5, ink);
+  p(-9, 20, 18, 3, ink);
+  p(-13, 0, 24, 4, hair);
+  p(-9, 0, 17, 1, '#56413b');
+  p(-12, 2, 3, 7, hair);
+  p(10, 2, 3, 7, hair);
+  p(-10, 4, 21, 13, skin);
+  p(-8, 3, 17, 4, skinLight);
+  p(-8, 7, 17, 8, skinLight);
+  p(-12, 10, 3, 5, skinShade);
+  p(10, 10, 3, 5, skinShade);
+  p(-10, 16, 21, 3, skinShade);
+  p(-16, 0, 5, 5, ink);
+  p(-17, -1, 5, 4, hair);
+  p(-16, 0, 3, 1, '#56413b');
+  p(-16, 4, 3, 7, hair);
+  p(-15, 4, 3, 1, '#a49a90');
+  p(-15, 7, 1, 3, '#56413b');
+  p(-8, 7, 6, 1, '#34282b');
+  p(3, 7, 6, 1, '#34282b');
+  p(-8, 9, 6, 3, '#f0dfc1');
+  p(3, 9, 6, 3, '#f0dfc1');
+  p(-5, 9, 2, 3, '#34282b');
+  p(6, 9, 2, 3, '#34282b');
+  p(0, 12, 3, 3, skinShade);
+  p(-8, 15, 3, 4, '#3b3031');
+  p(8, 15, 3, 4, '#3b3031');
+  p(-6, 15, 5, 1, '#34282b');
+  p(2, 15, 6, 1, '#34282b');
+  p(-5, 17, 13, 1, '#422c30');
+  p(-3, 17, 8, 1, '#eddbba');
+  p(-7, 19, 16, 2, '#3b3031');
+  p(-4, 21, 10, 1, '#29252c');
+  p(-3, 22, 8, 1, skinShade);
+  p(-2, 22, 5, 1, skin);
+  // Playable extras: the mouth actually moves and the voice reads as a ring.
+  // Both are opt-in, so the approved NPC sprite keeps its exact rectangles.
+  if (talking || voice) {
+    p(-4, 17, 8, 1, '#2a1d20');
+    p(-3, 17, 6, 1, '#8d3b3f');
+    p(-2, 18, 4, 1, '#5c2226');
+  }
+  if (voice) {
+    p(11, 8, 3, 3, '#e6d9b4');
+    p(15, 6, 3, 7, '#e6d9b4');
+    p(19, 3, 3, 13, '#e6d9b4');
+  }
+  ctx.restore();
+}
+
+// «El único que me banca»: Papafrita's animal, one small mutt that fights for
+// him. Readable at cast scale, and deliberately not a Monster Hunter palico.
+export function drawCompanion(ctx, x, y, { scale = 2, facing = 1, flash = false } = {}) {
+  const p = (px, py, w, h, fill) => pixel(ctx, px, py, w, h, fill);
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.translate(Math.round(x), Math.round(y));
+  ctx.scale(scale * facing, scale);
+  p(-8, 0, 16, 2, '#11141c');
+  ctx.translate(0, -15);
+  // Brown mutt: body, tail, legs, head with one eye and a bright collar.
+  p(-7, 7, 13, 7, '#171526');
+  p(-6, 8, 11, 5, '#8a6242');
+  p(-6, 8, 11, 1, '#a67a54');
+  p(-9, 4, 3, 5, '#171526');
+  p(-8, 5, 2, 4, '#8a6242');
+  p(-6, 12, 3, 4, '#171526');
+  p(2, 12, 3, 4, '#171526');
+  p(-5, 13, 2, 2, '#5e4028');
+  p(3, 13, 2, 2, '#5e4028');
+  p(4, 1, 9, 9, '#171526');
+  p(5, 2, 7, 7, '#8a6242');
+  p(5, 2, 7, 1, '#a67a54');
+  p(12, 4, 3, 3, '#171526');
+  p(12, 5, 2, 2, '#5e4028');
+  p(6, 4, 2, 2, '#171526');
+  p(4, 8, 9, 1, '#c4404e');
+  if (flash) {
+    p(10, -3, 3, 3, '#f7efe2');
+    p(14, -6, 3, 3, '#f7efe2');
   }
   ctx.restore();
 }
@@ -2866,7 +3029,16 @@ export function drawAstralAura(ctx, x, y, radius, time = 0, intensity = 1) {
   ctx.restore();
 }
 
-export function drawGamerProjectile(ctx, device) {
+export function drawGamerProjectile(ctx, device, shot = {}) {
+  if (device === 'voice') {
+    // Papafrita's voice: nested arcs that widen with every enemy it goes
+    // through. The width lives on the shot, so the wave grows as it travels.
+    const half = Math.max(5, Math.min(14, Math.round((shot.width ?? 10) / 2)));
+    pixel(ctx, -4, -half, 4, half * 2, '#f7efe2');
+    pixel(ctx, -10, -half + 3, 4, half * 2 - 6, '#d9c4a8');
+    pixel(ctx, -16, -half + 6, 4, Math.max(2, half * 2 - 12), '#b39a7c');
+    return;
+  }
   if (device === 'shard') {
     // «BOTELLA ROTA»: a glass sliver, readable while it tumbles.
     pixel(ctx, -3, -4, 6, 8, '#171526');

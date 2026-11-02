@@ -126,7 +126,7 @@ function weightedEntry(entries, random) {
   return entries[entries.length - 1] ?? null;
 }
 
-export function selectLevelOptions(catalog, { character, level, ranks }, random) {
+export function selectLevelOptions(catalog, { character, level, ranks, ownChance = OWN_OFFER_CHANCE }, random) {
   const rankOf = id => Object.hasOwn(ranks, id) ? ranks[id] : 0;
   const eligible = catalog.upgrades.filter(entry =>
     (entry.characters === 'all' || entry.characters === character)
@@ -138,7 +138,7 @@ export function selectLevelOptions(catalog, { character, level, ranks }, random)
   // No signature is eligible at all: no roll is spent, so the sequence stays
   // stable for a character that cannot grow that way yet.
   const ownPick = forced.length ? weightedEntry(forced, random)
-    : own.length > 0 && random() < OWN_OFFER_CHANCE ? weightedEntry(own, random) : null;
+    : own.length > 0 && random() < ownChance ? weightedEntry(own, random) : null;
   const picks = ownPick ? [ownPick] : [];
   return [...picks, ...pickWithGuarantee(common, LEVEL_OPTIONS - picks.length, level, random)];
 }

@@ -21,8 +21,14 @@ export function waveBudget(act, wave, duration) {
   return Math.round(config.perMinute * duration / 60);
 }
 
+// A kind's life is one value for the whole world: the one it first appears
+// with. Only the closing waves use the world's peak, so the finale still
+// escalates without the same zombie getting tougher every single wave.
 export function waveLife(act, wave, kind) {
-  return waveConfig(act, wave)?.life?.[kind];
+  const rows = (act?.waves ?? []).filter(row => typeof row.life?.[kind] === 'number');
+  if (!rows.length) return undefined;
+  const closing = (act?.boss?.wave ?? act?.waves?.length ?? 1) - 1;
+  return wave >= closing ? rows[rows.length - 1].life[kind] : rows[0].life[kind];
 }
 
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave

@@ -39,10 +39,11 @@ test('Papafrita production sprite keeps the approved casual photo outfit in ever
     assert.ok(calls.filter(([kind]) => kind === 'fillRect').every(([, ...values]) => values.every(Number.isInteger)));
   }
   assert.equal(npc.id, 'papafrita');
-  assert.equal(npc.stats, undefined);
+  assert.equal(npc.stats, undefined, 'the cameo keeps no combat sheet');
   assert.equal(npc.unlock, undefined);
-  assert.equal(Object.hasOwn(CHARACTERS, 'papafrita'), false);
-  assert.equal(ROSTER.length, 5);
+  // The same character is a playable ficha now; the stage keeps his approved art.
+  assert.equal(CHARACTERS.papafrita.id, 'papafrita');
+  assert.equal(ROSTER.length, 6);
 });
 
 test('Papafrita portraits rebuild reproducibly without changing the approved head, neck or body', async () => {

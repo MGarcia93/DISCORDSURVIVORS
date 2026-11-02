@@ -65,7 +65,7 @@ test('the shipped narrative catalog registers Jhony portraits and the roster now
   }
   // The same character is a playable ficha now; the catalog still only speaks him.
   assert.equal(CHARACTERS.jhony.id, 'jhony');
-  assert.equal(ROSTER.length, 5);
+  assert.equal(ROSTER.length, 6);
   assert.ok(catalog.entries.every(entry => entry.error === null));
   assert.deepEqual(catalog.bindings, [], 'this does not activate any Act 1 scenes');
 });

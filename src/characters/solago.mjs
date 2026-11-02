@@ -81,6 +81,23 @@ const solago = {
       active: p.permissionActive > 0,
     };
   },
+  // «PERMISO» and «RISA» already have their own feedback; the buff list repeats
+  // them with the numbers they are actually applying.
+  buffs(p) {
+    const list = [];
+    if (p.permissionActive > 0) {
+      const damage = Math.round(((this.combat?.permissionDamageMult ?? 1) - 1) * 100);
+      const interval = Math.round((1 - (this.combat?.permissionRateMult ?? 1)) * 100);
+      list.push({
+        id: 'permission', name: 'PERMISO', seconds: p.permissionActive,
+        detail: `+${damage}% DAÑO · −${interval}% INTERVALO`,
+      });
+    }
+    if (p.smile > 0) {
+      list.push({ id: 'smile', name: 'RISA', seconds: p.smile, detail: `bloquea ${Math.round(p.smileBlock ?? 0)}` });
+    }
+    return list;
+  },
   passives: [
     {
       key: 'smile',
@@ -113,6 +130,7 @@ const solago = {
   specials: [
     {
       key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26, durationBonus: 'standDuration',
+      buff: 'daño en área · no te podés mover',
       immobilize: true,
       onTick(run, p, dt, ctx) {
         run.standIn -= dt;

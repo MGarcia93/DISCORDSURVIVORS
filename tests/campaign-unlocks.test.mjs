@@ -14,7 +14,8 @@ const encounters = [
 ];
 // Encounter order the selection screen follows: reaching Jhony closes Act 1,
 // so his is the first note a fresh save reads.
-const encounterOrder = [{ scene: 'act-01-jhony', character: 'jhony' }, ...encounters];
+const encounterOrder = [{ scene: 'act-01-jhony', character: 'jhony' }, ...encounters,
+  { scene: 'act-05-final', character: 'papafrita' }];
 const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 function memoryStorage(initial = null) {
   let value = initial;
@@ -44,6 +45,7 @@ test('each real encounter unlocks its character when completed or skipped, with 
       for (const other of encounters.filter(item => item !== encounter)) {
         assert.equal(isCharacterUnlocked(other.character, reloaded), false, 'does not grant other encounters');
       }
+      assert.equal(isCharacterUnlocked('jhony', reloaded), false, 'and never grants Jhony his Act 1 encounter');
       assert.equal(reloaded.getItem(PROGRESS_STORAGE_KEY), saved, 'checking an unlock never rewrites progress');
     }
   }

@@ -160,6 +160,20 @@ export const EFFECTS = {
     describe: value => value > 1 ? 'Remate con onda de impacto' : 'Remate sobre enemigos débiles' },
   buildCombo: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'La build suma rebotes' : 'La build dispara más seguido' },
+  // Papafrita's six signatures: each one levels I..III, and his passive counts
+  // how many DIFFERENT ones he owns, never how many copies.
+  waveGrowth: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `La onda se ensancha y atraviesa +${value} por enemigo` },
+  copyWave: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Copia hacia otro objetivo cada ${7 - value} ataques` },
+  bubbleBurst: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? `Estallido del globo (nivel ${value})` : 'El globo estalla al desaparecer' },
+  escape: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 2 ? 'Se escapa con señuelo y onda al reaparecer' : 'Se escapa con señuelo cuando lo rodean' },
+  companion: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'El animal encadena y golpea en área' : 'Un animal ataca objetivos secundarios' },
+  echo: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => `Eco demorado cada ${7 - value} ataques` },
 };
 
 // Jhony's six signatures and their evolutions (§5). Each one adds or reshapes
@@ -190,6 +204,22 @@ const JHONY_UPGRADES = [
   { id: 'build-updated', name: 'Build actualizada', characters: 'jhony', minLevel: 4,
     requires: [{ id: 'broken-build', rank: 1 }], ranks: [{ effects: [{ type: 'buildCombo', value: 1 }] }] },
 ];
+
+
+// Papafrita's six signatures (§5), each one with levels I, II and III. A rank
+// adds one to its effect; the rules live in the ficha and the passive counts
+// distinct ids, so three copies of one signature are still 1/6.
+const PAPAFRITA_UPGRADES = [
+  ['and-what-else', '¿Y sabés qué más?', 'waveGrowth'],
+  ['other-console', 'Lo compré en otra consola', 'copyWave'],
+  ['not-done-yet', 'Todavía no terminé', 'bubbleBurst'],
+  ['fishing', 'Me salió pesca', 'escape'],
+  ['only-one', 'El único que me banca', 'companion'],
+  ['definitive-edition', 'Edición definitiva', 'echo'],
+].map(([id, name, type]) => ({
+  id, name, characters: 'papafrita', minLevel: 2, chance: 0.55, requires: [],
+  ranks: [1, 2, 3].map(() => ({ effects: [{ type, value: 1 }] })),
+}));
 
 export const LEVEL_UPGRADES = [
   ...[
@@ -265,6 +295,7 @@ export const LEVEL_UPGRADES = [
   // Jhony's six signatures and their evolutions. Each one adds or reshapes an
   // attack; the evolution only opens once its base was taken.
   ...JHONY_UPGRADES,
+  ...PAPAFRITA_UPGRADES,
 ];
 
 // Milestone levels: at these levels the entry is forced into the selection,
@@ -277,6 +308,7 @@ const MILESTONES = {
   'deeper-confusion': [3], 'extra-shroom': [4],
   'brick-pierce': [3], 'sena-burst': [4],
   'tilt-circle': [3],
+  'and-what-else': [3], 'fishing': [5],
 };
 for (const entry of LEVEL_UPGRADES) if (MILESTONES[entry.id]) entry.guaranteedAt = MILESTONES[entry.id];
 

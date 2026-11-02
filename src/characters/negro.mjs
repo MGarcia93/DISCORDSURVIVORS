@@ -34,6 +34,13 @@ const negro = {
     drawElNegro(ctx, 128, 150, { time, moving, facing: previewFacing, sitting: isSitting, scale: 2 });
   },
   regenHud(p) { return { ringY: p.y + 31, radius: 37, textX: p.x - 31, textY: p.y - 77 }; },
+  // «Guardián del sillón»: the still passive banks a shield, and the HUD says so
+  // while there is something left to absorb.
+  buffs(p) {
+    return (p.shield ?? 0) > 0
+      ? [{ id: 'shield', name: 'ESCUDO', detail: `absorbe ${Math.round(p.shield)}` }]
+      : [];
+  },
   draw(ctx, x, y, context) {
     drawElNegro(ctx, x, y, {
       time: context.time, moving: context.moving, facing: context.facing,
@@ -60,6 +67,7 @@ const negro = {
   specials: [
     {
       key: 'anime', name: 'Modo Otaku', hotkey: 'q', duration: 8, cooldown: 18, durationBonus: 'waifuDuration',
+      buff: 'waifu que dispara sola',
       onTick(run, p, dt, ctx) {
         run.animeIn -= dt;
         if (run.animeIn > 0) return;
@@ -69,6 +77,7 @@ const negro = {
     },
     {
       key: 'chair', name: 'Me da paja', hotkey: 'e', duration: 6, cooldown: 22,
+      buff: 'daño en área · casi no te movés',
       speedFactor: 0.12, contactFactor: 0.2,
       onTick(run, p, dt, ctx) {
         run.chairIn -= dt;

@@ -90,7 +90,7 @@ test('sale income settles debt before crediting the wallet, preserving sale buff
     assert.equal(run.coins, coins + 7, 'previous wallet is not spent again to settle sale debt');
     assert.equal(run.player.sellMoveSlowFrac, 0.15);
     assert.equal(run.player.sellDamageFrac, 0.1);
-    assert.match(run.player.characterDef.statusHud(run.player), /−15% VELOCIDAD/);
+    assert.match(run.player.characterDef.buffs(run.player).map(buff => buff.name).join(' '), /−15% VELOCIDAD/);
     const snapshot = JSON.stringify(run);
     assert.equal(sellBelonging(run, 'psp'), false);
     assert.equal(JSON.stringify(run), snapshot);
@@ -130,7 +130,8 @@ test('each stage resets debt, escalation and panic without replenishing sold bel
 test('sale penalties have visible countdowns and disappear when expired', () => {
   const run = arena();
   for (const key of ['psp', 'keyboard', 'chair', 'monitor']) sellBelonging(run, key);
-  const hud = () => run.player.characterDef.statusHud(run.player);
+  const hud = () => run.player.characterDef.buffs(run.player, run)
+    .map(buff => `${buff.name} · ${Math.ceil(buff.seconds)}s`).join(' | ');
   for (const expected of [/−15% VELOCIDAD · 10s/, /INTERVALO DE TIRO · 10s/, /−15% DEFENSA · 10s/, /VISIÓN REDUCIDA · 10s/]) {
     assert.match(hud(), expected);
   }

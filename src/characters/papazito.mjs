@@ -138,15 +138,23 @@ const papazito = {
   statusHud(p) {
     const lines = [`DEUDA: ${p.senaDebt} ◈`];
     if (p.senaLastCost > 0) lines.push(`ÚLTIMO COBRO: ${p.senaLastCost} ◈ · PAGÓ ${p.senaLastPaid} ◈`);
-    if (p.panicTtl > 0) lines.push(`PÁNICO · ${Math.ceil(p.panicTtl)}s · +30% MOVIMIENTO · −40% INTERVALO`);
+    return lines.join('\n');
+  },
+  // Panic and the sale penalties expire on their own, so they are buffs; the
+  // status panel keeps the ledger that does not tick down.
+  buffs(p) {
+    const list = [];
+    if (p.panicTtl > 0) {
+      list.push({ id: 'panic', name: 'PÁNICO', seconds: p.panicTtl, detail: '+30% MOVIMIENTO · −40% INTERVALO' });
+    }
     const penalties = [
       ['sellMoveSlowTtl', `−${Math.round((p.sellMoveSlowFrac ?? 0) * 100)}% VELOCIDAD`],
       ['sellAtkSlowTtl', `+${Math.round((p.sellAtkSlowFrac ?? 0) * 100)}% INTERVALO DE TIRO`],
       ['sellDefLossTtl', `−${Math.round((p.sellDefLossFrac ?? 0) * 100)}% DEFENSA`],
       ['sellVisionTtl', 'VISIÓN REDUCIDA'],
     ];
-    for (const [key, label] of penalties) if (p[key] > 0) lines.push(`${label} · ${Math.ceil(p[key])}s`);
-    return lines.join('\n');
+    for (const [key, label] of penalties) if (p[key] > 0) list.push({ id: key, name: label, seconds: p[key] });
+    return list;
   },
   passiveSpeedMult: p => (p.panicTtl > 0 ? 1.3 : 1),
   passiveRateMult: p => (p.panicTtl > 0 ? 0.6 : 1),
@@ -170,6 +178,7 @@ const papazito = {
   }, {
     // Three dense expanding rings, not a continuous homing rain.
     key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 1.2, cooldown: 25,
+    buff: '3 anillos de ladrillos',
     burstCount: 3, bricksPerBurst: 48, burstInterval: 0.45,
     spawnRadius: 18 * WORLD_SCALE, speed: 280 * WORLD_SCALE, damageMult: 1,
     onStart(run, p) {

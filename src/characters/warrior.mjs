@@ -79,11 +79,24 @@ const warrior = {
         ttl: this.ttl + (p.rewardBonuses?.smokeDuration ?? 0) });
     },
   }],
+  // The cloud is the passive's real effect and it lives on the floor, not on the
+  // player: report the freshest one and what it is doing to the horde.
+  buffs(p, run) {
+    const smoke = this.passives.find(passive => passive.kind === 'smoke');
+    const clouds = (run?.effects ?? []).filter(effect => effect.kind === 'smoke' && effect.ttl > 0);
+    if (!smoke || !clouds.length) return [];
+    const cloud = clouds.reduce((fresh, current) => (current.ttl > fresh.ttl ? current : fresh));
+    return [{
+      id: 'smoke', name: 'HUMO', seconds: cloud.ttl,
+      detail: `−${Math.round(smoke.slow * 100)}% VELOCIDAD ENEMIGA · ${Math.round(smoke.missChance * 100)}% FALLO`,
+    }];
+  },
   // Q: VIAJE ASTRAL. A spore circle around Warrior: continuous area damage,
   // disorients normal enemies (drift) and briefly stuns the weak ones; strong
   // enemies and bosses only get slowed.
   specials: [{
     key: 'astral', name: 'Viaje Astral', hotkey: 'q', duration: 6, cooldown: 20,
+    buff: 'daño en área · confunde y aturde',
     radius: 170 * WORLD_SCALE, tickRate: 0.4, tickFactor: 0.6,
     stacksPerTick: 2, confusionTtl: 6, stunThreshold: 150, stunWindow: 1.2,
     onTick(run, p, dt, ctx) {
@@ -102,6 +115,7 @@ const warrior = {
     // E: ME DESAPAREZCO. Short full invulnerability inside smoke, then he
     // reappears at the safest nearby spot with a spore explosion.
     key: 'vanish', name: 'Me Desaparezco', hotkey: 'e', duration: 2, cooldown: 30,
+    buff: 'invulnerable · explosión al volver',
     contactFactor: 0,
     blink: 90 * WORLD_SCALE, burstRadius: 120 * WORLD_SCALE,
     burstFactor: 1.5, burstStacks: 2,
