@@ -143,9 +143,15 @@ export function selectLevelOptions(catalog, { character, level, ranks, ownChance
   return [...picks, ...pickWithGuarantee(common, LEVEL_OPTIONS - picks.length, level, random)];
 }
 
-export function describeReward(reward, effects = {}) {
+export function describeReward(reward, effects = {}, totals = {}) {
   const descriptions = (reward.modifiers ?? []).map(modifier =>
     `${STAT_LABELS[modifier.stat]} ${modifier.value >= 0 ? '+' : ''}${modifier.value}${modifier.operation === 'percent' ? '%' : ''}`);
-  for (const effect of reward.effects ?? []) descriptions.push(effects[effect.type].describe(effect.value));
+  for (const effect of reward.effects ?? []) {
+    const definition = effects[effect.type];
+    // An effect whose text depends on the accumulated level (a cadence, a cap)
+    // is described with the total this rank would leave, not with its delta.
+    const value = definition?.cumulative ? (totals[effect.type] ?? effect.value) : effect.value;
+    descriptions.push(definition.describe(value));
+  }
   return descriptions;
 }

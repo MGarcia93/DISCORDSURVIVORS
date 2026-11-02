@@ -66,6 +66,7 @@ test('Confusion wears off after its duration and slowed movement recovers', () =
   step(run, 0.05, {});
   assert.equal(victim.confusionStacks, 1);
 
+  run.player.hp = 1e6;   // the point is the status, not surviving the swarm
   for (let i = 0; i < 120; i++) step(run, 0.05, {}); // six seconds: beyond the effect duration
 
   assert.equal(victim.confusionStacks, 0);

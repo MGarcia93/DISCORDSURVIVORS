@@ -3031,12 +3031,15 @@ export function drawAstralAura(ctx, x, y, radius, time = 0, intensity = 1) {
 
 export function drawGamerProjectile(ctx, device, shot = {}) {
   if (device === 'voice') {
-    // Papafrita's voice: nested arcs that widen with every enemy it goes
-    // through. The width lives on the shot, so the wave grows as it travels.
-    const half = Math.max(5, Math.min(14, Math.round((shot.width ?? 10) / 2)));
-    pixel(ctx, -4, -half, 4, half * 2, '#f7efe2');
-    pixel(ctx, -10, -half + 3, 4, half * 2 - 6, '#d9c4a8');
-    pixel(ctx, -16, -half + 6, 4, Math.max(2, half * 2 - 12), '#b39a7c');
+    // Papafrita's voice: the same three rising bars his portrait uses next to
+    // his mouth, scaled up until they read mid-combat. They sit across the
+    // travel direction, so the wave grows toward where the shout is going.
+    const tall = Math.max(10, Math.min(30, Math.round((shot.width ?? 10) * 1.6) + 6));
+    const bars = [[-9, 0.42], [-3, 0.72], [3, 1]];
+    for (const [x, share] of bars) {
+      const height = Math.max(4, Math.round(tall * share / 2) * 2);
+      pixel(ctx, x, -height / 2, 4, height, '#f7efe2');
+    }
     return;
   }
   if (device === 'shard') {

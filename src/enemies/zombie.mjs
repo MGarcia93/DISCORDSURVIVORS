@@ -7,7 +7,7 @@ const zombie = {
   stats: {
     life: wave => 40 + 6 * wave,        // 40% + 6 pp per wave
     defense: 0,
-    attack: 120,                        // 120% -> 12 contact damage
+    attack: 260,                        // 260% -> 26 contact damage
     attackSpeed: 154,                   // 154% -> one swing every 0.65 s
     attackDistance: 0,                  // melee: contact, measured from the edge
     moveSpeed: wave => 800 + 80 * wave, // 800% + 80 pp per wave

@@ -130,7 +130,7 @@ const papafrita = {
       <div class="eyebrow">Atacante de voz · Coleccionista · Dificultad media-alta</div><h2>PAPAFRITA</h2>
       <p class="character-desc">Habla demasiado. Se mete en Discord, empieza a explicar un juego o una build que nadie le pidió y cuando parece que terminó todavía le quedan veinte minutos. Fanático de los single player y de Monster Hunter, amenaza con irse a jugar solo pero no admite que le gusta jugar con el Negro.</p>
       <p class="character-quote">«Para esto me voy a jugar un single player».</p>
-      <div class="stats papafrita-stats"><div><b>90</b><small>VIDA</small></div><div><b>27</b><small>DAÑO</small></div><div><b class="penalty">−15%</b><small>DEFENSA</small></div><div><b>+60%</b><small>ALCANCE</small></div><div><b>+80%</b><small>ATK/SEG</small></div></div>
+      <div class="stats papafrita-stats"><div><b>90</b><small>VIDA</small></div><div><b>30</b><small>DAÑO</small></div><div><b class="penalty">−15%</b><small>DEFENSA</small></div><div><b>+220%</b><small>ALCANCE</small></div><div><b>2,4</b><small>ONDAS/SEG</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>NO TE CALLÁS MÁS</b><p>Ondas de voz a distancia media que atraviesan a varios enemigos. No sostiene armas: su voz es el ataque.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>ME FALTA UN ÍTEM</b><p>Cuenta los tipos distintos de sus seis mejoras, nunca las copias. Con 2 tipos las ondas atraviesan un enemigo más; con 4, cada 5 ataques sale una onda secundaria; con 6, cada 3 ataques salen dos ecos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>MONÓLOGO INTERMINABLE</b><p>Un globo enorme sobre una zona: daño periódico y los enemigos normales se acercan a escuchar. Los jefes no pierden el movimiento. Recarga: 18 segundos.</p></div></div>
@@ -162,7 +162,7 @@ const papafrita = {
     ...resolveEntityStats({
       life: 90,
       defense: 85,
-      attack: 270,
+      attack: 300,
       attackSpeed: 240,
       attackDistance: 320,
       moveSpeed: 3300,
@@ -170,7 +170,7 @@ const papafrita = {
   },
   // «No te callás más»: a voice wave that crosses several bodies.
   attack: { type: 'ranged', device: 'voice', pierce: 2, width: 10, align: true, spin: false },
-  ownOfferChance: 0.5,
+  ownOfferChance: 0.45,
   combat: {},
   decays: [],
   passives: [],
@@ -179,16 +179,11 @@ const papafrita = {
       key: 'monologo', name: 'Monólogo interminable', hotkey: 'q', duration: 6, cooldown: 18,
       onStart(run, p) {
         run.monologue = { x: p.x, y: p.y, r: BUBBLE_RADIUS * WORLD_SCALE, ttl: p.monologo, tick: 0 };
-        run.effects.push({ x: p.x, y: p.y - 78 * WORLD_SCALE, text: '«Y otra cosa...»', ttl: 1.2, kind: 'voice' });
       },
-      onTick(run, p, dt, ctx) {
-        if (!run.monologue) return;
-        // The bubble stays where the talk started; he keeps walking.
-        if (!tickBubble(run, p, dt, ctx, run.monologue)) {
-          const rank = p.rewardBonuses.bubbleBurst ?? 0;
-          if (rank > 0) burstBubble(run, p, ctx, run.monologue, rank);
-          run.monologue = null;
-        }
+      onTick(run) {
+        // The bubble's own clock lives in the sheet's onTick, so the ultimate
+        // can open one even when this special is not the one that made it.
+        void run;
       },
     },
     {
@@ -242,11 +237,18 @@ const papafrita = {
   onShot(run, p, ctx, primary = null) {
     p.waves += 1;
     p.collected = collectionOf(run);
-    // "hacia otro enemigo cercano": never the body the main wave is already on.
-    const spoken = primary?.target !== undefined ? [primary.target] : [];
+    // "hacia otro enemigo cercano": never the body the main wave is already on,
+    // and never a body another extra wave of this same attack is using.
+    const used = primary?.target !== undefined ? [primary.target] : [];
+    const pick = () => {
+      const target = ctx.nearest(run, p, used, p.attackRange);
+      if (target) used.push(target.id);
+      return target;
+    };
     const copies = p.rewardBonuses.copyWave ?? 0;
     if (copies > 0 && p.waves % (7 - copies) === 0) {
-      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.7, pierce: 1, width: 10 });
+      const target = pick();
+      if (target) spawnWave(run, p, ctx, { to: target, damage: power(p) * 0.7, pierce: 1, width: 10 });
     }
     const echoRank = p.rewardBonuses.echo ?? 0;
     if (echoRank > 0 && p.waves % (7 - echoRank) === 0) {
@@ -256,11 +258,17 @@ const papafrita = {
         p.echoQueue.push({ at: run.elapsed + 0.35, angle, width: 8 + echoRank * 2 });
       }
     }
+    // 2/6 and 4/6 stay alive at 6/6: the milestones stack instead of replacing.
+    if (p.collected >= SECONDARY_MILESTONE && p.waves % SECONDARY_EVERY === 0) {
+      const target = pick();
+      if (target) spawnWave(run, p, ctx, { to: target, damage: power(p) * 0.6, pierce: 1, width: 10 });
+    }
     if (p.collected >= ECHO_MILESTONE && p.waves % ECHO_EVERY === 0) {
-      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.5, pierce: 0, width: 8 });
-      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.5, pierce: 0, width: 8 });
-    } else if (p.collected >= SECONDARY_MILESTONE && p.waves % SECONDARY_EVERY === 0) {
-      spawnWave(run, p, ctx, { exclude: spoken, damage: power(p) * 0.6, pierce: 1, width: 10 });
+      for (let echo = 0; echo < 2; echo++) {
+        const target = pick();
+        if (!target) break;
+        spawnWave(run, p, ctx, { to: target, damage: power(p) * 0.5, pierce: 0, width: 8 });
+      }
     }
   },
   // «¿Y sabés qué más?»: the wave widens with every listener, and its pierce
@@ -285,6 +293,15 @@ const papafrita = {
   },
   onTick(run, p, dt, ctx) {
     p.collected = collectionOf(run);
+    // «Monólogo interminable»: the bubble stays where the talk started and the
+    // upgrade «Todavía no terminé» decides what happens when it runs out.
+    if (run.monologue) {
+      if (!tickBubble(run, p, dt, ctx, run.monologue)) {
+        const burst = p.rewardBonuses.bubbleBurst ?? 0;
+        if (burst > 0) burstBubble(run, p, ctx, run.monologue, burst);
+        run.monologue = null;
+      }
+    }
     // The decoy keeps talking for a moment and drags the ordinary walkers.
     if (run.decoy) {
       run.decoy.ttl -= dt;

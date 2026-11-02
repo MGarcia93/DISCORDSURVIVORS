@@ -4,7 +4,8 @@ import { WORLD_SCALE, createRun, activateSpecial, step } from '../src/engine.mjs
 import { UNIT_PX } from '../src/stats.mjs';
 import { CHARACTERS } from '../src/characters/index.mjs';
 import papafrita, { collectionOf } from '../src/characters/papafrita.mjs';
-import { DEFAULT_CATALOG } from '../src/reward-data.mjs';
+import { DEFAULT_CATALOG, EFFECTS } from '../src/reward-data.mjs';
+import { describeReward } from '../src/reward-catalog.mjs';
 import { isCharacterUnlocked } from '../src/progression.mjs';
 
 function solo(random = () => 0.5) {
@@ -49,7 +50,7 @@ test('Papafrita runs on the percentage core and throws voice waves, not weapons'
   // §3: a little under the average on body, above it on reach and cadence.
   assert.equal(p.maxHp, 90);
   assert.equal(p.defense, 0.425);
-  assert.equal(p.damage, 27);
+  assert.equal(p.damage, 30);
   assert.equal(p.attackRange, 320 * UNIT_PX);
   assert.ok(Math.abs(p.shotInterval - 100 / 240) < 1e-9);
   assert.equal(p.speed, 165 * WORLD_SCALE);
@@ -151,7 +152,7 @@ test('«Todavía no terminé» bursts the bubble when the monologue ends', () =>
   const victim = dummy(run, 30);
   activateSpecial(run, 'monologo');
   run.monologue.ttl = 0.01;
-  papafrita.specials[0].onTick(run, p, 0.05, ctx);
+  papafrita.onTick(run, p, 0.05, ctx);
   assert.equal(run.monologue, null, 'the bubble is gone');
   assert.ok(victim.hp < 400, 'and it burst on the way out');
   assert.ok(run.effects.some(effect => effect.kind === 'voiceRing'));
@@ -206,7 +207,7 @@ test('the monologue is a zone: it ticks, it pulls the ordinary walkers, never th
   const boss = { id: 2, x: p.x + 100, y: p.y + 40, hp: 400, maxHp: 400, speed: 0, radius: 20, kind: 'boss', boss: true };
   run.enemies.push(walker, boss);
   const walkerX = walker.x, bossX = boss.x;
-  for (let i = 0; i < 6; i++) papafrita.specials[0].onTick(run, p, 0.1, toolbox(run));
+  for (let i = 0; i < 6; i++) papafrita.onTick(run, p, 0.1, toolbox(run));
   assert.ok(walker.x < walkerX, 'the walker drifts toward the talk');
   assert.equal(boss.x, bossX, 'the boss does not lose control');
   assert.ok(walker.hp < 400, 'and the zone burns');
@@ -254,4 +255,36 @@ test('the six signatures live in the level catalogue with three levels each', ()
   const own = DEFAULT_CATALOG.upgrades.filter(entry => entry.characters === 'papafrita');
   assert.deepEqual(own.map(entry => `${entry.id}:${entry.ranks.length}`).sort(),
     ['and-what-else:3', 'definitive-edition:3', 'fishing:3', 'not-done-yet:3', 'only-one:3', 'other-console:3']);
+});
+
+test('every rank card states the cadence that rank will actually leave', () => {
+  const card = (id, totals) => describeReward(
+    DEFAULT_CATALOG.upgrades.find(entry => entry.id === id).ranks[totals[0] - 1], EFFECTS, totals[1]).join(' · ');
+  assert.match(card('other-console', [1, { copyWave: 1 }]), /cada 6 ataques/);
+  assert.match(card('other-console', [2, { copyWave: 2 }]), /cada 5 ataques/);
+  assert.match(card('other-console', [3, { copyWave: 3 }]), /cada 4 ataques/);
+  assert.match(card('definitive-edition', [3, { echo: 3 }]), /cada 4 ataques/);
+});
+
+test('6/6 keeps the 4/6 wave and sends the two echoes to different bodies', () => {
+  const run = solo();
+  const p = run.player;
+  for (const id of ['and-what-else', 'fishing', 'other-console', 'not-done-yet', 'only-one', 'definitive-edition']) {
+    run.levelRanks[id] = 1;
+  }
+  p.waves = 14; // the fifteenth attack is a multiple of 3 and of 5
+  for (let i = 0; i < 4; i++) dummy(run, 100 + i * 60);
+  papafrita.onShot(run, p, toolbox(run), { target: 1 });
+  const targets = run.projectiles.map(shot => shot.target);
+  assert.equal(targets.length, 3, 'the secondary wave still fires at 6/6, plus the two echoes');
+  assert.equal(new Set(targets).size, 3, 'and every one goes to a different body');
+});
+
+test('the bubble clears itself even when the burst upgrade is not owned', () => {
+  const run = solo();
+  const p = run.player;
+  p.rewardBonuses = {};
+  run.monologue = { x: p.x, y: p.y, r: 132 * WORLD_SCALE, ttl: 0.01, tick: 0 };
+  papafrita.onTick(run, p, 0.05, toolbox(run));
+  assert.equal(run.monologue, null, 'no ghost bubble left on the run');
 });

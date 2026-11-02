@@ -1,4 +1,4 @@
-import { step, chooseUpgrade, buyHeal, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
+import { step, chooseUpgrade, sellBelonging, startNextWave, activateSpecial } from './engine.mjs';
 import { handleRewardAction } from './game/reward-actions.mjs';
 import { nextPlayableAct, PLAYABLE_ACTS, actForWorld, getAct } from './campaign/acts.mjs';
 import { drawStory } from './scenes.mjs';
@@ -141,7 +141,7 @@ function frame(timestamp) {
 function clickSound(button) {
   const data = button.dataset;
   if (data.level) return 'confirm';
-  if (data.sale || data.heal || data.upgrade) return 'coin';
+  if (data.sale || data.upgrade || 'heal' in data) return 'coin';
   if (data.character || data.special) return 'select';
   if (data.action === 'next-wave' || data.action === 'resume') return 'confirm';
   if (data.action === 'home' || data.action === 'close-menu' || data.action === 'sell-menu-close') return 'select';
@@ -216,7 +216,6 @@ document.addEventListener('click', event => {
   if (button.dataset.special && state.run && !state.paused) activateSpecial(state.run, button.dataset.special);
   if (button.dataset.upgrade && state.run) { chooseUpgrade(state.run, button.dataset.upgrade); state.lastPhase = ''; overlay(); updateHUD(); }
   handleRewardAction(state.run, button.dataset, () => { state.lastPhase = ''; overlay(); updateHUD(); });
-  if (button.dataset.heal && state.run) { buyHeal(state.run); state.lastPhase = ''; overlay(); updateHUD(); }
 });
 
 document.addEventListener('input', event => {

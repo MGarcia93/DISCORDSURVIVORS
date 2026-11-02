@@ -152,6 +152,28 @@ test('every shop offer paints its own item portrait on a canvas', () => {
   }
 });
 
+test('the rendered healing service charges its price and restores health', async () => {
+  const { HEAL_COST, HEAL_AMOUNT } = await import('../src/engine.mjs');
+  const run = createRun(() => 0.5);
+  endWave(run);
+  run.coins = 100;
+  run.player.hp = 20;
+  render(run);
+  assert.match(box.innerHTML, /data-heal/, 'the shop paints the healing control');
+  // The attribute carries no value, so the handler must act on its presence:
+  // `dataset.heal` is an empty string, which is false like a missing one.
+  assert.equal(activate(run, { heal: '' }), true);
+  assert.equal(run.player.hp, 20 + HEAL_AMOUNT);
+  assert.equal(run.coins, 100 - HEAL_COST);
+  run.player.hp = run.player.maxHp;
+  const before = JSON.stringify(run);
+  assert.equal(activate(run, { heal: '' }), false, 'a full bar refuses the service');
+  assert.equal(JSON.stringify(run), before);
+  run.player.hp = 40;
+  run.coins = HEAL_COST - 1;
+  assert.equal(activate(run, { heal: '' }), false, 'a thin purse refuses the service');
+});
+
 test('unknown item ids still paint the fallback crate instead of a blank card', () => {
   const ctx = makeContext();
   let painted = 0;

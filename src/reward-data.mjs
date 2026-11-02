@@ -162,17 +162,17 @@ export const EFFECTS = {
     describe: value => value > 1 ? 'La build suma rebotes' : 'La build dispara más seguido' },
   // Papafrita's six signatures: each one levels I..III, and his passive counts
   // how many DIFFERENT ones he owns, never how many copies.
-  waveGrowth: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+  waveGrowth: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => `La onda se ensancha y atraviesa +${value} por enemigo` },
-  copyWave: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+  copyWave: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => `Copia hacia otro objetivo cada ${7 - value} ataques` },
-  bubbleBurst: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+  bubbleBurst: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? `Estallido del globo (nivel ${value})` : 'El globo estalla al desaparecer' },
-  escape: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+  escape: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 2 ? 'Se escapa con señuelo y onda al reaparecer' : 'Se escapa con señuelo cuando lo rodean' },
-  companion: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+  companion: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => value > 1 ? 'El animal encadena y golpea en área' : 'Un animal ataca objetivos secundarios' },
-  echo: { max: 3, validate: value => Number.isSafeInteger(value) && value > 0,
+  echo: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => `Eco demorado cada ${7 - value} ataques` },
 };
 

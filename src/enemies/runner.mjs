@@ -8,7 +8,7 @@ const runner = {
   stats: {
     life: wave => 28 + 5 * wave,          // 28% + 5 pp per wave
     defense: 0,
-    attack: 120,                          // 120% -> 12 contact damage
+    attack: 240,                          // 240% -> 24 contact damage
     attackSpeed: 154,                     // 154% -> one swing every 0.65 s
     attackDistance: 0,                    // melee: contact, measured from the edge
     moveSpeed: wave => 1760 + 80 * wave,  // 1760% + 80 pp per wave

@@ -22,7 +22,7 @@ function renderBuffs(p) {
   lastBuffPanel = panel;
   lastBuffs = signature;
   panel.hidden = buffs.length === 0;
-  panel.innerHTML = buffs.length === 0 ? '' : `<b>BUFFS</b>${buffs.map(buff => `<span><b>${escape(buff.name)}</b>${buff.seconds > 0 ? `<i>${Math.ceil(buff.seconds)}s</i>` : ''}${buff.detail ? `<em>${escape(buff.detail)}</em>` : ''}</span>`).join('')}`;
+  panel.innerHTML = buffs.length === 0 ? '' : buffs.map(buff => `<span><b>${escape(buff.name)}</b>${buff.seconds > 0 ? `<i>${Math.ceil(buff.seconds)}s</i>` : ''}${buff.detail ? `<em>${escape(buff.detail)}</em>` : ''}</span>`).join('');
 }
 
 export function updateHUD() {

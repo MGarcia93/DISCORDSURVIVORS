@@ -3,7 +3,7 @@ import { describeReward } from '../reward-catalog.mjs';
 import { EFFECTS } from '../reward-data.mjs';
 import { state } from '../app/state.mjs';
 import { formatTime } from './hud.mjs';
-import { rewardPreviewLines } from './reward-view.mjs';
+import { rewardEffectTotals, rewardPreviewLines } from './reward-view.mjs';
 import { countOf, itemPrice } from '../run-rewards.mjs';
 import { drawItemIcon } from './item-icons.mjs';
 import { volumeRow, muteRow } from '../audio/controls.mjs';
@@ -50,7 +50,8 @@ export function overlay() {
   if (phase === 'levelUp') {
     const cards = state.run.levelChoices.map(entry => {
       const rank = countOf(state.run.levelRanks, entry.id);
-      const description = describeReward(entry.ranks[rank], EFFECTS).map(escapeText).join(' · ');
+      const totals = rewardEffectTotals(state.run, `level-preview:${entry.id}`, entry.ranks[rank]);
+      const description = describeReward(entry.ranks[rank], EFFECTS, totals).map(escapeText).join(' · ');
       const preview = rewardPreviewLines(state.run, `level-preview:${entry.id}`, entry.ranks[rank]);
       const pips = Array.from({ length: entry.ranks.length },
         (_, index) => `<i class="${index < rank ? 'on' : ''}"></i>`).join('');

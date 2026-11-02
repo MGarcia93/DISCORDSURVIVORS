@@ -20,3 +20,9 @@ export function rewardPreviewLines(run, source, reward) {
   }
   return lines;
 }
+
+// The capped totals a rank would leave, so a card can describe the level it is
+// actually selling. Display only: nothing is written to the run.
+export function rewardEffectTotals(run, source, reward) {
+  return previewReward(run, source, reward)?.bonuses ?? {};
+}

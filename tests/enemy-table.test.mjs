@@ -38,7 +38,7 @@ test('the resistant zombie is a slow wall: more life, mitigation and punch, less
   assert.equal(ENEMY_KINDS.brute.radius, 22);
   assert.equal(enemyHp('brute', 3), 156);
   assert.equal(enemyDefense('brute', 3), 0.3);
-  assert.equal(enemyContactDamage('brute', 3), 30);
+  assert.equal(enemyContactDamage('brute', 3), 90);
   assert.equal(enemyAttackInterval('brute', 3), 1);
   assert.equal(enemyAttackRange('brute', 3), 0);
   assert.equal(enemySpeed('brute', 3), 490 * 5 / 100 * WORLD_SCALE);
@@ -56,8 +56,8 @@ test('enemy sheets are percentages over the base stats with per-wave curves', ()
   assert.equal(ENEMY_KINDS.runner.radius, 13);
   assert.equal(ENEMY_KINDS.alarmZombie.radius, 38);
   assert.equal(enemySpeed('alarmZombie', 4), 52 * WORLD_SCALE);
-  for (const kind of ['zombie', 'runner']) {
-    assert.equal(enemyContactDamage(kind), 12);
+  for (const [kind, contact] of [['zombie', 26], ['runner', 24]]) {
+    assert.equal(enemyContactDamage(kind), contact);
     assert.equal(enemyBounty(kind), 2);
   }
   assert.equal(enemyContactDamage('alarmZombie'), 30);

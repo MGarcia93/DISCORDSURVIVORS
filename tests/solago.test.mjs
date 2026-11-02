@@ -69,7 +69,7 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   step(run, 0.05, {});
   assert.ok(p.smile > 0, 'the smile is on');
   const block = 40;
-  const absorbed = 12 * (1 - p.defense);
+  const absorbed = 26 * (1 - p.defense);
   assert.ok(Math.abs(p.shield - (block - absorbed)) < 1e-9, 'the shield pays what the body would have taken');
   assert.equal(p.hp, p.maxHp, 'and the body takes none of it');
   assert.equal(p.characterDef.contactDefenseBonus, undefined, 'no defense bonus is stacked on top');
