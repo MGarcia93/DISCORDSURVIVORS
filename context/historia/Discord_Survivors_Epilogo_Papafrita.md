@@ -482,11 +482,27 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 **PAPASITO:** ¡Callate la boca, Papafrita!
 
+*El Kulu-Ya-Ku saca otra piedra, más grande, y empieza a correr directamente hacia Papasito. Papasito sale disparado.*
+
+**PAPASITO:** ¡EH, EH! ¡SACAME ESTE BICHO!
+
+**NEGRO:** JAJAJA, ¡TE QUIERE CAGAR A PIEDRAZOS!
+
+**PAPAFRITA:** ¡Y sí! ¡Le rompiste la piedra! ¿Qué esperabas?
+
+**SOLAGO:** JAJAJAJA, ¡MIRÁ CÓMO CORRE EL PARAGUAYO!
+
+**PAPASITO:** ¡PERO AYUDEN, PUES!
+
+*El Kulu sigue corriendo detrás de Papasito. Papasito pasa por delante del Negro y Solago, que se corren para dejarlo pasar.*
+
 **SOLAGO:** JAJAJAJA, decí otra, Negro.
 
 **NEGRO:** Anamencua dos.
 
 **PAPASITO:** ¡UUUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA!
+
+*El Kulu intenta aplastarlo con la roca. Papasito esquiva por poco y la piedra golpea el suelo.*
 
 *Comienza la pelea.*
 
