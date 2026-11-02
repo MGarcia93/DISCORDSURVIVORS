@@ -28,13 +28,22 @@ try {
 
   await page.getByRole('button', { name: 'QUE EMPIECE EL DESASTRE' }).click();
   await page.getByRole('button', { name: 'SALTAR HISTORIA' }).click();
+  // The act opens with its arrival cinematic, and the cinematic owns the
+  // keyboard until it is skipped.
+  const skip = page.locator('[data-action="narrative-skip"]');
+  for (let scene = 0; scene < 6; scene++) {
+    await skip.first().waitFor({ timeout: 5000 }).catch(() => null);
+    if (!(await skip.count())) break;
+    await skip.first().click();
+    await page.waitForTimeout(250);
+  }
   assert.equal(await page.locator('#player-name').innerText(), 'SOLAGO');
   assert.equal(await page.locator('[data-special="stand"]').isVisible(), true);
   assert.equal(await page.locator('[data-special="anime"]').count(), 0);
   assert.equal(await page.locator('#task-panel').isVisible(), true);
   await page.keyboard.press('q');
   await page.waitForFunction(() => document.querySelector('[data-special="stand"]')?.disabled === true);
-  assert.equal(await page.locator('#task-label').innerText(), '0/8 BAJAS');
+  assert.equal(await page.locator('#task-label').innerText(), '0/6 BAJAS', 'the permission counter the sheet actually asks for');
 
   await page.reload();
   await page.getByRole('button', { name: 'EMPEZAR PARTIDA' }).click();

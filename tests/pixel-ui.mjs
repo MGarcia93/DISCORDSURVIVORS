@@ -47,7 +47,8 @@ try {
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'EMPEZAR PARTIDA' }).click();
     await page.locator('#sprite-preview').waitFor();
-    assert.equal(await page.locator('.locked-card').count(), 6);
+    assert.equal(await page.locator('.roster-card').count(), 8, 'the grid is full');
+    assert.equal(await page.locator('.roster-card:not(.locked-card)').count(), 1, 'only the starter plays on a fresh save');
     const description = await page.locator('.character-desc').textContent();
     assert.match(description, /se cree blanco cuando es negro/i);
     assert.match(description, /dice que se baña, pero nadie le cree/i);
@@ -64,7 +65,16 @@ try {
     await page.getByRole('button', { name: 'CONTINUAR', exact: false }).click();
     await page.getByRole('button', { name: 'CONTINUAR', exact: false }).click();
     await page.getByRole('button', { name: 'ENTRAR AL CAOS' }).click();
-    await page.waitForFunction(() => document.querySelector('#timer')?.textContent === '00:59');
+    // The act opens with its arrival cinematic and the clock is held until it is
+    // skipped; 00:59 lasts one second, so any 00:xx means the wave is running.
+    const skip = page.locator('[data-action="narrative-skip"]');
+    for (let scene = 0; scene < 6; scene++) {
+      await skip.first().waitFor({ timeout: 5000 }).catch(() => null);
+      if (!(await skip.count())) break;
+      await skip.first().click();
+      await page.waitForTimeout(250);
+    }
+    await page.waitForFunction(() => /^00:\d\d$/.test(document.querySelector('#timer')?.textContent ?? ''));
     await page.keyboard.press('q');
     await page.waitForFunction(() => document.querySelector('[data-special="chair"]')?.disabled);
     await page.keyboard.press('e');
@@ -94,7 +104,10 @@ try {
           };
         }));
       }
-      for (const layout of layouts) assert.deepEqual(layout, layouts[0], 'the selection layout must not move when the profile changes');
+      // Only the geometry has to stay put: `scrolls` is a property of the profile,
+      // and the next assertion is the one that cares about it.
+      const frame = layout => ({ panel: layout.panel, actions: layout.actions, page: layout.page });
+      for (const layout of layouts) assert.deepEqual(frame(layout), frame(layouts[0]), 'the selection layout must not move when the profile changes');
       assert.equal(layouts.some(layout => layout.scrolls), true, 'an overlong profile scrolls inside the panel instead of growing the page');
     }
     await page.close();

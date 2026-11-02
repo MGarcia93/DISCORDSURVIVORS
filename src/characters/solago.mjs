@@ -30,7 +30,7 @@ const SHEET = {
 const solago = {
   id: 'solago',
   name: 'SOLAGO',
-  gameNote: 'MORDIDA AUTOMÁTICA · 8 BAJAS = PERMISO PARA JUGAR · STAND CON E',
+  gameNote: 'MORDIDA AUTOMÁTICA · 6 BAJAS = PERMISO PARA JUGAR · STAND CON E',
   // Legacy flags remain valid; the campaign encounter also grants availability.
   unlock: { flag: 'solagoUnlocked', scene: 'act-02-solago' },
   // Selection screen metadata: label, profile block and preview pose belong

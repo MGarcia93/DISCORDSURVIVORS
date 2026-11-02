@@ -10,11 +10,26 @@ try {
   await page.getByRole('button', { name: 'EMPEZAR PARTIDA' }).waitFor();
   assert.equal(await page.locator('#menu-scene').evaluate(canvas => canvas.width === 480 && getComputedStyle(canvas).imageRendering === 'pixelated'), true);
   await page.getByRole('button', { name: 'EMPEZAR PARTIDA' }).click();
-  assert.equal(await page.locator('.locked-card').count(), 6);
+  // A fresh save leaves one playable card: the grid is filled with the locked
+  // roster plus the placeholders, whatever their numbers are today.
+  assert.equal(await page.locator('.roster-card').count(), 8, 'the grid is full');
+  assert.equal(await page.locator('.roster-card:not(.locked-card)').count(), 1, 'only the starter plays');
   await page.getByRole('button', { name: 'QUE EMPIECE EL DESASTRE' }).click();
   for (let i = 0; i < 2; i++) await page.getByRole('button', { name: 'CONTINUAR' }).click();
   await page.getByRole('button', { name: 'ENTRAR AL CAOS' }).click();
-  await page.waitForFunction(() => document.querySelector('#timer')?.textContent === '00:59');
+  // The act opens with its arrival cinematic and the clock is held while it
+  // plays, so the smoke test skips it the way a player can. The scene arrives
+  // from the catalog after the world does, hence the wait.
+  const skip = page.locator('[data-action="narrative-skip"]');
+  for (let scene = 0; scene < 6; scene++) {
+    await skip.first().waitFor({ timeout: 5000 }).catch(() => null);
+    if (!(await skip.count())) break;
+    await skip.first().click();
+    await page.waitForTimeout(250);
+  }
+  // Any 00:xx means the wave is running: 00:59 lasts one second and the scene
+  // may already have eaten it.
+  await page.waitForFunction(() => /^00:\d\d$/.test(document.querySelector('#timer')?.textContent ?? ''));
   await page.keyboard.press('q');
   await page.waitForFunction(() => document.querySelector('[data-special="chair"]')?.disabled);
   await page.keyboard.press('e');
