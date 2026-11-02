@@ -142,8 +142,8 @@ export function skipEmptyChoice(run) {
 // shopping spree once a boss pays. The base price is the first copy in the
 // first world; each owned copy doubles it again and every wave adds the
 // campaign's inflation.
-export const COPY_MARKUP = 1;
-export const WAVE_MARKUP = 0.08;
+export const COPY_MARKUP = 2;
+export const WAVE_MARKUP = 0.2;
 
 export function itemPrice(item, owned = 0, wave = 1) {
   const copies = 1 + COPY_MARKUP * Math.max(0, owned);

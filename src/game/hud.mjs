@@ -13,7 +13,12 @@ export function updateHUD() {
   document.querySelector('#coins').textContent = `◈ ${state.run.coins}`;
   const level = document.querySelector('#level');
   const needed = nextLevelXP(state.run);
-  if (level) level.textContent = `NIVEL ${state.run.level} · XP ${state.run.xp}/${needed}${state.run.pendingLevels.length ? ` · ${state.run.pendingLevels.length} PENDIENTES` : ''}`;
+  // The pending count is part of this line, so keep the number glued to its word
+  // with a non-breaking space: if the line has to wrap, "3 PENDIENTES" moves
+  // whole instead of leaving the number stranded.
+  const pending = state.run.pendingLevels.length;
+  const pendingLabel = pending ? ` · ${pending}\u00A0${pending === 1 ? 'PENDIENTE' : 'PENDIENTES'}` : '';
+  if (level) level.textContent = `NIVEL ${state.run.level} · XP ${state.run.xp}/${needed}${pendingLabel}`;
   const xpFill = document.querySelector('#xp-fill');
   if (xpFill) xpFill.style.width = `${Math.min(100, state.run.xp / needed * 100)}%`;
   const { boss } = state.run.act;

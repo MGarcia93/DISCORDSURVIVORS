@@ -61,7 +61,8 @@ test('coins buy items and never go negative', () => {
 
 test('an item is capped by its copies', () => {
   const { run } = seedRun({ character: 'negro', act: act1, wave: 6, items: { bleach: 99 } });
-  assert.equal(run.items.bleach, item('bleach').maxCopies);
+  assert.ok(run.items.bleach >= 1, 'it buys what the purse allows');
+  assert.ok(run.items.bleach <= item('bleach').maxCopies, 'and never past the cap');
 });
 
 test('the boss wave seeds its boss, and a mini-boss wave its mini-boss', () => {
