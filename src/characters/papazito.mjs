@@ -25,7 +25,7 @@ const papazito = {
       <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
       <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+240%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 8–12 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente al menos 4 fichas y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 4 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente 1 ficha y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
       <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 25 segundos.</p></div></div>`,
   unlockNote: {
@@ -82,11 +82,11 @@ const papazito = {
     },
   }],
   scheduleSena(run, p) {
-    // The first bill is cheap: a high opening charge left him in debt from the
-    // first minute, which is how he was reaching every shop broke.
-    const randomCost = 4 + Math.floor(run.random() * 5) + p.senaCharges * 4;
+    // A flat start of four that creeps up by one: a high opening charge left him
+    // in debt from the first minute, and a steep ladder kept him there.
+    const randomCost = 4 + p.senaCharges;
     const randomInterval = 8 + Math.floor(run.random() * 5) - p.senaCharges;
-    p.senaNextCost = p.senaCharges > 0 ? Math.max(p.senaLastCost + 4, randomCost) : randomCost;
+    p.senaNextCost = p.senaCharges > 0 ? Math.max(p.senaLastCost + 1, randomCost) : randomCost;
     p.senaInterval = Math.max(4, p.senaCharges > 0 ? Math.min(p.senaInterval - 1, randomInterval) : randomInterval);
     p.senaCooldown = p.senaInterval;
   },

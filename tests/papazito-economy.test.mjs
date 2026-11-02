@@ -22,18 +22,19 @@ function advance(run, seconds) {
 test('timed extortion charges without coin awards and escalates within a 60-second stage', () => {
   const run = arena();
   run.coins = 100;
-  assert.equal(run.player.senaNextCost, 6);
+  assert.equal(run.player.senaNextCost, 4);
   assert.equal(run.player.senaCooldown, 10);
   advance(run, 10.05);
-  assert.equal(run.coins, 94);
+  assert.equal(run.coins, 96);
   assert.equal(run.player.senaCharges, 1);
-  assert.equal(run.player.senaNextCost, 10);
+  assert.equal(run.player.senaNextCost, 5);
   assert.equal(run.player.senaInterval, 9);
   assert.ok(run.player.panicTtl > 4.8);
   advance(run, 9.05);
-  assert.equal(run.coins, 84);
-  assert.equal(run.player.senaNextCost, 14);
+  assert.equal(run.coins, 91);
+  assert.equal(run.player.senaNextCost, 6);
   assert.equal(run.player.senaInterval, 8);
+  run.coins = 0;   // a flat bill this cheap is payable: debt needs an empty purse
   advance(run, 35);
   assert.ok(run.player.senaCharges >= 6);
   assert.ok(run.player.senaDebt > 0, 'the buff keeps a real unpaid cost');
@@ -42,14 +43,14 @@ test('timed extortion charges without coin awards and escalates within a 60-seco
 });
 
 test('random charge and timer bounds remain finite, positive and visible before charging', () => {
-  for (const [random, cost, interval] of [[() => 0, 4, 8], [() => 0.999999, 8, 12]]) {
+  for (const [random, cost, interval] of [[() => 0, 4, 8], [() => 0.999999, 4, 12]]) {
     const run = arena(random);
     assert.equal(run.player.senaNextCost, cost);
     assert.equal(run.player.senaInterval, interval);
     assert.match(run.player.characterDef.taskHud(run.player).label, new RegExp(`${cost} ◈`));
     advance(run, interval + 0.05);
     assert.equal(run.player.senaDebt, cost);
-    assert.equal(run.player.senaNextCost, cost + 4);
+    assert.equal(run.player.senaNextCost, cost + 1);
     assert.equal(run.player.senaInterval, interval - 1);
   }
 });
@@ -59,10 +60,10 @@ test('unpaid charges accumulate debt and partial payment never makes the wallet 
   run.coins = 3;
   advance(run, 10.05);
   assert.equal(run.coins, 0);
-  assert.equal(run.player.senaDebt, 3);
+  assert.equal(run.player.senaDebt, 1);
   assert.match(run.effects.map(e => e.text).join('|'), /DEUDA/);
   advance(run, 9.05);
-  assert.equal(run.player.senaDebt, 13);
+  assert.equal(run.player.senaDebt, 6);
   assert.equal(run.coins, 0);
 });
 
@@ -73,7 +74,7 @@ test('random variation never lowers a bill or lengthens its interval within a st
     const cost = run.player.senaNextCost;
     const interval = run.player.senaInterval;
     advance(run, run.player.senaCooldown + 0.05);
-    assert.ok(run.player.senaNextCost >= cost + 4);
+    assert.ok(run.player.senaNextCost >= cost + 1);
     assert.ok(run.player.senaInterval <= Math.max(4, interval - 1));
   }
 });
@@ -109,7 +110,7 @@ test('each stage resets debt, escalation and panic without replenishing sold bel
   assert.equal(startNextWave(run), true);
   assert.equal(run.player.senaDebt, 0);
   assert.equal(run.player.senaCharges, 0);
-  assert.equal(run.player.senaNextCost, 6);
+  assert.equal(run.player.senaNextCost, 4);
   assert.equal(run.player.senaCooldown, 10);
   assert.equal(run.player.panicTtl, 0);
   assert.equal(run.player.soldItems.psp, true);
