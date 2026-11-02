@@ -859,39 +859,59 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 ### Cinemática del jefe
 
-*El grupo llega al nido. Rathalos aterriza frente a ellos.*
+*El grupo llega al nido de Rathalos.*
 
-**PAPAFRITA:** Bueno, escuchen bien. Este bicho tiene varios ataques importantes, así que—
+**PAPAFRITA:** Ahí está.
+
+**PAPAFRITA:** Bueno, escuchen. No se manden todavía. Primero esperamos que baje y después le pegamos todos juntos.
+
+**NEGRO:** Dale, avisá cuándo.
+
+**WARRIOR:** Dale, ura.
+
+*Rathalos aterriza y ruge.*
+
+*Warrior sale corriendo directamente hacia él.*
+
+**WARRIOR:** ¡DALE, URAAA!
+
+**NEGRO:** ¿A DÓNDE VA ESTE PELOTUDO?
+
+*Warrior intenta golpear a Rathalos, pero el monstruo lo sacude de un coletazo y lo manda volando hasta donde está el grupo.*
+
+**PAPAFRITA:** ¡PERO WARRIOR! ¡TE DIJE QUE ESPERARAS, HIJO DE PUTA!
+
+**WARRIOR:** ¡DALE, MANCO! ¡NO SE TIRARON, URA!
+
+**NEGRO:** ¡JAJAJAJA! ¡PERO SI DIJISTE QUE SÍ, PELOTUDO!
+
+**WARRIOR:** ¡Y BUENO, URA! ¡SI ME SEGUÍAN LO HACÍAMOS MIERDA!
+
+**PAPAFRITA:** ¡PERO SI TODAVÍA NO TE DIJE QUE FUERAS!
+
+**WARRIOR:** ¡DALE, MANCO!
+
+**NEGRO:** JAJAJAJA. ¡EL HIJO DE PUTA SE MANDÓ SOLO Y NOS ECHA LA CULPA!
+
+*Warrior se levanta, sacudiéndose la ropa.*
+
+**PAPAFRITA:** Bueno, ahora escuchen lo que les voy a decir para que no vuelva a pasar—
 
 **RATHALOS:** ¡ROAAAAAR!
 
-**PAPAFRITA:** Como les decía, cuando levanta vuelo—
+**PAPAFRITA:** Como les decía—
 
 **RATHALOS:** ¡ROAAAAAR!
 
-**NEGRO:** JAJAJAJA. ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!
-
-**PAPAFRITA:** Pará, Negro, estoy intentando explicar.
+**NEGRO:** ¡JAJAJAJA! ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!
 
 **PAPAFRITA:** Y no es un dragón, es un wyvern. Los dragones tienen cuatro patas y—
 
 **RATHALOS:** ¡ROAAAAAR!
 
-**PAPAFRITA:** ¡ME VAS A DEJAR TERMINAR!
-
-**PAPAFRITA:** Bueno, primero hay que—
-
-**RATHALOS:** ¡ROAAAAAR!
-
-*Papafrita se queda mirando al monstruo.*
+**PAPAFRITA:** ¡LA CONCHA DE TU MADRE!
 
 **PAPAFRITA:** Escuchame una cosa, dragón de mierda.
-
-**SOLAGO:** Uh, se calentó.
-
-**NEGRO:** Che, ¿y si le ponemos un micrófono a Papafrita y lo usamos de carnada?
-
-**PAPAFRITA:** ¡NEGRO, CERRÁ EL ORTO!
 
 *Comienza la pelea.*
 
