@@ -1,6 +1,7 @@
 import { enemyBounty } from '../enemies/index.mjs';
 import { nextLevelXPFor } from '../run-rewards.mjs';
 import { waveBudget as spawnBudgetFor, waveConfig } from '../waves.mjs';
+import { PLAYABLE_ACTS } from '../campaign/acts.mjs';
 
 // A wave's entry budget: what a player who survived the waves before it already
 // earned. The lab needs it to be honest — a level-5 build at wave 5 is a claim
@@ -29,14 +30,25 @@ function minibosses(act) {
   return Array.isArray(declared) ? declared : [declared];
 }
 
+// The campaign arrives at a wave with everything the previous worlds paid, not
+// just this act's own waves: picking Act 2 wave 1 must carry Act 1's haul.
+function previousActs(act) {
+  const index = PLAYABLE_ACTS.findIndex(candidate => candidate.id === act.id);
+  return index <= 0 ? [] : PLAYABLE_ACTS.slice(0, index);
+}
+
 export function waveEntryBudget(act, wave, balance) {
   const duration = balance.waves?.duration ?? act.duration;
   const multiplier = balance.xp.multiplier ?? 1;
   const entry = { wave, duration, xp: 0, coins: 0, level: 1, choices: 0 };
-  for (let w = 1; w < wave; w++) {
-    const config = waveConfig(act, w);
+  const campaign = [
+    ...previousActs(act).flatMap(earlier => Array.from({ length: earlier.waves.length }, (_, index) => ({ act: earlier, wave: index + 1 }))),
+    ...Array.from({ length: wave - 1 }, (_, index) => ({ act, wave: index + 1 })),
+  ];
+  for (const { act: row, wave: w } of campaign) {
+    const config = waveConfig(row, w);
     if (!config) continue;
-    const spawns = spawnBudgetFor(act, w, duration);
+    const spawns = spawnBudgetFor(row, w, duration);
     const mix = Object.entries(config.mix ?? {}).filter(([, weight]) => weight > 0);
     const share = mix.reduce((sum, [, weight]) => sum + weight, 0);
     if (!mix.length || !spawns) {
@@ -51,12 +63,23 @@ export function waveEntryBudget(act, wave, balance) {
     }
     entry.coins += balance.gold?.survival ?? 20;
   }
-  // A mini-boss is not part of any spawn mix: it walks in on its own wave and
-  // pays once, so it is credited when its wave is already behind you.
-  for (const boss of minibosses(act)) {
-    if (!(boss.wave < wave)) continue;
-    entry.xp += (balance.xp.rewards?.[boss.kind] ?? 0) * multiplier;
-    entry.coins += balance.gold?.rewards?.[boss.kind] ?? enemyBounty(boss.kind);
+  // A mini-boss and an act boss are not part of any spawn mix: they walk in on
+  // their own wave and pay once, so they count when their world is already
+  // behind you — every world before this one, and this one up to this wave.
+  const visited = [
+    ...previousActs(act).map(earlier => ({ act: earlier, upTo: earlier.waves.length })),
+    { act, upTo: wave - 1 },
+  ];
+  for (const { act: row, upTo } of visited) {
+    for (const boss of minibosses(row)) {
+      if (boss.wave > upTo) continue;
+      entry.xp += (balance.xp.rewards?.[boss.kind] ?? 0) * multiplier;
+      entry.coins += balance.gold?.rewards?.[boss.kind] ?? enemyBounty(boss.kind);
+    }
+    if (upTo >= row.waves.length) {
+      entry.xp += (balance.xp.rewards?.[row.boss.kind] ?? 0) * multiplier;
+      entry.coins += balance.gold?.rewards?.[row.boss.kind] ?? enemyBounty(row.boss.kind);
+    }
   }
   entry.level = levelForXP(balance, entry.xp);
   // Level 1 is the character's own sheet: only the levels above it are choice.
