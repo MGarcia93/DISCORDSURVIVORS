@@ -21,7 +21,7 @@ const warrior = {
       <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
       <p class="character-desc">Chamán de Jujuy: argentino, aunque el grupo insista con Bolivia. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
       <p class="character-quote">«Yo soy argentino, boludo».</p>
-      <div class="stats warrior-stats"><div><b>−15%</b><small>VIDA MÁXIMA</small></div><div><b>+350%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,6</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      <div class="stats warrior-stats"><div><b>−10%</b><small>VIDA MÁXIMA</small></div><div><b>+325%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,75</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
@@ -41,10 +41,10 @@ const warrior = {
   stats: {
     hitRadius: 15 * WORLD_SCALE, // lean frame from the photo: not one of the six stats
     ...resolveEntityStats({
-      life: 85,              // 85 hp: frágil, sobrevive controlando
+      life: 90,              // 90 hp: frágil, sobrevive controlando
       defense: 100,          // defensa estándar: 10 puntos -> 50% de mitigación
       attack: 150,           // 15 damage: 50% above the base attack value
-      attackSpeed: 60,       // 0.6 bombs/s: one deliberate bomb every 1.67s
+      attackSpeed: 75,       // 0.75 bombs/s: one deliberate bomb every 1.33s
       attackDistance: 300,   // 330px: about 15% farther than El Negro's 286px reach
       moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
     }),
@@ -53,7 +53,7 @@ const warrior = {
   // includes his +35% effect duration (4s base -> 5.4s); the radius keeps his
   // +25% area proposal (70px base -> 77 unscaled).
   attack: {
-    type: 'ranged', device: 'shroom', damageMultiplier: 3,
+    type: 'ranged', device: 'shroom', damageMultiplier: 3.25,
     blast: { radius: 77 * WORLD_SCALE, stacks: 1, ttl: 5.4 },
   },
   decays: [],

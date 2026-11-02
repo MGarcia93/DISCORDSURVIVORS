@@ -63,7 +63,7 @@ test('Papazito ladrillazos carry the brick device for their own projectile art',
   assert.equal(run.projectiles[0]?.damage, 30, 'one heavy 300% attack, no multiplier');
 });
 
-test('a Warrior mushroom bomb deals 45 damage before its area splash', () => {
+test('a Warrior mushroom bomb deals its weighted damage before the area splash', () => {
   const run = createRun(() => 0.5, 'warrior');
   run.spawnIn = 100;
   run.shotIn = 0.001;
@@ -71,7 +71,7 @@ test('a Warrior mushroom bomb deals 45 damage before its area splash', () => {
 
   step(run, 0.05, {});
 
-  assert.equal(run.projectiles[0]?.damage, 45);
+  assert.equal(run.projectiles[0]?.damage, run.player.damage * 3.25);
 });
 
 test('a projectile whose locked target dies disappears instead of changing targets', () => {

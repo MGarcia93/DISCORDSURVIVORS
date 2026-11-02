@@ -39,16 +39,16 @@ test('Warrior is a registered controller running on the percentage core', () => 
   assert.equal(CHARACTERS.warrior.id, 'warrior');
   const w = createRun(Math.random, 'warrior').player;
   // Stat sheet from the character md, translated to percentages of BASE_STATS:
-  // life 85%, defense 100% (10 standard points), attack 80%, attackSpeed 90%,
-  // attack 150% base (15), bomb multiplier x3 (45 per mushroom),
-  // attackSpeed 60% (0.6 bombs/s),
+  // life 90%, defense 100% (10 standard points),
+  // attack 150% base (15), bomb multiplier x3.25,
+  // attackSpeed 75% (0.75 bombs/s),
   // attackDistance 300%, moveSpeed 3300% (normal game mobility).
-  assert.equal(w.maxHp, 85);
+  assert.equal(w.maxHp, 90);
   assert.equal(w.defense, 0.5);
   assert.equal(w.damage, 15);
   assert.equal(w.attackRange, 300 * UNIT_PX);
-  assert.ok(Math.abs(w.shotInterval - 100 / 60) < 1e-9);
-  assert.equal(CHARACTERS.warrior.attack.damageMultiplier, 3);
+  assert.ok(Math.abs(w.shotInterval - 100 / 75) < 1e-9);
+  assert.equal(CHARACTERS.warrior.attack.damageMultiplier, 3.25);
   assert.equal(w.speed, 165 * WORLD_SCALE);
   assert.equal(CHARACTERS.warrior.attack.device, 'shroom', 'his basic attack config lives in the sheet');
 });
