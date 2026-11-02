@@ -1,4 +1,4 @@
-import { activateSpecial, buyItem, chooseLevelReward, createRun, skipEmptyChoice, startNextWave, step } from '../engine.mjs';
+import { activateSpecial, buyHeal, buyItem, chooseLevelReward, createRun, skipEmptyChoice, startNextWave, step } from '../engine.mjs';
 import { BALANCE } from '../reward-data.mjs';
 import { DEFAULT_ACT, nextPlayableAct } from '../campaign/acts.mjs';
 import { beginRewards } from '../run-rewards.mjs';
@@ -38,6 +38,11 @@ export function runShop(run, character) {
     const pick = pickLevelReward(run, character);
     if (!pick || !chooseLevelReward(run, pick.id)) { if (!skipEmptyChoice(run)) break; }
   }
+  // A person heals at the shop before spending on anything else. Without this
+  // the bot bleeds out across a campaign and reports losses the game never
+  // forces on a player.
+  let healed = 0;
+  while (run.player.hp < run.player.maxHp && buyHeal(run) && healed++ < 20) { /* keep healing */ }
   for (const id of ITEM_PRIORITY) {
     for (let copy = 0; copy < 4; copy++) {
       const offer = (run.shopOffers ?? []).find(entry => entry.id === id && !entry.bought);
