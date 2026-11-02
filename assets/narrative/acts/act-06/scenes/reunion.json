@@ -57,6 +57,24 @@
   },
   "steps": [
     {
+      "type": "fade",
+      "to": "black",
+      "duration": 0
+    },
+    {
+      "type": "fade",
+      "to": "clear",
+      "duration": 0.6
+    },
+    {
+      "type": "notice",
+      "title": "MUNDO 06",
+      "lines": [
+        "BOSQUE PRIMIGENIO"
+      ],
+      "duration": 4
+    },
+    {
       "type": "camera",
       "to": "wide",
       "zoom": 1.05,
