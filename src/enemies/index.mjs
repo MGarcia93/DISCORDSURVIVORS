@@ -6,6 +6,13 @@ import zombie from './zombie.mjs';
 import runner from './runner.mjs';
 import brute from './brute.mjs';
 import alarmZombie from './alarm-zombie.mjs';
+import workerZombie from './worker-zombie.mjs';
+import policeZombie from './police-zombie.mjs';
+import protectedZombie from './protected-zombie.mjs';
+import militaryZombie from './military-zombie.mjs';
+import armoredZombie from './armored-zombie.mjs';
+import firemanZombie from './fireman-zombie.mjs';
+import truckHorde from './truck-horde.mjs';
 import meleeMinion from './melee-minion.mjs';
 import mageMinion from './mage-minion.mjs';
 import siegeMinion from './siege-minion.mjs';
@@ -48,13 +55,17 @@ import rathalos from './rathalos.mjs';
 // The sheet is the ONLY owner of those six values. An act never re-authors
 // them: `act.statMultipliers[kind]` fields that one kind at the act's tier, and
 // the multiplier lands on the authored percentage (see scaled).
-export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie, meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
+export const ENEMY_KINDS = { zombie, runner, brute, alarmZombie,
+  workerZombie, policeZombie, protectedZombie, militaryZombie, armoredZombie, firemanZombie, truckHorde,
+  meleeMinion, mageMinion, siegeMinion, mistWalker, maiden, yorick,
   skeleton, lesserDemon, shaman, burningElite, batSwarm, lordZir, lilith,
   barbarian, slaver, archer, alchemist, lotusAlchemist, taskmaster, administrator,
   jagras, vespoid, kestodon, mernos, hornetaur, greatJagras, kuluYaKu, pukeiPukei, rathalos };
 
 // Spawn and select order. Kept explicit so a new module is added once, here.
 export const ENEMY_IDS = [zombie.id, runner.id, brute.id, alarmZombie.id,
+  workerZombie.id, policeZombie.id, protectedZombie.id, militaryZombie.id, armoredZombie.id,
+  firemanZombie.id, truckHorde.id,
   meleeMinion.id, mageMinion.id, siegeMinion.id, mistWalker.id, maiden.id, yorick.id,
   skeleton.id, lesserDemon.id, shaman.id, burningElite.id, batSwarm.id,
   lordZir.id, lilith.id,

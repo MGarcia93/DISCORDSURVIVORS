@@ -248,3 +248,62 @@ test('the act 6 roster authors its own sheets, reach and roles', () => {
   assert.equal(enemyAttackRange('rathalos'), 0);
   assert.equal(enemyAttackRange('pukeiPukei'), 0);
 });
+
+test('the act 7 zombie variants are the walker family at its own rung', () => {
+  // Act 7 is the next rung: the plain body is 175 life / 46 damage, so every
+  // variant is a heavier walker, never a new species.
+  const variants = ['workerZombie', 'policeZombie', 'protectedZombie', 'militaryZombie', 'armoredZombie'];
+  for (const kind of variants) {
+    assert.ok(enemyHp(kind) > 175, `${kind} is a variant, not the plain body`);
+    assert.equal(ENEMY_KINDS[kind].actions, undefined, `${kind} is a plain walker`);
+    assert.ok(ENEMY_KINDS[kind].radius >= ENEMY_KINDS.zombie.radius, `${kind} keeps the walker body`);
+    assert.equal(enemyAttackRange(kind), 0, `${kind} reaches only at contact`);
+  }
+  assert.equal(enemyHp('workerZombie'), 200);
+  assert.equal(enemyHp('policeZombie'), 220);
+  assert.equal(enemyHp('protectedZombie'), 250);
+  assert.equal(enemyHp('militaryZombie'), 300);
+  assert.equal(enemyHp('armoredZombie'), 420);
+  // Defense is a ladder of its own: the vest, the padding and the plates.
+  assert.equal(enemyDefense('workerZombie'), 0);
+  assert.equal(enemyDefense('policeZombie'), 0.075);
+  assert.equal(enemyDefense('protectedZombie'), 0.2);
+  assert.equal(enemyDefense('militaryZombie'), 0.125);
+  assert.equal(enemyDefense('armoredZombie'), 0.275);
+  // The police arrives first and the armored is the wall: speed and punch read
+  // the role the script gives each one.
+  assert.ok(enemySpeed('policeZombie') > enemySpeed('militaryZombie'));
+  assert.ok(enemySpeed('militaryZombie') > enemySpeed('protectedZombie'));
+  assert.ok(enemySpeed('protectedZombie') > enemySpeed('armoredZombie'));
+  assert.equal(enemyContactDamage('workerZombie'), 46);
+  assert.equal(enemyContactDamage('militaryZombie'), 48);
+  assert.equal(enemyContactDamage('armoredZombie'), 52);
+  assert.deepEqual(variants.map(enemyBounty), [3, 3, 4, 5, 7]);
+});
+
+test('the act 7 mini-boss is a heavy walker with a charge of its own', () => {
+  assert.equal(ENEMY_KINDS.firemanZombie.boss, true, 'it carries a boss bar without closing the run');
+  assert.equal(enemyHp('firemanZombie'), 2200);
+  assert.equal(enemyDefense('firemanZombie'), 0.175);
+  assert.equal(enemyContactDamage('firemanZombie'), 70);
+  assert.equal(enemyBounty('firemanZombie'), 25);
+  assert.equal(ENEMY_KINDS.firemanZombie.radius, 27);
+  assert.equal(enemyAttackRange('firemanZombie'), 0, 'it reaches only at contact');
+  assert.deepEqual(ENEMY_KINDS.firemanZombie.actions.map(action => action.key),
+    ['swipe', 'charge', 'recover']);
+  assert.ok(enemySpeed('firemanZombie') < enemySpeed('armoredZombie'), 'slower than the wall');
+  assert.ok(enemyHp('firemanZombie') > enemyHp('armoredZombie'), 'and it outlasts it');
+});
+
+test('the act 7 boss is the truck itself: an objective, not a fighter', () => {
+  const truck = ENEMY_KINDS.truckHorde;
+  assert.equal(truck.boss, true);
+  assert.equal(enemyHp('truckHorde'), 5200);
+  assert.equal(enemyDefense('truckHorde'), 0.3);
+  assert.equal(enemyBounty('truckHorde'), 120);
+  assert.equal(truck.radius, 58, 'it is the widest body in the game');
+  // It neither walks nor hits: the horde it calls is the threat.
+  assert.equal(enemySpeed('truckHorde'), 0);
+  assert.equal(enemyContactDamage('truckHorde'), 0);
+  assert.deepEqual(truck.actions.map(action => action.key), ['blare']);
+});
