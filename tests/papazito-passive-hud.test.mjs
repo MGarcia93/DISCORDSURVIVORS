@@ -5,16 +5,16 @@ import { createRun, sellBelonging } from '../src/engine.mjs';
 test('Papazito passive bar shows readiness, cooldown progress and active panic', () => {
   const p = createRun(() => 0.5, 'papazito').player;
   const def = p.characterDef;
-  assert.deepEqual(def.taskHud(p), { percentage: 0, label: '10 ◈ · 10s', active: false });
+  assert.deepEqual(def.taskHud(p), { percentage: 0, label: '6 ◈ · 10s', active: false });
   p.senaCooldown = 10;
   p.panicTtl = 5;
-  assert.deepEqual(def.taskHud(p), { percentage: 0, label: '10 ◈ · 10s', active: true });
+  assert.deepEqual(def.taskHud(p), { percentage: 0, label: '6 ◈ · 10s', active: true });
   assert.match(def.statusHud(p), /PÁNICO · 5s/);
   p.senaCooldown = 5;
   p.panicTtl = 0;
-  assert.deepEqual(def.taskHud(p), { percentage: 50, label: '10 ◈ · 5s', active: false });
+  assert.deepEqual(def.taskHud(p), { percentage: 50, label: '6 ◈ · 5s', active: false });
   p.senaCooldown = 0;
-  assert.deepEqual(def.taskHud(p), { percentage: 100, label: '10 ◈ · 0s', active: false });
+  assert.deepEqual(def.taskHud(p), { percentage: 100, label: '6 ◈ · 0s', active: false });
 });
 
 test('arena labels Papazito passive bar without changing Solago panel', async () => {

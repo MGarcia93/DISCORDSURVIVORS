@@ -22,17 +22,17 @@ function advance(run, seconds) {
 test('timed extortion charges without coin awards and escalates within a 60-second stage', () => {
   const run = arena();
   run.coins = 100;
-  assert.equal(run.player.senaNextCost, 10);
+  assert.equal(run.player.senaNextCost, 6);
   assert.equal(run.player.senaCooldown, 10);
   advance(run, 10.05);
-  assert.equal(run.coins, 90);
+  assert.equal(run.coins, 94);
   assert.equal(run.player.senaCharges, 1);
-  assert.equal(run.player.senaNextCost, 14);
+  assert.equal(run.player.senaNextCost, 10);
   assert.equal(run.player.senaInterval, 9);
   assert.ok(run.player.panicTtl > 4.8);
   advance(run, 9.05);
-  assert.equal(run.coins, 76);
-  assert.equal(run.player.senaNextCost, 18);
+  assert.equal(run.coins, 84);
+  assert.equal(run.player.senaNextCost, 14);
   assert.equal(run.player.senaInterval, 8);
   advance(run, 35);
   assert.ok(run.player.senaCharges >= 6);
@@ -42,7 +42,7 @@ test('timed extortion charges without coin awards and escalates within a 60-seco
 });
 
 test('random charge and timer bounds remain finite, positive and visible before charging', () => {
-  for (const [random, cost, interval] of [[() => 0, 8, 8], [() => 0.999999, 12, 12]]) {
+  for (const [random, cost, interval] of [[() => 0, 4, 8], [() => 0.999999, 8, 12]]) {
     const run = arena(random);
     assert.equal(run.player.senaNextCost, cost);
     assert.equal(run.player.senaInterval, interval);
@@ -59,10 +59,10 @@ test('unpaid charges accumulate debt and partial payment never makes the wallet 
   run.coins = 3;
   advance(run, 10.05);
   assert.equal(run.coins, 0);
-  assert.equal(run.player.senaDebt, 7);
+  assert.equal(run.player.senaDebt, 3);
   assert.match(run.effects.map(e => e.text).join('|'), /DEUDA/);
   advance(run, 9.05);
-  assert.equal(run.player.senaDebt, 21);
+  assert.equal(run.player.senaDebt, 13);
   assert.equal(run.coins, 0);
 });
 
@@ -109,7 +109,7 @@ test('each stage resets debt, escalation and panic without replenishing sold bel
   assert.equal(startNextWave(run), true);
   assert.equal(run.player.senaDebt, 0);
   assert.equal(run.player.senaCharges, 0);
-  assert.equal(run.player.senaNextCost, 10);
+  assert.equal(run.player.senaNextCost, 6);
   assert.equal(run.player.senaCooldown, 10);
   assert.equal(run.player.panicTtl, 0);
   assert.equal(run.player.soldItems.psp, true);

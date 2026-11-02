@@ -107,7 +107,7 @@ test('penniless Papazito receives the panic buff with an unpaid bill', () => {
   run.spawnIn = run.shotIn = 100;
   step(run, 0.05);
   assert.equal(run.coins, 0);
-  assert.equal(p.senaDebt, 10);
+  assert.equal(p.senaDebt, 6);
   assert.equal(p.panicTtl, 5);
 });
 

@@ -82,7 +82,9 @@ const papazito = {
     },
   }],
   scheduleSena(run, p) {
-    const randomCost = 8 + Math.floor(run.random() * 5) + p.senaCharges * 4;
+    // The first bill is cheap: a high opening charge left him in debt from the
+    // first minute, which is how he was reaching every shop broke.
+    const randomCost = 4 + Math.floor(run.random() * 5) + p.senaCharges * 4;
     const randomInterval = 8 + Math.floor(run.random() * 5) - p.senaCharges;
     p.senaNextCost = p.senaCharges > 0 ? Math.max(p.senaLastCost + 4, randomCost) : randomCost;
     p.senaInterval = Math.max(4, p.senaCharges > 0 ? Math.min(p.senaInterval - 1, randomInterval) : randomInterval);
