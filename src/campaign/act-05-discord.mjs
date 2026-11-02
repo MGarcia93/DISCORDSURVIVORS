@@ -37,7 +37,7 @@ export default {
       wave: 1,
       perMinute: 60,
       mix: { zombie: 0.35, meleeMinion: 0.25, mageMinion: 0.25, mistWalker: 0.15 },
-      life: { zombie: 62, meleeMinion: 58, mageMinion: 50, mistWalker: 60 },
+      life: { zombie: 121, meleeMinion: 113, mageMinion: 98, mistWalker: 117 },
     },
     // "Esqueletos de Diablo, bárbaros de Conan y caminantes de Yorick", with the
     // slaver that runs straight at Warrior.
@@ -45,11 +45,11 @@ export default {
       wave: 2,
       perMinute: 72,
       mix: { skeleton: 0.3, barbarian: 0.25, mistWalker: 0.2, slaver: 0.25 },
-      life: { skeleton: 66, barbarian: 70, mistWalker: 72, slaver: 68 },
+      life: { skeleton: 129, barbarian: 136, mistWalker: 140, slaver: 133 },
     },
     // The analysis wave: the scenes and the banter carry it, so the arena stays
     // light while the Administrator talks.
-    { wave: 3, perMinute: 24, mix: { meleeMinion: 0.5, skeleton: 0.5 }, life: { meleeMinion: 74, skeleton: 74 } },
+    { wave: 3, perMinute: 24, mix: { meleeMinion: 0.5, skeleton: 0.5 }, life: { meleeMinion: 144, skeleton: 144 } },
     // Hotfix 1.0.4 makes them faster; 1.0.5 cuts the specials for ten seconds.
     {
       wave: 4,
@@ -57,7 +57,7 @@ export default {
       speedBoost: 1.3,
       specialLock: 10,
       mix: { zombie: 0.2, skeleton: 0.2, barbarian: 0.2, archer: 0.2, alchemist: 0.2 },
-      life: { zombie: 80, skeleton: 82, barbarian: 84, archer: 70, alchemist: 76 },
+      life: { zombie: 156, skeleton: 160, barbarian: 164, archer: 136, alchemist: 148 },
     },
     // The four corrupted bosses bring their own pressure: the alarm drags a
     // horde, Yorick his walkers, Lilith her summons, the Capataz his guards.

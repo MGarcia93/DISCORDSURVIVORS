@@ -25,30 +25,30 @@ export default {
   miniboss: { wave: 5, kind: 'lotusAlchemist', name: 'EL ALQUIMISTA DEL LOTO' },
   boss: { wave: 6, kind: 'taskmaster', name: 'EL CAPATAZ DE LA RUEDA DEL DOLOR' },
   waves: [
-    { wave: 1, perMinute: 54, mix: { barbarian: 1 }, life: { barbarian: 39 } },
+    { wave: 1, perMinute: 54, mix: { barbarian: 1 }, life: { barbarian: 66 } },
     {
       wave: 2,
       perMinute: 66,
       mix: { slaver: 0.55, archer: 0.45 },
-      life: { slaver: 41, archer: 30 },
+      life: { slaver: 70, archer: 51 },
     },
     {
       wave: 3,
       perMinute: 78,
       mix: { barbarian: 0.45, slaver: 0.3, archer: 0.25 },
-      life: { barbarian: 46, slaver: 48, archer: 36 },
+      life: { barbarian: 78, slaver: 82, archer: 61 },
     },
     {
       wave: 4,
       world: 'laboratory',
       perMinute: 90,
       mix: { barbarian: 0.35, archer: 0.35, alchemist: 0.3 },
-      life: { barbarian: 52, archer: 40, alchemist: 44 },
+      life: { barbarian: 88, archer: 68, alchemist: 75 },
     },
     // El Alquimista arrives once at the start of this wave; his own alchemists
     // keep him company and give the wave its pressure.
     // The Alchemist does not run on a clock: the wave closes when he falls.
-    { wave: 5, world: 'laboratory', untimed: true, perMinute: 24, mix: { alchemist: 1 }, life: { alchemist: 52 } },
+    { wave: 5, world: 'laboratory', untimed: true, perMinute: 24, mix: { alchemist: 1 }, life: { alchemist: 88 } },
     // The boss wave is untimed and carries no budget of its own: the Capataz
     // calls his own guards, not a horde.
     { wave: 6, perMinute: 0, mix: {}, life: {} },
