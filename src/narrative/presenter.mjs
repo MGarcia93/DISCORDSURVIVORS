@@ -62,6 +62,34 @@ const PROP_ART = {
       ctx.fillRect(x + col, y - Math.round(ry * Math.sqrt(Math.max(0, 1 - t * t))) + 1, 3, 1);
     }
   },
+  // The tail that sends Warrior flying: a chain of Rathalos tail segments
+  // sweeping across the stage, with the motion lines behind it. Stage-owned, so
+  // any scene can stage a swipe without a new sprite variant.
+  tailSwipe(ctx, x, y, state) {
+    if (state !== 'hit') return;
+    const ink = '#21100e', base = '#b5472a', mid = '#8a2f1c', light = '#e0764a', horn = '#cfc4a8';
+    for (let i = 0; i < 7; i++) {
+      const px = x + 70 - i * 20;
+      const py = y - 44 - Math.round(Math.sin((i / 6) * Math.PI) * 16);
+      const w = 22 - (i % 2);
+      ctx.fillStyle = ink; ctx.fillRect(px, py, w, 12);
+      ctx.fillStyle = i < 4 ? base : mid; ctx.fillRect(px + 2, py + 2, w - 4, 8);
+      ctx.fillStyle = light; ctx.fillRect(px + 2, py + 2, w - 6, 2);
+      ctx.fillStyle = horn;
+      ctx.fillRect(px + 6, py - 5, 4, 5);
+      ctx.fillRect(px + 14, py - 4, 3, 4);
+    }
+    // Motion lines: the air the tail already cut.
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = i % 2 ? '#8a2f1c' : '#e0764a';
+      ctx.fillRect(x - 40 + i * 8, y - 58 - i * 6, 46 - i * 6, 2);
+    }
+    // The hit lands at the far end of the sweep, where the player is standing.
+    ctx.fillStyle = '#ffe9a0';
+    ctx.fillRect(x - 62, y - 40, 12, 12);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x - 58, y - 36, 5, 5);
+  },
   chains(ctx, x, y, state) {
     const ink = '#16151c', iron = '#6d6a72', light = '#cfcbcd', rust = '#5e3a24';
     const broken = state === 'broken';

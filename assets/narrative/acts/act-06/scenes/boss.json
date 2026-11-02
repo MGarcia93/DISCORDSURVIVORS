@@ -50,6 +50,10 @@
       "nest": [
         1000,
         420
+      ],
+      "swipe": [
+        1150,
+        460
       ]
     },
     "actors": {
@@ -76,6 +80,13 @@
       "rathalos": {
         "enemy": "rathalos",
         "at": "rathalos-off"
+      }
+    },
+    "props": {
+      "swipe": {
+        "at": "swipe",
+        "state": "closed",
+        "front": true
       }
     }
   },
@@ -167,6 +178,15 @@
       ]
     },
     {
+      "type": "prop",
+      "prop": "swipe",
+      "state": "hit"
+    },
+    {
+      "type": "wait",
+      "duration": 0.18
+    },
+    {
       "type": "flash",
       "at": "attack",
       "duration": 0.3
@@ -185,6 +205,11 @@
           "duration": 0.35
         }
       ]
+    },
+    {
+      "type": "prop",
+      "prop": "swipe",
+      "state": "closed"
     },
     {
       "type": "dialogue",
