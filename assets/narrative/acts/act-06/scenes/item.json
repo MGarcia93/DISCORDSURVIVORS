@@ -36,7 +36,7 @@
         480
       ],
       "kulu-close": [
-        1010,
+        1050,
         490
       ],
       "wide": [
@@ -46,6 +46,10 @@
       "clash": [
         1030,
         440
+      ],
+      "kulu-back": [
+        1240,
+        480
       ]
     },
     "actors": {
@@ -175,13 +179,14 @@
         {
           "type": "move",
           "actor": "papasito",
-          "toward": "kulu-close",
-          "speed": 420,
-          "duration": 0.9
+          "to": "kulu-close",
+          "duration": 1.3
         },
         {
-          "type": "wait",
-          "duration": 0.9
+          "type": "camera",
+          "to": "clash",
+          "zoom": 1.1,
+          "duration": 1.3
         }
       ]
     },
@@ -189,6 +194,21 @@
       "type": "flash",
       "at": "kulu",
       "duration": 0.3
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "kulu",
+          "to": "kulu-back",
+          "duration": 0.45
+        },
+        {
+          "type": "wait",
+          "duration": 0.45
+        }
+      ]
     },
     {
       "type": "dialogue",
