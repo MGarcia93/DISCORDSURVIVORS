@@ -8,26 +8,29 @@
   </g>
   
   <!-- Casual body: a short-sleeved black tee over bare forearms, cropped at the
-       waist like the armoured portrait. The sleeves share the shoulder line, so
-       the silhouette is one shirt with two arms coming out of it. -->
+       waist. Centred under the head, with the cast's stepped shoulders instead
+       of a hard box. -->
   <g id="casual-body">
-    <!-- Bare arms first: the shirt covers their top half. -->
-    <path fill="#1b1923" d="M9 127h26v77H9zM145 127h26v77h-26z"/>
-    <path fill="#c58f68" d="M12 129h20v75H12z"/>
-    <path fill="#e0aa7b" d="M12 129h7v75h-7z"/>
-    <path fill="#97644e" d="M148 129h20v75h-20z"/>
-    <path fill="#b47d5c" d="M162 129h3v75h-3z"/>
-    <!-- Shirt: stepped shoulders, torso and both sleeves as one mass. -->
-    <path fill="#1b1923" d="M44 116h92v5h12v6h24v58h-26v23H33v-23H9v-58h24v-6h11z"/>
-    <path fill="#20212a" d="M46 119h88v5h10v6h23v50h-26v21H34v-21H11v-50h23v-6h4z"/>
-    <path fill="#343440" d="M34 131h12v62H34z"/>
-    <path fill="#15161e" d="M141 131h12v62h-12z"/>
-    <path fill="#15161e" d="M34 193h119v9H34z"/>
-    <!-- Sleeve hems. -->
-    <path fill="#101118" d="M11 173h25v4H11zM146 173h26v4h-26z"/>
+    <!-- Bare forearms, under the sleeves. -->
+    <path fill="#1b1923" d="M12 150h24v54H12zM146 150h24v54h-24z"/>
+    <path fill="#c58f68" d="M15 154h18v50H15z"/>
+    <path fill="#e0aa7b" d="M15 154h6v50h-6z"/>
+    <path fill="#97644e" d="M149 154h18v50h-18z"/>
+    <path fill="#b47d5c" d="M163 154h4v50h-4z"/>
+    <!-- Shirt: three stepped rows for the shoulders, then the body. -->
+    <path fill="#1b1923" d="M56 114h72v5h-72zM40 119h104v6H40zM32 125h120v79H32z"/>
+    <path fill="#20212a" d="M58 117h68v4H58zM42 122h100v5H42zM35 127h114v74H35z"/>
+    <path fill="#343440" d="M35 127h10v74H35z"/>
+    <path fill="#15161e" d="M139 127h10v74h-10z"/>
+    <path fill="#15161e" d="M35 195h114v6H35z"/>
+    <!-- Short sleeves, sharing the shoulder line. -->
+    <path fill="#1b1923" d="M8 125h27v33H8zM145 125h27v33h-27z"/>
+    <path fill="#20212a" d="M11 128h21v27H11z"/>
+    <path fill="#15161e" d="M148 128h21v27h-21z"/>
+    <path fill="#101118" d="M8 155h27v4H8zM145 155h27v4h-27z"/>
     <!-- Neck opening: the tee covers the base of the neck. -->
-    <path fill="#101118" d="M62 115h48v12H62z"/>
-    <path fill="#15161e" d="M66 125h40v5H66z"/>
+    <path fill="#101118" d="M64 113h50v12H64z"/>
+    <path fill="#15161e" d="M68 123h42v5H68z"/>
   </g>
   <g id="hair-back" transform="translate(0 -38)">
     <path fill="#211e26" d="M45 69h15v-7h40v6h17v12h8v27h-7v16h-9v7H51v-7H40v-17h-5V85h10z"/>
