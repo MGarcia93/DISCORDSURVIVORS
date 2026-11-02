@@ -399,8 +399,15 @@ function fireRadial(run, source, damage, { count, speed, radius }) {
 // the sold-defence penalty, the character's situational bonus, the shield and
 // the immunity floor. A swing and a projectile both go through it, so the two
 // can never drift apart.
+// A special may hand the body a window where nothing lands: La Patrona takes
+// the hits while Solago cannot step out of them.
+function invulnerable(p) {
+  return (p.characterDef.specials ?? []).some(special => special.invulnerable === true && (p[special.key] ?? 0) > 0);
+}
+
 function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } = {}) {
   const p = run.player;
+  if (invulnerable(p)) return 0;
   const defenseMult = p.characterDef.passiveDefenseMult?.(p) ?? 1;
   let incoming = damage
     * (1 - Math.min(0.75, p.defense * defenseMult * (p.sellDefLossTtl > 0 ? 1 - (p.sellDefLossFrac ?? 0) : 1) + defenseBonus))
@@ -676,7 +683,7 @@ export function step(run, seconds, input = {}) {
     const before = wave.radius;
     wave.radius += wave.speed * dt;
     const gap = distance(wave, p);
-    if (!wave.hit && p.immune <= 0 && gap + p.hitRadius >= before && gap - p.hitRadius <= wave.radius) {
+    if (!wave.hit && p.immune <= 0 && !invulnerable(p) && gap + p.hitRadius >= before && gap - p.hitRadius <= wave.radius) {
       wave.hit = true;
       p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)));
       p.immune = 0.65;

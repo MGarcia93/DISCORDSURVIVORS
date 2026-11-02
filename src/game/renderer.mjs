@@ -111,7 +111,9 @@ export function drawRunScene(ctx, run, {
     pixelText(ctx, 'JA!', p.x - 16 * WORLD_SCALE, p.y - 42 * WORLD_SCALE, 2, '#e8dfa1');
   }
   if (p.stand > 0) pixelRing(ctx, p.x, p.y, 170 * WORLD_SCALE, '#a89ac6');
-  if (p.still >= 2 && p.hp < p.maxHp) {
+  // Only the body that actually regenerates shows the ring: the engine stopped
+  // healing everyone else for standing still.
+  if (p.regen > 0 && p.still >= Math.max(0.5, 2 - (p.rewardBonuses?.stillThreshold ?? 0)) && p.hp < p.maxHp) {
     const regen = p.characterDef.regenHud?.(p);
     if (regen) {
       pixelRing(ctx, p.x, regen.ringY, regen.radius, '#bfd890');
