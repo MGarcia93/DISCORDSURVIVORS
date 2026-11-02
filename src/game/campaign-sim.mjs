@@ -103,7 +103,7 @@ export function runCampaign({ character = 'negro', seed = 1, act = DEFAULT_ACT, 
     if (phase !== 'shop') return { won: false, run, waves, reason: phase };
     if (!runShop(run, character, { policy, spend, buy })) return { won: false, run, waves, reason: 'shop' };
     if (run.worldCleared) {
-      if (!nextPlayableAct(run.act.id)) return { won: true, run, waves };
+      if (!nextPlayableAct(run.act.id, { postgame: true })) return { won: true, run, waves };
       run = createNextWorldRun(run);
       if (!run) return { won: false, run, waves, reason: 'chain' };
       continue;

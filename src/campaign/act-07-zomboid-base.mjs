@@ -10,6 +10,8 @@ export default {
   order: 7,
   title: 'No me traigas más zombis',
   status: 'playable',
+  // Played after the campaign is cleared twice, not after its last world.
+  postgame: true,
   world: 'zomboid-siege',
   duration: 60,
   narrative: 'acts/act-07/manifest.json',

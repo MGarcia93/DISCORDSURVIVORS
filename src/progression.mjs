@@ -7,6 +7,11 @@ export const PROGRESS_STORAGE_KEY = 'discord-survivors.progress.v1';
 // be earned again through their own encounter.
 export const PROGRESS_STORAGE_VERSION = 2;
 
+// The epilogue is not the campaign's ending: it is what the second ending finds.
+// Two cleared campaigns is the whole condition, and it is counted from the last
+// world of the campaign, never from an epilogue.
+export const POSTGAME_CLEARS = 2;
+
 // Registered unlockable characters. Legacy consumers retain roster order;
 // campaign encounters and their saved flags belong to each character's sheet.
 export const UNLOCK_CHAIN = ROSTER.filter(character => character.unlock.flag).map(character => character.id);
@@ -58,6 +63,17 @@ function readProgressRecord(storage) {
 function readProgress(storage) {
   const record = readProgressRecord(storage);
   return record.valid ? record.progress : null;
+}
+
+function writeProgressRecord(progress, storage) {
+  try {
+    const target = resolveStorage(storage);
+    if (!target) return false;
+    target.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function writeProgressFlag(flag, storage) {
@@ -122,6 +138,25 @@ export function isCharacterUnlocked(character, storage) {
   return progress[descriptor.flag] === true
     || (typeof descriptor.scene === 'string' && Array.isArray(progress.seenScenes)
       && progress.seenScenes.includes(descriptor.scene));
+}
+
+function clearsOf(progress) {
+  const clears = progress?.campaignClears;
+  return Number.isInteger(clears) && clears > 0 ? clears : 0;
+}
+
+export function campaignClears(storage) {
+  return clearsOf(readProgress(storage));
+}
+
+export function recordCampaignClear(storage) {
+  const record = readProgressRecord(storage);
+  if (!record.valid) return false;
+  return writeProgressRecord({ ...record.progress, campaignClears: clearsOf(record.progress) + 1 }, storage);
+}
+
+export function postgameOpen(storage) {
+  return clearsOf(readProgress(storage)) >= POSTGAME_CLEARS;
 }
 
 export function isDebugUnlockAll(storage) {

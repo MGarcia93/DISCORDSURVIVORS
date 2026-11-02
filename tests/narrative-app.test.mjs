@@ -126,6 +126,9 @@ test('campaign continuation advances acts without bypassing their closing scenes
   dom.click('play');
   await Promise.resolve(); await Promise.resolve();
   const first = state.run;
+  // This walk covers the act hand-over, epilogue included, so the save it runs
+  // on already carries two cleared campaigns.
+  dom.storage.set('discord-survivors.progress.v1', JSON.stringify({ version: 2, campaignClears: 2 }));
   const { applyUpgradeRank } = await import('../src/run-rewards.mjs');
   assert.equal(applyUpgradeRank(first, first.rewardCatalog.upgrades.find(entry => entry.id === 'stat-attack')), true);
   const upgradedDamage = first.player.damage;

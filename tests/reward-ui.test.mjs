@@ -48,17 +48,37 @@ test('the boss shop continues to the next world and death still only offers repl
     const html = render(run);
     assert.match(html, /data-action="next-act"/, 'the shop hands over to the trip');
     assert.match(html, /EL BOTÍN ES TUYO/);
-    if (index < PLAYABLE_ACTS.length - 1) {
+    if (index < 4) {
       assert.match(html, /SIGUIENTE MUNDO/);
       // The destination is announced on arrival, not inside the button.
       assert.ok(!html.includes(PLAYABLE_ACTS[index + 1].title));
     } else {
-      assert.match(html, /TERMINAR CAMPAÑA/, 'the last world ends the campaign');
+      // The campaign's last world stops there until a second clear opens the
+      // epilogue, and the epilogue itself cannot be reached from a first run.
+      assert.match(html, /TERMINAR CAMPAÑA/, `${act.id} has nowhere to continue on a first run`);
     }
     run.phase = 'dead';
     const dead = render(run);
     assert.doesNotMatch(dead, /data-action="next-act"/);
     assert.match(dead, /data-action="play"/);
+  }
+
+  // The second ending is the one that hands the campaign over to the epilogue.
+  const store = new Map([['discord-survivors.progress.v1', JSON.stringify({ version: 2, campaignClears: 2 })]]);
+  const previous = globalThis.localStorage;
+  globalThis.localStorage = { getItem: key => store.get(key) ?? null, setItem: (key, value) => store.set(key, value) };
+  try {
+    const finale = createRun(() => 0.5, 'negro', {}, PLAYABLE_ACTS.find(act => act.id === 'act-05'));
+    finale.phase = 'shop';
+    finale.worldCleared = true;
+    finale.time = finale.duration;
+    step(finale, 0, {});
+    const html = render(finale);
+    assert.match(html, /VOLVER AL DISCORD/, 'the epilogue is what the second ending opens');
+    assert.ok(!html.includes(PLAYABLE_ACTS.find(act => act.id === 'act-06').title), 'still announced on arrival');
+  } finally {
+    if (previous === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = previous;
   }
 });
 

@@ -4,7 +4,7 @@ import { nextPlayableAct, PLAYABLE_ACTS, actForWorld, getAct } from './campaign/
 import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
-import { isCharacterUnlocked, unlockAllForTesting, unlockAllForSession, UNLOCK_CHAIN } from './progression.mjs';
+import { isCharacterUnlocked, unlockAllForTesting, unlockAllForSession, recordCampaignClear, postgameOpen, UNLOCK_CHAIN } from './progression.mjs';
 import { DEV } from './dev-flags.mjs';
 import { on } from './bus.mjs';
 import { state } from './app/state.mjs';
@@ -30,6 +30,10 @@ import { waveConfig } from './waves.mjs';
 on('waveCleared', ({ run: clearedRun }) => {
   if (clearedRun.phase !== 'won' && !clearedRun.worldCleared) return;
   for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = isCharacterUnlocked(id);
+  // Clearing the campaign's last world opens one; an epilogue or a lab wave
+  // never does, and the epilogue itself is behind this counter.
+  if (clearedRun.worldCleared && !clearedRun.lab && !clearedRun.act.postgame
+    && !nextPlayableAct(clearedRun.act.id)) recordCampaignClear();
 });
 
 // Gameplay SFX hang off the same post-state events the rest of the shell reads.
@@ -218,7 +222,7 @@ document.addEventListener('click', event => {
   if (action === 'balance-play' || action === 'balance-repeat') playBalanceWave();
   if (action === 'balance-back') show('balance');
   if (action === 'next-act' && state.run?.worldCleared) {
-    const next = nextPlayableAct(state.run.act.id);
+    const next = nextPlayableAct(state.run.act.id, { postgame: postgameOpen() });
     if (next) {
       state.selectedAct = next.id;
       enterWorld(state.run);

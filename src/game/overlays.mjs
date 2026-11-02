@@ -8,6 +8,7 @@ import { countOf, itemPrice } from '../run-rewards.mjs';
 import { drawItemIcon } from './item-icons.mjs';
 import { volumeRow, muteRow } from '../audio/controls.mjs';
 import { nextPlayableAct } from '../campaign/acts.mjs';
+import { postgameOpen } from '../progression.mjs';
 
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -96,11 +97,11 @@ export function overlay() {
     // A world boss pays into the same shop as any wave, and its continue button
     // is the trip itself: the next world is announced on arrival, not here.
     const cleared = state.run.worldCleared === true;
-    const nextWorld = cleared ? nextPlayableAct(state.run.act.id) : null;
+    const nextWorld = cleared ? nextPlayableAct(state.run.act.id, { postgame: postgameOpen() }) : null;
     const footer = lab
       ? `<button class="primary" data-action="balance-repeat">REPETIR LA OLEADA →</button><button class="secondary" data-action="balance-back">VOLVER AL LABORATORIO</button>`
       : cleared
-        ? `<button class="primary" data-action="next-act">${nextWorld ? 'SIGUIENTE MUNDO' : 'TERMINAR CAMPAÑA'} →</button>`
+        ? `<button class="primary" data-action="next-act">${nextWorld ? (nextWorld.postgame ? 'VOLVER AL DISCORD' : 'SIGUIENTE MUNDO') : 'TERMINAR CAMPAÑA'} →</button>`
         : `<button class="primary" data-action="next-wave">${state.run.wave === state.run.act.boss.wave - 1 ? `ENFRENTAR: ${state.run.act.boss.name}` : 'SIGUIENTE OLEADA'} →</button>`;
     const labHint = lab
       ? '<p class="shop-hint">Laboratorio: lo que compres acá se tira al salir. El build se arma en el laboratorio.</p>'
@@ -108,12 +109,15 @@ export function overlay() {
     body = `<div class="eyebrow">${cleared ? `Mundo 0${state.run.act.order} completado` : `Oleada ${state.run.wave} completada`}</div><h2>EL BOTÍN ES TUYO</h2><p class="reward-sub"><b class="wallet">${state.run.coins} ◈</b> disponibles · +${state.run.rewardBalance.gold?.survival ?? 20} por sobrevivir</p>${labHint}<div class="reward-grid">${cards || '<p>No quedan objetos elegibles.</p>'}</div><div class="reward-extras"><button class="upgrade shop-heal" data-heal ${healDisabled ? 'disabled' : ''}><b>✚ DELIVERY DE EMERGENCIA</b><span>Servicio de curación: recuperás ${HEAL_AMOUNT} de vida.</span><small>${full ? 'VIDA COMPLETA' : `${HEAL_COST} ◈`}</small></button></div><div class="shop-footer">${footer}</div>`;
   }
   if (phase === 'dead' || phase === 'won') {
-    const next = phase === 'won' ? nextPlayableAct(state.run.act.id) : null;
+    const next = phase === 'won' ? nextPlayableAct(state.run.act.id, { postgame: postgameOpen() }) : null;
+    // The epilogue is not the next world: it is what the second ending finds, so
+    // the button says where it takes you.
+    const returnsToDiscord = next?.postgame === true;
     // The next world is announced by its arrival card, not by the button.
-    const continueButton = next ? '<button class="primary" data-action="next-act">SIGUIENTE MUNDO</button>' : '';
+    const continueButton = next ? `<button class="primary" data-action="next-act">${returnsToDiscord ? 'VOLVER AL DISCORD' : 'SIGUIENTE MUNDO'}</button>` : '';
     body = lab
       ? `<div class="eyebrow">Laboratorio de balance</div><h2>${phase === 'won' ? 'OLEADA TERMINADA.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>La partida se tira: el build sigue en el laboratorio, así que podés repetir esta oleada o ajustar los items antes de volver.</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions"><button class="primary" data-action="balance-repeat">REPETIR LA OLEADA</button><button class="secondary" data-action="balance-back">VOLVER AL LABORATORIO</button></div>`
-      : `<div class="eyebrow">${phase === 'won' ? next ? 'Mundo completado' : 'Campaña completada' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? next ? 'SEGUIMOS CONECTADOS.' : 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? (next ? 'Superaste este mundo. La partida continúa.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.') : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions">${continueButton}<button class="${next ? 'secondary' : 'primary'}" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
+      : `<div class="eyebrow">${phase === 'won' ? next && !returnsToDiscord ? 'Mundo completado' : 'Campaña completada' : 'Se desconectó del canal'}</div><h2>${phase === 'won' ? next && !returnsToDiscord ? 'SEGUIMOS CONECTADOS.' : 'EL SERVIDOR ES TUYO.' : state.run.player.characterDef.deathLine ?? 'SE TERMINÓ LA PAJA.'}</h2><p>${phase === 'won' ? (returnsToDiscord ? 'Todavía queda alguien adentro.' : next ? 'Superaste este mundo. La partida continúa.' : 'Derrotaste al Administrador. Ahora falta decidir qué jugar.') : 'Murió haciendo lo que amaba: el mínimo esfuerzo posible.'}</p><p>${state.run.kills} enemigos · ${formatTime(state.run.elapsed)} de supervivencia · Oleada ${state.run.wave}</p><div class="actions">${continueButton}<button class="${next ? 'secondary' : 'primary'}" data-action="play">OTRA PARTIDA</button><button class="secondary" data-action="home">VOLVER AL INICIO</button></div>`;
   }
   box.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="${phase === 'shop' ? 'Mejoras entre oleadas' : phase === 'levelUp' ? 'Elegir mejora de nivel' : phase === 'paused' ? 'Partida pausada' : 'Resultado de la partida'}"><div class="${phase === 'shop' || phase === 'levelUp' ? 'shop-dialog' : ''}">${body}</div></div>`;
   for (const canvas of box.querySelectorAll?.('canvas[data-art]') ?? []) {

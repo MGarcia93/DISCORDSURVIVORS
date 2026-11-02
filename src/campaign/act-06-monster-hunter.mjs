@@ -14,6 +14,8 @@ export default {
   order: 6,
   title: 'Nadie te vino a buscar',
   status: 'playable',
+  // Played after the campaign is cleared twice, not after its last world.
+  postgame: true,
   world: 'monster-hunter',
   duration: 60,
   narrative: 'acts/act-06/manifest.json',

@@ -43,7 +43,11 @@ export function actForWorld(world) {
   return ACTS.find(act => act.world === world) ?? null;
 }
 
-export function nextPlayableAct(id) {
+// The order is the map, but a postgame act is not what follows the campaign: it
+// is what the second ending opens. Callers that walk a campaign pass the state
+// of that gate; the map itself never reads progress.
+export function nextPlayableAct(id, { postgame = false } = {}) {
   const index = PLAYABLE_ACTS.findIndex(act => act.id === id);
-  return index < 0 ? null : PLAYABLE_ACTS[index + 1] ?? null;
+  if (index < 0) return null;
+  return PLAYABLE_ACTS.slice(index + 1).find(act => postgame || !act.postgame) ?? null;
 }
