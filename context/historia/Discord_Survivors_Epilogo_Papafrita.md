@@ -909,6 +909,14 @@ JHONY — PROJECT_ZOMBOID — CONECTADO
 
 **PAPAFRITA:** Escuchame una cosa, dragón de mierda.
 
+**PAPAFRITA:** Bueno. Como les decía, este bicho tiene tres fases y—
+
+**NEGRO:** No, boludo. Ya fue.
+
+**PAPAFRITA:** —y además el fuego sigue un patrón que—
+
+**SOLAGO:** ¡QUE ARRANQUE LA PELEA DE UNA VEZ!
+
 *Comienza la pelea.*
 
 ### Fase 1 — La cacería

@@ -305,6 +305,31 @@
           "text": "Escuchame una cosa, dragón de mierda."
         }
       ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno. Como les decía, este bicho tiene tres fases y—"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "No, boludo. Ya fue."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "—y además el fuego sigue un patrón que—"
+        },
+        {
+          "speaker": "solago",
+          "expression": "angry",
+          "text": "¡QUE ARRANQUE LA PELEA DE UNA VEZ!"
+        }
+      ]
     }
   ]
 }
