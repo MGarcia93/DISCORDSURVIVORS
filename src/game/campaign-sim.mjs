@@ -28,7 +28,7 @@ export function playWave(run, { skill = 'perfect', random } = {}) {
   let frame = 0;
   let elapsed = 0;
   while (elapsed < WAVE_LIMIT) {
-    if (frame % profile.reactionFrames === 0) input = botInput(run, profile, dice);
+    if (frame % profile.reactionFrames === 0) input = botInput(run, profile, dice, input);
     step(run, FRAME, input);
     frame++;
     elapsed += FRAME;

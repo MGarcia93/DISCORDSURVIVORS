@@ -28,8 +28,8 @@ const DIRECTIONS = new Map([[16, directions(16)], [8, directions(8)], [4, direct
 // wheel and sometimes misjudges a ring, which is exactly how a person takes
 // damage that was avoidable.
 export const SKILLS = {
-  perfect: { reactionFrames: 1, candidates: 16, ringIgnore: 0, lookahead: LOOKAHEAD },
-  average: { reactionFrames: 12, candidates: 8, ringIgnore: 0.35, lookahead: LOOKAHEAD },
+  perfect: { reactionFrames: 1, candidates: 16, ringIgnore: 0, lookahead: LOOKAHEAD, switchMargin: 0.08 },
+  average: { reactionFrames: 12, candidates: 8, ringIgnore: 0.35, lookahead: LOOKAHEAD, switchMargin: 0 },
 };
 
 function distance(a, b) {
@@ -70,20 +70,29 @@ export function scoreSpot(run, x, y, { dodgeRings = true } = {}) {
 }
 
 // The best of sixteen headings, plus staying put when it is already good.
-export function botInput(run, profile = SKILLS.perfect, random = () => 1) {
+export function botInput(run, profile = SKILLS.perfect, random = () => 1, previous = null) {
   const p = run.player;
   // The bot's own dice: a sloppy hand must not shift the game's spawns, or the
   // two runs stop being the same campaign.
   const dodgeRings = !(profile.ringIgnore > 0 && random() < profile.ringIgnore);
   const options = { dodgeRings };
-  const stand = scoreSpot(run, p.x, p.y, options);
-  let best = { x: 0, y: 0 };
-  let bestScore = stand;
-  for (const direction of DIRECTIONS.get(profile.candidates) ?? DIRECTIONS.get(16)) {
+  const score = direction => {
     const x = clamp(p.x + direction.x * profile.lookahead, 30, WIDTH - 30);
     const y = clamp(p.y + direction.y * profile.lookahead, 30, HEIGHT - 30);
-    const score = scoreSpot(run, x, y, options);
-    if (score > bestScore) { bestScore = score; best = direction; }
+    return scoreSpot(run, x, y, options);
+  };
+  let best = { x: 0, y: 0 };
+  let bestScore = scoreSpot(run, p.x, p.y, options);
+  for (const direction of DIRECTIONS.get(profile.candidates) ?? DIRECTIONS.get(16)) {
+    const value = score(direction);
+    if (value > bestScore) { bestScore = value; best = direction; }
+  }
+  // Hysteresis: re-deciding sixty times a second on a sixteen-way wheel makes a
+  // body vibrate in place instead of walking. A new heading has to be clearly
+  // better before it replaces the one already in progress.
+  if (previous && (previous.x || previous.y)) {
+    const keep = score(previous);
+    if (bestScore - keep < profile.switchMargin) return previous;
   }
   return best;
 }
