@@ -1,0 +1,398 @@
+{
+  "id": "act-07-prologue",
+  "stage": {
+    "background": "creator-desk",
+    "size": [
+      2288,
+      748
+    ],
+    "points": {
+      "negro": [
+        1320,
+        400
+      ],
+      "solago": [
+        1320,
+        500
+      ],
+      "papasito": [
+        1160,
+        550
+      ],
+      "warrior": [
+        1160,
+        450
+      ],
+      "papafrita": [
+        1160,
+        350
+      ],
+      "maxi-in": [
+        2200,
+        460
+      ],
+      "maxi": [
+        1690,
+        430
+      ],
+      "wide": [
+        1450,
+        420
+      ],
+      "close": [
+        1600,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    },
+    "props": {
+      "portal-negro": {
+        "at": "negro",
+        "state": "closed"
+      },
+      "portal-solago": {
+        "at": "solago",
+        "state": "closed"
+      },
+      "portal-papasito": {
+        "at": "papasito",
+        "state": "closed"
+      },
+      "portal-warrior": {
+        "at": "warrior",
+        "state": "closed"
+      },
+      "portal-papafrita": {
+        "at": "papafrita",
+        "state": "closed"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno. Uno menos."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Uno menos? ¡Si Maxi lo tuvo que sacar a la fuerza!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Y bueno, pero volvió. Cuenta."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "annoyed",
+          "text": "Volví expulsado, es distinto."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Por lo menos ya estamos todos."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Falta Jhony."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Uh."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Recién te acordás?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Yo pensé que había vuelto."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alert"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "No."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Sigue en el Project Zomboid?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Desde el primer mundo?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, tampoco pasó tanto."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Para él sí."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿y le mandaste mensaje?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Y qué dijo?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Nada. Ya saben cómo es Jhony, no mira los mensajes."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, sacalo como hiciste con Papafrita."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Dale."
+        }
+      ]
+    },
+    {
+      "type": "camera",
+      "to": "close",
+      "zoom": 1,
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Lo estás sacando?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Sí, sí."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, listo."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "portal"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "prop",
+          "prop": "portal-negro",
+          "state": "open"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-solago",
+          "state": "open"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-papasito",
+          "state": "open"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-warrior",
+          "state": "open"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-papafrita",
+          "state": "open"
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 1.1
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Pará, ¿qué hacés?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Vayan a buscarlo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PERO LA CONCHA DE TU MADRE!"
+        }
+      ]
+    },
+    {
+      "type": "fade",
+      "to": "black",
+      "duration": 0.6
+    },
+    {
+      "type": "exit",
+      "actor": "negro"
+    },
+    {
+      "type": "exit",
+      "actor": "solago"
+    },
+    {
+      "type": "exit",
+      "actor": "papasito"
+    },
+    {
+      "type": "exit",
+      "actor": "warrior"
+    },
+    {
+      "type": "exit",
+      "actor": "papafrita"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "prop",
+          "prop": "portal-negro",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-solago",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-papasito",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-warrior",
+          "state": "closed"
+        },
+        {
+          "type": "prop",
+          "prop": "portal-papafrita",
+          "state": "closed"
+        }
+      ]
+    },
+    {
+      "type": "fade",
+      "to": "clear",
+      "duration": 0.6
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Qué paja."
+        }
+      ]
+    }
+  ]
+}

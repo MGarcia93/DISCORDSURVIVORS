@@ -1,0 +1,149 @@
+{
+  "id": "act-07-wall",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "wall": [
+        300,
+        600
+      ],
+      "gate": [
+        572,
+        620
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        580,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "sound",
+      "sound": "crash"
+    },
+    {
+      "type": "camera",
+      "to": "wall",
+      "zoom": 1,
+      "duration": 0.9
+    },
+    {
+      "type": "wait",
+      "duration": 0.4
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "No, boludo..."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Se cayó toda esa parte."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Me llevó una banda de tiempo levantar esa pared."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Podemos arreglarla después."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡Primero hay que sacar todos estos zombis!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Para mí tenías que hacerla de piedra."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Digo, para que aguante."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¿Vos me estás enseñando a construir una base?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "No, yo te digo nomás."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡VOS NO SABÉS NI COCINAR UN HUEVO EN ESTE JUEGO!"
+        }
+      ],
+      "layout": "stage"
+    }
+  ]
+}

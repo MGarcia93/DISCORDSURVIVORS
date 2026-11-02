@@ -1,0 +1,458 @@
+{
+  "characters": "../../characters.json",
+  "sounds": {
+    "portal": {
+      "frequency": 180,
+      "duration": 0.6,
+      "gain": 0.08
+    },
+    "alert": {
+      "frequency": 640,
+      "duration": 0.16,
+      "gain": 0.09
+    },
+    "alarm": {
+      "frequency": 190,
+      "duration": 0.24,
+      "gain": 0.05
+    },
+    "horn": {
+      "frequency": 120,
+      "duration": 0.5,
+      "gain": 0.1
+    },
+    "crash": {
+      "noise": true,
+      "duration": 0.4,
+      "cutoff": 500,
+      "gain": 0.16
+    },
+    "roar": {
+      "noise": true,
+      "duration": 0.5,
+      "cutoff": 420,
+      "gain": 0.14
+    }
+  },
+  "scenes": [
+    {
+      "id": "act-07-prologue",
+      "title": "Epílogo: El último que falta",
+      "file": "scenes/prologue.json"
+    },
+    {
+      "id": "act-07-arrival",
+      "title": "Epílogo: La visita",
+      "file": "scenes/arrival.json",
+      "module": "scenes/arrival.mjs"
+    },
+    {
+      "id": "act-07-wave-1",
+      "title": "Epílogo: Las 2.000 horas",
+      "file": "scenes/wave-1.json"
+    },
+    {
+      "id": "act-07-wave-2",
+      "title": "Epílogo: La build perfecta",
+      "file": "scenes/wave-2.json"
+    },
+    {
+      "id": "act-07-cultivos",
+      "title": "Epílogo: La gallina",
+      "file": "scenes/cultivos.json"
+    },
+    {
+      "id": "act-07-bombero",
+      "title": "Epílogo: El depósito",
+      "file": "scenes/bombero.json"
+    },
+    {
+      "id": "act-07-depot",
+      "title": "Epílogo: Todo ordenado",
+      "file": "scenes/depot.json"
+    },
+    {
+      "id": "act-07-circle",
+      "title": "Epílogo: ¡ERA UN CÍRCULO!",
+      "file": "scenes/circle.json"
+    },
+    {
+      "id": "act-07-wall",
+      "title": "Epílogo: Dos mil horas a la basura",
+      "file": "scenes/wall.json"
+    },
+    {
+      "id": "act-07-truck",
+      "title": "Epílogo: La última horda",
+      "file": "scenes/truck.json"
+    },
+    {
+      "id": "act-07-final",
+      "title": "Epílogo: ¿Una partida?",
+      "file": "scenes/final.json"
+    },
+    {
+      "id": "act-07-credits",
+      "title": "Epílogo: Una más",
+      "file": "scenes/credits.json"
+    }
+  ],
+  "bindings": [
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-07-prologue"
+    },
+    {
+      "when": "before_wave",
+      "wave": 1,
+      "scene": "act-07-arrival"
+    },
+    {
+      "when": "after_wave",
+      "wave": 1,
+      "scene": "act-07-wave-1"
+    },
+    {
+      "when": "before_wave",
+      "wave": 2,
+      "scene": "act-07-wave-2"
+    },
+    {
+      "when": "after_wave",
+      "wave": 2,
+      "scene": "act-07-cultivos"
+    },
+    {
+      "when": "before_wave",
+      "wave": 3,
+      "scene": "act-07-bombero"
+    },
+    {
+      "when": "after_wave",
+      "wave": 3,
+      "scene": "act-07-depot"
+    },
+    {
+      "when": "before_wave",
+      "wave": 4,
+      "scene": "act-07-circle"
+    },
+    {
+      "when": "before_wave",
+      "wave": 5,
+      "scene": "act-07-wall"
+    },
+    {
+      "when": "before_wave",
+      "wave": 6,
+      "scene": "act-07-truck"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-07-final"
+    },
+    {
+      "when": "after_wave",
+      "wave": 6,
+      "scene": "act-07-credits"
+    }
+  ],
+  "banter": [
+    {
+      "wave": 1,
+      "at": 2,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡No se separen de la base!"
+    },
+    {
+      "wave": 1,
+      "at": 4,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡Me están siguiendo todos!"
+    },
+    {
+      "wave": 1,
+      "at": 6,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡Y SÍ, PELOTUDO, VOS LOS TRAJISTE!"
+    },
+    {
+      "wave": 1,
+      "at": 8,
+      "speaker": "solago",
+      "expression": "surprised",
+      "text": "¡Son una banda!"
+    },
+    {
+      "wave": 1,
+      "at": 10,
+      "speaker": "jhony",
+      "expression": "neutral",
+      "text": "¡Hay armas en el galpón!"
+    },
+    {
+      "wave": 1,
+      "at": 12,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¿Cuál galpón?"
+    },
+    {
+      "wave": 1,
+      "at": 14,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡EL QUE TENÉS ADELANTE!"
+    },
+    {
+      "wave": 2,
+      "at": 2,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "Epa, esa trampa está buena."
+    },
+    {
+      "wave": 2,
+      "at": 4,
+      "speaker": "jhony",
+      "expression": "neutral",
+      "text": "Es una build que vi en una guía."
+    },
+    {
+      "wave": 2,
+      "at": 6,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¿No podés jugar sin mirar guías?"
+    },
+    {
+      "wave": 2,
+      "at": 8,
+      "speaker": "jhony",
+      "expression": "neutral",
+      "text": "¿Qué tiene de malo mirar una guía?"
+    },
+    {
+      "wave": 2,
+      "at": 10,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Nada, pregunto."
+    },
+    {
+      "wave": 2,
+      "at": 12,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "Vos tenés dos mil horas y no sabés ni poner una puerta."
+    },
+    {
+      "wave": 2,
+      "at": 14,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Bueno, pará."
+    },
+    {
+      "wave": 3,
+      "at": 2,
+      "speaker": "jhony",
+      "expression": "neutral",
+      "text": "¿Dónde está Papafrita?"
+    },
+    {
+      "wave": 3,
+      "at": 3.5,
+      "speaker": "solago",
+      "expression": "neutral",
+      "text": "No sé."
+    },
+    {
+      "wave": 3,
+      "at": 5,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Se fue solo otra vez."
+    },
+    {
+      "wave": 3,
+      "at": 6.5,
+      "speaker": "jhony",
+      "expression": "surprised",
+      "text": "¡¿CÓMO QUE SE FUE SOLO?!"
+    },
+    {
+      "wave": 3,
+      "at": 8,
+      "speaker": "papafrita-casual",
+      "expression": "happy",
+      "text": "¡Encontré unas casas para lootear!"
+    },
+    {
+      "wave": 3,
+      "at": 9.5,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡ESTAMOS DEFENDIENDO LA BASE!"
+    },
+    {
+      "wave": 3,
+      "at": 11,
+      "speaker": "papafrita-casual",
+      "expression": "neutral",
+      "text": "¡YA VOY, PARÁ!"
+    },
+    {
+      "wave": 3,
+      "at": 12.5,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "Después lo agarran veinte zombis y se muere."
+    },
+    {
+      "wave": 3,
+      "at": 14,
+      "speaker": "papafrita-casual",
+      "expression": "angry",
+      "text": "¡QUE NO ME VOY A MORIR!"
+    },
+    {
+      "wave": 3,
+      "at": 15.5,
+      "speaker": "jhony",
+      "expression": "tired",
+      "text": "No, boludo. Otro más no."
+    },
+    {
+      "wave": 4,
+      "at": 2,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¡Jhony, están entrando por el costado!"
+    },
+    {
+      "wave": 4,
+      "at": 4,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡Ya los vi!"
+    },
+    {
+      "wave": 4,
+      "at": 6,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¡Hacé un círculo!"
+    },
+    {
+      "wave": 4,
+      "at": 8,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡CERRÁ EL ORTO, NEGRO!"
+    },
+    {
+      "wave": 5,
+      "at": 2,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡Cuiden los cultivos!"
+    },
+    {
+      "wave": 5,
+      "at": 4,
+      "speaker": "solago",
+      "expression": "surprised",
+      "text": "¡Hay demasiados!"
+    },
+    {
+      "wave": 5,
+      "at": 6,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "Ura, ya están entrando por atrás."
+    },
+    {
+      "wave": 5,
+      "at": 8,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡NEGRO, VENÍ A AYUDAR!"
+    },
+    {
+      "wave": 5,
+      "at": 10,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¡Estoy ocupado!"
+    },
+    {
+      "wave": 5,
+      "at": 12,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡¿CON QUÉ?!"
+    },
+    {
+      "wave": 5,
+      "at": 14,
+      "speaker": "maxi-negro",
+      "expression": "neutral",
+      "text": "¡ME ESTOY CURANDO!"
+    },
+    {
+      "wave": 6,
+      "at": 2,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡YA CASI LLEGAMOS!"
+    },
+    {
+      "wave": 6,
+      "at": 4,
+      "speaker": "papasito",
+      "expression": "neutral",
+      "text": "¡Son demasiados!"
+    },
+    {
+      "wave": 6,
+      "at": 6,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡NO PAREN!"
+    },
+    {
+      "wave": 6,
+      "at": 8,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡ME ESTOY QUEDANDO SIN VIDA!"
+    },
+    {
+      "wave": 6,
+      "at": 10,
+      "speaker": "jhony",
+      "expression": "angry",
+      "text": "¡CURATE!"
+    },
+    {
+      "wave": 6,
+      "at": 12,
+      "speaker": "maxi-negro",
+      "expression": "angry",
+      "text": "¡NO TENGO NADA!"
+    },
+    {
+      "wave": 6,
+      "at": 14,
+      "speaker": "jhony",
+      "expression": "surprised",
+      "text": "¡¿CÓMO QUE NO TENÉS NADA?!"
+    }
+  ]
+}

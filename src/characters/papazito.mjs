@@ -1,6 +1,7 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawPapazito } from '../sprites.mjs';
+import { statBlock } from './stat-block.mjs';
 
 // A sale authors the same signed modifier shape every item and upgrade uses:
 // `percent('attack', 10)` is a buff, `percent('moveSpeed', -15)` a penalty. The
@@ -13,10 +14,17 @@ const SALE_LABELS = { attack: 'DAÑO', moveSpeed: 'VELOCIDAD', attackSpeed: 'VEL
 
 // Papazito — El Paraguayo Trucho. Stat sheet: percentual values over
 // BASE_STATS (src/stats.mjs) per context/personajes/papazito_el_paraguayo_trucho.md §3
-// and the playtesting balance so far: life 110, ranged damage 30 (like El Negro),
-// attack speed 90 (0.9 bricks/s, interval ~1.11s), attackDistance 280 (308px,
-// slightly longer than El Negro's 286px), defense 110 (11 points,
-// 55% mitigation), moveSpeed 2970 (148.5 scaled px/s, -10%).
+// and the playtesting balance so far. The selector card and the engine read this
+// one sheet, so they cannot disagree.
+const SHEET = {
+  life: 110,             // 110 hp
+  defense: 110,          // 11 points -> 55% mitigation
+  attack: 245,           // 24.5 per brick: ranged pays twice, it never has to close
+  attackSpeed: 72,       // 0.72 bricks/s: -20% on top of the ranged damage cut
+  attackDistance: 280,   // 308px reach, slightly longer than El Negro's 286px
+  moveSpeed: 2970,       // 148.5 scaled px/s: -10% mobility
+};
+
 const papazito = {
   id: 'papazito',
   name: 'PAPAZITO',
@@ -32,7 +40,7 @@ const papazito = {
       <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
       <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
       <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
-      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+240%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
+      ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 4 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente 1 ficha y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 25 segundos.</p></div></div>
@@ -51,14 +59,7 @@ const papazito = {
   },
   stats: {
     hitRadius: 18 * WORLD_SCALE, // the bulk frame from the photo: not one of the six stats
-    ...resolveEntityStats({
-      life: 110,             // +10% vida
-      defense: 110,          // 11 points -> 55% mitigation
-      attack: 245,           // 24.5 per brick: ranged pays twice, it never has to close
-      attackSpeed: 72,       // 0.72 bricks/s: -20% on top of the ranged damage cut
-      attackDistance: 280,   // 308px reach, slightly longer than El Negro
-      moveSpeed: 2970,       // -10% mobility
-    }),
+    ...resolveEntityStats(SHEET),
   },
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.
   // Ladrillazo: one heavy brick per shot; balance knobs stay here.

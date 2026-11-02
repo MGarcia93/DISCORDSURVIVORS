@@ -465,3 +465,44 @@ test('the rathalos gains its phases as it loses life', () => {
   step(run, 0.05, {});
   assert.equal(wyvern.inferno, true, 'and the last phase burns once');
 });
+
+test('the fireman telegraphs a straight charge and stands exposed after it', () => {
+  const run = quietRun();
+  const fireman = createEnemy(run, 'firemanZombie', run.player.x + 400, run.player.y);
+  run.enemies.push(fireman);
+  run.random = () => 0.9; // swipe first, then the charge quarter of the roll
+  step(run, 0.05, {});
+  assert.equal(fireman.chargeBoost, 2.4, 'it accelerates');
+  assert.ok(fireman.chargeTtl > 0, 'for a short burst');
+  assert.equal(fireman.exposed, true, 'and the rush leaves it open');
+  // The burst is over: the opening the script asks for.
+  fireman.chargeTtl = 0;
+  fireman.attackCd = 0;
+  step(run, 0.05, {});
+  assert.equal(fireman.exposed, false);
+  assert.ok(fireman.stunTtl > 0, 'it stands still');
+  assert.ok(fireman.attackCd >= 1.3, 'and its next swing is late');
+  assert.equal(run.projectiles.length, 0, 'it never throws anything');
+});
+
+test('the fireman does not charge from contact', () => {
+  const run = quietRun();
+  const fireman = createEnemy(run, 'firemanZombie', run.player.x + 60, run.player.y);
+  run.enemies.push(fireman);
+  run.random = () => 0.9;
+  step(run, 0.05, {});
+  assert.equal(fireman.chargeBoost, undefined, 'a charge from contact would be unreadable');
+});
+
+test('the truck never walks and never hurts: it only calls', () => {
+  const run = quietRun();
+  const truck = createEnemy(run, 'truckHorde', run.player.x + 300, run.player.y);
+  run.enemies.push(truck);
+  step(run, 0.05, {});
+  assert.ok(run.effects.some(effect => effect.text === 'BOCINA'), 'the horn calls the horde');
+  const startX = truck.x;
+  const hp = run.player.hp;
+  for (let i = 0; i < 20; i++) step(run, 0.05, {});
+  assert.equal(truck.x, startX, 'it does not chase');
+  assert.equal(run.player.hp, hp, 'it does not hit');
+});

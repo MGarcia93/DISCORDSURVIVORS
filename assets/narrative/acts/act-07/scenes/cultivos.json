@@ -1,0 +1,156 @@
+{
+  "id": "act-07-cultivos",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "crops": [
+        220,
+        500
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        560,
+        430
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Che, ¿tenés gallinas?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Sí. ¿Por?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "No dejes que Papafrita se acerque."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "annoyed",
+          "text": "Dale, Negro, no empecés."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "¿Qué pasó con las gallinas?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "happy",
+          "text": "JAJAJA, no, la gallina..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Tres horas, boludo. TRES HORAS buscando una gallina."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "neutral",
+          "text": "Bueno, pero..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "La llevo a la base, la dejo ahí, viene este pelotudo, le pega una sola vez y la mata."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "happy",
+          "text": "JAJAJAJA."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡PERO NO PENSÉ QUE SE IBA A MORIR DE UN GOLPE!"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡Y ME DEJASTE TODA LA BASE LLENA DE SANGRE, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡PERO ME HICISTE LIMPIARLA!"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Papafrita, no toqués las gallinas."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "neutral",
+          "text": "Bueno, tampoco iba a tocar ninguna."
+        }
+      ]
+    }
+  ]
+}

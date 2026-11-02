@@ -62,6 +62,37 @@ const PROP_ART = {
       ctx.fillRect(x + col, y - Math.round(ry * Math.sqrt(Math.max(0, 1 - t * t))) + 1, 3, 1);
     }
   },
+  // The tail that sends Warrior flying: a chain of Rathalos tail segments swept
+  // across the stage in three frames, with the impact star on the contact frame.
+  // Stage-owned, so a scene can stage a swipe without a new sprite variant.
+  tailSwipe(ctx, x, y, state) {
+    if (state === 'closed') return;
+    const phase = state === 'hit2' ? 1 : state === 'hit3' ? 2 : 0;
+    const ink = '#21100e', base = '#b5472a', mid = '#8a2f1c', light = '#e0764a', horn = '#cfc4a8';
+    const startX = [40, 70, 20][phase];
+    const count = [5, 7, 5][phase];
+    for (let i = 0; i < count; i++) {
+      const px = x + startX - i * 20;
+      const py = y - 42 - Math.round(Math.sin((i / (count - 1)) * Math.PI) * 16);
+      const w = 22 - (i % 2);
+      ctx.fillStyle = ink; ctx.fillRect(px, py, w, 12);
+      ctx.fillStyle = i < count - 3 ? base : mid; ctx.fillRect(px + 2, py + 2, w - 4, 8);
+      ctx.fillStyle = light; ctx.fillRect(px + 2, py + 2, w - 6, 2);
+      ctx.fillStyle = horn;
+      ctx.fillRect(px + 6, py - 5, 4, 5);
+      ctx.fillRect(px + 14, py - 4, 3, 4);
+    }
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = i % 2 ? '#8a2f1c' : '#e0764a';
+      ctx.fillRect(x - 40 + i * 8 + phase * 14, y - 58 - i * 6, 46 - i * 6, 2);
+    }
+    if (phase === 1) {
+      ctx.fillStyle = '#ffe9a0'; ctx.fillRect(x - 62, y - 40, 12, 12);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(x - 58, y - 36, 5, 5);
+    } else if (phase === 2) {
+      ctx.fillStyle = '#e0764a'; ctx.fillRect(x - 66, y - 36, 6, 6);
+    }
+  },
   chains(ctx, x, y, state) {
     const ink = '#16151c', iron = '#6d6a72', light = '#cfcbcd', rust = '#5e3a24';
     const broken = state === 'broken';
@@ -204,7 +235,7 @@ export function createPresenter(root, catalog, onError) {
             ctx.translate(actor.x, actor.y);
             if (actor.dead) { ctx.rotate(-Math.PI / 2); ctx.globalAlpha = 0.6; }
             // A corpse does not walk: freeze its frame so it stays still.
-            drawEnemyFigure(ctx, { kind: actor.enemy, x: 0, y: 0, id: 1 }, actor.dead ? 0 : player.time);
+            drawEnemyFigure(ctx, { kind: actor.enemy, x: 0, y: 0, id: 1, variant: actor.variant, facing: actor.facing }, actor.dead ? 0 : player.time);
             ctx.restore();
             continue;
           }

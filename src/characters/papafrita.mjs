@@ -1,6 +1,7 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawPapafrita } from '../sprites.mjs';
+import { statBlock } from './stat-block.mjs';
 
 // «Me falta un ítem» (§4.2): the collection counts DIFFERENT exclusive upgrades,
 // never copies. `run.levelRanks` is the run's own record of what was taken, so
@@ -136,6 +137,17 @@ function tickCompanion(run, p, dt, ctx) {
   run.effects.push({ x: second.x, y: second.y, kind: 'biteWave', r: 80 * WORLD_SCALE, ttl: 0.35, duration: 0.35 });
 }
 
+// The six statistics as a percentage of the neutral reference. The selector
+// card and the engine read this one sheet, so they cannot disagree.
+const SHEET = {
+  life: 90,
+  defense: 85,
+  attack: 259,           // 25.9 per wave: ranged pays twice, it never has to close
+  attackSpeed: 144,      // 1.44 waves/s: -20% on top of the damage cut
+  attackDistance: 320,
+  moveSpeed: 3300,
+};
+
 const papafrita = {
   id: 'papafrita',
   name: 'PAPAFRITA',
@@ -150,7 +162,7 @@ const papafrita = {
       <div class="eyebrow">Atacante de voz · Coleccionista · Dificultad media-alta</div><h2>PAPAFRITA</h2>
       <p class="character-desc">Habla demasiado. Se mete en Discord, empieza a explicar un juego o una build que nadie le pidió y cuando parece que terminó todavía le quedan veinte minutos. Fanático de los single player y de Monster Hunter, amenaza con irse a jugar solo pero no admite que le gusta jugar con el Negro.</p>
       <p class="character-quote">«Para esto me voy a jugar un single player».</p>
-      <div class="stats papafrita-stats"><div><b>90</b><small>VIDA</small></div><div><b>36</b><small>DAÑO</small></div><div><b class="penalty">−15%</b><small>DEFENSA</small></div><div><b>+220%</b><small>ALCANCE</small></div><div><b>1,8</b><small>ONDAS/SEG</small></div></div>
+      ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>NO TE CALLÁS MÁS</b><p>Ondas de voz a distancia media que atraviesan a varios enemigos. No sostiene armas: su voz es el ataque.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>ME FALTA UN ÍTEM</b><p>Cuenta los tipos distintos de sus seis mejoras, nunca las copias. Con 2 tipos las ondas atraviesan un enemigo más; con 4, cada 5 ataques sale una onda secundaria; con 6, cada 3 ataques salen dos ecos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>AHORA SÍ COMPLETÉ LA BUILD</b><p>Seis segundos de ondas en varias direcciones, globos extra y sus mejoras potenciadas: escala con lo que juntó, nunca regala lo que no tiene. Recarga: 30 segundos.</p></div></div>
@@ -179,14 +191,7 @@ const papafrita = {
   // cadence. Percentages over BASE_STATS, tuned with the balance bot.
   stats: {
     hitRadius: 17 * WORLD_SCALE,
-    ...resolveEntityStats({
-      life: 90,
-      defense: 85,
-      attack: 259,           // 25.9 per wave: ranged pays twice, it never has to close
-      attackSpeed: 144,      // 1.44 waves/s: -20% on top of the damage cut
-      attackDistance: 320,
-      moveSpeed: 3300,
-    }),
+    ...resolveEntityStats(SHEET),
   },
   // «No te callás más»: a straight wave of sound, not a homing shot.
   attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560, lift: 46, lead: -8 },

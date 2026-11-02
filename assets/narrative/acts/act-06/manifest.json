@@ -535,6 +535,13 @@
     },
     {
       "wave": 4,
+      "at": 1.2,
+      "speaker": "warrior",
+      "expression": "neutral",
+      "text": "Ura, dale, los distraigo."
+    },
+    {
+      "wave": 4,
       "at": 2,
       "speaker": "papafrita",
       "expression": "happy",
@@ -542,10 +549,24 @@
     },
     {
       "wave": 4,
+      "at": 3.2,
+      "speaker": "warrior",
+      "expression": "angry",
+      "text": "¡Ura, manco, por qué no avisaste!"
+    },
+    {
+      "wave": 4,
       "at": 3.5,
       "speaker": "maxi-negro",
       "expression": "surprised",
       "text": "¡¿QUÉ PASA?!"
+    },
+    {
+      "wave": 4,
+      "at": 4.4,
+      "speaker": "solago",
+      "expression": "angry",
+      "text": "¡TE DIJE QUE NO NOS SEPAREMOS!"
     },
     {
       "wave": 4,
@@ -1106,13 +1127,6 @@
       "speaker": "warrior",
       "expression": "happy",
       "text": "¡Dale, ura, dale!"
-    },
-    {
-      "wave": 6,
-      "at": 35,
-      "speaker": "papafrita",
-      "expression": "neutral",
-      "text": "Bueno, primero hay que—"
     },
     {
       "wave": 6,

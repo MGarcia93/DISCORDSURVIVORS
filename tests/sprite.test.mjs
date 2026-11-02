@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawEnemyShot, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, PALETTE } from '../src/sprites.mjs';
+import { createHash } from 'node:crypto';
+import { drawElNegro, drawSolago, drawPatrona, drawAnime, drawGamerProjectile, drawEnemyShot, drawWarrior, drawPapazito, drawSmokeCloud, drawShroomBlast, drawAstralAura, drawZombie, PALETTE } from '../src/sprites.mjs';
 import { ENEMY_IDS, getEnemyKind } from '../src/enemies/index.mjs';
 import { getCharacter } from '../src/characters/index.mjs';
 
@@ -45,6 +46,8 @@ test('the walker kinds are one connected body, never floating pieces', () => {
   // The boss is excluded on purpose: its sound rings are separate VFX in the air,
   // so the body is connected but the particle rings are not part of the figure.
   for (const kind of ['zombie', 'runner', 'brute', 'meleeMinion', 'mageMinion', 'siegeMinion',
+    'workerZombie', 'policeZombie', 'protectedZombie', 'militaryZombie', 'armoredZombie',
+    'firemanZombie',
     'skeleton', 'lesserDemon', 'shaman', 'burningElite', 'batSwarm',
     'barbarian', 'slaver', 'archer', 'alchemist']) {
     const cells = new Set();
@@ -517,4 +520,45 @@ test('the act 6 ground kinds are one connected body, and the elite is not a comm
   assert.ok(enemyShape('greatJagras').height > enemyShape('jagras').height * 1.4,
     'the elite has to read apart from the pack at a glance');
   assert.ok(enemyShape('rathalos').height > player.height * 2, 'the boss towers');
+});
+
+// The Act 7 variants reuse the approved walker, so the walker itself must never
+// move: the plain drawing is pinned exactly as it shipped, and each outfit is
+// pinned separately so a gear tweak is a deliberate, visible redraw.
+test('the outfit pass leaves the Act 1 walker untouched', () => {
+  const pin = options => createHash('sha256')
+    .update(JSON.stringify([...bounds(ctx => drawZombie(ctx, 0, 0, { time: 0.15, seed: 1, ...options })).rects].sort()))
+    .digest('hex');
+  assert.equal(pin({}), '407cdec832598d3ae2badfc7fb19bc6c403e7f1aec361b1311345bf4d39d577b');
+  const outfits = {
+    worker: 'da02efb72bb61cf3a716757b196f9ed03972892cf787f88d2187481db46fa5fe',
+    police: '9cea2330632179720e3b257b462304b0b06ddc3a7a683fc0305672075a33499a',
+    protected: '7b57d6981f4367002952a93e940a0e94aeabfdcd9a6a3c8154d98ba7b1da3417',
+    military: 'a2d1e4fc82ec1022a97d28de4865a6cfa16ad3184b520d352733a2314a688a12',
+    armored: 'eb2dc126d87698b08700279c60e36545d4c8ff4e5a46bf733ec7f5e02b0e9136',
+  };
+  const seen = new Set([pin({})]);
+  for (const [outfit, expected] of Object.entries(outfits)) {
+    assert.equal(pin({ outfit }), expected, `${outfit} keeps its approved drawing`);
+    seen.add(expected);
+  }
+  assert.equal(seen.size, 6, 'every outfit is its own drawing, never a recolour of the next');
+});
+
+test('the fireman keeps its approved drawing and towers over the brute', () => {
+  const fireman = enemyShape('firemanZombie');
+  const brute = enemyShape('brute');
+  assert.equal(createHash('sha256').update(JSON.stringify([...fireman.rects].sort())).digest('hex'),
+    'df26aa4dc750549c286f892cfcba03ed1c41cd6e091817052c74f7f66d3b3443');
+  assert.ok(fireman.height > brute.height, 'the mini-boss stands a head over the wall');
+  assert.ok(fireman.width > brute.width, 'and is wider, so the charge reads before it comes');
+});
+
+test('the truck keeps its approved drawing and reads wider than any body', () => {
+  const truck = enemyShape('truckHorde');
+  const fireman = enemyShape('firemanZombie');
+  assert.equal(createHash('sha256').update(JSON.stringify([...truck.rects].sort())).digest('hex'),
+    'a92128be1c8007c787810338b5a9ac24bf39a740b78e4f7fa2823dcb7171749c');
+  assert.ok(truck.width > fireman.width * 1.5, 'a vehicle, not a body with a hat');
+  assert.ok(truck.height < fireman.height * 1.5, 'and low enough to read as a truck');
 });

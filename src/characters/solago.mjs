@@ -1,6 +1,7 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawSolago, drawPatrona } from '../sprites.mjs';
+import { statBlock } from './stat-block.mjs';
 
 // What one smile is worth in damage. It is a block, not a stance: the pool is
 // spent by the hits that land while she laughs, and what nobody uses is gone
@@ -14,6 +15,17 @@ const BITE_HEAL = 4;
 // the longest ranged reach (an archer parks at 231 px) or the ultimate leaves
 // every caster standing outside the ring and she cannot punish them for it.
 const STAND_RADIUS = 240;
+
+// The six statistics as a percentage of the neutral reference. The selector
+// card and the engine read this one sheet, so they cannot disagree.
+const SHEET = {
+  life: 150,            // 150 points of damage: the tank of the roster
+  defense: 45,          // 4.5 defense points -> 22.5% mitigation
+  attack: 440,          // 44 per bite: just under a walker's 46, one upgrade finishes it
+  attackSpeed: 120,     // 1.2 bites per second: the boss answer has to earn its window
+  attackDistance: 83,   // close to Jhony: a bite that lands without living inside the boss
+  moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
+};
 
 const solago = {
   id: 'solago',
@@ -30,7 +42,7 @@ const solago = {
       <div class="eyebrow">Tanque cuerpo a cuerpo · Contraataque</div><h2>SOLAGO</h2>
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
-      <div class="stats solago-stats"><div><b>190</b><small>VIDA</small></div><div><b>+133%</b><small>DAÑO MELEE</small></div><div><b>+8%</b><small>ALCANCE</small></div><div><b>+27%</b><small>DEFENSA</small></div><div><b>108%</b><small>VELOCIDAD</small></div></div>
+      ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido, y empuja lo que muerde.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
@@ -54,14 +66,7 @@ const solago = {
   // attacker values the engine reads.
   stats: {
     hitRadius: 15 * WORLD_SCALE, // collision size: not one of the six combat stats
-    ...resolveEntityStats({
-      life: 150,            // 150 points of damage: the tank of the roster
-      defense: 45,          // 4.5 defense points -> 22.5% mitigation
-      attack: 440,          // 44 per bite: just under a walker's 46, one upgrade finishes it
-      attackSpeed: 120,     // 1.2 bites per second: the boss answer has to earn its window
-      attackDistance: 83,   // close to Jhony: a bite that lands without living inside the boss
-      moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
-    }),
+    ...resolveEntityStats(SHEET),
   },
   attack: { type: 'melee' },
   decays: ['permissionActive'],

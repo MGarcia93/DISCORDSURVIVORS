@@ -73,9 +73,9 @@ test('fichas own their selection profile block and preview pose', () => {
     assert.match(ficha, /  preview\(ctx, \{ time, cycle \}\)/, `${id} ficha animates its own preview`);
   }
   const warrior = FICHAS.find(([id]) => id === 'warrior')[1];
-  assert.match(warrior, /<b>\+325%<\/b><small>DAÑO POR BOMBA/, 'Warrior profile reflects the bomb damage');
-  assert.match(warrior, /<b>\+200%<\/b><small>ALCANCE/, 'Warrior profile reflects the reach buff');
-  assert.match(warrior, /<b>0,75<\/b><small>HONGOS\/SEGUNDO/, 'Warrior profile reflects the slower bomb cadence');
+  // The statistics are generated from the ficha's own sheet, never typed row by
+  // row: tests/character-stat-block.test.mjs pins the six shared rows.
+  assert.match(warrior, /\$\{statBlock\(SHEET\)\}/, 'Warrior profile renders the shared statistics block');
   assert.match(registry, /export const ROSTER = \[/, 'the registry exports the card order');
   assert.match(progression, /export const UNLOCK_CHAIN = ROSTER\.filter\(/, 'the unlock chain is derived from the registry order');
   assert.doesNotMatch(progression, /'(negro|solago|warrior|papazito)'/, 'progression never names a character');

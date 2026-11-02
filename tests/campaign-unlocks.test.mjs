@@ -52,7 +52,7 @@ test('each real encounter unlocks its character when completed or skipped, with 
 });
 
 test('existing encounter history restores all characters without replaying or rewriting the save', () => {
-  const original = JSON.stringify({ version: 1, seenScenes: encounters.map(item => item.scene), custom: { keep: 123 } });
+  const original = JSON.stringify({ version: 2, seenScenes: encounters.map(item => item.scene), custom: { keep: 123 } });
   const store = memoryStorage(original);
   for (const { character } of encounters) assert.equal(isCharacterUnlocked(character, store), true);
   assert.equal(store.getItem(PROGRESS_STORAGE_KEY), original);

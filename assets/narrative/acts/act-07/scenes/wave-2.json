@@ -1,0 +1,153 @@
+{
+  "id": "act-07-wave-2",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "gate": [
+        572,
+        620
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        580,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Escuchen. Vamos a hacer una cosa. Yo cubro la entrada, ustedes limpian los costados."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "No se manden solos."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Y no toquen las trampas."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alarm"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale, Jhony."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "No escuchó una mierda."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Sí escuché."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Qué dijo?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Que hay que matar zombis."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "..."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "alarm"
+    }
+  ]
+}

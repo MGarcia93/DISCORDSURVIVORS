@@ -15,5 +15,11 @@ export const FIGURE_DRAWERS = {
 export function drawEnemyFigure(ctx, figure, time) {
   const prop = FIGURE_DRAWERS[figure.kind];
   if (prop) { prop(ctx, figure, time); return; }
-  getEnemyKind(figure.kind).draw(ctx, figure.x, figure.y, { time, seed: figure.id });
+  // One mirror for every ficha: an enemy walking left is the same body flipped
+  // about its own x, so no sheet needs its own facing code.
+  const facing = figure.facing ?? 1;
+  ctx.save();
+  if (facing < 0) { ctx.translate(figure.x * 2, 0); ctx.scale(-1, 1); }
+  getEnemyKind(figure.kind).draw(ctx, figure.x, figure.y, { time, seed: figure.id, variant: figure.variant });
+  ctx.restore();
 }

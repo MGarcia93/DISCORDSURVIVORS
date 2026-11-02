@@ -23,6 +23,7 @@ import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, na
 import { audio } from './audio/index.mjs';
 import { musicCue, SFX, UI } from './audio/mix.mjs';
 import { warpToWorld } from './game/world-transition.mjs';
+import { waveConfig } from './waves.mjs';
 
 // Refresh availability after a world victory. Encounter cinematics own unlock
 // announcements; an unrelated boss victory must not repeat a legacy reward.
@@ -133,6 +134,13 @@ function frame(timestamp) {
       if (!sceneWasBlocking && !narrative.blocked) step(state.run, dt, input);
       narrative.observe();
     }
+    // A wave may declare its own noise: the depot fight keeps the car alarm
+    // ringing every couple of seconds while it lasts.
+    const alarm = waveConfig(state.run.act, state.run.wave)?.alarm;
+    if (alarm && state.run.phase === 'playing' && !state.paused && !narrative.blocked) {
+      state.alarmIn = (state.alarmIn ?? alarm) - dt;
+      if (state.alarmIn <= 0) { audio.playSound(SFX.alarm, 'alarm'); state.alarmIn = alarm; }
+    } else state.alarmIn = null;
     if (narrative.blocked) state.keys.clear();
     draw();
     state.hudElapsed += dt;
@@ -246,6 +254,26 @@ document.addEventListener('input', event => {
   if (label && level !== null) label.textContent = `${Math.round(level * 100)}%`;
 });
 
+// Both the Alt+Shift+U shortcut and the Konami code open this door: the debug
+// unlock for a build being shown off, not a reward for playing.
+function unlockEverything() {
+  if (!unlockAllForTesting()) return false;
+  state.debugUnlockAll = true;
+  for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = true;
+  state.selectedCharacter = 'negro';
+  show('characters');
+  return true;
+}
+
+// The Konami code, pressed on the menu. The buffer keeps only the last ten keys,
+// so any wrong key simply moves the window along instead of needing a reset.
+const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+let konamiBuffer = [];
+function konamiCode(key) {
+  konamiBuffer = [...konamiBuffer, key].slice(-KONAMI.length);
+  return konamiBuffer.length === KONAMI.length && konamiBuffer.every((pressed, index) => pressed === KONAMI[index]);
+}
+
 document.addEventListener('keydown', event => {
   audio.unlock();
   const key = event.key.toLowerCase();
@@ -277,12 +305,12 @@ document.addEventListener('keydown', event => {
     }
     if (key === 'escape' && document.querySelector('#menu-overlay .overlay')) closeMenuOverlay();
     if (DEV && state.screen === 'home' && event.altKey && event.shiftKey && key === 'u') {
-      if (unlockAllForTesting()) {
-        state.debugUnlockAll = true;
-        for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = true;
-        state.selectedCharacter = 'negro';
-        show('characters');
-      }
+      unlockEverything();
+      event.preventDefault();
+      return;
+    }
+    if (DEV && state.screen === 'home' && konamiCode(key)) {
+      unlockEverything();
       event.preventDefault();
       return;
     }

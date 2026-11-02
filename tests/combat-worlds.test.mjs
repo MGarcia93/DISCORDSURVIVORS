@@ -42,12 +42,12 @@ test('Act 4 combat visits the laboratory for waves 4 and 5, then returns to the 
   }
 });
 
-test('other acts retain their scenery and an explicit sandbox world still wins', () => {
+test('every wave paints its own world, and an explicit sandbox world still wins', () => {
   for (const act of PLAYABLE_ACTS.filter(act => act.id !== act04.id)) {
     const run = createRun(() => 0.5, 'negro', {}, act);
-    for (const { wave } of act.waves) {
+    for (const { wave, world } of act.waves) {
       run.wave = wave;
-      assert.deepEqual(painting(run), painting(run, { world: act.world }), `${act.id} wave ${wave}`);
+      assert.deepEqual(painting(run), painting(run, { world: world ?? act.world }), `${act.id} wave ${wave}`);
     }
   }
   const run = createRun(() => 0.5, 'negro', {}, act04);

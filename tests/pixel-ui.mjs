@@ -76,7 +76,7 @@ try {
     if (mobile) assert.equal(await page.getByRole('button', { name: 'Arriba', exact: true }).isVisible(), true);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     if (!mobile) {
-      await page.evaluate(() => localStorage.setItem('discord-survivors.progress.v1', JSON.stringify({ version: 1, debugUnlockAll: true })));
+      await page.evaluate(() => localStorage.setItem('discord-survivors.progress.v1', JSON.stringify({ version: 2, debugUnlockAll: true })));
       await page.reload();
       await page.getByRole('button', { name: 'EMPEZAR PARTIDA' }).click();
       await page.locator('#sprite-preview').waitFor();

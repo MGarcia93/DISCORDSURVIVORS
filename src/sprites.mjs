@@ -3886,7 +3886,7 @@ const KULU_ROCK = { light: '#b9b3ab', base: '#8d8880', mid: '#66625c', dark: '#4
 // rock is a body part here, not a prop: it is the largest silhouette in the
 // frame because the fight is about going around it.
 export function drawKuluYaKu(ctx, x, y, options = {}) {
-  const { time = 0, seed = 0, scale = 2 } = options;
+  const { time = 0, seed = 0, scale = 2, variant = 'rock' } = options;
   const stride = Math.floor(time * 3 + seed) % 2;
   const bob = Math.floor(time * 2) % 2;
   pose(ctx, x, y, scale);
@@ -3941,7 +3941,16 @@ export function drawKuluYaKu(ctx, x, y, options = {}) {
   pixel(ctx, 4, -88 + bob, 10, 4, KULU_INK);
   pixel(ctx, 5, -87 + bob, 8, 2, KULU_FEATHER.mid);
   for (let i = 0; i < 4; i++) pixel(ctx, 3 + i * 4, -92 + bob, 2, 6, KULU_INK);
-  // The rock: a rounded boulder held in front, stepped in the cast's way.
+  // The rock: a rounded boulder held in front, stepped in the cast's way. The
+  // scene asks for `none` once Papasito breaks it, and `big` for the second one.
+  if (variant !== 'none') {
+  const rockScale = variant === 'big' ? 1.3 : 1;
+  if (rockScale !== 1) {
+    ctx.save();
+    ctx.translate(41, -23);
+    ctx.scale(rockScale, rockScale);
+    ctx.translate(-41, 23);
+  }
   roundedMass(ctx, 26, -40, 30, 34, KULU_INK);
   roundedMass(ctx, 27, -39, 28, 32, KULU_ROCK.base);
   roundedMass(ctx, 29, -41, 24, 8, KULU_INK);
@@ -3949,11 +3958,13 @@ export function drawKuluYaKu(ctx, x, y, options = {}) {
   pixel(ctx, 27, -9, 28, 3, KULU_ROCK.dark);
   for (let i = 0; i < 4; i++) pixel(ctx, 31 + i * 5, -34 + (i % 2) * 8, 6, 5, KULU_ROCK.mid);
   pixel(ctx, 33, -30, 3, 9, KULU_ROCK.dark);
+  if (rockScale !== 1) ctx.restore();
   // Arms gripping the boulder, so the rock belongs to the body.
   for (const ay of [-38, -20]) {
     pixel(ctx, 18, ay, 12, 7, KULU_INK);
     pixel(ctx, 19, ay + 1, 10, 5, KULU_FEATHER.mid);
     pixel(ctx, 19, ay + 1, 4, 1, KULU_FEATHER.light);
+  }
   }
   ctx.restore();
 }

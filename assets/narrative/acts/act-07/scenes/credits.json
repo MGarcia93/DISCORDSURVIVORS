@@ -1,0 +1,143 @@
+{
+  "id": "act-07-credits",
+  "stage": {
+    "background": "creator-desk",
+    "size": [
+      2288,
+      748
+    ],
+    "points": {
+      "negro": [
+        1320,
+        400
+      ],
+      "solago": [
+        1320,
+        500
+      ],
+      "papasito": [
+        1160,
+        550
+      ],
+      "warrior": [
+        1160,
+        450
+      ],
+      "papafrita": [
+        1160,
+        350
+      ],
+      "jhony": [
+        1440,
+        460
+      ],
+      "maxi": [
+        1690,
+        430
+      ],
+      "wide": [
+        1400,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Bueno, la última y me voy a dormir."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale."
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 1.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡NEGRO, ¿QUÉ MIERDA ESTÁS HACIENDO?!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "angry",
+          "text": "¡PARÁ, BOLUDO!"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡TE DIJE QUE NO TE MANDES SOLO!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJAJAJA."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡Y VOS DE QUÉ TE REÍS SI VAS 0/8!"
+        }
+      ]
+    },
+    {
+      "type": "fade",
+      "to": "black",
+      "duration": 1.2
+    },
+    {
+      "type": "splash",
+      "speaker": "jhony",
+      "text": "Bueno... ¿otra?"
+    }
+  ]
+}

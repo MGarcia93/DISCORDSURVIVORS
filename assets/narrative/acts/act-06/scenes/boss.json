@@ -2,71 +2,100 @@
   "id": "act-06-boss",
   "stage": {
     "background": "monster-hunter",
+    "size": [
+      1700,
+      748
+    ],
     "points": {
-      "left": [
-        400,
+      "negro": [
+        280,
         470
       ],
-      "mid-left": [
-        470,
+      "solago": [
+        360,
+        545
+      ],
+      "papasito": [
+        480,
         540
       ],
-      "mid-right": [
-        610,
-        540
-      ],
-      "right": [
-        690,
+      "warrior": [
+        600,
         470
       ],
       "papafrita": [
-        830,
+        780,
         470
       ],
-      "close": [
-        600,
-        480
+      "rathalos-off": [
+        1760,
+        420
+      ],
+      "rathalos": [
+        1250,
+        420
+      ],
+      "attack": [
+        1080,
+        470
+      ],
+      "flung": [
+        700,
+        520
       ],
       "wide": [
-        600,
+        760,
         430
       ],
-      "boss": [
-        600,
-        300
+      "nest": [
+        1000,
+        420
+      ],
+      "swipe": [
+        1150,
+        460
       ]
     },
     "actors": {
       "negro": {
         "character": "maxi-negro",
-        "at": "left"
+        "at": "negro"
       },
       "solago": {
         "character": "solago",
-        "at": "mid-left"
+        "at": "solago"
       },
       "papasito": {
         "character": "papasito",
-        "at": "mid-right"
+        "at": "papasito"
       },
       "warrior": {
         "character": "warrior",
-        "at": "right"
+        "at": "warrior"
       },
       "papafrita": {
         "character": "papafrita",
         "at": "papafrita"
+      },
+      "rathalos": {
+        "enemy": "rathalos",
+        "at": "rathalos-off"
+      }
+    },
+    "props": {
+      "tailSwipe": {
+        "at": "swipe",
+        "state": "closed",
+        "front": true
       }
     }
   },
   "steps": [
     {
-      "type": "notice",
-      "title": "RATHALOS",
-      "lines": [
-        "¡ROAAAAAR!"
-      ],
-      "duration": 2.4
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1.05,
+      "duration": 0.8
     },
     {
       "type": "dialogue",
@@ -75,22 +104,38 @@
           "speaker": "papafrita",
           "expression": "neutral",
           "text": "Ahí está."
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Bueno, escuchen. No se manden todavía. Primero esperamos que baje y después le pegamos todos juntos."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Dale, avisá cuándo."
+        },
+        {
+          "speaker": "warrior",
+          "expression": "neutral",
+          "text": "Dale, ura."
         }
       ]
     },
     {
-      "type": "camera",
-      "to": "boss",
-      "zoom": 1.1,
-      "duration": 1
-    },
-    {
-      "type": "dialogue",
-      "lines": [
+      "type": "parallel",
+      "steps": [
         {
-          "speaker": "papafrita",
-          "expression": "neutral",
-          "text": "Bueno, escuchen bien. Este bicho tiene varios ataques importantes, así que—"
+          "type": "move",
+          "actor": "rathalos",
+          "to": "rathalos",
+          "duration": 1.4
+        },
+        {
+          "type": "camera",
+          "to": "nest",
+          "zoom": 1.05,
+          "duration": 1.4
         }
       ]
     },
@@ -100,7 +145,135 @@
       "lines": [
         "¡ROAAAAAR!"
       ],
-      "duration": 2.4
+      "duration": 2.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡DALE, URAAA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿A DÓNDE VA ESTE PELOTUDO?"
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "attack",
+          "duration": 0.6
+        },
+        {
+          "type": "wait",
+          "duration": 0.6
+        }
+      ]
+    },
+    {
+      "type": "prop",
+      "prop": "tailSwipe",
+      "state": "hit1"
+    },
+    {
+      "type": "wait",
+      "duration": 0.09
+    },
+    {
+      "type": "prop",
+      "prop": "tailSwipe",
+      "state": "hit2"
+    },
+    {
+      "type": "wait",
+      "duration": 0.12
+    },
+    {
+      "type": "prop",
+      "prop": "tailSwipe",
+      "state": "hit3"
+    },
+    {
+      "type": "wait",
+      "duration": 0.18
+    },
+    {
+      "type": "flash",
+      "at": "attack",
+      "duration": 0.3
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "flung",
+          "duration": 0.35
+        },
+        {
+          "type": "wait",
+          "duration": 0.35
+        }
+      ]
+    },
+    {
+      "type": "prop",
+      "prop": "tailSwipe",
+      "state": "closed"
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡PERO WARRIOR! ¡TE DIJE QUE ESPERARAS, HIJO DE PUTA!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡DALE, MANCO! ¡NO SE TIRARON, URA!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "¡JAJAJAJA! ¡PERO SI DIJISTE QUE SÍ, PELOTUDO!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡Y BUENO, URA! ¡SI ME SEGUÍAN LO HACÍAMOS MIERDA!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "angry",
+          "text": "¡PERO SI TODAVÍA NO TE DIJE QUE FUERAS!"
+        },
+        {
+          "speaker": "warrior",
+          "expression": "angry",
+          "text": "¡DALE, MANCO!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJAJA. ¡EL HIJO DE PUTA SE MANDÓ SOLO Y NOS ECHA LA CULPA!"
+        }
+      ]
+    },
+    {
+      "type": "move",
+      "actor": "warrior",
+      "to": "warrior",
+      "duration": 0.4
     },
     {
       "type": "dialogue",
@@ -108,7 +281,7 @@
         {
           "speaker": "papafrita",
           "expression": "neutral",
-          "text": "Como les decía, cuando levanta vuelo—"
+          "text": "Bueno, ahora escuchen lo que les voy a decir para que no vuelva a pasar—"
         }
       ]
     },
@@ -118,7 +291,25 @@
       "lines": [
         "¡ROAAAAAR!"
       ],
-      "duration": 2.4
+      "duration": 2.2
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "Como les decía—"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "title": "RATHALOS",
+      "lines": [
+        "¡ROAAAAAR!"
+      ],
+      "duration": 2.2
     },
     {
       "type": "dialogue",
@@ -126,12 +317,7 @@
         {
           "speaker": "maxi-negro",
           "expression": "happy",
-          "text": "JAJAJAJA. ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!"
-        },
-        {
-          "speaker": "papafrita",
-          "expression": "annoyed",
-          "text": "Pará, Negro, estoy intentando explicar."
+          "text": "¡JAJAJAJA! ¡HASTA EL DRAGÓN QUIERE QUE CIERRES EL ORTO!"
         },
         {
           "speaker": "papafrita",
@@ -146,7 +332,7 @@
       "lines": [
         "¡ROAAAAAR!"
       ],
-      "duration": 2.4
+      "duration": 2.2
     },
     {
       "type": "dialogue",
@@ -154,40 +340,37 @@
         {
           "speaker": "papafrita",
           "expression": "angry",
-          "text": "¡ME VAS A DEJAR TERMINAR!"
-        }
-      ]
-    },
-    {
-      "type": "notice",
-      "title": "RATHALOS",
-      "lines": [
-        "¡ROAAAAAR!"
-      ],
-      "duration": 2.4
-    },
-    {
-      "type": "dialogue",
-      "lines": [
+          "text": "¡LA CONCHA DE TU MADRE!"
+        },
         {
           "speaker": "papafrita",
           "expression": "angry",
           "text": "Escuchame una cosa, dragón de mierda."
-        },
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
         {
-          "speaker": "solago",
+          "speaker": "papafrita",
           "expression": "neutral",
-          "text": "Uh, se calentó."
+          "text": "Bueno. Como les decía, este bicho tiene tres fases y—"
         },
         {
           "speaker": "maxi-negro",
-          "expression": "neutral",
-          "text": "Che, ¿y si le ponemos un micrófono a Papafrita y lo usamos de carnada?"
+          "expression": "annoyed",
+          "text": "No, boludo. Ya fue."
         },
         {
           "speaker": "papafrita",
+          "expression": "neutral",
+          "text": "—y además el fuego sigue un patrón que—"
+        },
+        {
+          "speaker": "solago",
           "expression": "angry",
-          "text": "¡NEGRO, CERRÁ EL ORTO!"
+          "text": "¡QUE ARRANQUE LA PELEA DE UNA VEZ!"
         }
       ]
     }

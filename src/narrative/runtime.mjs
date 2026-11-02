@@ -113,6 +113,9 @@ export function validateScene(scene, { characters = {}, sounds = {}, actions = {
         case 'fade':
           requireValue(step.to === undefined || ['black', 'clear'].includes(step.to), 'Invalid fade target');
           break;
+        case 'variant':
+          requireValue(own(actors, step.actor) && text(step.variant), `Unknown actor or variant: ${step.actor}`);
+          break;
         case 'exit':
           requireValue(own(actors, step.actor), `Unknown actor: ${step.actor}`);
           resources.push(`actor:${step.actor}`); break;
@@ -187,7 +190,7 @@ export class ScenePlayer {
         character: actor.character, enemy: actor.enemy, dead: (actor.state ?? 'alive') === 'dead',
         // A scene may dress an actor differently from the rest of the act: the
         // epilogue's Papafrita leaves the armour behind once he is expelled.
-        outfit: actor.outfit,
+        outfit: actor.outfit, variant: actor.variant,
         x, y, facing: 1, animation: actor.state === 'dead' ? 'idle' : 'idle',
       }];
     }));
@@ -301,6 +304,12 @@ export class ScenePlayer {
     if (step.type === 'wait') return this._timed(step.duration, () => {});
     if (step.type === 'prop') {
       this.props[step.prop].state = step.state;
+      return { tick: () => true, skip() {} };
+    }
+    if (step.type === 'variant') {
+      // A staged body changes its look mid-scene: the rock breaks, a bigger one
+      // appears. The ficha owns what each variant paints.
+      this.actors[step.actor].variant = step.variant;
       return { tick: () => true, skip() {} };
     }
     if (step.type === 'exit') {

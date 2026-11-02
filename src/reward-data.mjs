@@ -29,6 +29,8 @@ export const BALANCE = {
       barbarian: 1, slaver: 1, archer: 1, alchemist: 1, lotusAlchemist: 6,
       jagras: 1, vespoid: 1, kestodon: 1, mernos: 1, hornetaur: 2,
       greatJagras: 3, kuluYaKu: 6, pukeiPukei: 6, rathalos: 0,
+      workerZombie: 1, policeZombie: 1, protectedZombie: 2, militaryZombie: 2,
+      armoredZombie: 3, firemanZombie: 6, truckHorde: 0,
     },
   },
   gold: {
@@ -36,6 +38,8 @@ export const BALANCE = {
       zombie: 1, runner: 1, brute: 5, alarmZombie: 30,
       jagras: 2, vespoid: 2, kestodon: 3, mernos: 2, hornetaur: 4,
       greatJagras: 12, kuluYaKu: 25, pukeiPukei: 25, rathalos: 120,
+      workerZombie: 2, policeZombie: 2, protectedZombie: 4, militaryZombie: 5,
+      armoredZombie: 7, firemanZombie: 25, truckHorde: 120,
     },
     survival: 5,
   },

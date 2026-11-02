@@ -1,11 +1,21 @@
 import { WORLD_SCALE, WIDTH, HEIGHT } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawWarrior } from '../sprites.mjs';
+import { statBlock } from './stat-block.mjs';
 
 // Warrior — El Chamán del Norte. Stat sheet: percentual values over BASE_STATS
 // (src/stats.mjs) per his character sheet (context/personajes) and subsequent
-// playtesting balance: life 85, defense 10 pts (standard), base attack 15,
-// mushroom damage x3, attack speed 0.6/s, attack distance 297px, normal mobility.
+// playtesting balance. The selector card and the engine read this one sheet, so
+// they cannot disagree.
+const SHEET = {
+  life: 90,              // 90 hp: frágil, sobrevive controlando
+  defense: 100,          // defensa estándar: 10 puntos -> 50% de mitigación
+  attack: 108,           // 10.8 damage: ranged pays twice, the blast is the rest
+  attackSpeed: 60,       // 0.6 bombs/s: -20%, one deliberate bomb every 1.67s
+  attackDistance: 300,   // 330px: about 15% farther than El Negro's 286px reach
+  moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
+};
+
 const warrior = {
   id: 'warrior',
   name: 'WARRIOR',
@@ -21,7 +31,7 @@ const warrior = {
       <div class="eyebrow">Controlador · Dificultad media</div><h2>WARRIOR</h2>
       <p class="character-desc">Chamán de Jujuy: argentino, aunque el grupo insista con Bolivia. Los ojos siempre rojos, el humo siempre encima y una bolsita de hongos de la que nadie pregunta demasiado.</p>
       <p class="character-quote">«Yo soy argentino, boludo».</p>
-      <div class="stats warrior-stats"><div><b>−10%</b><small>VIDA MÁXIMA</small></div><div><b>+325%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,75</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
+      ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>
@@ -40,14 +50,7 @@ const warrior = {
   },
   stats: {
     hitRadius: 15 * WORLD_SCALE, // lean frame from the photo: not one of the six stats
-    ...resolveEntityStats({
-      life: 90,              // 90 hp: frágil, sobrevive controlando
-      defense: 100,          // defensa estándar: 10 puntos -> 50% de mitigación
-      attack: 108,           // 10.8 damage: ranged pays twice, the blast is the rest
-      attackSpeed: 60,       // 0.6 bombs/s: -20%, one deliberate bomb every 1.67s
-      attackDistance: 300,   // 330px: about 15% farther than El Negro's 286px reach
-      moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
-    }),
+    ...resolveEntityStats(SHEET),
   },
   // Mushroom bombs: direct impact plus a small blast area. The ttl already
   // includes his +35% effect duration (4s base -> 5.4s); the radius keeps his

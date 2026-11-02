@@ -1,0 +1,481 @@
+{
+  "id": "act-07-final",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "portal": [
+        1000,
+        460
+      ],
+      "maxi-in": [
+        1180,
+        460
+      ],
+      "maxi": [
+        1000,
+        400
+      ],
+      "exit-a": [
+        950,
+        470
+      ],
+      "exit-b": [
+        980,
+        520
+      ],
+      "exit-c": [
+        1010,
+        470
+      ],
+      "exit-d": [
+        1040,
+        520
+      ],
+      "exit-e": [
+        920,
+        520
+      ],
+      "exit-f": [
+        1070,
+        470
+      ],
+      "wide": [
+        572,
+        470
+      ],
+      "close": [
+        760,
+        470
+      ],
+      "road": [
+        572,
+        640
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "maxi": {
+        "character": "maxi",
+        "at": "maxi-in"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      }
+    },
+    "props": {
+      "portal": {
+        "at": "portal",
+        "state": "closed"
+      }
+    }
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "..."
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Bueno, por lo menos seguimos vivos."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Mirá cómo quedó todo."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "neutral",
+          "text": "Se puede reparar."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "Sí, ya sé."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, te ayudamos a arreglar."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "No."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "¿Por?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Porque la van a romper más."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Qué mala onda, boludo."
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "portal"
+    },
+    {
+      "type": "prop",
+      "prop": "portal",
+      "state": "wide"
+    },
+    {
+      "type": "flash",
+      "at": "portal",
+      "duration": 0.2
+    },
+    {
+      "type": "move",
+      "actor": "maxi",
+      "to": "maxi",
+      "duration": 0
+    },
+    {
+      "type": "camera",
+      "to": "close",
+      "zoom": 1,
+      "duration": 0.9
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "¿Terminaron?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¿Y vos qué hacés acá? No vuelvo una mierda, boludo."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Nos tenemos que ir."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Pero bro..."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Bro."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "scared",
+          "text": "Bro..."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "annoyed",
+          "text": "Brooo..."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡Bro!"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "scared",
+          "text": "Bro..."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "..."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "Bro..."
+        },
+        {
+          "speaker": "maxi",
+          "expression": "happy",
+          "text": "Bro."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "La concha de tu madre... Dale."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "¿Qué mierda fue eso?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "No entendí una mierda."
+        },
+        {
+          "speaker": "papasito",
+          "expression": "surprised",
+          "text": "¿Así nomás lo convenciste?"
+        },
+        {
+          "speaker": "maxi",
+          "expression": "neutral",
+          "text": "Sí."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "happy",
+          "text": "Ah, yo entendí. Es como una conversación donde no necesitás decir nada porque la otra persona ya sabe lo que querés decir. Pasa mucho cuando tenés confianza con alguien, porque..."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "annoyed",
+          "text": "No entendiste una mierda, Papafrita."
+        },
+        {
+          "speaker": "papafrita-casual",
+          "expression": "angry",
+          "text": "¡Sí entendí, boludo! Es el meme ese de los dos que se hablan con «bro»."
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "tired",
+          "text": "¿Y qué están jugando ahora?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "Nada todavía."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Podemos jugar un LoL."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "Ni en pedo."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Bueno, listo."
+        }
+      ]
+    },
+    {
+      "type": "wait",
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "neutral",
+          "text": "¿Una sola?"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA, sabía."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡CERRÁ EL ORTO, NEGRO!"
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "annoyed",
+          "text": "Igual, si van a jugar como el orto, me voy."
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Sí, sí. Dale."
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "negro",
+          "to": "exit-a",
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "solago",
+          "to": "exit-b",
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "exit-c",
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "warrior",
+          "to": "exit-d",
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "papafrita",
+          "to": "exit-e",
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "jhony",
+          "to": "exit-f",
+          "duration": 1.6
+        },
+        {
+          "type": "move",
+          "actor": "maxi",
+          "to": "maxi",
+          "duration": 0.4
+        },
+        {
+          "type": "camera",
+          "to": "wide",
+          "zoom": 1,
+          "duration": 1.6
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "exit",
+          "actor": "jhony"
+        },
+        {
+          "type": "exit",
+          "actor": "negro"
+        },
+        {
+          "type": "exit",
+          "actor": "solago"
+        },
+        {
+          "type": "exit",
+          "actor": "papasito"
+        },
+        {
+          "type": "exit",
+          "actor": "warrior"
+        },
+        {
+          "type": "exit",
+          "actor": "papafrita"
+        },
+        {
+          "type": "exit",
+          "actor": "maxi"
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "prop",
+          "prop": "portal",
+          "state": "closed"
+        },
+        {
+          "type": "fade",
+          "to": "black",
+          "duration": 1.2
+        }
+      ]
+    }
+  ]
+}

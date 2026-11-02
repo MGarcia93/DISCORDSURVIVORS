@@ -50,6 +50,26 @@
       "kulu-back": [
         1240,
         480
+      ],
+      "chase-a": [
+        820,
+        490
+      ],
+      "chase-b": [
+        520,
+        480
+      ],
+      "flee": [
+        150,
+        560
+      ],
+      "follow": [
+        620,
+        440
+      ],
+      "slam": [
+        300,
+        560
       ]
     },
     "actors": {
@@ -196,6 +216,11 @@
       "duration": 0.3
     },
     {
+      "type": "variant",
+      "actor": "kulu",
+      "variant": "none"
+    },
+    {
       "type": "parallel",
       "steps": [
         {
@@ -242,7 +267,93 @@
           "speaker": "papasito",
           "expression": "angry",
           "text": "¡Callate la boca, Papafrita!"
+        }
+      ]
+    },
+    {
+      "type": "variant",
+      "actor": "kulu",
+      "variant": "big"
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "kulu",
+          "to": "chase-a",
+          "duration": 1.1
         },
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "chase-b",
+          "duration": 1.1
+        },
+        {
+          "type": "camera",
+          "to": "follow",
+          "zoom": 1.1,
+          "duration": 1.1
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "papasito",
+          "expression": "surprised",
+          "text": "¡EH, EH! ¡SACAME ESTE BICHO!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "happy",
+          "text": "JAJAJA, ¡TE QUIERE CAGAR A PIEDRAZOS!"
+        },
+        {
+          "speaker": "papafrita",
+          "expression": "happy",
+          "text": "¡Y sí! ¡Le rompiste la piedra! ¿Qué esperabas?"
+        },
+        {
+          "speaker": "solago",
+          "expression": "happy",
+          "text": "JAJAJAJA, ¡MIRÁ CÓMO CORRE EL PARAGUAYO!"
+        },
+        {
+          "speaker": "papasito",
+          "expression": "angry",
+          "text": "¡PERO AYUDEN, PUES!"
+        }
+      ]
+    },
+    {
+      "type": "parallel",
+      "steps": [
+        {
+          "type": "move",
+          "actor": "papasito",
+          "to": "flee",
+          "duration": 1.2
+        },
+        {
+          "type": "move",
+          "actor": "kulu",
+          "to": "chase-b",
+          "duration": 1.2
+        },
+        {
+          "type": "camera",
+          "to": "wide",
+          "zoom": 1.05,
+          "duration": 1.2
+        }
+      ]
+    },
+    {
+      "type": "dialogue",
+      "lines": [
         {
           "speaker": "solago",
           "expression": "happy",
@@ -259,6 +370,15 @@
           "text": "¡UUUUUUYYYYYY, HIJO DE PUTAAAA! ¡CALLATE LA BOCA!"
         }
       ]
+    },
+    {
+      "type": "flash",
+      "at": "slam",
+      "duration": 0.35
+    },
+    {
+      "type": "wait",
+      "duration": 0.4
     }
   ]
 }

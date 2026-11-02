@@ -1,0 +1,161 @@
+{
+  "id": "act-07-bombero",
+  "stage": {
+    "background": "zomboid-base",
+    "points": {
+      "depot": [
+        880,
+        220
+      ],
+      "depot-out": [
+        1140,
+        220
+      ],
+      "jhony": [
+        840,
+        400
+      ],
+      "negro": [
+        660,
+        380
+      ],
+      "solago": [
+        660,
+        480
+      ],
+      "papasito": [
+        500,
+        530
+      ],
+      "warrior": [
+        500,
+        430
+      ],
+      "papafrita": [
+        500,
+        330
+      ],
+      "wide": [
+        580,
+        450
+      ]
+    },
+    "actors": {
+      "negro": {
+        "character": "maxi-negro",
+        "at": "negro"
+      },
+      "solago": {
+        "character": "solago",
+        "at": "solago"
+      },
+      "papasito": {
+        "character": "papasito",
+        "at": "papasito"
+      },
+      "warrior": {
+        "character": "warrior",
+        "at": "warrior"
+      },
+      "jhony": {
+        "character": "jhony",
+        "at": "jhony"
+      },
+      "papafrita": {
+        "character": "papafrita",
+        "at": "papafrita",
+        "outfit": "casual"
+      },
+      "fireman": {
+        "enemy": "firemanZombie",
+        "at": "depot-out"
+      }
+    },
+    "props": {}
+  },
+  "steps": [
+    {
+      "type": "camera",
+      "to": "wide",
+      "zoom": 1,
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "jhony",
+          "expression": "scared",
+          "text": "No, no, no. ¡Al depósito no!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "neutral",
+          "text": "¿Qué tenés ahí?"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡TODAS MIS COSAS!"
+        },
+        {
+          "speaker": "maxi-negro",
+          "expression": "neutral",
+          "text": "Pero tenés como cuarenta cajas."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡POR ESO!"
+        }
+      ]
+    },
+    {
+      "type": "sound",
+      "sound": "crash"
+    },
+    {
+      "type": "flash",
+      "at": "depot",
+      "duration": 0.2
+    },
+    {
+      "type": "camera",
+      "to": "depot",
+      "zoom": 1,
+      "duration": 0.9
+    },
+    {
+      "type": "move",
+      "actor": "fireman",
+      "to": "depot",
+      "duration": 0.8
+    },
+    {
+      "type": "dialogue",
+      "lines": [
+        {
+          "speaker": "maxi-negro",
+          "expression": "surprised",
+          "text": "Uh, mirá ese gordo."
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡A ese hay que bajarlo rápido!"
+        },
+        {
+          "speaker": "solago",
+          "expression": "scared",
+          "text": "¡No le hacemos una mierda!"
+        },
+        {
+          "speaker": "jhony",
+          "expression": "angry",
+          "text": "¡PÉGUENLE POR ATRÁS!"
+        }
+      ],
+      "layout": "stage"
+    }
+  ]
+}

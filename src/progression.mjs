@@ -2,6 +2,11 @@ import { CHARACTERS, ROSTER } from './characters/index.mjs';
 
 export const PROGRESS_STORAGE_KEY = 'discord-survivors.progress.v1';
 
+// Bumped whenever the unlock rules change. A save written by another build keeps
+// everything it knows except the characters that build handed out: they have to
+// be earned again through their own encounter.
+export const PROGRESS_STORAGE_VERSION = 2;
+
 // Registered unlockable characters. Legacy consumers retain roster order;
 // campaign encounters and their saved flags belong to each character's sheet.
 export const UNLOCK_CHAIN = ROSTER.filter(character => character.unlock.flag).map(character => character.id);
@@ -17,16 +22,33 @@ function unlockDescriptor(character) {
   return Object.hasOwn(CHARACTERS, character) ? CHARACTERS[character].unlock : null;
 }
 
+// A record from another build cannot be trusted about who was unlocked: the
+// flags and the scenes that granted them are dropped and the rest of the save is
+// kept. It runs on the first read, which is what the game does on entry.
+function relock(progress, storage) {
+  const next = { ...progress, version: PROGRESS_STORAGE_VERSION };
+  const scenes = new Set();
+  for (const character of Object.values(CHARACTERS)) {
+    const { flag, scene } = character.unlock ?? {};
+    if (flag) delete next[flag];
+    if (typeof scene === 'string') scenes.add(scene);
+  }
+  if (Array.isArray(next.seenScenes) && scenes.size) {
+    next.seenScenes = next.seenScenes.filter(seen => !scenes.has(seen));
+  }
+  try { storage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(next)); } catch { /* keep the in-memory copy */ }
+  return next;
+}
+
 function readProgressRecord(storage) {
   try {
     const target = resolveStorage(storage);
     if (!target) return { valid: false, progress: null };
     const raw = target.getItem(PROGRESS_STORAGE_KEY);
-    if (raw === null) return { valid: true, progress: { version: 1 } };
+    if (raw === null) return { valid: true, progress: { version: PROGRESS_STORAGE_VERSION } };
     const progress = JSON.parse(raw);
-    if (!progress || progress.version !== 1 || typeof progress !== 'object' || Array.isArray(progress)) {
-      return { valid: false, progress: null };
-    }
+    if (!progress || typeof progress !== 'object' || Array.isArray(progress)) return { valid: false, progress: null };
+    if (progress.version !== PROGRESS_STORAGE_VERSION) return { valid: true, progress: relock(progress, target) };
     return { valid: true, progress };
   } catch {
     return { valid: false, progress: null };

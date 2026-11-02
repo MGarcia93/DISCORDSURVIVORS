@@ -18,7 +18,7 @@ test('beating the first map can persist Solago unlocked in local storage', () =>
   const storage = memoryStorage();
   assert.equal(unlockCharacter('solago', storage), true);
   assert.equal(isCharacterUnlocked('solago', storage), true);
-  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 1, solagoUnlocked: true });
+  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 2, solagoUnlocked: true });
 });
 
 test('Warrior also starts locked and is the reward for winning the map chain as Solago', () => {
@@ -48,25 +48,45 @@ test('Papazito starts locked and is the reward for winning the map chain as Warr
 test('one debug storage flag unlocks all registered and future character IDs', () => {
   const storage = memoryStorage();
   assert.equal(unlockAllForTesting(storage), true);
-  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 1, debugUnlockAll: true });
+  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 2, debugUnlockAll: true });
   for (const id of ['solago', 'maxi', 'future-character']) assert.equal(isCharacterUnlocked(id, storage), true);
   assert.equal(isCharacterUnlocked('solago', storage), true);
 });
 
 test('debug unlock only writes its storage flag and fails closed on blocked storage', () => {
-  const storage = memoryStorage({ [PROGRESS_STORAGE_KEY]: JSON.stringify({ version: 1, solagoUnlocked: true }) });
+  const storage = memoryStorage({ [PROGRESS_STORAGE_KEY]: JSON.stringify({ version: 2, solagoUnlocked: true }) });
   assert.equal(unlockAllForTesting(storage), true);
-  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 1, solagoUnlocked: true, debugUnlockAll: true });
+  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), { version: 2, solagoUnlocked: true, debugUnlockAll: true });
   assert.equal(unlockAllForTesting({ setItem() { throw new Error('blocked'); } }), false);
 });
 
-test('unlock commands preserve malformed and unsupported stored progression data', () => {
-  for (const original of ['', '{bad json', JSON.stringify({ version: 9, futureField: 'keep me' })]) {
+test('unlock commands preserve unreadable stored progression data', () => {
+  for (const original of ['', '{bad json']) {
     const storage = memoryStorage({ [PROGRESS_STORAGE_KEY]: original });
     assert.equal(unlockCharacter('solago', storage), false);
     assert.equal(unlockAllForTesting(storage), false);
     assert.equal(storage.getItem(PROGRESS_STORAGE_KEY), original);
   }
+});
+
+test('a save from another build keeps the rest of its progress and loses the characters', () => {
+  const storage = memoryStorage({
+    [PROGRESS_STORAGE_KEY]: JSON.stringify({
+      version: 1,
+      solagoUnlocked: true,
+      warriorUnlocked: true,
+      seenScenes: ['act-02-solago', 'act-01-arrival'],
+      custom: { keep: 123 },
+    }),
+  });
+  assert.equal(isCharacterUnlocked('solago', storage), false, 'the old build handed him out');
+  assert.equal(isCharacterUnlocked('warrior', storage), false);
+  assert.deepEqual(JSON.parse(storage.getItem(PROGRESS_STORAGE_KEY)), {
+    version: 2,
+    seenScenes: ['act-01-arrival'],
+    custom: { keep: 123 },
+  }, 'only the unlocks and the encounters that granted them are dropped');
+  assert.equal(unlockCharacter('solago', storage), true, 'and he can be earned again');
 });
 
 test('malformed, unsupported or unavailable storage fails safely as locked', () => {

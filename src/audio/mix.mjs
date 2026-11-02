@@ -110,6 +110,9 @@ export const SFX = {
   down: { frequency: 90, duration: 0.7, gain: 0.052 },
   // The server gate between worlds: a low power-down sweep, not a fanfare.
   warp: { frequency: 90, duration: 1.1, gain: 0.05, release: true },
+  // The car alarm a wave declares: two short beats on the same note, the sound
+  // of a horn that nobody is coming back to switch off.
+  alarm: { frequency: 190, duration: 0.22, gain: 0.045, release: true },
 };
 
 // UI feedback: the clicks the player makes, not the world reacting. Same bus as
