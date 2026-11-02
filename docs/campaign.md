@@ -152,6 +152,22 @@ attacks without pause. Its cinematics live in
 the `discord` world: the group walks back through the server to the window where
 Maxi is waiting, plugged in.
 
+## Wave composition
+
+A wave declares `perMinute` (how often something spawns) and `mix` (the weight
+of each kind). Every spawn rolls against those percentages, so two runs of the
+same wave are not the same wave: that is the game's randomness.
+
+A wave may also declare `ramp`: stages of its own mix, each with the share of the
+clock it covers. When it does, **each spawn rolls against the percentages active
+at that moment** — the opening minutes are one mix, the last third another — and
+the wave's `mix` stays as the fallback for a wave with no ramp. It is still one
+roll per spawn, so the run keeps its randomness; what changes is that a wave can
+build to a spike instead of asking for the whole budget at second zero.
+
+Act 3 wave 4 is the reference: half the wave is skeletons and shamans, then
+twenty percent burning elites, then four fifths elites for the last third.
+
 ## Wave length
 
 The act declares the real length, and that is what every build plays: no host
