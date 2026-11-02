@@ -150,12 +150,12 @@ export const EFFECTS = {
 
 export const LEVEL_UPGRADES = [
   ...[
-    ['life', 'Más vida', flat('life', 5)], ['defense', 'Más defensa', flat('defense', 0.25)],
-    ['attack', 'Más ataque', percent('attack', 2.5)], ['attackDistance', 'Más alcance', percent('attackDistance', 5)],
-    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 2.5)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 2.5)],
+    ['life', 'Más vida', flat('life', 10)], ['defense', 'Más defensa', flat('defense', 0.5)],
+    ['attack', 'Más ataque', percent('attack', 5)], ['attackDistance', 'Más alcance', percent('attackDistance', 10)],
+    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 5)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 5)],
   ].map(([id, name, modifier]) => ({
     id: `stat-${id}`, name, characters: 'all', minLevel: 2, requires: [],
-    ranks: Array.from({ length: 3 }, () => ({ modifiers: [modifier] })),
+    ranks: Array.from({ length: 5 }, () => ({ modifiers: [modifier] })),
   })),
   ...[
     ['otaku-time', 'Un capítulo más', 'negro', 'waifuDuration'],

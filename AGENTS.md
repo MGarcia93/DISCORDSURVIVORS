@@ -12,6 +12,8 @@ node tools/serve.mjs        # no-store, so a stale module cannot outlive an edit
 ```sh
 node --test tests/*.test.mjs
 node --check <every file you touched>
+node tools/balance.mjs            # headless campaign per character, 24 runs each
+node tools/balance.mjs --runs=48  # tighter estimate
 ```
 
 Visual cinematic staging has its own order: implement the scene first, show it in
