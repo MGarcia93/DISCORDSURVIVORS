@@ -2,6 +2,7 @@ import { validateLine, validateScene } from './runtime.mjs';
 import { worldIds } from '../backgrounds/index.mjs';
 import { ACTS, actForWorld } from '../campaign/acts.mjs';
 import { ENEMY_KINDS } from '../enemies/index.mjs';
+import { DEV } from '../dev-flags.mjs';
 
 // The production bundle moves this module into a hashed chunk, so
 // `import.meta.url` stops sitting under `src/`. The narrative tree is copied
@@ -15,14 +16,28 @@ export const narrativeBase = (() => {
     ? new URL('assets/narrative/', documentBase)
     : new URL('../../assets/narrative/', moduleURL);
 })();
-export const manifestURL = new URL('manifest.json', narrativeBase);
+
+// The tree is copied verbatim, so its URLs never change and a browser would keep
+// serving yesterday's dialogue. The build bakes one hash of the whole tree in
+// here and every fetched URL carries it: a different tree is a different URL,
+// and the dev server, which serves every file with no-store, leaves it alone.
+const narrativeVersion = DEV ? '' : (typeof __NARRATIVE_VERSION__ === 'undefined' ? '' : __NARRATIVE_VERSION__);
+
+export function versionedNarrativeURL(url, version = narrativeVersion) {
+  if (!version) return url;
+  const stamped = new URL(url.href);
+  stamped.searchParams.set('v', version);
+  return stamped;
+}
+
+export const manifestURL = versionedNarrativeURL(new URL('manifest.json', narrativeBase));
 const BACKGROUNDS = Object.freeze(Object.fromEntries(worldIds.map(id => [id, true])));
 
 // The act owns its scenes: `narrative` is a path relative to the shared
 // manifest, so a world brings its own cast, sounds, scenes, bindings and banter
 // without any module naming them.
 export function actManifestURL(act) {
-  return act?.narrative ? new URL(act.narrative, manifestURL) : null;
+  return act?.narrative ? versionedNarrativeURL(new URL(act.narrative, manifestURL)) : null;
 }
 
 // Every manifest the campaign registers, base first, with the act that owns it.
@@ -55,16 +70,16 @@ export async function loadCatalog({ url = manifestURL, urls, sources, fetcher = 
     const manifest = await read(target);
     // Portrait paths resolve from characters.json, not from the manifest that
     // names it: an act manifest lives one folder deeper than the shared files.
-    const charactersURL = new URL(manifest.characters, target);
+    const charactersURL = versionedNarrativeURL(new URL(manifest.characters, target));
     for (const [id, character] of Object.entries(await read(charactersURL))) {
       if (!character.name || !character.sprite || !character.expressions?.neutral) throw Error(`Invalid character: ${id}`);
       for (const [expression, path] of Object.entries(character.expressions)) {
-        character.expressions[expression] = new URL(path, charactersURL).href;
+        character.expressions[expression] = versionedNarrativeURL(new URL(path, charactersURL)).href;
       }
       characters[id] = character;
     }
     for (const sound of Object.values(manifest.sounds ?? {})) {
-      if (sound.src) sound.src = new URL(sound.src, target).href;
+      if (sound.src) sound.src = versionedNarrativeURL(new URL(sound.src, target)).href;
       // A tonal sound needs a frequency; a noise burst only needs its length.
       else if (sound.noise) {
         if (!Number.isFinite(sound.duration) || sound.duration <= 0) throw Error('Invalid sound definition');
@@ -83,9 +98,9 @@ export async function loadCatalog({ url = manifestURL, urls, sources, fetcher = 
     ids.add(item.id);
     const entry = { id: item.id, title: item.title ?? item.id, scene: null, actions: {}, error: null };
     try {
-      entry.scene = await read(new URL(item.file, target));
+      entry.scene = await read(versionedNarrativeURL(new URL(item.file, target)));
       if (entry.scene.id !== item.id) throw Error('Scene id does not match manifest');
-      if (item.module) entry.actions = (await importer(new URL(item.module, target).href)).actions;
+      if (item.module) entry.actions = (await importer(versionedNarrativeURL(new URL(item.module, target)).href)).actions;
       validateScene(entry.scene, { characters, sounds, actions: entry.actions, backgrounds: BACKGROUNDS, enemies: ENEMY_KINDS });
     } catch (error) { entry.error = `${item.id}: ${error.message}`; }
     // The act that owns the scene: the manifest that declared it, or, for a
