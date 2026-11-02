@@ -56,7 +56,7 @@ const negro = {
       life: 120,             // 120 points of damage
       defense: 30,           // 3 defense points -> 15% mitigation
       attack: 300,           // 30 damage per shot
-      attackSpeed: 222.22,   // ~2.22 attacks/s (~0.45s between shots)
+      attackSpeed: 160,      // 1.6 attacks/s: he cannot hold a wave without moving
       attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
       moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always
     }),
