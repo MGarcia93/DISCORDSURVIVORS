@@ -92,7 +92,7 @@ test('the bed level is one number the whole mix scales from', () => {
 });
 
 test('every world plays its own track and an unknown act falls back to the provisional one', () => {
-  const worlds = ['act-01', 'act-02', 'act-03', 'act-04', 'act-05'];
+  const worlds = ['act-01', 'act-02', 'act-03', 'act-04', 'act-05', 'act-06'];
   const sources = new Set();
   for (const id of worlds) {
     const track = TRACKS[id];
@@ -121,7 +121,7 @@ test('the per-track gain keeps every world at the calibrated bed level', () => {
   // The mix is judged with the Act 1 track: MUSIC_BED_GAIN is the amplitude that
   // lands the bed under the SFX. Every other file must be pulled to that same
   // level by its own gain, or a louder master would break the whole mix.
-  for (const id of ['act-02', 'act-03', 'act-04', 'act-05']) {
+  for (const id of ['act-02', 'act-03', 'act-04', 'act-05', 'act-06']) {
     const cue = musicCue({ screen: 'game', run: { wave: 1, phase: 'playing', act: { id, boss: { wave: 6 } } } });
     assert.equal(cue.src, TRACKS[id].src);
     assert.equal(cue.gain.toFixed(6), (MUSIC_BED_GAIN * TRACKS[id].gain).toFixed(6));

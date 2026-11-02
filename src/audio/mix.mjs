@@ -74,6 +74,10 @@ export const TRACKS = {
   // -13.5 dBFS RMS, 60 s, peaks at full scale before the gain: the bed cannot
   // add headroom the file already spent.
   'act-05': { src: 'assets/audio/act-05-discord.ogg', gain: 0.39 },
+  // Act 6 — Primordial Forest. 80 s, 32 kHz, the same rendering pipeline as act
+  // four. Its master was not measured here (no decoder in this environment), so
+  // it starts on act four's gain; measure it and move this number.
+  'act-06': { src: 'assets/audio/act-06-monster-hunter.ogg', gain: 0.39 },
 };
 
 export const FALLBACK_TRACK = 'act-01';

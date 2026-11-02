@@ -176,11 +176,17 @@ then means the same thing in every world.
 | `act-03` | Diablo | `act-03-inferno.ogg` | 74 s | -18.0 dBFS | 0.65 |
 | `act-04` | Conan Exiles | `act-04-exiles.ogg` | 85 s | -13.6 dBFS | 0.39 |
 | `act-05` | Discord | `act-05-discord.ogg` | 60 s | -13.5 dBFS | 0.39 |
+| `act-06` | Monster Hunter | `act-06-monster-hunter.ogg` | 80 s | por medir | 0.39 |
 
 Every file but Act 1 ends loud, so they take `trim: 0` and the default 0.25 s
 crossfade. Act 1 is the one with a decay tail, which is what its 0.2 s trim is
 for. A hot master is not fixed by ear: move its `gain`, because a file left
 8 dB louder breaks the level the whole mix was judged at.
+
+The act-06 master has not been measured yet: it ships on act four's gain as a
+starting point. To measure it and settle the number:
+
+    ffmpeg -i assets/audio/act-06-monster-hunter.ogg -af astats=metadata=1:reset=0 -f null - 2>&1 | grep "RMS level dB"
 
 A live run always plays its own act. The screens with no run follow the world
 they are showing: a narrative preview plays the act that owns its scene, and the
