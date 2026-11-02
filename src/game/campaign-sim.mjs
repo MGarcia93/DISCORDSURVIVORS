@@ -103,6 +103,17 @@ export function runCampaign({ character = 'negro', seed = 1, act = DEFAULT_ACT, 
 
 const average = values => (values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0);
 
+// Wilson interval: with a handful of runs a bare percentage lies. This is the
+// range the true rate is likely in, so "3/6" reads as a coin toss, not as 50%.
+export function confidence(wins, runs) {
+  if (!runs) return { low: 0, high: 1 };
+  const z = 1.96, p = wins / runs;
+  const denom = 1 + (z * z) / runs;
+  const centre = p + (z * z) / (2 * runs);
+  const spread = z * Math.sqrt((p * (1 - p)) / runs + (z * z) / (4 * runs * runs));
+  return { low: Math.max(0, (centre - spread) / denom), high: Math.min(1, (centre + spread) / denom) };
+}
+
 // One line per character: how often the campaign is finished, at what level, and
 // where the rest died. `own` counts the signature ranks a run actually reached,
 // which is how "the build that breaks the run" gets measured.
@@ -125,6 +136,7 @@ export function measureCharacter(character, { runs = 24, seed = 11, step = 7, ow
     runs,
     wins,
     rate: runs ? wins / runs : 0,
+    spread: confidence(wins, runs),
     level: Math.round(average(results.map(result => result.run.level))),
     ownRanks: Number(average(own.map(entries => entries.reduce((sum, [, rank]) => sum + rank, 0))).toFixed(1)),
     ownEntries: Number(average(own.map(entries => entries.length)).toFixed(1)),

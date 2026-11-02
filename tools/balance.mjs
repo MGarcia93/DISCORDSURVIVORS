@@ -32,6 +32,7 @@ const only = args.character;
 const characters = only ? [only] : ['negro', 'solago', 'warrior', 'papazito'];
 const pad = (value, width) => String(value).padEnd(width);
 const pct = value => `${Math.round(value * 100)}%`;
+const range = row => `${Math.round((row.spread.high - row.spread.low) * 50)}`;
 
 function measure(modePolicy, modeSpend, modeSkill = skill, modeBuy = buy) {
   return only
@@ -51,7 +52,7 @@ if (args.compare) {
   for (let index = 0; index < perfect.length; index++) {
     const exact = perfect[index];
     const human = average[index];
-    const cell = row => `${row.wins}/${row.runs} ${pct(row.rate)} · nivel ${row.level}`;
+    const cell = row => `${row.wins}/${row.runs} ${pct(row.rate)} ±${range(row)} · nivel ${row.level}`;
     console.log(`${pad(exact.character, 10)} ${pad(cell(exact), 26)} ${pad(cell(human), 26)}`);
     console.log(`${pad('', 10)} ${exact.outcomes.join(' ')}`);
     console.log(`${pad('', 10)} ${human.outcomes.join(' ')}`);
@@ -92,6 +93,6 @@ let total = 0;
 for (const row of rows) {
   total += row.rate;
   const deaths = row.deaths.length ? row.deaths.map(([where, count]) => `${where}×${count}`).join(' ') : '—';
-  console.log(`${pad(row.character, 10)} ${pad(`${row.wins}/${row.runs} ${pct(row.rate)}`, 10)} ${pad(row.level, 7)} ${pad(`${row.ownRanks}`, 9)} ${deaths}`);
+  console.log(`${pad(row.character, 10)} ${pad(`${row.wins}/${row.runs} ${pct(row.rate)} ±${range(row)}`, 14)} ${pad(row.level, 7)} ${pad(`${row.ownRanks}`, 9)} ${deaths}`);
 }
 if (rows.length > 1) console.log(`\nmedia del roster: ${pct(total / rows.length)}`);
