@@ -182,7 +182,7 @@ const jhony = {
   previewAria: 'Pixel art de Jhony: campera de cuero negra, pelo largo, anteojos, barba y una botella de cerveza en la mano',
   profile: `
       <div class="eyebrow">Berserker de botella · Dificultad media-alta</div><h2>JHONY</h2>
-      <p class="character-desc">Metalero, dos mil horas de Project Zomboid y cero paciencia. Empieza jugando tranquilo, toma algo y jode con los demás; basta una provocación para que empiece a putear a todo el servidor. Jura que no vuelve al LoL, pero cuando está tomado es él quien propone una partida.</p>
+      <p class="character-desc">Metalero, tryhard y con cero paciencia. Empieza jugando tranquilo, pero basta una provocación para que se tiltee y putee a todo el servidor. Jura que no vuelve al LoL, aunque cuando está tomado es él quien propone la partida.</p>
       <p class="character-quote">«Estoy jugando tranquilo. No rompan las pelotas».</p>
       <div class="stats jhony-stats"><div><b>110</b><small>VIDA</small></div><div><b>80</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>DEFENSA</small></div><div><b class="penalty">−15%</b><small>ALCANCE</small></div><div><b>+5%</b><small>ATK/SEG</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>BOTELLAZO</b><p>Golpea con la botella de cerveza al enemigo más cercano. Corto y fuerte: hay que acercarse. La botella no se gasta, no hay inventario.</p></div></div>
@@ -198,7 +198,13 @@ const jhony = {
   drawRoster(ctx) { drawJhony(ctx, this.rosterPose.x, this.rosterPose.y, { bottle: true, scale: 1 }); },
   preview(ctx, { time, cycle }) {
     const attacking = cycle > 7 && cycle < 8.2;
-    drawJhony(ctx, 128, 150, { time, moving: cycle < 3.4, attacking, bottle: true, scale: 2, facing: 1 });
+    // Selector timeline: walk, idle, botellazo and, to close, «Un traguito más».
+    // The drunk form is a state of the run, so the preview has to show it too.
+    const drunk = cycle > 8.6;
+    const sway = drunk ? Math.sin(time * 3.2) * 2 : 0;
+    drawJhony(ctx, 128 + sway, 150, {
+      time, moving: cycle < 3.4, attacking, bottle: true, scale: 2, facing: 1, drink: drunk,
+    });
   },
   draw(ctx, x, y, context) {
     drawJhony(ctx, x, y, {
