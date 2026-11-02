@@ -28,7 +28,7 @@ export function waveBudget(act, wave, duration) {
 export function waveLife(act, wave, kind) {
   const rows = (act?.waves ?? []).filter(row => typeof row.life?.[kind] === 'number');
   if (!rows.length) return undefined;
-  return rows[Math.min(1, rows.length - 1)].life[kind];
+  return rows[Math.min(1, rows.length - 1)].life[kind] * (act?.power?.life ?? 1);
 }
 
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave
