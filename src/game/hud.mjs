@@ -14,10 +14,10 @@ export function updateHUD() {
   const level = document.querySelector('#level');
   const needed = nextLevelXP(state.run);
   // The pending count is part of this line, so keep the number glued to its word
-  // with a non-breaking space: if the line has to wrap, "3 PENDIENTES" moves
-  // whole instead of leaving the number stranded.
+  // with a non-breaking space: if the line has to wrap, "(3 PENDIENTES)" moves
+  // whole instead of leaving a dangling number or separator.
   const pending = state.run.pendingLevels.length;
-  const pendingLabel = pending ? ` · ${pending}\u00A0${pending === 1 ? 'PENDIENTE' : 'PENDIENTES'}` : '';
+  const pendingLabel = pending ? ` (${pending}\u00A0${pending === 1 ? 'PENDIENTE' : 'PENDIENTES'})` : '';
   if (level) level.textContent = `NIVEL ${state.run.level} · XP ${state.run.xp}/${needed}${pendingLabel}`;
   const xpFill = document.querySelector('#xp-fill');
   if (xpFill) xpFill.style.width = `${Math.min(100, state.run.xp / needed * 100)}%`;

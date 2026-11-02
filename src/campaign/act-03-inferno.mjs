@@ -36,10 +36,14 @@ export default {
     {
       wave: 4,
       perMinute: 90,
-      // A wave may declare `ramp` (see src/waves.mjs) to bring its mix in
-      // stages. Measured on Negro: any ramp that softens the first half of this
-      // wave takes him from 46% to 88-100% campaigns, so it stays flat until the
-      // rest of the campaign has pressure to spare.
+      // The spike arrives as a slope and ends as a siege: half the wave is
+      // skeletons and shamans, then the burning elites take over the last
+      // third. Measured on Negro: 88% campaigns instead of 46% with the wall.
+      ramp: [
+        { until: 0.5, mix: { skeleton: 0.6, shaman: 0.4 } },
+        { until: 0.7, mix: { skeleton: 0.45, shaman: 0.35, burningElite: 0.2 } },
+        { until: 1, mix: { burningElite: 0.8, skeleton: 0.1, shaman: 0.1 } },
+      ],
       mix: { burningElite: 0.3, skeleton: 0.35, shaman: 0.35 },
       life: { burningElite: 174, skeleton: 52, shaman: 44 },
     },

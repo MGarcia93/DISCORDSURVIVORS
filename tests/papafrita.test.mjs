@@ -42,7 +42,7 @@ test('Papafrita production sprite keeps the approved casual photo outfit in ever
   assert.equal(npc.stats, undefined);
   assert.equal(npc.unlock, undefined);
   assert.equal(Object.hasOwn(CHARACTERS, 'papafrita'), false);
-  assert.equal(ROSTER.length, 4);
+  assert.equal(ROSTER.length, 5);
 });
 
 test('Papafrita portraits rebuild reproducibly without changing the approved head, neck or body', async () => {

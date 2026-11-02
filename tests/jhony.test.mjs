@@ -17,18 +17,48 @@ function record(draw) {
   return calls;
 }
 
+// The sprite is pinned by the pixels it paints, not by the order of its calls:
+// an order-only refactor across disjoint rectangles must not read as a redraw.
+function rasterize(draw) {
+  const pixels = new Map();
+  const state = { a: 1, d: 1, e: 0, f: 0, fill: '#000000' };
+  const stack = [];
+  const ctx = {
+    imageSmoothingEnabled: false,
+    getTransform: () => ({ a: 1, d: 1 }),
+    save() { stack.push({ ...state }); },
+    restore() { Object.assign(state, stack.pop() ?? state); },
+    translate(x, y) { state.e += state.a * x; state.f += state.d * y; },
+    scale(x, y) { state.a *= x; state.d *= y; },
+    fillRect(x, y, w, h) {
+      const x0 = Math.round(state.a * x + state.e), y0 = Math.round(state.d * y + state.f);
+      const x1 = Math.round(state.a * (x + w) + state.e), y1 = Math.round(state.d * (y + h) + state.f);
+      for (let py = Math.min(y0, y1); py < Math.max(y0, y1); py++) {
+        for (let px = Math.min(x0, x1); px < Math.max(x0, x1); px++) pixels.set(`${px},${py}`, state.fill);
+      }
+    },
+  };
+  const proxy = new Proxy(ctx, {
+    get: (target, key) => key === 'fillStyle' ? state.fill : target[key],
+    set: (target, key, value) => { if (key === 'fillStyle') state.fill = value; else target[key] = value; return true; },
+  });
+  draw(proxy);
+  const sorted = [...pixels.entries()].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }));
+  return createHash('sha256').update(JSON.stringify(sorted)).digest('hex');
+}
+
 test('Jhony preserves the approved black-leather sprite in both directions and walk frames', () => {
-  // Fingerprints captured from approved draft 03 before production integration.
+  // Pixel fingerprints captured from approved draft 03 before production
+  // integration; the shared-with-the-ficha refactor kept every one of them.
   const cases = [
-    [{}, 'b69c41c75cc47e06b33b386e1ebeb58bc00dd0fe2a2a462003b067010c3a09aa'],
-    [{ facing: -1 }, 'a26f5b8ffcb4c3bc96bc0f4a20287e0239f774d3a29141077975d4a621c941ab'],
-    [{ moving: true, time: 0 }, 'b69c41c75cc47e06b33b386e1ebeb58bc00dd0fe2a2a462003b067010c3a09aa'],
-    [{ moving: true, time: 0.125 }, '018082a86fcccc6dc6bf23cb132a614be149ca3ddce6f20a06703a9de426b640'],
+    [{}, '1ea9c40105c3d5fc7a74512d5e668b1a66372e899e4809e32febbfef630ac5ae'],
+    [{ facing: -1 }, '0c9e9ab1ff9245257cc1974ff15e827f6498ad65575ee64efa6284f6c5d4947b'],
+    [{ moving: true, time: 0 }, '1ea9c40105c3d5fc7a74512d5e668b1a66372e899e4809e32febbfef630ac5ae'],
+    [{ moving: true, time: 0.125 }, '52abf6c4dc8defcf9338a2cc80098b0d7dda3b90a974433e36644df12f3a5112'],
   ];
   for (const [options, expected] of cases) {
+    assert.equal(rasterize(ctx => drawJhony(ctx, 100, 150, options)), expected, JSON.stringify(options));
     const calls = record(ctx => drawJhony(ctx, 100, 150, options));
-    const hash = createHash('sha256').update(JSON.stringify(calls)).digest('hex');
-    assert.equal(hash, expected, JSON.stringify(options));
     for (const [kind, ...args] of calls.filter(([kind]) => kind === 'fillRect')) {
       assert.equal(kind, 'fillRect');
       assert.ok(args.every(Number.isInteger), 'all sprite rectangles use integer pixels');
@@ -36,21 +66,64 @@ test('Jhony preserves the approved black-leather sprite in both directions and w
   }
 });
 
-test('Jhony joins only the stage cast, never the playable roster or unlock system', () => {
-  assert.deepEqual(ROSTER.map(character => character.id), ['negro', 'solago', 'warrior', 'papazito']);
-  assert.equal(Object.hasOwn(CHARACTERS, 'jhony'), false);
-  assert.deepEqual(STAGE_CAST, [...ROSTER, jhony]);
+test('the playable Jhony carries a beer bottle that swings forward on attack', () => {
+  const idle = rasterize(ctx => drawJhony(ctx, 100, 150, {}));
+  const bottled = rasterize(ctx => drawJhony(ctx, 100, 150, { bottle: true }));
+  const swinging = rasterize(ctx => drawJhony(ctx, 100, 150, { bottle: true, attacking: true }));
+  assert.notEqual(bottled, idle, 'the bottle is drawn in his hand');
+  assert.notEqual(swinging, bottled, 'the attack pose is its own drawing');
+
+  // The bottle lives in the right hand: the drawn pixels spread further left
+  // when idle and further right when the arm thrusts it forward.
+  const bounds = draw => {
+    const xs = [];
+    const ctx = new Proxy({}, {
+      get: (_, key) => key === 'getTransform' ? () => ({ a: 1, d: 1 }) : () => {},
+      set: () => true,
+    });
+    const recording = new Proxy(ctx, {
+      get: (target, key) => key === 'fillRect'
+        ? (x, y, w) => xs.push(x, x + w)
+        : key === 'getTransform' ? () => ({ a: 1, d: 1 }) : () => {},
+      set: () => true,
+    });
+    draw(recording);
+    return [Math.min(...xs), Math.max(...xs)];
+  };
+  assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true }))[0] < 0, 'the bottle hangs past the body');
+  assert.ok(bounds(ctx => drawJhony(ctx, 0, 0, { bottle: true, attacking: true }))[1] > 30, 'the swing reaches forward');
+});
+
+test('Tilt shows on the face: knitted brows, red cheeks and anger ticks', () => {
+  const calm = record(ctx => drawJhony(ctx, 100, 150, {}));
+  const angry = record(ctx => drawJhony(ctx, 100, 150, { tilt: 0.6 }));
+  const furious = record(ctx => drawJhony(ctx, 100, 150, { tilt: 1 }));
+  assert.deepEqual(calm, record(ctx => drawJhony(ctx, 100, 150, { tilt: 0 })), 'a calm Jhony draws the approved face');
+  assert.ok(angry.length > calm.length, 'the tilt face adds features');
+  assert.ok(furious.length > angry.length, 'the last tick only shows at full tilt');
+  assert.ok(record(ctx => drawJhony(ctx, 100, 150, { tilt: 0.6 }))
+    .some(([kind, key, color]) => kind === 'set' && key === 'fillStyle' && color === '#b4543c'), 'red cheeks');
+});
+
+test('Jhony is a playable ficha unlocked by his Act 1 encounter', () => {
+  assert.deepEqual(ROSTER.map(character => character.id), ['negro', 'solago', 'warrior', 'papazito', 'jhony']);
+  assert.equal(CHARACTERS.jhony.id, 'jhony');
+  assert.equal(CHARACTERS.jhony.unlock.flag, 'jhonyUnlocked');
+  assert.equal(CHARACTERS.jhony.unlock.scene, 'act-01-jhony', 'meeting him in Act 1 is the unlock');
+  // The stage cast is the roster now: Jhony is not listed twice.
+  assert.deepEqual(STAGE_CAST.map(character => character.id), ROSTER.map(character => character.id));
   assert.equal(jhony.id, 'jhony');
   assert.equal(jhony.label, 'Jhony');
-  assert.equal(jhony.stats, undefined);
+  assert.equal(jhony.stats, undefined, 'the narrative NPC keeps no combat sheet');
   assert.equal(jhony.unlock, undefined);
 });
 
 test('the world viewer draws the controlled Jhony with the approved movement and facing', () => {
   const pos = { x: 0.70, y: 0.80 };
   const options = { actor: 'jhony', pos, moving: true, facing: -1 };
+  const ficha = ROSTER.find(character => character.id === 'jhony');
   const cast = record(ctx => drawCast(ctx, 1144, 748, 0.125, options));
-  const expected = record(ctx => jhony.draw(ctx, 1144 * pos.x, 748 * pos.y, {
+  const expected = record(ctx => ficha.draw(ctx, 1144 * pos.x, 748 * pos.y, {
     time: 0.125, moving: true, facing: -1, player: {},
   }));
   assert.deepEqual(cast.slice(-expected.length), expected);

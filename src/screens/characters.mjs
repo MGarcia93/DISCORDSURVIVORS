@@ -8,7 +8,7 @@ import { PLAYABLE_ACTS, getAct } from '../campaign/acts.mjs';
 // Fully data-driven: every card, profile, preview and progress note comes
 // from the ficha (src/characters/); adding a character never touches this
 // file — it only fills the ROSTER through the registry.
-const ROSTER_PLACEHOLDERS = ['Maxi', 'Jhonny', 'Pasasito', 'Tomi'];
+const ROSTER_PLACEHOLDERS = ['Maxi', 'Pasasito', 'Tomi'];
 const rosterButton = (ficha, unlocked, chosen) => `<button class="roster-card ${chosen ? 'selected' : ''} ${unlocked ? '' : 'locked-card'}" data-character="${ficha.id}" aria-label="${ficha.label}, ${unlocked ? chosen ? 'seleccionado' : 'disponible' : ficha.unlockNote.locked}" ${unlocked ? '' : 'disabled'}>${unlocked ? `<canvas id="roster-${ficha.id}" width="52" height="58" aria-hidden="true"></canvas>` : '<span aria-hidden="true">?</span>'}<small>${ficha.label}</small></button>`;
 
 export function characters() {
@@ -34,7 +34,7 @@ export function characters() {
     + ROSTER_PLACEHOLDERS.map(name => `<div class="roster-card locked-card" aria-label="${name}, no disponible en este prototipo"><span aria-hidden="true">?</span><small>${name}</small></div>`).join('');
   state.content.innerHTML = `
     <section class="screen character-screen">
-    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / 8 DISPONIBLES</span></header>
+    <header class="screen-heading"><div><div class="eyebrow">Preparar partida / 01</div><h1>ELEGÍ A TU SOBREVIVIENTE</h1></div><span class="screen-counter">${unlockedCount} / ${ROSTER.length + ROSTER_PLACEHOLDERS.length} DISPONIBLES</span></header>
     <div class="character-layout"><section aria-label="Personajes">
       <div class="sprite-stage"><canvas id="sprite-preview" width="256" height="190" role="img" aria-label="${ficha.previewAria}"></canvas><span class="stage-label">P1 · SELECCIONADO</span><span class="sprite-name">${ficha.detailLabel.toUpperCase()}</span></div>
       <div class="roster">${roster}</div>

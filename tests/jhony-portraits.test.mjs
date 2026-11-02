@@ -53,7 +53,7 @@ test('Jhony builds eight distinct expressions from the approved identity and kee
   } finally { await rm(scratch, { recursive: true, force: true }); }
 });
 
-test('the shipped narrative catalog registers Jhony portraits without making him playable', async () => {
+test('the shipped narrative catalog registers Jhony portraits and the roster now plays him', async () => {
   const catalog = await loadCatalog({ fetcher });
   const character = catalog.characters.jhony;
   assert.ok(character, 'Jhony is a narrative speaker');
@@ -63,8 +63,9 @@ test('the shipped narrative catalog registers Jhony portraits without making him
   for (const [name, path] of Object.entries(character.expressions)) {
     assert.match(await readFile(new URL(path), 'utf8'), new RegExp(`data-expression="${name}"`));
   }
-  assert.equal(Object.hasOwn(CHARACTERS, 'jhony'), false);
-  assert.equal(ROSTER.length, 4);
+  // The same character is a playable ficha now; the catalog still only speaks him.
+  assert.equal(CHARACTERS.jhony.id, 'jhony');
+  assert.equal(ROSTER.length, 5);
   assert.ok(catalog.entries.every(entry => entry.error === null));
   assert.deepEqual(catalog.bindings, [], 'this does not activate any Act 1 scenes');
 });

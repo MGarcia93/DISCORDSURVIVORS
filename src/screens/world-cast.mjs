@@ -1,8 +1,8 @@
 import { ROSTER } from '../characters/index.mjs';
-import jhony from '../npcs/jhony.mjs';
 
-// Stage-only NPCs never enter the playable roster or its unlock chain.
-export const STAGE_CAST = [...ROSTER, jhony];
+// The stage cast is the playable roster. Jhony walked in from the Act 1 stage:
+// he is a ficha now, so he is no longer listed twice here.
+export const STAGE_CAST = [...ROSTER];
 
 // The playable cast and NPCs on a world preview. Same Y the scenes stage their
 // actors on and the same sprite scale, so the dev viewer shows what a scene of

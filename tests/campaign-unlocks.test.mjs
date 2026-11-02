@@ -12,6 +12,9 @@ const encounters = [
   { act: 'act-03', scene: 'act-03-papasito', character: 'papazito' },
   { act: 'act-04', scene: 'act-04-warrior', character: 'warrior' },
 ];
+// Encounter order the selection screen follows: reaching Jhony closes Act 1,
+// so his is the first note a fresh save reads.
+const encounterOrder = [{ scene: 'act-01-jhony', character: 'jhony' }, ...encounters];
 const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 function memoryStorage(initial = null) {
   let value = initial;
@@ -53,6 +56,22 @@ test('existing encounter history restores all characters without replaying or re
   assert.equal(store.getItem(PROGRESS_STORAGE_KEY), original);
 });
 
+test('meeting Jhony when Act 1 closes is what makes him selectable', async () => {
+  const act = PLAYABLE_ACTS.find(act => act.id === 'act-01');
+  const catalog = await loadCatalog({ urls: [manifestURL, actManifestURL(act)], fetcher });
+  const store = memoryStorage();
+  const director = new WaveDirector(catalog, { seen: sceneSeenStore(store) });
+  director.attach({ act, character: 'negro', phase: 'won', wave: 6, time: 0 });
+  assert.equal(isCharacterUnlocked('jhony', store), false, 'not before Act 1 ends');
+  director.observe();
+  for (let frame = 0; director.blocked && frame < 40000; frame++) {
+    if (director.player.dialogue || director.player.notice || director.player.splash) director.advance();
+    else director.tick(0.05);
+  }
+  assert.equal(director.blocked, false, 'the Act 1 closing scenes finish');
+  assert.equal(isCharacterUnlocked('jhony', store), true);
+});
+
 test('victories no longer unlock the next played-character successor', () => {
   for (const { id } of ROSTER) for (const phase of ['won', 'shop']) {
     const store = memoryStorage();
@@ -88,16 +107,16 @@ test('roster guidance follows encounter order and recovered characters are selec
     const { characters } = await import('../src/screens/characters.mjs');
     const { state } = await import('../src/app/state.mjs');
     characters();
-    assert.match(content.innerHTML, /ACTO 2/);
+    assert.match(content.innerHTML, /ACTO 1/);
     assert.doesNotMatch(content.innerHTML, /GANÁ EL MAPA|CADENA DE MAPAS|ganá el mapa anterior/);
-    for (const [index, encounter] of encounters.entries()) {
+    for (const [index, encounter] of encounterOrder.entries()) {
       sceneSeenStore(store).add(encounter.scene);
       state.selectedCharacter = encounter.character;
       characters();
       assert.equal(state.selectedCharacter, encounter.character);
       assert.doesNotMatch(content.innerHTML, new RegExp(`data-character="${encounter.character}"[^>]*disabled`));
-      if (index < encounters.length - 1) {
-        assert.ok(content.innerHTML.includes(ROSTER.find(item => item.id === encounters[index + 1].character).unlockNote.locked));
+      if (index < encounterOrder.length - 1) {
+        assert.ok(content.innerHTML.includes(ROSTER.find(item => item.id === encounterOrder[index + 1].character).unlockNote.locked));
       }
     }
     assert.match(content.innerHTML, /TODOS LOS PERSONAJES IMPLEMENTADOS DESBLOQUEADOS/);

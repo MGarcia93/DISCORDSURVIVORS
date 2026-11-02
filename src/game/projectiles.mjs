@@ -3,7 +3,7 @@ import { drawEnemyShot, drawGamerProjectile } from '../sprites.mjs';
 // One painter for every projectile, player or enemy. The game canvas and the
 // enemy sandbox both call it, so a shot that exists in the run can never be
 // invisible in one of the two views.
-const CAST_DEVICES = new Set(['remote', 'joystick', 'phone', 'shroom', 'brick']);
+const CAST_DEVICES = new Set(['remote', 'joystick', 'phone', 'shroom', 'brick', 'bottle', 'shard']);
 
 export function drawProjectiles(ctx, projectiles) {
   for (const shot of projectiles) {
