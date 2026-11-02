@@ -156,29 +156,141 @@ function roundedMass(ctx, x, y, width, height, color) {
   pixel(ctx, x + 2, y + height - 1, width - 4, 1, color);
 }
 
+// Act 7 variants of the walker. The script asks for the Act 1 zombie family to
+// be reused and told apart by clothing and conduct, never by a palette swap, so
+// the same body takes an `outfit`: new trousers and a gear pass over the torso
+// and head, while the silhouette stays the walker's.
+const ZOMBIE_OUTFITS = {
+  worker: {
+    legs: '#2f3b52', legShade: '#252f42',
+    tones: { light: '#3d4d68', base: '#33415a', mid: '#2b374d', dark: '#243042' },
+  },
+  police: {
+    legs: '#242c3e', legShade: '#1b2231',
+    tones: { light: '#33405a', base: '#2b364c', mid: '#242e41', dark: '#1d2535' },
+  },
+  protected: {
+    legs: '#3a3229', legShade: '#2d2721',
+    tones: { light: '#4a4032', base: '#3e352a', mid: '#352d24', dark: '#2c251d' },
+  },
+  military: {
+    legs: '#3d4a32', legShade: '#313c29',
+    tones: { light: '#4b5a3a', base: '#3f4d31', mid: '#364229', dark: '#2c3722' },
+  },
+  armored: {
+    legs: '#2b3038', legShade: '#22262d',
+    tones: { light: '#3a4048', base: '#31363d', mid: '#292d33', dark: '#212429' },
+  },
+};
+
+// The gear pass. Drawn last so sleeves cover the bare arms, helmets cover the
+// hair and pads sit over the shoulders. Hands stay skin: a clothed body with
+// rotten hands is what makes the outfit read as clothing, not as a costume.
+function zombieGear(ctx, outfit, stride) {
+  const sleeve = (cloth, shade) => {
+    pixel(ctx, -12, -24 + stride, 4, 11, cloth);
+    pixel(ctx, -12, -24 + stride, 1, 11, shade);
+    pixel(ctx, 9, -23 - stride, 4, 11, cloth);
+    pixel(ctx, 12, -23 - stride, 1, 11, shade);
+    pixel(ctx, 2, -17, 5, 6, cloth);
+  };
+  if (outfit === 'worker') {
+    sleeve('#3d4d68', '#2b374d');
+    // Hi-vis vest with two reflective bands over the overalls.
+    pixel(ctx, -8, -22, 17, 7, '#d97a26');
+    pixel(ctx, -8, -22, 2, 7, '#efa03c');
+    pixel(ctx, 7, -22, 2, 7, '#b8641c');
+    pixel(ctx, -8, -21, 17, 1, '#efe4cf');
+    pixel(ctx, -8, -18, 17, 1, '#efe4cf');
+    // White hard hat: rounded dome, shaded underside and brim.
+    pixel(ctx, -6, -38, 13, 1, '#f7f3e7');
+    pixel(ctx, -7, -37, 15, 1, '#e8e2d2');
+    pixel(ctx, -8, -36, 17, 2, '#e8e2d2');
+    pixel(ctx, -8, -34, 17, 1, '#b9b2a1');
+    pixel(ctx, -9, -34, 19, 2, '#cfc8b6');
+    pixel(ctx, -9, -34, 19, 1, '#e8e2d2');
+  }
+  if (outfit === 'police') {
+    sleeve('#2b364c', '#1d2535');
+    // Navy duty vest, lit edge and a brass badge.
+    pixel(ctx, -8, -23, 17, 8, '#1f2736');
+    pixel(ctx, -8, -23, 2, 8, '#2a3448');
+    pixel(ctx, 7, -23, 2, 8, '#171e2b');
+    pixel(ctx, -5, -21, 2, 2, '#c9a227');
+    // Peak cap: crown, lit top, dark band and brim.
+    pixel(ctx, -8, -37, 17, 3, '#232c3f');
+    pixel(ctx, -8, -37, 17, 1, '#2f3a52');
+    pixel(ctx, -8, -35, 17, 1, '#171e2b');
+    pixel(ctx, -9, -34, 19, 2, '#171e2b');
+    pixel(ctx, -9, -34, 19, 1, '#232c3f');
+  }
+  if (outfit === 'protected') {
+    sleeve('#463c30', '#352d24');
+    // Padded jacket: shoulder pads, quilting and a dust bandana on the mouth.
+    pixel(ctx, -13, -25, 5, 8, '#4a4032');
+    pixel(ctx, -13, -25, 5, 2, '#5c5140');
+    pixel(ctx, 9, -25, 5, 8, '#4a4032');
+    pixel(ctx, 9, -25, 5, 2, '#5c5140');
+    pixel(ctx, -8, -20, 17, 1, '#2c251d');
+    pixel(ctx, -8, -17, 17, 1, '#2c251d');
+    pixel(ctx, -7, -27, 15, 3, '#6b5f48');
+    pixel(ctx, -7, -27, 15, 1, '#8a7a5c');
+    pixel(ctx, 8, -26, 3, 3, '#5a4c38');
+  }
+  if (outfit === 'military') {
+    sleeve('#3f4d31', '#2c3722');
+    // Steel pot, webbing strap and two pouches.
+    pixel(ctx, -6, -39, 13, 1, '#5d6e49');
+    pixel(ctx, -7, -38, 15, 1, '#4b5a3a');
+    pixel(ctx, -9, -37, 19, 3, '#4b5a3a');
+    pixel(ctx, -9, -37, 19, 1, '#5d6e49');
+    pixel(ctx, -9, -34, 19, 2, '#3a4630');
+    pixel(ctx, -8, -21, 17, 2, '#2f3a26');
+    pixel(ctx, -6, -19, 4, 3, '#5a4a34');
+    pixel(ctx, 2, -19, 4, 3, '#5a4a34');
+  }
+  if (outfit === 'armored') {
+    sleeve('#31363d', '#212429');
+    // Riot helmet with a closed visor and a two-plate carrier.
+    pixel(ctx, -6, -39, 13, 1, '#727d89');
+    pixel(ctx, -7, -38, 15, 1, '#5b6570');
+    pixel(ctx, -9, -37, 19, 4, '#5b6570');
+    pixel(ctx, -9, -37, 19, 1, '#727d89');
+    pixel(ctx, -9, -33, 19, 2, '#4a525c');
+    pixel(ctx, -8, -31, 17, 6, '#1b222b');
+    pixel(ctx, -8, -30, 15, 1, '#39424d');
+    pixel(ctx, -9, -22, 19, 8, '#3a4048');
+    pixel(ctx, -9, -22, 19, 1, '#4b525b');
+    pixel(ctx, -7, -19, 6, 4, '#2b3038');
+    pixel(ctx, 1, -19, 6, 4, '#2b3038');
+  }
+}
+
 // Act 1 walker. Slow, stooped, arms hanging: the plainest body of the cast.
 export function drawZombie(ctx, x, y, options = {}) {
-  const { time = 0, seed = 0, scale = 2 } = options;
+  const { time = 0, seed = 0, scale = 2, outfit = null } = options;
   const stride = Math.floor(time * 4 + seed) % 2;
   const shirt = ZOMBIE_SHIRTS[seed % 3];
+  const wear = outfit ? ZOMBIE_OUTFITS[outfit] : null;
+  const tones = wear ? wear.tones : {
+    light: shirt.light, base: shirt.base, mid: shirt.mid, dark: shirt.dark,
+  };
   pose(ctx, x, y, scale);
   pixel(ctx, -10, 0, 21, 2, '#131a20');
-  pixel(ctx, -7, -9, 6, 9 - stride, '#2c2b39');
-  pixel(ctx, 2, -9, 6, 8 + stride, '#2c2b39');
-  pixel(ctx, -7, -9, 2, 9 - stride, '#211f2c');
+  pixel(ctx, -7, -9, 6, 9 - stride, wear ? wear.legs : '#2c2b39');
+  pixel(ctx, 2, -9, 6, 8 + stride, wear ? wear.legs : '#2c2b39');
+  pixel(ctx, -7, -9, 2, 9 - stride, wear ? wear.legShade : '#211f2c');
   pixel(ctx, -8, 0, 6, 2, '#4a4658');
   pixel(ctx, 2, -1, 6, 2, '#4a4658');
   pixel(ctx, -8, 0, 6, 1, '#8a8496');
   pixel(ctx, 2, -1, 6, 1, '#8a8496');
   // Torso: contour, base, shaded flank, lit shoulder and a torn hem.
   pixel(ctx, -9, -25, 19, 17, '#151a24');
-  torsoBands(ctx, -8, -24, 17, 15, {
-    light: shirt.light, base: shirt.base, mid: shirt.mid, dark: shirt.dark,
-  });
+  torsoBands(ctx, -8, -24, 17, 15, tones);
   // Shadow the head casts on the chest, and a torn hem instead of a band.
-  pixel(ctx, -8, -24, 17, 2, shirt.mid);
-  pixel(ctx, -7, -12, 4, 2, shirt.dark);
-  pixel(ctx, 2, -12, 3, 2, shirt.dark);
+  pixel(ctx, -8, -24, 17, 2, tones.mid);
+  pixel(ctx, -7, -12, 4, 2, tones.dark);
+  pixel(ctx, 2, -12, 3, 2, tones.dark);
   // Arms: skin with its shade on the back arm and a hand at each end.
   pixel(ctx, -12, -24 + stride, 4, 13, '#718962');
   pixel(ctx, -12, -13 + stride, 4, 3, '#a8b98a');
@@ -195,6 +307,7 @@ export function drawZombie(ctx, x, y, options = {}) {
   pixel(ctx, 4, -30, 3, 2, '#d6df94');
   pixel(ctx, -2, -26, 6, 2, '#2e3330');
   pixel(ctx, -1, -26, 2, 1, '#d5ceaa');
+  if (wear) zombieGear(ctx, outfit, stride);
   ctx.restore();
 }
 
@@ -3061,26 +3174,57 @@ export function drawCompanion(ctx, x, y, { scale = 2, facing = 1, flash = false 
   ctx.scale(scale * facing, scale);
   p(-8, 0, 16, 2, '#11141c');
   ctx.translate(0, -15);
-  // Brown mutt: body, tail, legs, head with one eye and a bright collar.
-  p(-7, 7, 13, 7, '#171526');
-  p(-6, 8, 11, 5, '#8a6242');
-  p(-6, 8, 11, 1, '#a67a54');
-  p(-9, 4, 3, 5, '#171526');
-  p(-8, 5, 2, 4, '#8a6242');
-  p(-6, 12, 3, 4, '#171526');
-  p(2, 12, 3, 4, '#171526');
-  p(-5, 13, 2, 2, '#5e4028');
-  p(3, 13, 2, 2, '#5e4028');
-  p(4, 1, 9, 9, '#171526');
-  p(5, 2, 7, 7, '#8a6242');
-  p(5, 2, 7, 1, '#a67a54');
-  p(12, 4, 3, 3, '#171526');
-  p(12, 5, 2, 2, '#5e4028');
-  p(6, 4, 2, 2, '#171526');
-  p(4, 8, 9, 1, '#c4404e');
+  // Papafrita's cat: an orange tabby with striped flanks, pointed ears, whiskers
+  // and a tailored red collar. Cats sit and stare; the tail does the moving.
+  const fur = { light: '#e6ad6c', base: '#c98a4b', mid: '#a86c34', dark: '#7d4b22' };
+  // Tail: a long curve rising out of the haunches, joined to the body.
+  p(-8, 3, 6, 9, '#171526');
+  p(-7, 4, 4, 7, fur.base);
+  p(-11, 0, 3, 6, '#171526');
+  p(-10, 1, 2, 4, fur.light);
+  p(-12, -5, 3, 6, '#171526');
+  p(-11, -4, 2, 5, fur.base);
+  p(-11, -8, 3, 4, '#171526');
+  p(-10, -7, 2, 3, fur.light);
+  // Haunches and body.
+  p(-7, 5, 14, 10, '#171526');
+  p(-6, 6, 12, 8, fur.base);
+  p(-6, 6, 12, 2, fur.light);
+  p(-6, 12, 12, 2, fur.dark);
+  p(-2, 8, 2, 6, fur.mid);
+  p(2, 8, 2, 6, fur.mid);
+  // Front and back legs, paws together.
+  p(-6, 14, 3, 4, '#171526');
+  p(3, 14, 3, 4, '#171526');
+  p(-5, 15, 2, 2, fur.base);
+  p(4, 15, 2, 2, fur.base);
+  // Collar.
+  p(-6, 10, 12, 2, '#c4404e');
+  p(-2, 10, 2, 2, '#d8cf78');
+  // Head: round, with two pointed ears and a short muzzle.
+  p(2, -6, 5, 6, '#171526');
+  p(3, -5, 3, 5, fur.dark);
+  p(4, -5, 1, 3, fur.base);
+  p(8, -6, 5, 6, '#171526');
+  p(9, -5, 3, 5, fur.dark);
+  p(10, -5, 1, 3, fur.base);
+  p(2, -1, 11, 11, '#171526');
+  p(3, 0, 9, 9, fur.base);
+  p(3, 0, 9, 2, fur.light);
+  p(3, 7, 9, 2, fur.dark);
+  p(6, 0, 2, 8, fur.mid);
+  // Eyes: two almond slits, then the nose and the whiskers.
+  p(4, 3, 3, 2, '#171526');
+  p(8, 3, 3, 2, '#171526');
+  p(5, 3, 1, 1, '#c6e07a');
+  p(9, 3, 1, 1, '#c6e07a');
+  p(7, 5, 2, 1, '#c98a8a');
+  p(11, 5, 4, 1, '#e6d9b4');
+  p(11, 7, 4, 1, '#e6d9b4');
+  p(2, 5, 2, 1, '#e6d9b4');
   if (flash) {
-    p(10, -3, 3, 3, '#f7efe2');
-    p(14, -6, 3, 3, '#f7efe2');
+    p(13, -3, 3, 3, '#f7efe2');
+    p(16, -6, 3, 3, '#f7efe2');
   }
   ctx.restore();
 }
@@ -4042,5 +4186,120 @@ export function drawRathalos(ctx, x, y, options = {}) {
   pixel(ctx, 7, -132, 6, 10, RATH_HORN.base);
   pixel(ctx, 11, -140, 6, 10, RATH_HORN.base);
   pixel(ctx, 13, -140, 3, 7, RATH_HORN.light);
+  ctx.restore();
+}
+
+// Act 7 mini-boss: the fireman. A walker built like the brute, but dressed for
+// the job: turnout coat with two reflective bands, wide helmet, thick gloves
+// and the oxygen tank peeking over one shoulder. It reads as heavy from the
+// silhouette alone, which is what a telegraphed charge needs.
+export function drawFireman(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const stride = Math.floor(time * 3 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -16, 0, 33, 3, '#131a20');
+  // Legs: turnout trousers, thick boots with a lit toe.
+  pixel(ctx, -11, -14, 8, 14 - stride, '#2b2f36');
+  pixel(ctx, 3, -14, 8, 13 + stride, '#2b2f36');
+  pixel(ctx, -11, -14, 2, 14 - stride, '#1f232a');
+  pixel(ctx, -12, 0, 9, 3, '#4a4f57');
+  pixel(ctx, 3, -1, 9, 3, '#4a4f57');
+  pixel(ctx, -12, 0, 9, 1, '#6b7076');
+  pixel(ctx, 3, -1, 9, 1, '#6b7076');
+  // Coat: contour, volume, collar and the two reflective bands.
+  pixel(ctx, -14, -35, 29, 23, '#151a24');
+  torsoBands(ctx, -13, -34, 27, 21, {
+    light: '#c8b078', base: '#b8a06a', mid: '#a08a58', dark: '#8a7649',
+  });
+  pixel(ctx, -6, -36, 13, 3, '#8a7649');
+  pixel(ctx, -6, -36, 13, 1, '#a08a58');
+  pixel(ctx, -13, -27, 27, 1, '#e8e4d0');
+  pixel(ctx, -13, -26, 27, 1, '#d9b23c');
+  pixel(ctx, -13, -23, 27, 1, '#e8e4d0');
+  pixel(ctx, -13, -22, 27, 1, '#d9b23c');
+  pixel(ctx, -1, -33, 2, 19, '#8a7649');
+  // Arms: coat sleeves with a reflective cuff and a heavy glove.
+  pixel(ctx, -17, -32 + stride, 6, 11, '#151a24');
+  pixel(ctx, -16, -31 + stride, 4, 9, '#a08a58');
+  pixel(ctx, -16, -23 + stride, 4, 2, '#e8e4d0');
+  pixel(ctx, -16, -21 + stride, 4, 4, '#3a3f46');
+  pixel(ctx, 11, -31 - stride, 6, 10, '#151a24');
+  pixel(ctx, 12, -30 - stride, 4, 8, '#b8a06a');
+  pixel(ctx, 12, -23 - stride, 4, 2, '#e8e4d0');
+  pixel(ctx, 12, -21 - stride, 4, 4, '#3a3f46');
+  // Head: the walker's dead face, sunk under a wide helmet.
+  pixel(ctx, -9, -47, 19, 13, '#19232b');
+  pixel(ctx, -8, -45, 17, 11, '#8b9e70');
+  pixel(ctx, -8, -37, 17, 3, '#718962');
+  pixel(ctx, -7, -46, 15, 2, '#424b41');
+  pixel(ctx, -6, -41, 4, 2, '#d6df94');
+  pixel(ctx, 3, -41, 4, 2, '#d6df94');
+  pixel(ctx, -2, -37, 6, 2, '#2e3330');
+  pixel(ctx, -1, -37, 2, 1, '#d5ceaa');
+  // Helmet: rounded dome, dark band, brim and the front badge.
+  pixel(ctx, -6, -51, 13, 1, '#e2dccb');
+  pixel(ctx, -7, -50, 15, 1, '#c8c2b0');
+  pixel(ctx, -8, -49, 17, 2, '#c8c2b0');
+  pixel(ctx, -8, -49, 17, 1, '#e2dccb');
+  pixel(ctx, -9, -47, 19, 2, '#8f8a7c');
+  pixel(ctx, -10, -45, 21, 2, '#a8a294');
+  pixel(ctx, -10, -45, 21, 1, '#c8c2b0');
+  pixel(ctx, -2, -48, 4, 2, '#c9a227');
+  ctx.restore();
+}
+
+// Act 7 boss: the truck. A side view like the cast, so it reads at the same
+// scale as the bodies around it: cab, cargo bed, two wheels and the horn that
+// will not stop. The horn's rings pulse with time, which is the only part of it
+// that moves while the truck itself stands still.
+export function drawTruck(ctx, x, y, options = {}) {
+  const { time = 0, seed = 0, scale = 2 } = options;
+  const pulse = Math.floor(time * 4 + seed) % 2;
+  pose(ctx, x, y, scale);
+  pixel(ctx, -40, 0, 81, 3, '#131a20');
+  // Wheels first: the body sits over them. Rounded, with a dark tread and a
+  // lit hub, so they read as tyres and not as boxes under the chassis.
+  for (const wx of [-31, 15]) {
+    pixel(ctx, wx, -14, 18, 14, '#151a24');
+    roundedMass(ctx, wx + 1, -13, 16, 12, '#2b2f36');
+    pixel(ctx, wx + 3, -11, 12, 8, '#232830');
+    pixel(ctx, wx + 6, -9, 6, 4, '#6b7076');
+    pixel(ctx, wx + 7, -8, 4, 2, '#8f959c');
+  }
+  // Cargo bed: slats and a tarp, with the horde's hands over the edge.
+  pixel(ctx, -2, -30, 42, 18, '#151a24');
+  torsoBands(ctx, -1, -29, 40, 16, {
+    light: '#a35a45', base: '#8a4a3a', mid: '#753e30', dark: '#5e3227',
+  });
+  pixel(ctx, 1, -26, 36, 1, '#5e3227');
+  pixel(ctx, 1, -21, 36, 1, '#5e3227');
+  pixel(ctx, 1, -16, 36, 1, '#5e3227');
+  pixel(ctx, 6, -32, 26, 4, '#4a4f57');
+  pixel(ctx, 6, -32, 26, 1, '#6b7076');
+  pixel(ctx, 8, -14, 5, 4, '#8b9e70');
+  pixel(ctx, 9, -15, 3, 2, '#a8b98a');
+  pixel(ctx, 26, -14, 5, 4, '#718962');
+  pixel(ctx, 27, -15, 3, 2, '#8b9e70');
+  // Cab: body, door line, window and the grille at the front.
+  pixel(ctx, -40, -34, 40, 22, '#151a24');
+  torsoBands(ctx, -39, -33, 38, 20, {
+    light: '#a35a45', base: '#8a4a3a', mid: '#753e30', dark: '#5e3227',
+  });
+  pixel(ctx, -33, -31, 13, 9, '#151a24');
+  pixel(ctx, -32, -30, 11, 7, '#7f8f9a');
+  pixel(ctx, -32, -30, 11, 2, '#a9b7bf');
+  pixel(ctx, -19, -32, 1, 18, '#5e3227');
+  pixel(ctx, -38, -24, 7, 4, '#6b7076');
+  pixel(ctx, -37, -23, 5, 2, '#efe4cf');
+  pixel(ctx, -39, -18, 38, 2, '#5e3227');
+  // Horn on the roof: housing, mouth and the rings it throws.
+  pixel(ctx, -32, -39, 12, 6, '#151a24');
+  pixel(ctx, -31, -38, 10, 4, '#d9b23c');
+  pixel(ctx, -31, -38, 10, 1, '#efe4cf');
+  pixel(ctx, -23, -38, 3, 4, '#efe4cf');
+  pixel(ctx, -21, -39, 2, 6, '#efe4cf');
+  const ring = pulse ? 1 : 0;
+  pixel(ctx, -17, -38 - ring, 2, 3 + ring, '#d9b23c');
+  pixel(ctx, -14, -37 - ring, 2, 2 + ring, '#d9b23c');
   ctx.restore();
 }
