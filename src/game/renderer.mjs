@@ -67,7 +67,8 @@ export function drawRunScene(ctx, run, {
   figures.push({ x: p.x, y: p.y, kind: 'player' });
   figures.sort((a, b) => a.y - b.y);
   for (const figure of figures) {
-    if (figure.kind === 'player' && p.immune > 0 && Math.floor(p.immune * 14) % 2) ctx.globalAlpha = 0.45;
+    // A hit has to be seen: the body blinks for as long as the flash lasts.
+    if (figure.kind === 'player' && p.hurtFlash > 0 && Math.floor(p.hurtFlash * 20) % 2) ctx.globalAlpha = 0.4;
     if (figure.kind === 'player') {
       p.characterDef.draw(ctx, figure.x, figure.y + 38,
         { time, moving, facing, player: p });

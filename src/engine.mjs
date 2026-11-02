@@ -52,7 +52,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
       hp: s.maxHp, maxHp: s.maxHp, defense: s.defense, damage: s.damage,
       hitRadius: s.hitRadius, attackRange: s.attackRange, shotInterval: s.shotInterval,
       speed: s.speed,
-      regen: 0, still: 0, immune: 0, attackFlash: 0,
+      regen: 0, still: 0, immune: 0, attackFlash: 0, hurtFlash: 0,
       smile: 0, smileCooldown: 0,
     },
     enemies: [], projectiles: [], effects: [],
@@ -427,6 +427,7 @@ function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } 
   if (incoming > 0) p.characterDef.onDamaged?.(run, p, incoming,
     { hit, distance, nearest, fireRadial });
   p.hp = Math.max(0, p.hp - incoming);
+  if (incoming > 0) p.hurtFlash = 0.3;
   // No grace window after a contact hit: every enemy swings on its own clock,
   // so a crowd lands a crowd's worth of damage. Only the boss rings still grant
   // immunity, because a ring is one attack, not a body.
@@ -526,7 +527,7 @@ export function step(run, seconds, input = {}) {
   run.elapsed += dt;
   run.specialsLocked = Math.max(0, (run.specialsLocked ?? 0) - dt);
   const decayKeys = [
-    'immune', 'attackFlash',
+    'immune', 'attackFlash', 'hurtFlash',
     ...def.specials.flatMap(special => [special.key, `${special.key}Cooldown`]),
     ...def.passives.flatMap(passive => [passive.key, `${passive.key}Cooldown`]),
     ...def.decays,
@@ -695,6 +696,7 @@ export function step(run, seconds, input = {}) {
     if (!wave.hit && p.immune <= 0 && !invulnerable(p) && gap + p.hitRadius >= before && gap - p.hitRadius <= wave.radius) {
       wave.hit = true;
       p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)));
+      p.hurtFlash = 0.3;
       p.immune = 0.65;
     }
   }
