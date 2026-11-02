@@ -106,8 +106,34 @@ export const OWN_PRIORITY = {
 export const STAT_PRIORITY = ['stat-life', 'stat-attack', 'stat-defense', 'stat-attackSpeed', 'stat-moveSpeed', 'stat-attackDistance'];
 export const ITEM_PRIORITY = ['bleach', 'slipper', 'alcohol', 'magic-mushrooms', 'antidepressants', 'scissors', 'extortion-phone'];
 
-export function pickLevelReward(run, character) {
-  const offered = run.levelChoices ?? [];
-  const priority = [...(OWN_PRIORITY[character] ?? []), ...STAT_PRIORITY];
-  return priority.map(id => offered.find(entry => entry.id === id)).find(Boolean) ?? offered[0] ?? null;
-}
+// Two ways to decide, because a balance question has two ends: what the game
+// actually hands a player at random, and what a player who knows the run would
+// take. Everything else in between is noise.
+export const POLICIES = {
+  optimal: (run, character) => {
+    const offered = run.levelChoices ?? [];
+    const priority = [...(OWN_PRIORITY[character] ?? []), ...STAT_PRIORITY];
+    return priority.map(id => offered.find(entry => entry.id === id)).find(Boolean) ?? offered[0] ?? null;
+  },
+  random: run => {
+    const offered = run.levelChoices ?? [];
+    if (!offered.length) return null;
+    return offered[Math.floor(run.random() * offered.length) % offered.length];
+  },
+};
+
+export const pickLevelReward = (run, character) => POLICIES.optimal(run, character);
+
+// How a player spends. `min` is the survival floor (heals only), `max` takes
+// every offer it can pay for, and `adaptive` saves through ordinary waves and
+// opens the wallet before a boss.
+export const SPENDING = {
+  min: () => ({ heal: true, items: false }),
+  normal: (run, character, { beforeBoss }) => ({ heal: true, items: true, beforeBoss }),
+  max: () => ({ heal: true, items: true, every: true }),
+  adaptive: (run, character, { beforeBoss }) => ({
+    heal: true,
+    items: beforeBoss || run.coins > 250,
+    beforeBoss,
+  }),
+};

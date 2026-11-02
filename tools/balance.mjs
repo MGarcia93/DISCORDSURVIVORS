@@ -5,10 +5,16 @@ import { measureCharacter, measureRoster } from '../src/game/campaign-sim.mjs';
 // Headless balance run. Every character plays the same campaign with the same
 // bot, so the numbers compare characters instead of comparing two guesses.
 //
-//   node tools/balance.mjs                 all four characters, 24 campaigns each
-//   node tools/balance.mjs --runs=48       more campaigns, tighter estimate
-//   node tools/balance.mjs --character=negro --verbose
-//   node tools/balance.mjs --seed=11 --step=7
+//   node tools/balance.mjs                    all four characters, 24 campaigns
+//   node tools/balance.mjs --runs=48          tighter estimate
+//   node tools/balance.mjs --character=negro
+//   node tools/balance.mjs --policy=random --spend=min
+//   node tools/balance.mjs --matrix --runs=6  the whole spread at once
+//
+// `--policy` decides the level choices: optimal reads the character's kit,
+// random takes whatever the game rolled (what a new player does). `--spend`
+// decides the coins: min heals only, normal buys by priority, max buys every
+// offer, adaptive saves through ordinary waves and opens up before a boss.
 
 const args = Object.fromEntries(process.argv.slice(2).map(arg => {
   const [key, value] = arg.replace(/^--/, '').split('=');
@@ -17,16 +23,47 @@ const args = Object.fromEntries(process.argv.slice(2).map(arg => {
 const runs = Number(args.runs ?? 24);
 const seed = Number(args.seed ?? 11);
 const step = Number(args.step ?? 7);
+const policy = args.policy ?? 'optimal';
+const spend = args.spend ?? 'normal';
 const only = args.character;
 
 const characters = only ? [only] : ['negro', 'solago', 'warrior', 'papazito'];
-const rows = only
-  ? characters.map(character => measureCharacter(character, { runs, seed, step, ownIds: OWN_PRIORITY[character] ?? [] }))
-  : measureRoster({ characters, runs, seed, ownByCharacter: OWN_PRIORITY });
-
 const pad = (value, width) => String(value).padEnd(width);
 const pct = value => `${Math.round(value * 100)}%`;
-console.log(`\n${runs} campañas por personaje · semilla ${seed} · paso ${step}\n`);
+
+function measure(modePolicy, modeSpend) {
+  return only
+    ? [measureCharacter(only, { runs, seed, step, policy: modePolicy, spend: modeSpend, ownIds: OWN_PRIORITY[only] ?? [] })]
+    : measureRoster({ characters, runs, seed, ownByCharacter: OWN_PRIORITY, policy: modePolicy, spend: modeSpend });
+}
+
+if (args.matrix) {
+  // The spread a balance question needs: what the game deals a new player, the
+  // best build on the thinnest purse, and everything in between.
+  const modes = [
+    ['random/normal', 'random', 'normal'],
+    ['random/max', 'random', 'max'],
+    ['optimal/min', 'optimal', 'min'],
+    ['optimal/adaptive', 'optimal', 'adaptive'],
+    ['optimal/max', 'optimal', 'max'],
+  ];
+  const table = new Map(characters.map(character => [character, []]));
+  for (const [label, modePolicy, modeSpend] of modes) {
+    process.stderr.write(`midiendo ${label}…\n`);
+    for (const row of measure(modePolicy, modeSpend)) table.get(row.character).push([label, row]);
+  }
+  console.log(`\n${runs} campañas por celda · semilla ${seed}\n`);
+  console.log(`${pad('personaje', 10)} ${modes.map(([label]) => pad(label, 16)).join(' ')}`);
+  console.log('-'.repeat(10 + modes.length * 17));
+  for (const character of characters) {
+    const cells = table.get(character).map(([, row]) => pad(`${row.wins}/${row.runs} ${pct(row.rate)}`, 16));
+    console.log(`${pad(character, 10)} ${cells.join(' ')}`);
+  }
+  process.exit(0);
+}
+
+const rows = measure(policy, spend);
+console.log(`\n${runs} campañas por personaje · semilla ${seed} · ${policy}/${spend}\n`);
 console.log(`${pad('personaje', 10)} ${pad('campañas', 10)} ${pad('nivel', 7)} ${pad('propias', 9)} dónde muere`);
 console.log('-'.repeat(72));
 let total = 0;

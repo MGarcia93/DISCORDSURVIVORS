@@ -14,6 +14,7 @@ node --test tests/*.test.mjs
 node --check <every file you touched>
 node tools/balance.mjs            # headless campaign per character, 24 runs each
 node tools/balance.mjs --runs=48  # tighter estimate
+node tools/balance.mjs --matrix --runs=6   # random vs optimal decisions, thin vs full purse
 ```
 
 Visual cinematic staging has its own order: implement the scene first, show it in

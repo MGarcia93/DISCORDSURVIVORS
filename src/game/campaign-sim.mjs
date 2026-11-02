@@ -3,7 +3,7 @@ import { BALANCE } from '../reward-data.mjs';
 import { DEFAULT_ACT, nextPlayableAct } from '../campaign/acts.mjs';
 import { beginRewards } from '../run-rewards.mjs';
 import { createNextWorldRun } from './campaign-run.mjs';
-import { ITEM_PRIORITY, botInput, botSpecialKeys, pickLevelReward, shouldUseSpecial } from './bot.mjs';
+import { ITEM_PRIORITY, POLICIES, SPENDING, botInput, botSpecialKeys, shouldUseSpecial } from './bot.mjs';
 
 // Headless campaign runner: the same engine the browser runs, with the bot from
 // ./bot.mjs on the controls. It exists so a balance question ("can Solago finish
@@ -31,28 +31,39 @@ export function playWave(run) {
   return run.phase;
 }
 
-export function runShop(run, character) {
+export function runShop(run, character, { policy = 'optimal', spend = 'normal' } = {}) {
   beginRewards(run);
+  const decide = POLICIES[policy] ?? POLICIES.optimal;
   let guard = 0;
   while (run.pendingLevels.length && guard++ < SHOP_LIMIT) {
-    const pick = pickLevelReward(run, character);
+    const pick = decide(run, character);
     if (!pick || !chooseLevelReward(run, pick.id)) { if (!skipEmptyChoice(run)) break; }
   }
+  const beforeBoss = run.wave + 1 === run.act.boss.wave;
+  const plan = (SPENDING[spend] ?? SPENDING.normal)(run, character, { beforeBoss });
   // A person heals at the shop before spending on anything else. Without this
   // the bot bleeds out across a campaign and reports losses the game never
   // forces on a player.
   let healed = 0;
-  while (run.player.hp < run.player.maxHp && buyHeal(run) && healed++ < 20) { /* keep healing */ }
-  for (const id of ITEM_PRIORITY) {
-    for (let copy = 0; copy < 4; copy++) {
-      const offer = (run.shopOffers ?? []).find(entry => entry.id === id && !entry.bought);
-      if (!offer || !buyItem(run, id)) break;
+  while (plan.heal && run.player.hp < run.player.maxHp && buyHeal(run) && healed++ < 20) { /* keep healing */ }
+  if (plan.every) {
+    // Everything the shelf can sell, in the order it appears.
+    for (let guardBuy = 0; guardBuy < 40; guardBuy++) {
+      const offer = (run.shopOffers ?? []).find(entry => !entry.bought);
+      if (!offer || !buyItem(run, offer.id)) break;
+    }
+  } else if (plan.items) {
+    for (const id of ITEM_PRIORITY) {
+      for (let copy = 0; copy < 4; copy++) {
+        const offer = (run.shopOffers ?? []).find(entry => entry.id === id && !entry.bought);
+        if (!offer || !buyItem(run, id)) break;
+      }
     }
   }
   return run.pendingLevels.length === 0;
 }
 
-export function runCampaign({ character = 'negro', seed = 1, act = DEFAULT_ACT, maxWaves = 300 } = {}) {
+export function runCampaign({ character = 'negro', seed = 1, act = DEFAULT_ACT, maxWaves = 300, policy = 'optimal', spend = 'normal' } = {}) {
   let run = createRun(seededRandom(seed), character, { balance: BALANCE }, act);
   const waves = [];
   for (let guard = 0; guard < maxWaves; guard++) {
@@ -60,7 +71,7 @@ export function runCampaign({ character = 'negro', seed = 1, act = DEFAULT_ACT, 
     waves.push({ act: run.act.id, order: run.act.order, wave: run.wave, phase, level: run.level });
     if (phase === 'dead') return { won: false, run, waves, reason: 'dead' };
     if (phase !== 'shop') return { won: false, run, waves, reason: phase };
-    if (!runShop(run, character)) return { won: false, run, waves, reason: 'shop' };
+    if (!runShop(run, character, { policy, spend })) return { won: false, run, waves, reason: 'shop' };
     if (run.worldCleared) {
       if (!nextPlayableAct(run.act.id)) return { won: true, run, waves };
       run = createNextWorldRun(run);
@@ -77,8 +88,8 @@ const average = values => (values.length ? values.reduce((sum, value) => sum + v
 // One line per character: how often the campaign is finished, at what level, and
 // where the rest died. `own` counts the signature ranks a run actually reached,
 // which is how "the build that breaks the run" gets measured.
-export function measureCharacter(character, { runs = 24, seed = 11, step = 7, ownIds = [] } = {}) {
-  const results = Array.from({ length: runs }, (_, index) => runCampaign({ character, seed: seed + index * step }));
+export function measureCharacter(character, { runs = 24, seed = 11, step = 7, ownIds = [], policy = 'optimal', spend = 'normal' } = {}) {
+  const results = Array.from({ length: runs }, (_, index) => runCampaign({ character, seed: seed + index * step, policy, spend }));
   const wins = results.filter(result => result.won).length;
   const deaths = {};
   for (const result of results) {
@@ -103,6 +114,6 @@ export function measureCharacter(character, { runs = 24, seed = 11, step = 7, ow
   };
 }
 
-export function measureRoster({ characters = ['negro', 'solago', 'warrior', 'papazito'], runs = 24, seed = 11, ownByCharacter = {} } = {}) {
-  return characters.map(character => measureCharacter(character, { runs, seed, ownIds: ownByCharacter[character] ?? [] }));
+export function measureRoster({ characters = ['negro', 'solago', 'warrior', 'papazito'], runs = 24, seed = 11, ownByCharacter = {}, policy = 'optimal', spend = 'normal' } = {}) {
+  return characters.map(character => measureCharacter(character, { runs, seed, ownIds: ownByCharacter[character] ?? [], policy, spend }));
 }
