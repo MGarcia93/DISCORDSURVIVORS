@@ -31,7 +31,7 @@ test('a neutral entity at 100% in every stat resolves to the base table values',
 
 test('percentage sheets resolve the six stats into the absolute engine values EL NEGRO uses', () => {
   const negro = resolveEntityStats({
-    life: 120, defense: 30, attack: 300, attackSpeed: 222.22,
+    life: 120, defense: 30, attack: 300, attackSpeed: 180,
     attackDistance: 260, moveSpeed: 2800,
   });
   assert.equal(negro.hp, 120);
