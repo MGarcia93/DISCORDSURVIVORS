@@ -35,6 +35,8 @@ const ALIVE_CAP = 120;
 // Seconds of grace after a contact hit. Zero means every enemy lands its own
 // swing: standing in a pack kills, which is how the genre behaves.
 const CONTACT_IMMUNITY = 0;
+// Seconds a body has to wait before the next shove lands on it.
+const KNOCK_COOLDOWN = 1;
 
 export function createRun(random = Math.random, character = 'negro', rewards = {}, act = DEFAULT_ACT) {
   const characterDef = getCharacter(character);
@@ -335,12 +337,14 @@ function fire(run, source, damage, kind, maxDistance = Infinity, attack = null) 
   // target's direction once, keeps that heading, and hits everything its own
   // width touches on the way. No re-targeting, no bouncing.
   if (attack?.straight) {
+    // Aim and travel happen on the ground line, like every other shot; the
+    // ficha lifts only the drawing so the wave reads as leaving the mouth.
     const angle = Math.atan2(target.y - source.y, target.x - source.x);
     const speed = (attack.speed ?? 520) * WORLD_SCALE;
     const width = attack.width ?? 12;
     const wave = { x: source.x, y: source.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
       damage, kind, device, hit: [], ttl: Math.max(0.5, maxDistance / speed + 0.25),
-      angle, spin: false, through: true,
+      angle, spin: false, through: true, lift: attack.lift ?? 0,
       radius: Math.max(4, width / 2) * WORLD_SCALE, width };
     run.projectiles.push(wave);
     emit('shot', { run, kind });
@@ -484,7 +488,12 @@ function attackMelee(run) {
   // upgrade adds to it instead of replacing it.
   const push = (p.rewardBonuses.knockback ?? 0) + (combat.knockback ?? 0);
   if (push > 0) {
+    // A shove has a cooldown per body: without one, a fast bite pins a boss at
+    // arm's length forever and it never gets to swing.
+    const now = run.elapsed;
     for (const enemy of inReach.slice(0, 1 + extra)) {
+      if ((enemy.shoveAt ?? -Infinity) + KNOCK_COOLDOWN > now) continue;
+      enemy.shoveAt = now;
       const away = distance(enemy, p) || 1;
       enemy.x += (enemy.x - p.x) / away * push * WORLD_SCALE;
       enemy.y += (enemy.y - p.y) / away * push * WORLD_SCALE;

@@ -34,7 +34,11 @@ test('every bite shoves its target out of reach, so she has to step after it', (
   const pushed = target.x;
   run.shotIn = 0;
   step(run, 0.05, {});
-  assert.ok(target.x - pushed > 30, 'the upgrade adds to the base shove instead of replacing it');
+  assert.equal(target.x, pushed, 'a body has a shove cooldown: no pinning it at arm length');
+  run.elapsed += 1.2;
+  run.shotIn = 0;
+  step(run, 0.05, {});
+  assert.ok(target.x - pushed > 30, 'and once the cooldown passes the heavier shove lands');
 });
 
 test('Mordida de paleta cannot hit outside its reduced melee reach', () => {

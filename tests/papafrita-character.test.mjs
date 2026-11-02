@@ -283,7 +283,11 @@ test('6/6 keeps the 4/6 wave and sends the two echoes to different bodies', () =
     run.levelRanks[id] = 1;
   }
   p.waves = 14; // the fifteenth attack is a multiple of 3 and of 5
-  for (let i = 0; i < 4; i++) dummy(run, 100 + i * 60);
+  // Bodies spread on different headings, so the three waves cannot overlap.
+  dummy(run, 100, 400, 0);
+  dummy(run, 160, 400, 60);
+  dummy(run, 220, 400, -60);
+  dummy(run, 280, 400, 120);
   papafrita.onShot(run, p, toolbox(run), { target: 1 });
   const angles = run.projectiles.map(shot => Math.round(shot.angle * 100) / 100);
   assert.equal(angles.length, 3, 'the secondary wave still fires at 6/6, plus the two echoes');

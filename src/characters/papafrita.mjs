@@ -52,12 +52,12 @@ function power(p) {
 // touches. No re-targeting and no bouncing — it is a wall of sound crossing the
 // line it was thrown on, and the bodies it crosses eat part of it.
 function voiceWave(run, p, target, damage, width = 16) {
-  const angle = Math.atan2(target.y - (p.y - 8 * WORLD_SCALE), target.x - p.x);
+  const angle = Math.atan2(target.y - p.y, target.x - p.x);
   const speed = 560 * WORLD_SCALE;
   run.projectiles.push({
-    x: p.x, y: p.y - 8 * WORLD_SCALE,
+    x: p.x, y: p.y,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-    damage, kind: 'voice', device: 'voice', hit: [], through: true,
+    damage, kind: 'voice', device: 'voice', hit: [], through: true, lift: 56,
     ttl: Math.max(0.5, p.attackRange / speed + 0.25),
     angle, spin: false, radius: Math.max(4, width / 2) * WORLD_SCALE, width,
   });
@@ -74,9 +74,9 @@ function waveAt(run, p, ctx, { to = null, exclude = [], damage, width = 16 } = {
 function spawnEcho(run, p, angle, damage, width) {
   const speed = 560 * WORLD_SCALE;
   run.projectiles.push({
-    x: p.x, y: p.y - 8 * WORLD_SCALE,
+    x: p.x, y: p.y,
     vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-    damage, kind: 'voice', device: 'voice', hit: [], ttl: 1.6, through: true,
+    damage, kind: 'voice', device: 'voice', hit: [], ttl: 1.6, through: true, lift: 56,
     angle, radius: Math.max(4, width / 2) * WORLD_SCALE, width, echo: true,
   });
 }
@@ -189,7 +189,7 @@ const papafrita = {
     }),
   },
   // «No te callás más»: a straight wave of sound, not a homing shot.
-  attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560 },
+  attack: { type: 'ranged', device: 'voice', width: 16, straight: true, speed: 560, lift: 56 },
   ownOfferChance: 0.45,
   combat: {},
   decays: [],
