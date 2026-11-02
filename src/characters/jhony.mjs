@@ -1,6 +1,7 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawJhony } from '../sprites.mjs';
+import { statBlock } from './stat-block.mjs';
 
 // «TILT» (§4.2): a 0..100 bar. Damage taken and the pressure of the horde fill
 // it; at 100 he snaps into Furia for six seconds and the bar restarts from
@@ -170,10 +171,21 @@ function stompFinisher(run, p, ctx, rank) {
   return true;
 }
 
+// The six statistics as a percentage of the neutral reference. The selector
+// card and the engine read this one sheet, so they cannot disagree.
+const SHEET = {
+  life: 110,
+  defense: 90,
+  attack: 440,           // 44: just under a walker's 46, so one attack upgrade finishes it
+  attackSpeed: 105,
+  attackDistance: 85,
+  moveSpeed: 3300,
+};
+
 const jhony = {
   id: 'jhony',
   name: 'JHONY',
-  gameNote: 'METALERO TRYHARD · TILT Y BOTELLAZOS · SE DESBLOQUEA AL CONOCERLO EN EL ACTO 1',
+  gameNote: 'METALERO RUSHER · TILT Y BOTELLAZOS · SE DESBLOQUEA AL CONOCERLO EN EL ACTO 1',
   // Meeting him in Project Zomboid is what makes him selectable. The act keeps
   // him out of the group; the roster only borrows the ficha.
   unlock: { flag: 'jhonyUnlocked', scene: 'act-01-jhony' },
@@ -184,7 +196,7 @@ const jhony = {
       <div class="eyebrow">Berserker de botella · Dificultad media-alta</div><h2>JHONY</h2>
       <p class="character-desc">Metalero, tryhard y con cero paciencia. Empieza jugando tranquilo, pero basta una provocación para que se tiltee y putee a todo el servidor. Jura que no vuelve al LoL, aunque cuando está tomado es él quien propone la partida.</p>
       <p class="character-quote">«Estoy jugando tranquilo. No rompan las pelotas».</p>
-      <div class="stats jhony-stats"><div><b>110</b><small>VIDA</small></div><div><b>80</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>DEFENSA</small></div><div><b class="penalty">−15%</b><small>ALCANCE</small></div><div><b>+5%</b><small>ATK/SEG</small></div></div>
+      ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>BOTELLAZO</b><p>Golpea con la botella de cerveza al enemigo más cercano. Corto y fuerte: hay que acercarse. La botella no se gasta, no hay inventario.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>TILT</b><p>Barra de 0 a 100. La llena el daño recibido y la presión de la horda. Al llegar a 100 entra en Furia durante 6 segundos: +40% de ataque, +25% de velocidad de ataque y −30% de defensa. Después la barra arranca de cero.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>ME VI UNA GUÍA</b><p>Revisa la build más rota que encontró en internet y durante 10 segundos suma +30% de ataque y +50% de velocidad de ataque, además de tirar botellas que rebotan hasta 3 enemigos. Recarga: 30 segundos.</p></div></div>
@@ -223,14 +235,7 @@ const jhony = {
   // at the roster's average survival.
   stats: {
     hitRadius: 16 * WORLD_SCALE,
-    ...resolveEntityStats({
-      life: 110,
-      defense: 90,
-      attack: 440,           // 44: just under a walker's 46, so one attack upgrade finishes it
-      attackSpeed: 105,
-      attackDistance: 85,
-      moveSpeed: 3300,
-    }),
+    ...resolveEntityStats(SHEET),
   },
   attack: { type: 'melee' },
   // «Botellazo» (§4.1): short and heavy. The hit reads as glass and pushes a

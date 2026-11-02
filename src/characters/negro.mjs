@@ -1,6 +1,19 @@
 import { WORLD_SCALE } from '../constants.mjs';
 import { resolveEntityStats } from '../stats.mjs';
 import { drawElNegro, drawChair } from '../sprites.mjs';
+import { statBlock } from './stat-block.mjs';
+
+// The six statistics as a percentage of the neutral reference. The joke is the
+// effort he does not make: he is the slowest body in the roster and he does not
+// take hits for anyone. The tank is Solago.
+const SHEET = {
+  life: 120,             // 120 points of damage
+  defense: 30,           // 3 defense points -> 15% mitigation
+  attack: 216,           // 21.6 per shot: ranged pays twice, it never has to close
+  attackSpeed: 152,      // 1.52 attacks/s: -20% on top of the ranged damage cut
+  attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
+  moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always
+};
 
 const negro = {
   id: 'negro',
@@ -18,7 +31,7 @@ const negro = {
       <div class="eyebrow">Sedentario a distancia · Dificultad fácil</div><h2>EL NEGRO</h2>
       <p class="character-desc">Se cree blanco cuando es negro. Dice que se baña, pero nadie le cree. Amante de las coloradas, las Hello Kitty Girls y las sin papá.</p>
       <p class="character-quote">«El verdadero esfuerzo es levantarse».</p>
-      <div class="stats"><div><b>120</b><small>VIDA</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b class="penalty">−15%</b><small>VELOCIDAD</small></div></div>
+      ${statBlock(SHEET)}
       <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Empieza sin rebote; podés elegirlo al subir de nivel.</p></div></div>
       <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>
@@ -50,16 +63,7 @@ const negro = {
   // attacker values the engine reads.
   stats: {
     hitRadius: 17 * WORLD_SCALE, // collision size: not one of the six combat stats
-    ...resolveEntityStats({
-      // The joke is the effort he does not make: he is the slowest body in the
-      // roster and he does not take hits for anyone. The tank is Solago.
-      life: 120,             // 120 points of damage
-      defense: 30,           // 3 defense points -> 15% mitigation
-      attack: 216,           // 21.6 per shot: ranged pays twice, it never has to close
-      attackSpeed: 152,      // 1.52 attacks/s: -20% on top of the ranged damage cut
-      attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
-      moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always
-    }),
+    ...resolveEntityStats(SHEET),
   },
   // Sedentarismo extremo: the only body in the cast that heals by not moving.
   initPlayer(p) {
