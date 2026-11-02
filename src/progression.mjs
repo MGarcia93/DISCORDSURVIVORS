@@ -102,9 +102,19 @@ export function sceneSeenStore(storage) {
   };
 }
 
+// The Konami code opens the roster for the rest of the session and nothing more:
+// it is never written to the save, so closing the tab closes the door again.
+let sessionUnlockAll = false;
+
+export function unlockAllForSession() {
+  sessionUnlockAll = true;
+  return true;
+}
+
 export function isCharacterUnlocked(character, storage) {
   const descriptor = unlockDescriptor(character);
   if (descriptor && descriptor.flag === null) return true;
+  if (sessionUnlockAll) return true;
   const progress = readProgress(storage);
   if (!progress) return false;
   if (progress.debugUnlockAll === true) return true;
@@ -115,7 +125,7 @@ export function isCharacterUnlocked(character, storage) {
 }
 
 export function isDebugUnlockAll(storage) {
-  return readProgress(storage)?.debugUnlockAll === true;
+  return sessionUnlockAll || readProgress(storage)?.debugUnlockAll === true;
 }
 
 export function unlockCharacter(character, storage) {

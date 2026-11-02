@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 // Same minimal browser the app tests use: enough DOM for the shell, plus a real
-// localStorage so the unlock is the one the game would persist.
+// localStorage so the test can prove the code never writes to it.
 function browser() {
   const handlers = new Map(), cache = new Map(), storage = new Map();
   const ctx = new Proxy({}, { get: () => () => 0, set: () => true });
@@ -33,8 +33,9 @@ function browser() {
 }
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+const ROSTER_IDS = ['solago', 'warrior', 'papazito', 'jhony', 'papafrita'];
 
-test('the Konami code on the menu unlocks the roster, and a near miss does not', async () => {
+test('the Konami code on the menu unlocks the roster for the session only', async () => {
   const dom = browser();
   await import('../src/app.mjs');
   const { state } = await import('../src/app/state.mjs');
@@ -43,6 +44,12 @@ test('the Konami code on the menu unlocks the roster, and a near miss does not',
   assert.equal(state.screen, 'home');
   assert.equal(isCharacterUnlocked('solago'), false, 'the roster starts locked');
 
+  // Off the menu the code is just noise.
+  state.screen = 'characters';
+  for (const key of KONAMI) dom.key(key);
+  assert.equal(isCharacterUnlocked('solago'), false, 'the roster screen is not the menu');
+  state.screen = 'home';
+
   // Nine of the ten keys, then a wrong one: the egg must not open.
   for (const key of KONAMI.slice(0, 9)) dom.key(key);
   dom.key('x');
@@ -50,21 +57,14 @@ test('the Konami code on the menu unlocks the roster, and a near miss does not',
   assert.equal(state.screen, 'home');
 
   for (const key of KONAMI) dom.key(key);
-  assert.equal(state.debugUnlockAll, true, 'the egg turns the debug unlock on');
-  assert.equal(state.screen, 'characters', 'and shows the roster');
-  for (const id of ['solago', 'warrior', 'papazito', 'jhony', 'papafrita']) {
-    assert.equal(isCharacterUnlocked(id), true, `${id} is playable`);
-  }
-  assert.equal(JSON.parse(dom.storage.get('discord-survivors.progress.v1')).debugUnlockAll, true, 'and it is saved');
+  assert.equal(state.debugUnlockAll, true, 'the egg shows the roster unlocked');
+  assert.equal(state.screen, 'characters', 'and opens it');
+  for (const id of ROSTER_IDS) assert.equal(isCharacterUnlocked(id), true, `${id} is playable`);
+  assert.equal(dom.storage.size, 0, 'nothing is written: closing the tab closes the door');
 });
 
-test('the Konami code only counts while the menu is on screen', async () => {
-  const dom = browser();
-  await import('../src/app.mjs');
-  const { state } = await import('../src/app/state.mjs');
-  const { isCharacterUnlocked } = await import('../src/progression.mjs');
-
-  state.screen = 'characters';
-  for (const key of KONAMI) dom.key(key);
-  assert.equal(isCharacterUnlocked('solago'), false, 'the roster screen is not the menu');
+test('a fresh session starts locked again', async () => {
+  // A second instance of the module is what a reload gives the player.
+  const reloaded = await import('../src/progression.mjs?session=2');
+  assert.equal(reloaded.isCharacterUnlocked('solago'), false, 'the unlock did not survive the reload');
 });

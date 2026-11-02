@@ -4,7 +4,7 @@ import { nextPlayableAct, PLAYABLE_ACTS, actForWorld, getAct } from './campaign/
 import { drawStory } from './scenes.mjs';
 import { drawBackground } from './backgrounds/index.mjs';
 import { storyPages } from './screens/story-pages.mjs';
-import { isCharacterUnlocked, unlockAllForTesting, UNLOCK_CHAIN } from './progression.mjs';
+import { isCharacterUnlocked, unlockAllForTesting, unlockAllForSession, UNLOCK_CHAIN } from './progression.mjs';
 import { DEV } from './dev-flags.mjs';
 import { on } from './bus.mjs';
 import { state } from './app/state.mjs';
@@ -254,10 +254,11 @@ document.addEventListener('input', event => {
   if (label && level !== null) label.textContent = `${Math.round(level * 100)}%`;
 });
 
-// Both the Alt+Shift+U shortcut and the Konami code open this door: the debug
-// unlock for a build being shown off, not a reward for playing.
-function unlockEverything() {
-  if (!unlockAllForTesting()) return false;
+// Both the Alt+Shift+U shortcut and the Konami code open this door. The shortcut
+// is for a build being shown off and stays saved; the code is an easter egg for
+// whoever plays, so it only lasts the session.
+function unlockEverything(unlock = unlockAllForTesting) {
+  if (!unlock()) return false;
   state.debugUnlockAll = true;
   for (const id of UNLOCK_CHAIN) state[`${id}Unlocked`] = true;
   state.selectedCharacter = 'negro';
@@ -309,8 +310,8 @@ document.addEventListener('keydown', event => {
       event.preventDefault();
       return;
     }
-    if (DEV && state.screen === 'home' && konamiCode(key)) {
-      unlockEverything();
+    if (state.screen === 'home' && konamiCode(key)) {
+      unlockEverything(unlockAllForSession);
       event.preventDefault();
       return;
     }
