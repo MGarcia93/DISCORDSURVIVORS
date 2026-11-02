@@ -21,14 +21,8 @@ export function waveBudget(act, wave, duration) {
   return Math.round(config.perMinute * duration / 60);
 }
 
-// One life value per world, for every wave of it. The value is the one the
-// second wave declared: by then the build has started and the first wave stays
-// a warm up. A miniboss and the boss carry their own sheets, so the closing
-// waves do not need the kind to grow.
 export function waveLife(act, wave, kind) {
-  const rows = (act?.waves ?? []).filter(row => typeof row.life?.[kind] === 'number');
-  if (!rows.length) return undefined;
-  return rows[Math.min(1, rows.length - 1)].life[kind];
+  return waveConfig(act, wave)?.life?.[kind];
 }
 
 // One roll per spawn. A single-kind wave consumes no rolls at all, so a wave

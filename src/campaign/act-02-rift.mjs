@@ -19,30 +19,30 @@ export default {
   miniboss: { wave: 5, kind: 'maiden', name: 'LA DONCELLA DE LA NIEBLA' },
   boss: { wave: 6, kind: 'yorick', name: 'YORICK, EL ENTERRADOR' },
   waves: [
-    { wave: 1, perMinute: 60, mix: { meleeMinion: 1 }, life: { meleeMinion: 53 } },
+    { wave: 1, perMinute: 60, mix: { meleeMinion: 1 }, life: { meleeMinion: 53, mageMinion: 48, siegeMinion: 96, mistWalker: 55 } },
     {
       wave: 2,
       perMinute: 72,
       mix: { meleeMinion: 0.5, mageMinion: 0.3, siegeMinion: 0.2 },
-      life: { meleeMinion: 60, mageMinion: 48, siegeMinion: 96 },
+      life: { meleeMinion: 53, mageMinion: 48, siegeMinion: 96, mistWalker: 55 },
     },
     {
       wave: 3,
       perMinute: 84,
       mix: { mistWalker: 0.7, meleeMinion: 0.3 },
-      life: { mistWalker: 55, meleeMinion: 67 },
+      life: { meleeMinion: 53, mageMinion: 48, siegeMinion: 96, mistWalker: 55 },
     },
     {
       wave: 4,
       perMinute: 96,
       mix: { mistWalker: 0.45, mageMinion: 0.3, siegeMinion: 0.25 },
-      life: { mistWalker: 65, mageMinion: 62, siegeMinion: 110 },
+      life: { meleeMinion: 53, mageMinion: 48, siegeMinion: 96, mistWalker: 55 },
     },
     // The Maiden arrives once at the start of this wave; the walkers keep her company.
     // The Maiden does not run on a clock: the wave closes when she falls.
-    { wave: 5, untimed: true, perMinute: 30, mix: { mistWalker: 1 }, life: { mistWalker: 74 } },
+    { wave: 5, untimed: true, perMinute: 30, mix: { mistWalker: 1 }, life: { meleeMinion: 53, mageMinion: 48, siegeMinion: 96, mistWalker: 55 } },
     // The boss wave is untimed and carries no budget of its own: Yorick brings
     // his walkers with him.
-    { wave: 6, perMinute: 0, mix: {}, life: { mistWalker: 79 } },
+    { wave: 6, perMinute: 0, mix: {}, life: { meleeMinion: 53, mageMinion: 48, siegeMinion: 96, mistWalker: 55 } },
   ],
 };
