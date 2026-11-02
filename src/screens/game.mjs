@@ -16,7 +16,11 @@ export function game(previousRun = null) {
   state.lastPhase = '';
   const act = state.run.act;
   const def = state.run.player.characterDef;
-  const abilityButtons = def.specials
+  // Q is the ultimate and E the basic ability on every ficha, so the buttons
+  // read left to right in the same order no matter how the sheet lists them.
+  const hotkeyOrder = 'qer';
+  const abilityButtons = [...def.specials]
+    .sort((a, b) => hotkeyOrder.indexOf(a.hotkey) - hotkeyOrder.indexOf(b.hotkey))
     .map(special => `<button class="ability" data-special="${special.key}"><kbd>${special.hotkey.toUpperCase()}</kbd> <span>${special.name}</span></button>`)
     .join('');
   state.content.innerHTML = `

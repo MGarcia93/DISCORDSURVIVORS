@@ -38,7 +38,7 @@ test('Jhony runs on the percentage core with the sheet from the character doc', 
   assert.equal(p.speed, 165 * WORLD_SCALE);
   assert.equal(CHARACTERS.jhony.attack.type, 'melee', 'the botellazo is a melee swing');
   assert.equal(CHARACTERS.jhony.specials.map(s => `${s.key},${s.hotkey},${s.duration},${s.cooldown}`).join('|'),
-    'drink,q,6,16|guide,e,10,30');
+    'drink,e,6,16|guide,q,10,30');
 });
 
 test('the botellazo hits one enemy in reach, reads as glass and pushes', () => {

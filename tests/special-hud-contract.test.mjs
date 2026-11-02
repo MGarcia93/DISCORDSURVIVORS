@@ -18,9 +18,17 @@ test('every special declares a unique hotkey and a HUD label; characters declare
     assert.ok(hotkeys.size === def.specials.length);
   }
   assert.equal(CHARACTERS.negro.specials.map(s => `${s.key},${s.hotkey},${s.name}`).join('|'),
-    'anime,q,Modo Otaku|chair,e,Me da paja');
+    'anime,e,Modo Otaku|chair,q,Me da paja');
   assert.equal(CHARACTERS.solago.specials.map(s => `${s.key},${s.hotkey},${s.name}`).join('|'),
-    'stand,e,La Patrona');
+    'stand,q,La Patrona');
+});
+
+test('every ficha puts the ultimate on Q and the basic ability on E', () => {
+  for (const [id, def] of Object.entries(CHARACTERS)) {
+    const hotkeys = def.specials.map(special => special.hotkey).sort();
+    const expected = def.specials.length === 1 ? ['q'] : ['e', 'q'];
+    assert.deepEqual(hotkeys, expected, `${id} must use Q for the ultimate and E for the basic ability`);
+  }
 });
 
 test('taskHud and regenHud only come from characters that render them', () => {

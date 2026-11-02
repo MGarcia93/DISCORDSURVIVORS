@@ -16,9 +16,9 @@ try {
   await page.getByRole('button', { name: 'ENTRAR AL CAOS' }).click();
   await page.waitForFunction(() => document.querySelector('#timer')?.textContent === '00:59');
   await page.keyboard.press('q');
-  await page.waitForFunction(() => document.querySelector('[data-special="anime"]')?.disabled);
-  await page.keyboard.press('e');
   await page.waitForFunction(() => document.querySelector('[data-special="chair"]')?.disabled);
+  await page.keyboard.press('e');
+  await page.waitForFunction(() => document.querySelector('[data-special="anime"]')?.disabled);
   await page.getByRole('button', { name: 'PAUSA', exact: false }).click();
   await page.getByRole('dialog', { name: 'Partida pausada' }).waitFor();
   const timer = await page.locator('#timer').textContent();

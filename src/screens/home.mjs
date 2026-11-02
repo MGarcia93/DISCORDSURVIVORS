@@ -34,7 +34,7 @@ export function controls() {
   document.querySelector('#menu-overlay').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Controles"><div>
     <div class="eyebrow">Manual de supervivencia</div><h2>CON LO MÍNIMO ALCANZA</h2>
     <p><kbd>WASD</kbd> / <kbd>↑ ← ↓ →</kbd> Moverse<br>El control remoto ataca automáticamente.</p>
-    <p><kbd>Q</kbd> Modo Otaku · <kbd>E</kbd> Me da paja<br><kbd>ESC</kbd> Pausar la partida</p>
+    <p><kbd>Q</kbd> Me da paja · <kbd>E</kbd> Modo Otaku<br><kbd>ESC</kbd> Pausar la partida</p>
     <p>Quedate quieto 2 segundos para regenerar vida.<br>En pantalla táctil usá las flechas y los botones.</p>
     <button class="primary" data-action="close-menu">ENTENDIDO</button>
     </div></div>`;

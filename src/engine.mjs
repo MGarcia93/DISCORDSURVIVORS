@@ -32,6 +32,9 @@ export { chooseLevelReward, skipEmptyChoice, buyItem, nextLevelXP } from './run-
 // Safety net: the per-wave budget is the real limiter, this only stops a wave
 // from ever flooding the arena if its data asks for an absurd density.
 const ALIVE_CAP = 120;
+// Seconds of grace after a contact hit. Zero means every enemy lands its own
+// swing: standing in a pack kills, which is how the genre behaves.
+const CONTACT_IMMUNITY = 0;
 
 export function createRun(random = Math.random, character = 'negro', rewards = {}, act = DEFAULT_ACT) {
   const characterDef = getCharacter(character);
@@ -413,7 +416,10 @@ function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } 
   if (incoming > 0) p.characterDef.onDamaged?.(run, p, incoming,
     { hit, distance, nearest, fireRadial });
   p.hp = Math.max(0, p.hp - incoming);
-  p.immune = 0.65;
+  // No grace window after a contact hit: every enemy swings on its own clock,
+  // so a crowd lands a crowd's worth of damage. Only the boss rings still grant
+  // immunity, because a ring is one attack, not a body.
+  p.immune = CONTACT_IMMUNITY;
   const counter = p.rewardBonuses.smileCounter ?? 0;
   if (counter > 0 && (p.smile ?? 0) > 0 && enemy) hit(run, enemy, p.damage * counter, 'bite');
   return incoming;
@@ -640,7 +646,7 @@ export function step(run, seconds, input = {}) {
       enemy.x += (p.x - enemy.x) / dist * enemy.speed * charge * confusedSlow * dt;
       enemy.y += (p.y - enemy.y) / dist * enemy.speed * charge * confusedSlow * dt;
     }
-    const action = p.immune <= 0 && (enemy.attackCd ?? 0) <= 0
+    const action = (enemy.attackCd ?? 0) <= 0
       ? (enemy.actions ? pickAction(run, enemy, { inReach, distance: dist }) : (inReach ? { key: 'swipe', kind: 'melee' } : null))
       : null;
     if (action && action.kind !== 'melee') {

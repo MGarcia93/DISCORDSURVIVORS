@@ -32,7 +32,7 @@ try {
   assert.equal(await page.locator('[data-special="stand"]').isVisible(), true);
   assert.equal(await page.locator('[data-special="anime"]').count(), 0);
   assert.equal(await page.locator('#task-panel').isVisible(), true);
-  await page.keyboard.press('e');
+  await page.keyboard.press('q');
   await page.waitForFunction(() => document.querySelector('[data-special="stand"]')?.disabled === true);
   assert.equal(await page.locator('#task-label').innerText(), '0/8 BAJAS');
 

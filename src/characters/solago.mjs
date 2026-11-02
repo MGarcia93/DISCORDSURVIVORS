@@ -29,7 +29,7 @@ const solago = {
       <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido, y empuja lo que muerde.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'SOLAGO · BLOQUEADO · ENCUENTRO DEL ACTO 2',
     unlocked: 'SOLAGO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -129,7 +129,7 @@ const solago = {
   },
   specials: [
     {
-      key: 'stand', name: 'La Patrona', hotkey: 'e', duration: 7, cooldown: 26, durationBonus: 'standDuration',
+      key: 'stand', name: 'La Patrona', hotkey: 'q', duration: 7, cooldown: 26, durationBonus: 'standDuration',
       buff: 'daño en área · no te podés mover',
       immobilize: true,
       onTick(run, p, dt, ctx) {

@@ -21,8 +21,8 @@ const negro = {
       <div class="stats"><div><b>120</b><small>VIDA</small></div><div><b>+15%</b><small>DEFENSA</small></div><div><b class="penalty">−15%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>ARSENAL GAMER</b><p>Alterna entre control remoto, joystick y celular. Empieza sin rebote; podés elegirlo al subir de nivel.</p></div></div>
       <div class="skill"><kbd>☾</kbd><div><b>SEDENTARISMO EXTREMO</b><p>Quedate quieto 2 segundos para regenerar vida. Por fin una recompensa por no hacer nada.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>ME DA PAJA</b><p>6 segundos en el sillón: daño en área, resistencia extra y casi nada de movimiento. Recarga: 22 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>MODO OTAKU</b><p>Invocá una waifu pixel art durante 8 segundos. Recarga: 18 segundos.</p></div></div>`,
   // Roster card pose and the animated selection preview live here too.
   rosterPose: { x: 20, y: 47 },
   drawRoster(ctx) { drawElNegro(ctx, this.rosterPose.x, this.rosterPose.y, { scale: 1 }); },
@@ -70,7 +70,7 @@ const negro = {
   passives: [],
   specials: [
     {
-      key: 'anime', name: 'Modo Otaku', hotkey: 'q', duration: 8, cooldown: 18, durationBonus: 'waifuDuration',
+      key: 'anime', name: 'Modo Otaku', hotkey: 'e', duration: 8, cooldown: 18, durationBonus: 'waifuDuration',
       buff: 'waifu que dispara sola',
       onTick(run, p, dt, ctx) {
         run.animeIn -= dt;
@@ -80,7 +80,7 @@ const negro = {
       },
     },
     {
-      key: 'chair', name: 'Me da paja', hotkey: 'e', duration: 6, cooldown: 22,
+      key: 'chair', name: 'Me da paja', hotkey: 'q', duration: 6, cooldown: 22,
       buff: 'daño en área · casi no te movés',
       speedFactor: 0.12, contactFactor: 0.2,
       onTick(run, p, dt, ctx) {

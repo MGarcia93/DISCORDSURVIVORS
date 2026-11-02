@@ -18,13 +18,13 @@ function actors() {
 test('Viaje Astral config lives on the sheet', () => {
   const astral = CHARACTERS.warrior.specials[0];
   assert.equal(astral.key, 'astral');
-  assert.equal(astral.hotkey, 'q');
+  assert.equal(astral.hotkey, 'e');
   assert.equal(astral.cooldown, 20);
   assert.equal(astral.duration, 6);
   assert.equal(astral.radius, 170 * WORLD_SCALE);
   const vanish = CHARACTERS.warrior.specials[1];
   assert.equal(vanish.key, 'vanish');
-  assert.equal(vanish.hotkey, 'e');
+  assert.equal(vanish.hotkey, 'q');
   assert.equal(vanish.cooldown, 30);
   assert.equal(vanish.duration, 2);
   assert.equal(vanish.contactFactor, 0);

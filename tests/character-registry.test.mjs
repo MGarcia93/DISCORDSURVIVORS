@@ -111,9 +111,9 @@ test('penniless Papazito receives the panic buff with an unpaid bill', () => {
   assert.equal(p.panicTtl, 5);
 });
 
-test('ANAMENCUÁ is a 25s-cooldown r key unleashing three radial brick bursts', () => {
+test('ANAMENCUÁ is a 25s-cooldown Q ultimate unleashing three radial brick bursts', () => {
   assert.deepEqual(CHARACTERS.papazito.specials.map(s => [s.key, s.name, s.hotkey]),
-    [['sell', 'Liquidó todo', 'q'], ['anamencua', '¡ANAMENCUÁ!', 'r']]);
+    [['sell', 'Liquidó todo', 'e'], ['anamencua', '¡ANAMENCUÁ!', 'q']]);
 
   const run = createRun(Math.random, 'papazito');
   run.spawnIn = 100;
@@ -132,7 +132,7 @@ test('ANAMENCUÁ is a 25s-cooldown r key unleashing three radial brick bursts', 
 
 test('the sell table lives in the sheet, once per belonging, reset by every new run', () => {
   const spec = CHARACTERS.papazito.specials.find(s => s.key === 'sell');
-  assert.equal(spec.hotkey, 'q');
+  assert.equal(spec.hotkey, 'e');
   const items = spec.items;
   assert.deepEqual(Object.keys(items), ['psp', 'monitor', 'keyboard', 'chair', 'pc']);
   assert.equal(items.psp.coins, 20);

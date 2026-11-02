@@ -24,8 +24,8 @@ const warrior = {
       <div class="stats warrior-stats"><div><b>−10%</b><small>VIDA MÁXIMA</small></div><div><b>+325%</b><small>DAÑO POR BOMBA</small></div><div><b>+200%</b><small>ALCANCE</small></div><div><b>0,75</b><small>HONGOS/SEGUNDO</small></div><div><b>100%</b><small>VELOCIDAD</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>HONGOS ALUCINÓGENOS</b><p>Tira hongos que explotan al impactar: daño en área y Confusión acumulable en el grupo.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>HUMO DE PROCEDENCIA DUDOSA</b><p>Nube periódica que ralentiza un 35% y hace fallar un 20% de los ataques enemigos.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>ME DESAPAREZCO</b><p>Nube de humo enorme, invulnerable y reaparece de a chic: explosión de esporas al volver. Recarga: 30 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>VIAJE ASTRAL</b><p>Círculo de esporas alucinógenas: daño continuo en área y desorientación. Recarga: 20 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'WARRIOR · BLOQUEADO · ENCUENTRO DEL ACTO 4',
     unlocked: 'WARRIOR DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -95,7 +95,7 @@ const warrior = {
   // disorients normal enemies (drift) and briefly stuns the weak ones; strong
   // enemies and bosses only get slowed.
   specials: [{
-    key: 'astral', name: 'Viaje Astral', hotkey: 'q', duration: 6, cooldown: 20,
+    key: 'astral', name: 'Viaje Astral', hotkey: 'e', duration: 6, cooldown: 20,
     buff: 'daño en área · confunde y aturde',
     radius: 170 * WORLD_SCALE, tickRate: 0.4, tickFactor: 0.6,
     stacksPerTick: 2, confusionTtl: 6, stunThreshold: 150, stunWindow: 1.2,
@@ -114,7 +114,7 @@ const warrior = {
   }, {
     // E: ME DESAPAREZCO. Short full invulnerability inside smoke, then he
     // reappears at the safest nearby spot with a spore explosion.
-    key: 'vanish', name: 'Me Desaparezco', hotkey: 'e', duration: 2, cooldown: 30,
+    key: 'vanish', name: 'Me Desaparezco', hotkey: 'q', duration: 2, cooldown: 30,
     buff: 'invulnerable · explosión al volver',
     contactFactor: 0,
     blink: 90 * WORLD_SCALE, burstRadius: 120 * WORLD_SCALE,

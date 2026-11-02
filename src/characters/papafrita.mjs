@@ -24,9 +24,10 @@ const WAVE_RADIUS = 240;      // scaled px from the mouth to the edge
 const WAVE_GROWTH = 1.6;      // seconds to open the whole way
 const WAVE_EVERY = 2;         // seconds between waves while the monologue runs
 // Three waves per activation, and the three together are a runner's life with
-// the base sheet (~54): each one is a third, so a single wave never one-shots
-// and the whole monologue does. Everything scales with attack from there.
-const WAVE_DAMAGE = 2 / 3;
+// the base sheet (~54): each one is a sixth of the sheet (18 per wave), so a
+// single wave never one-shots and the whole monologue does. Everything scales
+// with attack from there.
+const WAVE_DAMAGE = 0.5;
 // The front is not infinite: every body it crosses eats a piece of it, so a
 // line of walkers is not swept at full damage.
 const WAVE_FALLOFF = 0.72;
@@ -149,11 +150,11 @@ const papafrita = {
       <div class="eyebrow">Atacante de voz · Coleccionista · Dificultad media-alta</div><h2>PAPAFRITA</h2>
       <p class="character-desc">Habla demasiado. Se mete en Discord, empieza a explicar un juego o una build que nadie le pidió y cuando parece que terminó todavía le quedan veinte minutos. Fanático de los single player y de Monster Hunter, amenaza con irse a jugar solo pero no admite que le gusta jugar con el Negro.</p>
       <p class="character-quote">«Para esto me voy a jugar un single player».</p>
-      <div class="stats papafrita-stats"><div><b>90</b><small>VIDA</small></div><div><b>30</b><small>DAÑO</small></div><div><b class="penalty">−15%</b><small>DEFENSA</small></div><div><b>+220%</b><small>ALCANCE</small></div><div><b>2,4</b><small>ONDAS/SEG</small></div></div>
+      <div class="stats papafrita-stats"><div><b>90</b><small>VIDA</small></div><div><b>36</b><small>DAÑO</small></div><div><b class="penalty">−15%</b><small>DEFENSA</small></div><div><b>+220%</b><small>ALCANCE</small></div><div><b>1,8</b><small>ONDAS/SEG</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>NO TE CALLÁS MÁS</b><p>Ondas de voz a distancia media que atraviesan a varios enemigos. No sostiene armas: su voz es el ataque.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>ME FALTA UN ÍTEM</b><p>Cuenta los tipos distintos de sus seis mejoras, nunca las copias. Con 2 tipos las ondas atraviesan un enemigo más; con 4, cada 5 ataques sale una onda secundaria; con 6, cada 3 ataques salen dos ecos.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>MONÓLOGO INTERMINABLE</b><p>Tres ondas de voz que se abren desde él y golpean una vez a todo lo que atraviesan. Las tres juntas se llevan a un runner con la hoja base, y escalan con el ataque. Recarga: 18 segundos.</p></div></div>
-      <div class="skill"><kbd>E</kbd><div><b>AHORA SÍ COMPLETÉ LA BUILD</b><p>Seis segundos de ondas en varias direcciones, globos extra y sus mejoras potenciadas: escala con lo que juntó, nunca regala lo que no tiene. Recarga: 30 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>AHORA SÍ COMPLETÉ LA BUILD</b><p>Seis segundos de ondas en varias direcciones, globos extra y sus mejoras potenciadas: escala con lo que juntó, nunca regala lo que no tiene. Recarga: 30 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>MONÓLOGO INTERMINABLE</b><p>Tres ondas de voz que se abren desde él y golpean una vez a todo lo que atraviesan. Las tres juntas se llevan a un runner con la hoja base, y escalan con el ataque. Recarga: 18 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'PAPAFRITA · BLOQUEADO · TERMINÁ EL ACTO 5',
     unlocked: 'PAPAFRITA DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -181,8 +182,8 @@ const papafrita = {
     ...resolveEntityStats({
       life: 90,
       defense: 85,
-      attack: 270,
-      attackSpeed: 240,
+      attack: 360,
+      attackSpeed: 180,
       attackDistance: 320,
       moveSpeed: 3300,
     }),
@@ -195,7 +196,8 @@ const papafrita = {
   passives: [],
   specials: [
     {
-      key: 'monologo', name: 'Monólogo interminable', hotkey: 'q', duration: 6, cooldown: 18,
+      key: 'monologo', name: 'Monólogo interminable', hotkey: 'e', duration: 6, cooldown: 18,
+      buff: 'ondas de voz que atraviesan todo',
       onStart(run, p) {
         run.monologue = { x: p.x, y: p.y, rings: [], emitIn: 0 };
       },
@@ -206,7 +208,8 @@ const papafrita = {
       },
     },
     {
-      key: 'build', name: 'Ahora sí completé la build', hotkey: 'e', duration: 6, cooldown: 30,
+      key: 'build', name: 'Ahora sí completé la build', hotkey: 'q', duration: 6, cooldown: 30,
+      buff: 'ondas en varias direcciones · globos extra',
       onStart(run, p) {
         run.buildIn = 0;
         run.buildBubbleIn = 1.2;

@@ -55,7 +55,7 @@ test('real app input and wave transitions honor narrative ownership without chan
   assert.equal(state.run.phase, 'playing');
   assert.equal(narrative.blocked, false);
   dom.key('q');
-  assert.ok(state.run.player.anime > 0, 'existing keyboard ability still works');
+  assert.ok(state.run.player.chair > 0, 'existing keyboard ability still works');
   state.run.time = 59.99;
   dom.frame(1000); dom.frame(1100);
   assert.equal(state.run.phase, 'shop');

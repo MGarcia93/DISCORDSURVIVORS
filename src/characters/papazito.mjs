@@ -26,8 +26,8 @@ const papazito = {
       <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+240%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 4 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente 1 ficha y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
-      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 25 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 25 segundos.</p></div></div>
+      <div class="skill"><kbd>E</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>`,
   unlockNote: {
     locked: 'PAPAZITO · BLOQUEADO · ENCUENTRO DEL ACTO 3',
     unlocked: 'PAPAZITO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -167,7 +167,7 @@ const papazito = {
   // Especial «Liquido todo, me voy de putas» (ficha §4.3): invented inventory,
   // engine-routine sale; the app renders the pause menu from this exact table.
   specials: [{
-    key: 'sell', name: 'Liquidó todo', hotkey: 'q', duration: 0, cooldown: 0,
+    key: 'sell', name: 'Liquidó todo', hotkey: 'e', duration: 0, cooldown: 0,
     items: {
       psp: { label: 'PSP', coins: 20, damageFrac: 0.1, damageTtl: 10, moveSlowFrac: 0.15, moveSlowTtl: 10, quote: 'Vendió la PSP' },
       monitor: { label: 'Monitor', coins: 35, damageFrac: 0.15, damageTtl: 10, visionTtl: 10, quote: 'Vendió el monitor' },
@@ -177,7 +177,7 @@ const papazito = {
     },
   }, {
     // Three dense expanding rings, not a continuous homing rain.
-    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 1.2, cooldown: 25,
+    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'q', duration: 1.2, cooldown: 25,
     buff: '3 anillos de ladrillos',
     burstCount: 3, bricksPerBurst: 48, burstInterval: 0.45,
     spawnRadius: 18 * WORLD_SCALE, speed: 280 * WORLD_SCALE, damageMult: 1,

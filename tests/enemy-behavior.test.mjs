@@ -55,13 +55,14 @@ test('an enemy attacks from its own reach and goes on its own cooldown', () => {
   assert.equal(enemy.attackCd, 2, 'waits its own interval, not the contact floor');
 });
 
-test('the player immunity stays a floor between two hits of the same enemy', () => {
+test('there is no global grace: each enemy lands its own swing', () => {
   const run = quietRun();
-  const enemy = place(run, { attackRange: 0, attackInterval: 0 });
+  place(run, { attackRange: 0, attackInterval: 0 });
   step(run, 0.05, {});
   const afterFirst = run.player.hp;
+  assert.ok(afterFirst < 1000, 'the first swing lands');
   step(run, 0.05, {});
-  assert.equal(run.player.hp, afterFirst, 'the second swing lands after the immunity, not before');
+  assert.ok(run.player.hp < afterFirst, 'and the next one lands too: a crowd is a crowd');
 });
 
 test('an enemy with declared actions rolls one by weight and pays its cooldown', () => {
