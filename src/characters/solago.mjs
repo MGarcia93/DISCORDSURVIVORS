@@ -54,7 +54,7 @@ const solago = {
       defense: 45,          // 4.5 defense points -> 22.5% mitigation
       attack: 520,          // 52 damage per bite: the heaviest punch in the cast
       attackSpeed: 150,     // 1.5 bites per second: each one has to hurt
-      attackDistance: 78,   // wide enough to bite without standing inside the boss
+      attackDistance: 83,   // close to Jhony: a bite that lands without living inside the boss
       moveSpeed: 3550,      // ~178 scaled px/s: she has to reach the bite
     }),
   },
