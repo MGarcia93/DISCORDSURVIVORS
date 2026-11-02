@@ -56,7 +56,7 @@ test('three brick rings hit enemies in every direction with defense and sale dam
   }
   activateSpecial(run, 'anamencua');
   for (let i = 0; i < 150; i++) step(run, 0.01);
-  for (const enemy of run.enemies) assert.ok(Math.abs(enemy.hp - (200 - 3 * 30 * 1.5 * 0.8)) < 1e-8);
+  for (const enemy of run.enemies) assert.ok(Math.abs(enemy.hp - (200 - 3 * 34 * 1.5 * 0.8)) < 1e-8);
   assert.equal(run.enemies.length, 4);
 });
 

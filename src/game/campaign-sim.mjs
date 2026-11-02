@@ -1,4 +1,4 @@
-import { activateSpecial, buyHeal, buyItem, chooseLevelReward, createRun, skipEmptyChoice, startNextWave, step } from '../engine.mjs';
+import { activateSpecial, buyHeal, buyItem, chooseLevelReward, createRun, sellBelonging, skipEmptyChoice, startNextWave, step } from '../engine.mjs';
 import { BALANCE } from '../reward-data.mjs';
 import { DEFAULT_ACT, nextPlayableAct } from '../campaign/acts.mjs';
 import { HEAL_COST } from '../engine.mjs';
@@ -20,13 +20,25 @@ export function seededRandom(seed) {
   return () => (state = (state * 1103515245 + 12345) % 2147483648) / 2147483648;
 }
 
-export function playWave(run, { skill = 'perfect', random } = {}) {
+// Papazito plays on the sale menu: his stock is coins now and damage for a
+// while. A bot that never sells is a Papazito without a kit, so the seller goes
+// first, cheapest first, once per wave while the buff is down.
+function sellOne(run) {
+  const stock = run.player.characterDef.specials?.find(special => special.items)?.items ?? {};
+  const keys = Object.keys(stock).filter(key => !run.player.soldItems?.[key]);
+  if (!keys.length) return false;
+  keys.sort((a, b) => stock[a].coins - stock[b].coins);
+  return sellBelonging(run, keys[0]);
+}
+
+export function playWave(run, { skill = 'perfect', random, sell = true } = {}) {
   const keys = botSpecialKeys(run);
   const profile = SKILLS[skill] ?? SKILLS.perfect;
   const dice = random ?? (() => 1);
   let input = { x: 0, y: 0 };
   let frame = 0;
   let elapsed = 0;
+  if (sell) sellOne(run);
   while (elapsed < WAVE_LIMIT) {
     if (frame % profile.reactionFrames === 0) input = botInput(run, profile, dice, input);
     step(run, FRAME, input);

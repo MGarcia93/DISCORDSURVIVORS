@@ -18,14 +18,13 @@ test('Papazito is a registered heavy ranged bruiser running on the percentage co
   assert.equal(CHARACTERS.papazito.id, 'papazito');
   const p = createRun(Math.random, 'papazito').player;
   // Stat sheet from context/personajes/papazito_el_paraguayo_trucho.md §3:
-  // life +10% -> 110, damage matches El Negro (30), attackSpeed -10% -> 90
+  // life +10% -> 110, damage 34, attackSpeed -10% -> 90
   // (interval ~1.11s), defense +10% -> 11 points (0.55 mitigation),
   // moveSpeed -10% -> 2970 (148.5 scaled px/s). Attack distance is
   // 280% (308px), slightly longer than El Negro's 260% (286px).
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.55);
-  assert.equal(p.damage, createRun(Math.random, 'negro').player.damage);
-  assert.equal(p.damage, 30);
+  assert.equal(p.damage, 34, 'heavier than El Negro: the cadence pays for it');
   assert.equal(p.attackRange, 280 * UNIT_PX);
   assert.ok(p.attackRange > createRun(Math.random, 'negro').player.attackRange);
   assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-9);
@@ -97,7 +96,7 @@ test('panic from La seña gallops him exactly +30% movement and -40% shot interv
   run.shotIn = 0;
   step(run, 0.05, {});
   assert.ok(Math.abs(run.shotIn - (100 / 90) * 0.6) < 1e-9, '+40% attack speed only');
-  assert.equal(p.damage, 30, 'no extra damage from the panic');
+  assert.equal(p.damage, 34, 'no extra damage from the panic');
 });
 
 test('penniless Papazito receives the panic buff with an unpaid bill', () => {
@@ -112,7 +111,7 @@ test('penniless Papazito receives the panic buff with an unpaid bill', () => {
   assert.equal(p.panicTtl, 5);
 });
 
-test('ANAMENCUÁ is a 40s-cooldown r key unleashing three radial brick bursts', () => {
+test('ANAMENCUÁ is a 25s-cooldown r key unleashing three radial brick bursts', () => {
   assert.deepEqual(CHARACTERS.papazito.specials.map(s => [s.key, s.name, s.hotkey]),
     [['sell', 'Liquidó todo', 'q'], ['anamencua', '¡ANAMENCUÁ!', 'r']]);
 
@@ -120,7 +119,7 @@ test('ANAMENCUÁ is a 40s-cooldown r key unleashing three radial brick bursts', 
   run.spawnIn = 100;
   assert.equal(activateSpecial(run, 'anamencua'), true);
   assert.equal(run.player.anamencua, 1.2);
-  assert.equal(run.player.anamencuaCooldown, 40);
+  assert.equal(run.player.anamencuaCooldown, 25);
   assert.equal(activateSpecial(run, 'anamencua'), false, 'the cooldown blocks a second activation');
 
   // Mute the basic attack to isolate the three expanding rings.
@@ -200,9 +199,9 @@ test('sale buffs expire: after their ttl the damage and debuffs stop applying', 
   run.enemies.push({ id: 1, x: p.x + p.speed, y: p.y, hp: 100, maxHp: 100, speed: 0, radius: 10, kind: 'zombie' });
   run.shotIn = 0.001;
   step(run, 0.05, {});
-  assert.equal(run.projectiles[0]?.damage, 30, 'the expired buff no longer strengthens the brick');
+  assert.equal(run.projectiles[0]?.damage, 34, 'the expired buff no longer strengthens the brick');
   assert.equal(p.soldItems.psp, true, 'sold stays sold; only the buff expired');
-  assert.equal(p.damage, 30, 'sheet damage never mutated');
+  assert.equal(p.damage, 34, 'sheet damage never mutated');
 });
 
 test('activateSpecial drives timers from the definition', () => {

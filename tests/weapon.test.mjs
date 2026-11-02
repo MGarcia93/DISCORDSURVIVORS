@@ -60,7 +60,7 @@ test('Papazito ladrillazos carry the brick device for their own projectile art',
   step(run, 0.05, {});
 
   assert.equal(run.projectiles[0]?.device, 'brick');
-  assert.equal(run.projectiles[0]?.damage, 30, 'one heavy 300% attack, no multiplier');
+  assert.equal(run.projectiles[0]?.damage, 34, 'one heavy brick, no multiplier');
 });
 
 test('a Warrior mushroom bomb deals its weighted damage before the area splash', () => {

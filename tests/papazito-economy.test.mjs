@@ -38,7 +38,7 @@ test('timed extortion charges without coin awards and escalates within a 60-seco
   assert.ok(run.player.senaCharges >= 6);
   assert.ok(run.player.senaDebt > 0, 'the buff keeps a real unpaid cost');
   assert.ok(run.player.senaInterval >= 4);
-  assert.equal(run.player.damage, 30);
+  assert.equal(run.player.damage, 34);
 });
 
 test('random charge and timer bounds remain finite, positive and visible before charging', () => {

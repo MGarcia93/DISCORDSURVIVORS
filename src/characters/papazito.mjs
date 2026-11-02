@@ -23,11 +23,11 @@ const papazito = {
       <div class="eyebrow">Atacante a distancia · Economía · Riesgo y recompensa</div><h2>PAPAZITO</h2>
       <p class="character-desc">El paraguayo trucho: no es albañil, no habla guaraní y por «¡ANAMENCUÁ!» sigue sin entender nada. Malvende su Pentium, pega con ladrillos y en cuanto la cariñosa le escribe entra en pánico.</p>
       <p class="character-quote">«No soy albañil, no hablo guaraní y no me devolvieron la seña».</p>
-      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+200%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
+      <div class="stats papazito-stats"><div><b>+10%</b><small>VIDA MÁXIMA</small></div><div><b>+240%</b><small>DAÑO</small></div><div><b class="penalty">−10%</b><small>VELOCIDAD</small></div><div><b class="penalty">−10%</b><small>ATK/SEG</small></div><div><b>+10%</b><small>DEFENSA</small></div></div>
       <div class="skill"><kbd>∞</kbd><div><b>LADRILLAZO</b><p>Arroja ladrillos pesados y lentos: pega duro,pero con cadencia baja que las mejoras aceleran.</p></div></div>
       <div class="skill"><kbd>◈</kbd><div><b>LA SEÑA</b><p>Empieza cobrando 8–12 fichas cada 8–12 segundos. Cada cobro aumenta el siguiente al menos 4 fichas y acorta el intervalo al menos 1 segundo, hasta un mínimo de 4. Si no alcanza, acumula deuda: las ventas la pagan primero. El cobro activa 5 segundos de pánico: +30% de velocidad y −40% de intervalo de tiro. La deuda y la escalada se reinician en cada etapa.</p></div></div>
       <div class="skill"><kbd>Q</kbd><div><b>LIQUIDÓ TODO</b><p>Menú de venta que pausa la acción: malvende pertenencias por fichas y daño temporal, a cambio de un debuff. Cada una se vende una vez por partida.</p></div></div>
-      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 40 segundos.</p></div></div>`,
+      <div class="skill"><kbd>R</kbd><div><b>¡ANAMENCUÁ!</b><p>Dispara tres ondas circulares de 48 ladrillos hacia afuera, una detrás de otra. Recarga: 25 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'PAPAZITO · BLOQUEADO · ENCUENTRO DEL ACTO 3',
     unlocked: 'PAPAZITO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -45,7 +45,7 @@ const papazito = {
     ...resolveEntityStats({
       life: 110,             // +10% vida
       defense: 110,          // 11 points -> 55% mitigation
-      attack: 300,           // 30 damage per brick, matching El Negro
+      attack: 340,           // 34 damage per brick: he pays for the slow cadence with weight
       attackSpeed: 90,       // 0.9 bricks/s: the slow heavy cadence of §4.1
       attackDistance: 280,   // 308px reach, slightly longer than El Negro
       moveSpeed: 2970,       // -10% mobility
@@ -97,6 +97,20 @@ const papazito = {
     const extend = p.rewardBonuses?.panicExtend ?? 0;
     if (extend <= 0 || p.panicTtl <= 0) return;
     p.panicTtl = Math.min(12, p.panicTtl + extend);
+  },
+  // El que vive de la plata cobra más por lo que mata: es su mecánica, no un
+  // premio. Sin esto la seña le vacía el bolsillo y llega a la tienda sin poder
+  // curarse, que es como está muriendo en el Acto 1.
+  goldBonus: 0.5,
+  onCoinsGained(run, p, amount) {
+    // Half again, carried between kills so a one-coin bounty is not rounded up
+    // into a double payout.
+    p.goldCarry = (p.goldCarry ?? 0) + amount * this.goldBonus;
+    const extra = Math.floor(p.goldCarry);
+    if (extra > 0) {
+      p.goldCarry -= extra;
+      run.coins += extra;
+    }
   },
   onSaleIncome(run, p, amount) {
     const paid = Math.min(amount, p.senaDebt);
@@ -153,7 +167,7 @@ const papazito = {
     },
   }, {
     // Three dense expanding rings, not a continuous homing rain.
-    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 1.2, cooldown: 40,
+    key: 'anamencua', name: '¡ANAMENCUÁ!', hotkey: 'r', duration: 1.2, cooldown: 25,
     burstCount: 3, bricksPerBurst: 48, burstInterval: 0.45,
     spawnRadius: 18 * WORLD_SCALE, speed: 280 * WORLD_SCALE, damageMult: 1,
     onStart(run, p) {

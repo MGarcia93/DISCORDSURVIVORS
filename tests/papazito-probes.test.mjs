@@ -31,7 +31,7 @@ test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
   const p = createRun(Math.random, 'papazito').player;
   assert.equal(p.maxHp, 110);
   assert.equal(p.defense, 0.55);
-  assert.equal(p.damage, 30);
+  assert.equal(p.damage, 34);
   assert.equal(p.attackRange, 280 * WS);
   assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-12);
   assert.equal(p.speed, 148.5 * WS);
@@ -39,12 +39,15 @@ test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
 
 test('S3 probe: La seña leaves early bounties alone until the timed charge', () => {
   const run = createRun(() => 0.5, 'papazito');
-  assert.deepEqual(killZombie(run, 100), { from: 100, to: 100 + run.rewardBalance.gold.rewards.zombie });
+  // Papazito banks half again per bounty, carried between kills.
+  const bounty = run.rewardBalance.gold.rewards.zombie;
+  assert.deepEqual(killZombie(run, 100), { from: 100, to: 100 + bounty });
   const p = run.player;
   assert.equal(p.panicTtl, 0);
   assert.ok(p.senaCooldown > 9 && p.senaCooldown < 10);
   killZombie(run);
-  assert.equal(run.coins, 100 + 2 * run.rewardBalance.gold.rewards.zombie, 'second award inside the cooldown keeps every coin');
+  // Two bounties plus the carried half: the bonus rounds up on the second kill.
+  assert.equal(run.coins, 100 + 2 * run.rewardBalance.gold.rewards.zombie + 1, 'second award inside the cooldown keeps every coin');
   assert.equal(p.panicTtl, 0, 'earning coins does not activate panic');
 });
 
@@ -73,7 +76,7 @@ test('S5 probe: ANAMENCUÁ cooldown and three-ring activation', () => {
   const run = createRun(Math.random, 'papazito');
   assert.equal(activateSpecial(run, 'anamencua'), true);
   assert.equal(run.player.anamencua, 1.2);
-  assert.equal(run.player.anamencuaCooldown, 40);
+  assert.equal(run.player.anamencuaCooldown, 25);
   run.spawnIn = run.shotIn = 100;
   const enemy = { id: ++run.serial, kind: 'zombie', x: run.player.x + 100 * WS, y: run.player.y, hp: 500, maxHp: 500,
     defense: 0, radius: 10 * WS, speed: 0 };
