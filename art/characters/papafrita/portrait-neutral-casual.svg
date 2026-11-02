@@ -7,30 +7,33 @@
     <path fill="#dda67b" d="M66 134h35v10h7v3H66z"/>
   </g>
   
-  <!-- Casual body: a short-sleeved black tee over bare forearms, cropped at the
-       waist. Centred under the head, with the cast's stepped shoulders instead
-       of a hard box. -->
-  <g id="casual-body">
-    <!-- Bare forearms, under the sleeves. -->
-    <path fill="#1b1923" d="M12 150h24v54H12zM146 150h24v54h-24z"/>
-    <path fill="#c58f68" d="M15 154h18v50H15z"/>
-    <path fill="#e0aa7b" d="M15 154h6v50h-6z"/>
-    <path fill="#97644e" d="M149 154h18v50h-18z"/>
-    <path fill="#b47d5c" d="M163 154h4v50h-4z"/>
-    <!-- Shirt: three stepped rows for the shoulders, then the body. -->
-    <path fill="#1b1923" d="M56 114h72v5h-72zM40 119h104v6H40zM32 125h120v79H32z"/>
-    <path fill="#20212a" d="M58 117h68v4H58zM42 122h100v5H42zM35 127h114v74H35z"/>
-    <path fill="#343440" d="M35 127h10v74H35z"/>
-    <path fill="#15161e" d="M139 127h10v74h-10z"/>
-    <path fill="#15161e" d="M35 195h114v6H35z"/>
-    <!-- Short sleeves, sharing the shoulder line. -->
-    <path fill="#1b1923" d="M8 125h27v33H8zM145 125h27v33h-27z"/>
-    <path fill="#20212a" d="M11 128h21v27H11z"/>
-    <path fill="#15161e" d="M148 128h21v27h-21z"/>
-    <path fill="#101118" d="M8 155h27v4H8zM145 155h27v4h-27z"/>
-    <!-- Neck opening: the tee covers the base of the neck. -->
-    <path fill="#101118" d="M64 113h50v12H64z"/>
-    <path fill="#15161e" d="M68 123h42v5H68z"/>
+  <!-- Casual body: the cast's rounded shirt silhouette, flattened to one black
+       tee tone, with bare forearms painted over the lower sleeves. -->
+  <g id="casual-body" transform="translate(0 4)">
+    
+    <path fill="#1b1923" d="M47 112h68v5h12v5h10v7h7v10h5v15h5v15h4v31H2v-33h4v-14h5v-16h6v-10h8v-7h10v-5h12z" />
+  
+    
+    <path fill="#20212a" d="M49 116h18v8h39v-8h14v5h13v9h9v17h7v19h6v34H5v-33h6v-18h7v-17h9v-10h12v-6h10z" />
+    <path fill="#20212a" d="M40 125h19v12h11v6h28v-6h13v-10h16v8h9v22h6v29h5v14H14v-30h6v-22h8v-13h12z" />
+    <path fill="#20212a" d="M39 127h13v8H39zM70 137h29v4H70zM114 126h12v9h-12zM24 144h6v18h-6z" />
+    <path fill="#20212a" d="M52 141h11v10h10v7h24v-7h10v-11h9v17h-9v43H57v-40h-5zM18 178h8v22h-8zM140 174h9v26h-9z" />
+    <path fill="#20212a" d="M67 159h31v6H67zM60 187h48v5H60zM30 163h15v5H30z" />
+  
+    <rect x="31" y="134" width="9" height="60" fill="#343440"/>
+    <rect x="123" y="134" width="9" height="60" fill="#15161e"/>
+    <!-- Bare forearms. -->
+    <rect x="9" y="154" width="32" height="50" fill="#1b1923"/>
+    <rect x="121" y="154" width="32" height="50" fill="#1b1923"/>
+    <rect x="9" y="154" width="32" height="3" fill="#101118"/>
+    <rect x="121" y="154" width="32" height="3" fill="#101118"/>
+    <rect x="12" y="158" width="25" height="46" fill="#c58f68"/>
+    <rect x="12" y="158" width="7" height="46" fill="#e0aa7b"/>
+    <rect x="124" y="158" width="25" height="46" fill="#97644e"/>
+    <rect x="145" y="158" width="4" height="46" fill="#b47d5c"/>
+    <!-- Collar. -->
+    <rect x="52" y="112" width="70" height="14" fill="#101118"/>
+    <rect x="56" y="126" width="62" height="4" fill="#15161e"/>
   </g>
   <g id="hair-back" transform="translate(0 -38)">
     <path fill="#211e26" d="M45 69h15v-7h40v6h17v12h8v27h-7v16h-9v7H51v-7H40v-17h-5V85h10z"/>
