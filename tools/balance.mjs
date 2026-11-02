@@ -5,7 +5,7 @@ import { measureCharacter, measureRoster } from '../src/game/campaign-sim.mjs';
 // Headless balance run. Every character plays the same campaign with the same
 // bot, so the numbers compare characters instead of comparing two guesses.
 //
-//   node tools/balance.mjs                    all four characters, 24 campaigns
+//   node tools/balance.mjs                    every character, 24 campaigns
 //   node tools/balance.mjs --runs=48          tighter estimate
 //   node tools/balance.mjs --character=negro
 //   node tools/balance.mjs --policy=random --spend=min
@@ -29,7 +29,7 @@ const skill = args.skill ?? 'perfect';
 const buy = args.buy ?? 'smart';
 const only = args.character;
 
-const characters = only ? [only] : ['negro', 'solago', 'warrior', 'papazito'];
+const characters = only ? [only] : ['negro', 'solago', 'warrior', 'papazito', 'jhony'];
 const pad = (value, width) => String(value).padEnd(width);
 const pct = value => `${Math.round(value * 100)}%`;
 const range = row => `${Math.round((row.spread.high - row.spread.low) * 50)}`;

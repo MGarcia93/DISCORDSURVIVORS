@@ -54,25 +54,25 @@ const percent = (stat, value) => ({ stat, operation: 'percent', value });
 export const ITEMS = [
   { id: 'scissors', name: 'Tijera', price: 45, maxCopies: 3,
     lore: 'Cuenta la leyenda que una asesina utilizó estas tijeras para apuñalar a alguien por la espalda. Algunos dicen que fue un accidente. Fuente: Solago.',
-    modifiers: [flat('attack', 2)] },
+    modifiers: [flat('attack', 1.5)] },
   { id: 'bleach', name: 'Lejía', price: 60, maxCopies: 3,
     lore: 'Dicen que cura cualquier enfermedad. El primero que lo comprobó no sobrevivió para confirmarlo.',
-    modifiers: [flat('life', 15)] },
+    modifiers: [flat('life', 10)] },
   { id: 'slipper', name: 'Zapatilla', price: 40, maxCopies: 3,
     lore: 'Cuenta la leyenda que esta zapatilla fue utilizada para aplastar una cabeza. Por alguna razón, a Maxi Negro le trae malos recuerdos.',
-    modifiers: [percent('attack', 10)] },
+    modifiers: [percent('attack', 7)] },
   { id: 'antidepressants', name: 'Antidepresivos', price: 60, maxCopies: 3,
     lore: 'No solucionan tus problemas, pero al menos evitás explotar antes de terminar la partida.',
-    modifiers: [flat('defense', 1)] },
+    modifiers: [flat('defense', 0.6)] },
   { id: 'extortion-phone', name: 'Teléfono de Extorsión', price: 45, maxCopies: 3,
     lore: 'Se dice que cierto sujeto recibe llamadas de extorsión constantemente. Desde entonces, cada vez que suena el teléfono, sale corriendo.',
-    modifiers: [percent('moveSpeed', 8)] },
+    modifiers: [percent('moveSpeed', 6)] },
   { id: 'magic-mushrooms', name: 'Hongos Mágicos', price: 60, maxCopies: 3,
     lore: 'Warrior asegura que con esto anda más rápido. Nadie tuvo los huevos de explicarle que lleva tres horas mirando una pared.',
-    modifiers: [percent('attackSpeed', 10)] },
+    modifiers: [percent('attackSpeed', 7)] },
   { id: 'alcohol', name: 'Alcohol', price: 35, maxCopies: 2,
     lore: 'Te vuelve más agresivo e intolerante. También te hace tanto daño que terminás considerando volver al LoL. Y eso ya es tocar fondo.',
-    modifiers: [percent('attack', 15), flat('defense', -1)] },
+    modifiers: [percent('attack', 10), flat('defense', -0.6)] },
   // Range assignment remains provisional in the approved design: keep the
   // entry available for authoring but exclude it from offers until confirmed.
   { id: 'chicken', name: 'Gallina', enabled: false, price: 40, maxCopies: 3,
@@ -146,13 +146,56 @@ export const EFFECTS = {
   panicExtend: points('Pánico extendido por baja', 2, ' s'),
   senaBurst: { max: 1.2, validate: value => Number.isFinite(value) && value > 0,
     describe: value => `Ráfaga de La seña: ${Math.round(value * 100)}% del daño` },
+  // Jhony's signatures: every entry either adds an attack or reshapes one, so
+  // the description names the shape and not a number.
+  tiltWave: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'Onda de Tilt y el círculo queda en el piso' : 'Onda de Tilt al entrar en Furia' },
+  shout: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'Grito que pega en 360°' : 'Grito frontal periódico' },
+  bottleShards: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'Fragmentos de vidrio en todas direcciones' : 'Fragmentos de vidrio tras el botellazo' },
+  extraBottle: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'Dos botellas arrojadas por ronda' : 'Una botella arrojada cada 4 botellazos' },
+  stomp: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'Remate con onda de impacto' : 'Remate sobre enemigos débiles' },
+  buildCombo: { max: 2, validate: value => Number.isSafeInteger(value) && value > 0,
+    describe: value => value > 1 ? 'La build suma rebotes' : 'La build dispara más seguido' },
 };
+
+// Jhony's six signatures and their evolutions (§5). Each one adds or reshapes
+// an attack, and the evolution only opens once its base was taken.
+const JHONY_UPGRADES = [
+  { id: 'tilt-circle', name: '¡ERA UN CÍRCULO!', characters: 'jhony', minLevel: 3, chance: 0.8,
+    requires: [], ranks: [{ effects: [{ type: 'tiltWave', value: 1 }] }] },
+  { id: 'tilt-circle-floor', name: 'El círculo queda', characters: 'jhony', minLevel: 4,
+    requires: [{ id: 'tilt-circle', rank: 1 }], ranks: [{ effects: [{ type: 'tiltWave', value: 1 }] }] },
+  { id: 'closed-mouth', name: '¡CERRÁ EL CULO!', characters: 'jhony', minLevel: 3,
+    requires: [], ranks: [{ effects: [{ type: 'shout', value: 1 }] }] },
+  { id: 'shout-360', name: 'Grito a 360', characters: 'jhony', minLevel: 4,
+    requires: [{ id: 'closed-mouth', rank: 1 }], ranks: [{ effects: [{ type: 'shout', value: 1 }] }] },
+  { id: 'broken-bottle', name: 'Botella rota', characters: 'jhony', minLevel: 3,
+    requires: [], ranks: [{ effects: [{ type: 'bottleShards', value: 1 }] }] },
+  { id: 'glass-everywhere', name: 'Vidrio para todos', characters: 'jhony', minLevel: 4,
+    requires: [{ id: 'broken-bottle', rank: 1 }], ranks: [{ effects: [{ type: 'bottleShards', value: 1 }] }] },
+  { id: 'one-more-beer', name: 'Una birra más', characters: 'jhony', minLevel: 3,
+    requires: [], ranks: [{ effects: [{ type: 'extraBottle', value: 1 }] }] },
+  { id: 'beer-round', name: 'La ronda', characters: 'jhony', minLevel: 4,
+    requires: [{ id: 'one-more-beer', rank: 1 }], ranks: [{ effects: [{ type: 'extraBottle', value: 1 }] }] },
+  { id: 'zomboid-stomp', name: '2.000 horas al pedo', characters: 'jhony', minLevel: 3,
+    requires: [], ranks: [{ effects: [{ type: 'stomp', value: 1 }] }] },
+  { id: 'stomp-wave', name: 'Remate de Zomboid', characters: 'jhony', minLevel: 4,
+    requires: [{ id: 'zomboid-stomp', rank: 1 }], ranks: [{ effects: [{ type: 'stomp', value: 1 }] }] },
+  { id: 'broken-build', name: 'La build está rotísima', characters: 'jhony', minLevel: 3,
+    requires: [], ranks: [{ effects: [{ type: 'buildCombo', value: 1 }] }] },
+  { id: 'build-updated', name: 'Build actualizada', characters: 'jhony', minLevel: 4,
+    requires: [{ id: 'broken-build', rank: 1 }], ranks: [{ effects: [{ type: 'buildCombo', value: 1 }] }] },
+];
 
 export const LEVEL_UPGRADES = [
   ...[
-    ['life', 'Más vida', flat('life', 10)], ['defense', 'Más defensa', flat('defense', 0.5)],
-    ['attack', 'Más ataque', percent('attack', 5)], ['attackDistance', 'Más alcance', percent('attackDistance', 10)],
-    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 5)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 5)],
+    ['life', 'Más vida', flat('life', 14)], ['defense', 'Más defensa', flat('defense', 0.7)],
+    ['attack', 'Más ataque', percent('attack', 7)], ['attackDistance', 'Más alcance', percent('attackDistance', 12)],
+    ['attackSpeed', 'Más cadencia', percent('attackSpeed', 7)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 6)],
   ].map(([id, name, modifier]) => ({
     id: `stat-${id}`, name, characters: 'all', minLevel: 2, requires: [],
     ranks: Array.from({ length: 5 }, () => ({ modifiers: [modifier] })),
@@ -219,6 +262,9 @@ export const LEVEL_UPGRADES = [
     guaranteedAt: [3], requires: [], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
   { id: 'remote-chain', name: 'Otro salto', characters: 'negro', minLevel: 4,
     requires: [{ id: 'remote-bounce', rank: 1 }], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
+  // Jhony's six signatures and their evolutions. Each one adds or reshapes an
+  // attack; the evolution only opens once its base was taken.
+  ...JHONY_UPGRADES,
 ];
 
 // Milestone levels: at these levels the entry is forced into the selection,
@@ -230,6 +276,7 @@ const MILESTONES = {
   'bite-arc': [3], 'patrona-final': [4],
   'deeper-confusion': [3], 'extra-shroom': [4],
   'brick-pierce': [3], 'sena-burst': [4],
+  'tilt-circle': [3],
 };
 for (const entry of LEVEL_UPGRADES) if (MILESTONES[entry.id]) entry.guaranteedAt = MILESTONES[entry.id];
 

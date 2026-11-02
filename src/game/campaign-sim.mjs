@@ -157,6 +157,6 @@ export function measureCharacter(character, { runs = 24, seed = 11, step = 7, ow
   };
 }
 
-export function measureRoster({ characters = ['negro', 'solago', 'warrior', 'papazito'], runs = 24, seed = 11, ownByCharacter = {}, policy = 'optimal', spend = 'normal', skill = 'perfect', buy = 'smart' } = {}) {
+export function measureRoster({ characters = ['negro', 'solago', 'warrior', 'papazito', 'jhony'], runs = 24, seed = 11, ownByCharacter = {}, policy = 'optimal', spend = 'normal', skill = 'perfect', buy = 'smart' } = {}) {
   return characters.map(character => measureCharacter(character, { runs, seed, ownIds: ownByCharacter[character] ?? [], policy, spend, skill, buy }));
 }
