@@ -170,12 +170,8 @@ export function createEnemy(run, kind, x, y) {
   // A wave may declare a speed boost: the Administrator's hotfix makes the wave
   // it touches faster without any sheet knowing about it.
   const boost = waveConfig(run.act, run.wave)?.speedBoost ?? 1;
-  // Each world hits harder than the one before: the act says how much, and the
-  // sheet keeps the difference between kinds inside the world.
-  const power = run.act?.power ?? {};
   return { id: ++run.serial, kind, x, y,
     hp, maxHp: hp, defense: enemyDefense(kind, run.wave),
-    contactDamage: enemyContactDamage(kind, run.wave) * (power.damage ?? 1),
     radius: def.radius * WORLD_SCALE, speed: enemySpeed(kind, run.wave) * boost,
     attackRange: enemyAttackRange(kind, run.wave),
     attackInterval: enemyAttackInterval(kind, run.wave),
@@ -421,7 +417,7 @@ function fireEnemyShot(run, enemy) {
     x: enemy.x, y: enemy.y,
     vx: dx / length * speed, vy: dy / length * speed,
     team: 'enemy', device: enemy.projectile ?? 'bolt',
-    damage: enemy.contactDamage ?? enemyContactDamage(enemy.kind, run.wave),
+    damage: enemyContactDamage(enemy.kind, run.wave),
     radius: 5 * WORLD_SCALE, ttl: 3, angle: Math.atan2(dy, dx), hit: [],
   });
 }
@@ -648,7 +644,7 @@ export function step(run, seconds, input = {}) {
       if ((enemy.attackRange ?? 0) > 0) fireEnemyShot(run, enemy);
       // A melee action may declare its own damage: the boss's cleave is not the
       // contact swing, and the ficha says so instead of the engine knowing it.
-      else hurtPlayer(run, enemy, action.damage ?? enemy.contactDamage ?? enemyContactDamage(enemy.kind, run.wave), {
+      else hurtPlayer(run, enemy, action.damage ?? enemyContactDamage(enemy.kind, run.wave), {
         defenseBonus: def.contactDefenseBonus?.(p) ?? 0, contactFactor,
       });
       // A confused mind swings slower; otherwise the sheet owns the cadence.

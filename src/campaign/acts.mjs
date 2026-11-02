@@ -12,16 +12,6 @@ import { validateCampaign } from './validate.mjs';
 //
 // Monster Hunter is deliberately absent: it is a rejected pitch in Act 4, not a
 // world. It enters this list the day it becomes playable.
-// Each world is tougher than the one before: life and damage scale with the
-// act's order, so the same kind is a different threat six waves later.
-export const ACT_POWER = [
-  { life: 1, damage: 1 },
-  { life: 1.2, damage: 1.15 },
-  { life: 1.45, damage: 1.3 },
-  { life: 1.7, damage: 1.45 },
-  { life: 1.95, damage: 1.6 },
-];
-
 export const ACTS = [
   act01,
   act02,
@@ -29,9 +19,6 @@ export const ACTS = [
   act04,
   act05,
 ];
-
-// Every act carries the power of its place in the campaign.
-ACTS.forEach((act, index) => { act.power = ACT_POWER[index] ?? { life: 1, damage: 1 }; });
 
 // Loading the module validates the whole map, so a half-authored act fails at
 // boot and in the test suite instead of at wave six.
