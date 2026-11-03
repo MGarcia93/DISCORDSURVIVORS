@@ -34,6 +34,9 @@ const STOMP_EXECUTE = 0.35;     // only finishes enemies below this share of hp
 const BOTTLE_EVERY = 4;         // «UNA BIRRA MÁS» swings between throws
 const BOTTLE_RANGE = 300;
 const SHARD_COUNT = 1;          // «BOTELLA ROTA»: one shard, more when evolved
+// Sustain: one flat mouthful per kill, the same rule as Solago's bite. Never a
+// share of the pool, which would grow every kill into a full heal.
+const KILL_HEAL = 2;
 
 // Every ficha-owned hit scales with the same multipliers the engine applies to
 // the basic attack, so an ability never lags behind the sheet.
@@ -273,12 +276,11 @@ const jhony = {
       },
     },
   ],
-  // Berserker: the bottle that lands a kill pours a mouthful back. It is the
-  // sustain that keeps a body fighting at contact range.
+  // Sustain on kill: one flat mouthful, exactly like Solago's bite. A flat
+  // number never grows with the health pool, so a big build cannot turn every
+  // kill into a full heal.
   onKill(run, p) {
-    // Four percent, not four points: at his base health that is the same
-    // mouthful as Solago's, and it keeps up when the build grows his pool.
-    p.hp = Math.min(p.maxHp, p.hp + Math.round(p.maxHp * 0.04));
+    p.hp = Math.min(p.maxHp, p.hp + KILL_HEAL);
   },
   initPlayer(p) {
     p.tilt = 0;

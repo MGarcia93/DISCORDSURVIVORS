@@ -387,3 +387,18 @@ test('standing still, the shout turns to the enemy instead of a fixed heading', 
   p.characterDef.onTick(run, p, 0.05, toolbox(run));
   assert.ok(left.hp < 300, 'the cone follows the body at his left');
 });
+
+test('a kill heals a flat mouthful, the same rule as Solago, never a share of the pool', () => {
+  const kills = (pool) => {
+    const run = createRun(() => 0.5, 'jhony');
+    run.spawnIn = 100;
+    run.player.maxHp = pool;
+    run.player.hp = pool - 40;
+    dummy(run, 40, 1);
+    for (let frame = 0; frame < 240 && run.enemies.length; frame++) step(run, 1 / 60, {});
+    assert.equal(run.enemies.length, 0, 'the bottle lands');
+    return run.player.hp - (pool - 40);
+  };
+  assert.equal(kills(110), 2, 'one kill, two points, whatever the pool');
+  assert.equal(kills(400), 2, 'a big pool never turns a kill into a bigger heal');
+});

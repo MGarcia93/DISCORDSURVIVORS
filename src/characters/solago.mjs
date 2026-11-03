@@ -8,8 +8,9 @@ import { statBlock } from './stat-block.mjs';
 // when the smile ends.
 const SMILE_BLOCK = 40;
 // Every bite that lands a kill feeds her: without it a melee body cannot walk
-// through a six-wave act, let alone five of them.
-const BITE_HEAL = 4;
+// through a six-wave act, let alone five of them. Two points, the same flat
+// mouthful Jhony gets, so no build can turn her kills into a heal.
+const BITE_HEAL = 2;
 
 // How far the scissors cut, in world units, from Solago's body. It has to pass
 // the longest ranged reach (an archer parks at 231 px) or the ultimate leaves

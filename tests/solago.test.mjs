@@ -94,7 +94,7 @@ test('every kill feeds her a mouthful, never past her ceiling', () => {
   const p = run.player;
   p.hp = 50;
   p.characterDef.onKill(run, p, {}, {});
-  assert.equal(p.hp, 54, 'a bite that lands a kill gives 4 back');
+  assert.equal(p.hp, 52, 'a bite that lands a kill gives 2 back');
   p.hp = p.maxHp - 1;
   p.characterDef.onKill(run, p, {}, {});
   assert.equal(p.hp, p.maxHp);
@@ -229,4 +229,15 @@ test('La Patrona holds Solago still, deals area damage, and nicks him when she l
   assert.equal(p.y, startY);
   assert.equal(activateSpecial(run, 'stand'), false);
   assert.equal(activateSpecial(run, 'anime'), false);
+});
+
+test('her bite heals a flat two points per kill, the same mouthful as Jhony', () => {
+  const run = createRun(() => 0.5, 'solago');
+  run.spawnIn = 100;
+  run.player.hp = 40;
+  const p = run.player;
+  run.enemies.push({ id: 1, x: p.x + p.attackRange - 4, y: p.y, hp: 1, maxHp: 1, speed: 0, radius: 10, kind: 'zombie' });
+  for (let frame = 0; frame < 240 && run.enemies.length; frame++) step(run, 1 / 60, {});
+  assert.equal(run.enemies.length, 0, 'the bite lands');
+  assert.equal(p.hp, 42, 'two points, not a share of her pool');
 });
