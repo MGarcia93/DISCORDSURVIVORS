@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun } from '../src/engine.mjs';
+import { createRun, step } from '../src/engine.mjs';
 import { createCatalog } from '../src/reward-catalog.mjs';
+import { PLAYABLE_ACTS } from '../src/campaign/acts.mjs';
 import {
   initializeRewards, awardXP, beginRewards, chooseLevelReward,
   skipEmptyChoice, buyItem, finishRewards, itemPrice, nextLevelXP,
@@ -180,4 +181,30 @@ test('reward generation and rejected actions cannot grant a character ability au
   assert.equal(run.player.rewardBonuses.bounce, undefined);
   assert.equal(chooseLevelReward(run, 'not-in-this-selection'), false);
   assert.equal(run.player.rewardBonuses.bounce, undefined);
+});
+
+test('every world keeps paying experience, fractional perAct included', () => {
+  const later = (act, kills) => {
+    const run = createRun(() => 0.25, 'negro', {}, act);
+    initializeRewards(run);
+    run.spawnIn = run.shotIn = 1e6;
+    run.enemies = Array.from({ length: kills }, (_, index) => ({ id: index + 1, kind: 'zombie', hp: 0, x: 0, y: 0 }));
+    step(run, 0, {});
+    return run;
+  };
+  // The first world is the reference: whole points per kill.
+  const reference = later(PLAYABLE_ACTS[0], 20);
+  assert.deepEqual([reference.level, reference.xp, reference.xpCarry], [2, 11, 0]);
+  // The second world pays 1.6 per kill. The product used to be rejected for not
+  // being a whole number, so the campaign stopped levelling the moment it left
+  // Act 1: twenty kills are 32 points there, level 3 with 3 over.
+  const second = later(PLAYABLE_ACTS[1], 20);
+  assert.deepEqual([second.level, second.xp], [3, 3], 'the second world still levels');
+  // Six kills there are 9.6 points: one level and a change, and the change
+  // waits in the carry instead of being rounded away or thrown out.
+  const carried = later(PLAYABLE_ACTS[1], 6);
+  assert.deepEqual([carried.level, carried.xp, carried.xpCarry], [2, 0, 0.6]);
+  // A late world pays three and a half points per kill and keeps growing.
+  const late = later(PLAYABLE_ACTS[4], 40);
+  assert.deepEqual([late.level, late.xp, late.xpCarry], [5, 34, 0], 'no float drift in the carry');
 });

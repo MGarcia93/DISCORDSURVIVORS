@@ -16,7 +16,7 @@ export function initializeRewards(run, { catalog = DEFAULT_CATALOG, balance = BA
   const state = createStatState(run.player);
   Object.assign(run, {
     rewardCatalog: catalog, rewardBalance: config, statState: state, effectSources: {},
-    level: 1, xp: 0, pendingLevels: [], levelRanks: {}, items: {},
+    level: 1, xp: 0, xpCarry: 0, pendingLevels: [], levelRanks: {}, items: {},
     levelChoices: null, shopOffers: null,
   });
   run.player.rewardBonuses = {};
@@ -40,16 +40,25 @@ export function actXpMultiplier(balance, order = 1) {
 }
 
 export function awardXP(run, amount) {
+  // A kill pays whole points; the act's per-world multiplier is what turns them
+  // into a fraction (1.6 in the second world, 2.2 in the third). Level
+  // thresholds are whole numbers, so the fraction rides in `xpCarry` instead of
+  // being rejected or rounded away: rejecting the product silently stopped
+  // every point of experience the moment the campaign left the first world.
+  if (run.phase !== 'playing' || !Number.isSafeInteger(amount) || amount < 0) return false;
   const scaled = amount * (run.rewardBalance.xp.multiplier ?? 1)
     * actXpMultiplier(run.rewardBalance, run.act?.order ?? 1);
-  if (run.phase !== 'playing' || !Number.isSafeInteger(scaled) || scaled < 0) return false;
-  let xp = run.xp + scaled, level = run.level;
+  if (!Number.isFinite(scaled)) return false;
+  const total = (run.xpCarry ?? 0) + scaled;
+  const gained = Math.floor(total);
+  let xp = run.xp + gained, level = run.level;
   if (!Number.isSafeInteger(xp)) return false;
   const pending = [];
   while (xp >= nextLevelXP(run, level)) {
     xp -= nextLevelXP(run, level);
     pending.push(++level);
   }
+  run.xpCarry = Number((total - gained).toFixed(9));
   run.xp = xp;
   run.level = level;
   run.pendingLevels.push(...pending);

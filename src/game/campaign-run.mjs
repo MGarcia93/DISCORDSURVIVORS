@@ -15,6 +15,8 @@ export function createNextWorldRun(previous) {
   for (const key of ['statState', 'effectSources', 'items', 'levelRanks', 'upgrades']) {
     run[key] = structuredClone(previous[key]);
   }
+  // Experience that did not add up to a whole point yet keeps adding up.
+  run.xpCarry = previous.xpCarry ?? 0;
   run.player.rewardBonuses = structuredClone(previous.player.rewardBonuses);
   applyStatState(run.player, run.statState);
   run.player.hp = run.player.maxHp;
