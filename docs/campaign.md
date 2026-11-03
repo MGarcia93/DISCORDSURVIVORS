@@ -13,9 +13,12 @@ The next act starts with the same character, acquired items, upgrade ranks,
 permanent statistics, reward bonuses, level, XP and coins. Health is restored to the upgraded maximum
 and all abilities are ready, with no cooldown. The battlefield and temporary
 combat effects start fresh. Sold possessions stay sold.
-**OTRA PARTIDA** replays the current world. The last act offers replay and the
-main menu, not a transition back to the first world. Closing scenes must finish
-or be skipped before continuing.
+**OTRA PARTIDA** after a death does not replay the world where the run ended: it
+starts the campaign over from the first world, with the chosen character and
+nothing carried over (no items, ranks, level, XP or coins). A cleared campaign
+replays the last world it ended on. The last act offers replay and the main menu,
+not a transition back to the first world. Closing scenes must finish or be
+skipped before continuing.
 
 ## Where things live
 
@@ -116,6 +119,11 @@ Character sheets declare the encounter scene in `unlock.scene`; availability is
 derived from the existing `seenScenes` history or a legacy unlock flag. Old
 encounter history therefore restores access without replaying or rewriting saves.
 Cancelled/failed scenes and isolated dev previews do not grant unlocks.
+
+Jhony is the exception: he refuses to join in Act 1, so meeting him there grants
+nothing. The last scene of his own epilogue (`act-07-credits`, the post-credits
+where he asks «¿otra?») is what makes him selectable, which sits behind the
+postgame gate of Act 7.
 
 ## Act 4 rescue scenery
 

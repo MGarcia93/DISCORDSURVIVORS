@@ -217,6 +217,13 @@ document.addEventListener('click', event => {
   if (action === 'story-back') { if (state.storyPage > 0) { state.storyPage--; story(); } else show('characters'); }
   if (action === 'story-next') { if (state.storyPage < storyPages.length - 1) { state.storyPage++; story(); } else enterWorld(); }
   if (action === 'play') enterWorld();
+  // Dying ends the campaign. OTRA PARTIDA starts a brand-new run in the first
+  // world, with the character the player picked and nothing else carried over.
+  if (action === 'restart-campaign') {
+    state.selectedAct = PLAYABLE_ACTS[0].id;
+    state.pendingRun = null;
+    enterWorld();
+  }
   // The lab seeds the run itself, and a lab run's own overlays come back here:
   // repeat re-seeds the same wave, back reopens the build screen.
   if (action === 'balance-play' || action === 'balance-repeat') playBalanceWave();

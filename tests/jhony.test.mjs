@@ -104,11 +104,11 @@ test('Tilt shows on the face as brows and ticks; the red cheeks are the whisky',
   assert.ok(red(record(ctx => drawJhony(ctx, 100, 150, { drink: true }))), 'the whisky shows on the face');
 });
 
-test('Jhony is a playable ficha unlocked by his Act 1 encounter', () => {
+test('Jhony is a playable ficha unlocked by the end of his epilogue', () => {
   assert.deepEqual(ROSTER.map(character => character.id), ['negro', 'solago', 'warrior', 'papazito', 'jhony', 'papafrita']);
   assert.equal(CHARACTERS.jhony.id, 'jhony');
   assert.equal(CHARACTERS.jhony.unlock.flag, 'jhonyUnlocked');
-  assert.equal(CHARACTERS.jhony.unlock.scene, 'act-01-jhony', 'meeting him in Act 1 is the unlock');
+  assert.equal(CHARACTERS.jhony.unlock.scene, 'act-07-credits', 'his own epilogue is the unlock, not the Act 1 meeting');
   // The stage cast is the roster now: Jhony is not listed twice.
   assert.deepEqual(STAGE_CAST.map(character => character.id), ROSTER.map(character => character.id));
   assert.equal(jhony.id, 'jhony');

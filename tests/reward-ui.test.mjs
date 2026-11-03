@@ -60,7 +60,8 @@ test('the boss shop continues to the next world and death still only offers repl
     run.phase = 'dead';
     const dead = render(run);
     assert.doesNotMatch(dead, /data-action="next-act"/);
-    assert.match(dead, /data-action="play"/);
+    assert.match(dead, /data-action="restart-campaign"/, 'death restarts the campaign from the first world');
+    assert.doesNotMatch(dead, /data-action="play"/, 'death never replays the world it died in');
   }
 
   // The second ending is the one that hands the campaign over to the epilogue.

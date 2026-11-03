@@ -185,10 +185,11 @@ const SHEET = {
 const jhony = {
   id: 'jhony',
   name: 'JHONY',
-  gameNote: 'METALERO RUSHER · TILT Y BOTELLAZOS · SE DESBLOQUEA AL CONOCERLO EN EL ACTO 1',
-  // Meeting him in Project Zomboid is what makes him selectable. The act keeps
-  // him out of the group; the roster only borrows the ficha.
-  unlock: { flag: 'jhonyUnlocked', scene: 'act-01-jhony' },
+  gameNote: 'METALERO RUSHER · TILT Y BOTELLAZOS · SE DESBLOQUEA AL TERMINAR SU EPÍLOGO',
+  // He refuses to join during Act 1 and only comes back to Discord with the
+  // group when his own epilogue ends, so the last scene of that epilogue is the
+  // unlock. Meeting him in Project Zomboid is not enough.
+  unlock: { flag: 'jhonyUnlocked', scene: 'act-07-credits' },
   label: 'Jhony',
   detailLabel: 'Jhony',
   previewAria: 'Pixel art de Jhony: campera de cuero negra, pelo largo, anteojos, barba y una botella de cerveza en la mano',
@@ -202,7 +203,7 @@ const jhony = {
       <div class="skill"><kbd>Q</kbd><div><b>ME VI UNA GUÍA</b><p>Revisa la build más rota que encontró en internet y durante 10 segundos suma +30% de ataque y +50% de velocidad de ataque, además de tirar botellas que rebotan hasta 3 enemigos. Recarga: 30 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>UN TRAGUITO MÁS</b><p>Saca el whisky: +33% de frecuencia de botellazos y la acumulación de Tilt sube la mitad durante 6 segundos. Recarga: 16 segundos.</p></div></div>`,
   unlockNote: {
-    locked: 'JHONY · BLOQUEADO · ENCUENTRO DEL ACTO 1',
+    locked: 'JHONY · BLOQUEADO · EPÍLOGO DEL ACTO 7',
     unlocked: 'JHONY DESBLOQUEADO · DISPONIBLE PARA JUGAR',
   },
   deathLine: 'DESINSTALO ESTA MIERDA.',

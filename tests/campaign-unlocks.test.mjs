@@ -12,10 +12,12 @@ const encounters = [
   { act: 'act-03', scene: 'act-03-papasito', character: 'papazito' },
   { act: 'act-04', scene: 'act-04-warrior', character: 'warrior' },
 ];
-// Encounter order the selection screen follows: reaching Jhony closes Act 1,
-// so his is the first note a fresh save reads.
-const encounterOrder = [{ scene: 'act-01-jhony', character: 'jhony' }, ...encounters,
-  { scene: 'act-05-final', character: 'papafrita' }];
+// Encounter order the selection screen follows. Jhony refuses to join all the
+// way through Act 1: he only comes back to Discord when his own epilogue ends,
+// so his note is the last one a save reads.
+const encounterOrder = [...encounters,
+  { scene: 'act-05-final', character: 'papafrita' },
+  { scene: 'act-07-credits', character: 'jhony' }];
 const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 function memoryStorage(initial = null) {
   let value = initial;
@@ -45,7 +47,7 @@ test('each real encounter unlocks its character when completed or skipped, with 
       for (const other of encounters.filter(item => item !== encounter)) {
         assert.equal(isCharacterUnlocked(other.character, reloaded), false, 'does not grant other encounters');
       }
-      assert.equal(isCharacterUnlocked('jhony', reloaded), false, 'and never grants Jhony his Act 1 encounter');
+      assert.equal(isCharacterUnlocked('jhony', reloaded), false, 'and never grants Jhony his epilogue unlock');
       assert.equal(reloaded.getItem(PROGRESS_STORAGE_KEY), saved, 'checking an unlock never rewrites progress');
     }
   }
@@ -58,19 +60,37 @@ test('existing encounter history restores all characters without replaying or re
   assert.equal(store.getItem(PROGRESS_STORAGE_KEY), original);
 });
 
-test('meeting Jhony when Act 1 closes is what makes him selectable', async () => {
+function playToTheEnd(director, frames = 40000) {
+  for (let frame = 0; director.blocked && frame < frames; frame++) {
+    if (director.player.dialogue || director.player.notice || director.player.splash) director.advance();
+    else director.tick(0.05);
+  }
+  assert.equal(director.blocked, false, 'the scenes finish');
+}
+
+test('Jhony refusing to join in Act 1 never makes him selectable', async () => {
   const act = PLAYABLE_ACTS.find(act => act.id === 'act-01');
   const catalog = await loadCatalog({ urls: [manifestURL, actManifestURL(act)], fetcher });
   const store = memoryStorage();
   const director = new WaveDirector(catalog, { seen: sceneSeenStore(store) });
   director.attach({ act, character: 'negro', phase: 'won', wave: 6, time: 0 });
-  assert.equal(isCharacterUnlocked('jhony', store), false, 'not before Act 1 ends');
+  assert.equal(isCharacterUnlocked('jhony', store), false);
   director.observe();
-  for (let frame = 0; director.blocked && frame < 40000; frame++) {
-    if (director.player.dialogue || director.player.notice || director.player.splash) director.advance();
-    else director.tick(0.05);
-  }
-  assert.equal(director.blocked, false, 'the Act 1 closing scenes finish');
+  playToTheEnd(director);
+  assert.equal(director.player.scene.id, 'act-01-epilogue', 'Act 1 closes with the epilogue');
+  assert.equal(isCharacterUnlocked('jhony', store), false, 'the Act 1 meeting is not the unlock');
+});
+
+test('the last scene of his own epilogue is what makes Jhony selectable', async () => {
+  const act = PLAYABLE_ACTS.find(act => act.id === 'act-07');
+  const catalog = await loadCatalog({ urls: [manifestURL, actManifestURL(act)], fetcher });
+  const store = memoryStorage();
+  const director = new WaveDirector(catalog, { seen: sceneSeenStore(store) });
+  director.attach({ act, character: 'negro', phase: 'won', wave: 6, time: 0 });
+  assert.equal(isCharacterUnlocked('jhony', store), false, 'not before his epilogue ends');
+  director.observe();
+  playToTheEnd(director);
+  assert.equal(director.player.scene.id, 'act-07-credits', 'his epilogue closes with the post-credits');
   assert.equal(isCharacterUnlocked('jhony', store), true);
 });
 
@@ -109,7 +129,7 @@ test('roster guidance follows encounter order and recovered characters are selec
     const { characters } = await import('../src/screens/characters.mjs');
     const { state } = await import('../src/app/state.mjs');
     characters();
-    assert.match(content.innerHTML, /ACTO 1/);
+    assert.ok(content.innerHTML.includes(ROSTER.find(item => item.id === 'solago').unlockNote.locked), 'a fresh save points at the first encounter');
     assert.doesNotMatch(content.innerHTML, /GANÁ EL MAPA|CADENA DE MAPAS|ganá el mapa anterior/);
     for (const [index, encounter] of encounterOrder.entries()) {
       sceneSeenStore(store).add(encounter.scene);
