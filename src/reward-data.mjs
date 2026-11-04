@@ -292,7 +292,10 @@ const LEVEL_UPGRADE_BASE = [
   // The drop upgrade. It touches no combat statistic, so it is offered with the
   // shared pool from level two: the first ranks make the drop a plan and the
   // last one turns a bad fight into a small rescue.
-  { id: 'loot', name: 'Botín inesperado', characters: 'all', minLevel: 2,
+  // The loot card waits for the mechanic to be introduced: `lootSeen` is set by
+  // the first drop of the run, which is the same moment the Administrator shows
+  // the object. Offering it before would sell a drop the player never saw.
+  { id: 'loot', name: 'Botín inesperado', characters: 'all', minLevel: 2, requiresLootSeen: true,
     requires: [], ranks: Array.from({ length: 3 }, () => ({
       effects: [{ type: 'dropChance', value: 0.03 }, { type: 'dropHeal', value: 3 }],
     })) },

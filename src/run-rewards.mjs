@@ -102,6 +102,16 @@ function applyReward(run, source, reward) {
   return true;
 }
 
+// The pool the level menu draws from, in one place: an entry may wait for the
+// loot mechanic to be introduced (`requiresLootSeen`) before it is eligible.
+export function levelUpgradePool(run) {
+  return run.rewardCatalog.upgrades.filter(entry => {
+    if (entry.requiresLootSeen && !run.lootSeen) return false;
+    const rank = countOf(run.levelRanks, entry.id);
+    return rank < entry.ranks.length && canApply(run, `preview:${entry.id}`, entry.ranks[rank]);
+  });
+}
+
 function makeShopOffers(run) {
   const remaining = run.rewardCatalog.items.filter(item => item.enabled !== false
     && countOf(run.items, item.id) < item.maxCopies && canApply(run, `preview:${item.id}`, item));
@@ -115,10 +125,7 @@ export function beginRewards(run) {
   if (run.phase !== 'shop') return false;
   if (run.pendingLevels.length) {
     if (run.levelChoices === null) {
-      const upgrades = run.rewardCatalog.upgrades.filter(entry => {
-        const rank = countOf(run.levelRanks, entry.id);
-        return rank < entry.ranks.length && canApply(run, `preview:${entry.id}`, entry.ranks[rank]);
-      });
+      const upgrades = levelUpgradePool(run);
       run.levelChoices = selectLevelOptions({ upgrades }, {
         character: run.character, level: run.pendingLevels[0], ranks: run.levelRanks,
         // A collector has to see his own shelf more often than the rest.

@@ -185,12 +185,12 @@ purse, water ice pop, mushroom, chipá, whisky and a handheld console — and al
 six have the same effect: only the object and its drawing change. The engine rolls it once
 per kill, collects it on contact and clears the floor at the wave boundary.
 
-The chance is deliberately low in the first worlds: `0.015` plus `0.005` per
-world order, plus up to `0.08` as the body's health falls, plus the
-`dropChance` effect, capped at `0.25`. A body at full health leaves the object
-where it fell instead of wasting it, and a fresh drop arms for 0.35 s so a melee
-kill still shows it before the body swallows it. The heal is `14` points plus
-the `dropHeal` effect, never past the top.
+The chance is deliberately low in the first worlds — 0.5% per kill in act one,
+1% in act two, 4.5% by the last — and rises with the missing health, up to
++8 points, plus the `dropChance` effect, capped at `0.25`. A body at full
+health leaves the object where it fell instead of wasting it, and a fresh drop
+arms for 0.35 s so a melee kill still shows it before the body swallows it. The
+heal is `14` points plus the `dropHeal` effect, never past the top.
 
 Every object is drawn by writing its art as rectangles; the module then computes
 the silhouette and adds the two-step outline — one black pixel against the body,
@@ -201,7 +201,10 @@ free.
 
 The upgrade is `loot` ("Botín inesperado"), a common entry with three ranks of
 `+3%` chance and `+3` heal. It touches no combat statistic, so it is offered
-from level two with the shared pool.
+from level two with the shared pool — but only after `run.lootSeen`, the flag the
+first drop sets together with the Administrator's notice. Selling the upgrade
+before the player has seen a drop would sell a mechanic they do not know yet.
+The flag travels with the campaign through `createNextWorldRun`.
 
 ## When an upgrade is offered
 

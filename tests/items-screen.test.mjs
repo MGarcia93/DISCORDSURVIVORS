@@ -30,7 +30,7 @@ test('the sandbox lists the six objects it paints', () => {
   itemsScreen();
   assert.equal((content.innerHTML.match(/<li>/g) ?? []).length, 6);
   for (const character of ROSTER) assert.ok(content.innerHTML.includes(PICKUPS[character.id].label));
-  assert.match(content.innerHTML, /1\.5%/, 'the first world states its real chance');
+  assert.match(content.innerHTML, /0\.5%/, 'the first world states its real chance');
   assert.match(content.innerHTML, /4\.5%/, 'the last world states its real chance');
 });
 

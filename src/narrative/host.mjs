@@ -18,8 +18,11 @@ export class NarrativeHost {
   constructor({ load = defaultLoad, makeView = createPresenter, audio = new NarrativeAudio(), seen = null } = {}) {
     this.load = load; this.makeView = makeView; this.audio = audio; this.seen = seen;
     this.generation = 0; this.director = null; this.loading = false; this.error = null;
+    // A system notice is the Administrator's screen: it owns the layer, it
+    // pauses the run, and the player dismisses it. It is not a scene.
+    this.systemNotice = null;
   }
-  get blocked() { return this.loading || Boolean(this.director?.blocked); }
+  get blocked() { return this.loading || Boolean(this.director?.blocked) || Boolean(this.systemNotice); }
   async attach(run, root, { preview = false, persist = true } = {}) {
     this.detach();
     const generation = this.generation;
@@ -52,7 +55,7 @@ export class NarrativeHost {
     this.generation++; this.director?.detach(); this.director = null;
     this.view?.dispose(); this.view = null; this.audio.stop();
     this.loading = false; this.error = null; this.catalog = null;
-    this.suspended = false;
+    this.suspended = false; this.systemNotice = null;
   }
   preview(id) {
     if (!this.previewMode || !this.director) return false;
@@ -78,13 +81,25 @@ export class NarrativeHost {
     if (!this.director) { start(); return true; }
     return this.director.nextWave(start);
   }
-  advance() { this.director?.advance(); this.render(); }
-  skip() { this.audio.stop(); this.director?.skip(); this.render(); }
+  showNotice(notice) { this.systemNotice = notice; this.render(); }
+  clearNotice() { this.systemNotice = null; this.render(); }
+  advance() {
+    // The shell owns the sequence: it knows which beat comes next and when the
+    // last one was already on screen.
+    if (this.systemNotice) { this.systemNotice.advance?.(); return; }
+    this.director?.advance(); this.render();
+  }
+  skip() { this.audio.stop(); if (this.systemNotice) { this.clearNotice(); return; } this.director?.skip(); this.render(); }
   fail(message) { this.error = message; this.audio.stop(); this.director?.fail(message); this.render(); }
   enqueueBanter(line) { return this.director?.enqueueBanter(line) ?? false; }
   suspend() { this.suspended = true; this.audio.stop(); }
   resume() { this.suspended = false; }
   key(key, repeat = false) {
+    if (this.systemNotice) {
+      if (!repeat && (key === 'enter' || key === ' ')) this.advance();
+      if (!repeat && key === 'escape') this.skip();
+      return key !== 'tab';
+    }
     if (!this.blocked) return false;
     if (!repeat && (key === 'enter' || key === ' ')) this.advance();
     if (!repeat && key === 'escape') this.skip();
@@ -93,6 +108,6 @@ export class NarrativeHost {
   }
   render() {
     this.view?.render(this.director?.player, this.director?.banter.current,
-      this.error ?? this.director?.error, { preview: this.previewMode });
+      this.error ?? this.director?.error, { preview: this.previewMode, notice: this.systemNotice });
   }
 }

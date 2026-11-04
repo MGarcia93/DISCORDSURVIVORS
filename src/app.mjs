@@ -21,6 +21,7 @@ import { balance, isBalanceDevelopment } from './screens/balance.mjs';
 import { balanceForMode, seedRun } from './game/balance-seed.mjs';
 import { game } from './screens/game.mjs';
 import { narrative, leaveNarrative, showNarrativeViewer, tickNarrativeViewer, narrativeAction, activeNarrativeHost, trapNarrativeFocus, isNarrativeDevelopment, activeNarrativeAct } from './narrative/integration.mjs';
+import { lootMessageFor } from './narrative/loot-messages.mjs';
 import { audio } from './audio/index.mjs';
 import { musicCue, SFX, UI } from './audio/mix.mjs';
 import { warpToWorld } from './game/world-transition.mjs';
@@ -63,6 +64,7 @@ function show(name, previousRun = null) {
   if (name !== 'game') { state.run = null; state.pendingRun = null; }
   state.paused = false;
   state.sellMenuOpen = false;
+  state.lootStage = null;
   document.body.classList.toggle('in-game', name === 'game');
   if (name === 'home') home();
   if (name === 'characters') characters();
@@ -126,8 +128,62 @@ function playBalanceWave() {
   show('game');
 }
 
-function frame(timestamp) {
-  const dt = state.lastFrame ? (timestamp - state.lastFrame) / 1000 : 0;
+// The Administrator writes once per run, on the first drop. His screen owns the
+// whole layer and stops the run: the diagnosis and the progress bar run on their
+// own clock, and the object waits for the player to dismiss it. Until the layer
+// is free the notice waits on the run itself.
+function flushLootNotice() {
+  const run = state.run;
+  if (!run?.lootNotice || state.lootStage || run.phase !== 'playing') return;
+  if (narrative.blocked) return;
+  state.lootStage = { beats: lootMessageFor(run.lootNotice.character), index: 0, time: 0 };
+  delete run.lootNotice;
+  showLootStage();
+}
+
+function showLootStage() {
+  const sequence = state.lootStage;
+  if (!sequence) return;
+  const beat = sequence.beats[sequence.index];
+  narrative.showNotice({
+    title: 'ADMINISTRADOR',
+    lines: [...beat.lines],
+    progress: beat.progress,
+    item: beat.item ?? null,
+    // Every beat waits for the player except the loading one.
+    waiting: !beat.auto,
+    advance: advanceLootStage,
+  });
+}
+
+// CONTINUAR (and Enter) move to the next beat; on the last one they close.
+function advanceLootStage() {
+  const sequence = state.lootStage;
+  if (!sequence) { narrative.clearNotice(); return; }
+  if (sequence.index < sequence.beats.length - 1) {
+    sequence.index += 1;
+    sequence.time = 0;
+    showLootStage();
+    return;
+  }
+  narrative.clearNotice();
+  state.lootStage = null;
+}
+
+function tickLootNotice(dt) {
+  const sequence = state.lootStage;
+  if (!sequence) return;
+  const beat = sequence.beats[sequence.index];
+  // Only the loading beat advances alone; the others wait for the player.
+  if (beat.auto) {
+    sequence.time += dt;
+    if (sequence.time >= beat.duration) advanceLootStage();
+  }
+  // Escape clears the whole notice from the host: drop the sequence with it.
+  if (!narrative.systemNotice && state.lootStage) state.lootStage = null;
+}
+
+function frame(timestamp) {  const dt = state.lastFrame ? (timestamp - state.lastFrame) / 1000 : 0;
   state.lastFrame = timestamp;
   if (state.screen === 'game' && state.run) {
     const sceneWasBlocking = narrative.blocked;
@@ -140,6 +196,8 @@ function frame(timestamp) {
       narrative.tick(dt);
       if (!sceneWasBlocking && !narrative.blocked) step(state.run, dt, input);
       narrative.observe();
+      tickLootNotice(dt);
+      flushLootNotice();
     }
     // A wave may declare its own noise: the depot fight keeps the car alarm
     // ringing every couple of seconds while it lasts.

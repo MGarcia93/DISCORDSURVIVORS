@@ -32,6 +32,8 @@ export const state = {
   run: null,
   paused: false,
   sellMenuOpen: false,
+  // The Administrator's first-drop sequence while it owns the screen.
+  lootStage: null,
   lastFrame: 0,
   lastPhase: '',
   hudElapsed: 0,

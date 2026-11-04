@@ -12,7 +12,7 @@ export function createNextWorldRun(previous) {
   const run = createRun(previous.random, previous.character, {
     catalog: previous.rewardCatalog, balance: previous.rewardBalance,
   }, act);
-  for (const key of ['statState', 'effectSources', 'items', 'levelRanks', 'upgrades']) {
+  for (const key of ['statState', 'effectSources', 'items', 'levelRanks', 'upgrades', 'lootSeen']) {
     run[key] = structuredClone(previous[key]);
   }
   // Experience that did not add up to a whole point yet keeps adding up.

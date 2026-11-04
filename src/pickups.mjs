@@ -7,15 +7,16 @@ import { emit } from './bus.mjs';
 // The engine only rolls it on a kill, collects it on contact and clears the
 // floor at the wave boundary.
 //
-// The drop is deliberately rare in the first worlds: act one pays 1.5% per
-// kill, and the chance grows a little with the world order. It also grows as
-// the body's health falls, so the last sliver of life is the one time the game
-// leans in. The `dropChance` / `dropHeal` effects are the upgrade's own
-// contribution and stack on top of both.
+// The drop is deliberately rare in the first worlds: act one pays 0.5% per
+// kill and act two 1%, then the curve climbs to 4.5% by the last one. It also
+// grows as the body's health falls, so the last sliver of life is the one time
+// the game leans in. The `dropChance` / `dropHeal` effects are the upgrade's
+// own contribution and stack on top of both.
 export const DROP_HEAL = 14;
 export const PICKUP_TTL = 12;
-const ACT_BASE_CHANCE = 0.015;
-const ACT_CHANCE_STEP = 0.005;
+// One entry per world, so the first two can stay stingy without dragging the
+// rest of the campaign down with them.
+const ACT_CHANCE = Object.freeze([0.005, 0.010, 0.025, 0.030, 0.035, 0.040, 0.045]);
 // Exported so the development sandbox states the real number instead of a copy
 // that drifts the moment the drop is tuned.
 export const MISSING_HEALTH_CHANCE = 0.08;
@@ -269,7 +270,7 @@ const HANDHELD = art(p => {
 // One object per ficha. Same effect for all six: only the object and its drawing
 // change, so the drop reads as the character's own and never as a stat.
 export const PICKUPS = Object.freeze({
-  negro: Object.freeze({ id: 'kuromi', label: 'Peluche de Kuromi', draw: (ctx, x, y, options) => paint(ctx, x, y, options, KUROMI) }),
+  negro: Object.freeze({ id: 'kuromi', label: 'Figura de Kuromi', draw: (ctx, x, y, options) => paint(ctx, x, y, options, KUROMI) }),
   solago: Object.freeze({ id: 'ice-pop', label: 'Paleta de agua', draw: (ctx, x, y, options) => paint(ctx, x, y, options, ICE_POP) }),
   warrior: Object.freeze({ id: 'mushroom', label: 'Hongo', draw: (ctx, x, y, options) => paint(ctx, x, y, options, MUSHROOM) }),
   papazito: Object.freeze({ id: 'chipa', label: 'Chipá', draw: (ctx, x, y, options) => paint(ctx, x, y, options, CHIPA) }),
@@ -284,7 +285,8 @@ export function pickupFor(character) {
 // The chance per kill, with every source already resolved: the world's floor,
 // the missing health and the upgrade's own bonus.
 export function actDropChance(order = 1) {
-  return ACT_BASE_CHANCE + ACT_CHANCE_STEP * (Math.max(1, order) - 1);
+  const index = Math.max(1, Math.round(order)) - 1;
+  return ACT_CHANCE[Math.min(index, ACT_CHANCE.length - 1)];
 }
 
 export function dropChance(run) {
@@ -310,6 +312,13 @@ export function dropPickup(run, enemy) {
     ttl: PICKUP_TTL, arm: 0.35,
   };
   run.pickups.push(pickup);
+  // The first drop of the run is also what introduces the mechanic: the shell
+  // shows the Administrator's notice, and the loot upgrade only enters the
+  // level-up pool once this flag is set. One flag, one introduction.
+  if (!run.lootSeen) {
+    run.lootSeen = true;
+    run.lootNotice = { character: run.player.character };
+  }
   return pickup;
 }
 

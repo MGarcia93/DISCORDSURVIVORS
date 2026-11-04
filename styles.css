@@ -312,6 +312,20 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 .narrative-banter img { width: 55px; height: 65px; }
 .narrative-banter .portrait-extended { width: 63.25px; height: 77.35px; flex-shrink: 0; align-self: flex-end; }
 .narrative-banter p { margin: 4px 0 0; overflow-wrap: anywhere; }
+/* The Administrator's box: Discord-blue frame, the object where the face would
+   be, and one line per system entry. */
+.narrative-banter.admin { border-color: #5865f2; background: #0b0f1af2; width: min(520px, 78%); }
+.narrative-banter.admin strong { color: #9fb1ff; letter-spacing: .14em; }
+.narrative-banter.admin p { margin: 3px 0 0; color: #f4e9dc; }
+.narrative-banter.admin p:last-child { color: #d7f779; }
+.narrative-banter .loot-icon { width: 56px; height: 64px; flex-shrink: 0; image-rendering: pixelated; }
+.narrative-banter .loot-icon.empty { border: 1px dashed #5865f2; opacity: .45; }
+.admin-progress { margin-top: 8px; width: min(520px, 80%); height: 6px; background: #2a2f45; border: 1px solid #5865f2; }
+.admin-progress span { display: block; height: 100%; background: #9fb1ff; transition: width .35s linear; }
+/* The Administrator's screen: the whole layer, the run stopped behind it. */
+.narrative-notice.loot { gap: 10px; }
+.narrative-notice.loot .loot-icon { width: 112px; height: 128px; image-rendering: pixelated; }
+.narrative-notice.loot .loot-lines p { max-width: 34em; }
 .narrative-error { position: absolute; top: 8px; left: 8px; max-width: 90%; padding: 10px; background: #3d1829; color: #fff; font: 12px/1.5 monospace; overflow-wrap: anywhere; }
 .narrative-viewer { max-width: 1250px; margin: auto; }
 .narrative-viewer .actions { margin: 12px 0; flex-wrap: wrap; }

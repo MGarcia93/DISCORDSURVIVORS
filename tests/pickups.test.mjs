@@ -49,6 +49,8 @@ test('every ficha leaves its own object and no two share one', () => {
 
 test('the first world drops almost nothing and later worlds pay more', () => {
   const chance = order => dropChance(quietRun(() => 0.5, 'negro', order));
+  assert.equal(chance(1), 0.005, 'act one is the rarest');
+  assert.equal(chance(2), 0.01, 'act two barely pays more');
   assert.ok(chance(1) < 0.02, `act one is rare (${chance(1)})`);
   assert.ok(chance(1) < chance(3) && chance(3) < chance(6));
 });
@@ -65,7 +67,7 @@ test('the drop gets more likely as health falls, and never runs away', () => {
 });
 
 test('a kill that rolls the drop leaves the object on the floor', () => {
-  const run = quietRun(() => 0.01);
+  const run = quietRun(() => 0.001);
   dyingEnemy(run);
   assert.equal(run.kills, 1);
   assert.equal(run.pickups.length, 1);
@@ -80,7 +82,7 @@ test('a kill that misses the roll leaves nothing', () => {
 });
 
 test('a fresh drop arms before it can be taken', () => {
-  const run = quietRun(() => 0.01);
+  const run = quietRun(() => 0.001);
   run.player.hp = run.player.maxHp - 40;
   dyingEnemy(run);
   const pickup = run.pickups[0];
@@ -90,6 +92,22 @@ test('a fresh drop arms before it can be taken', () => {
   assert.equal(run.pickups.length, 1, 'the drop is visible for a moment before it is swallowed');
   for (let i = 0; i < 8; i++) step(run, 0.05, {});
   assert.equal(run.pickups.length, 0, 'and then the body takes it');
+});
+
+test('the Administrator writes once per run, on the first drop', () => {
+  const run = quietRun(() => 0.001);
+  const kill = id => {
+    run.enemies.push({ id, x: 560, y: 340, hp: 1, maxHp: 10, speed: 0, radius: 15, kind: 'zombie', defense: 0 });
+    for (let i = 0; i < 20; i++) step(run, 0.05, {});
+  };
+  kill(1);
+  assert.deepEqual(run.lootNotice, { character: 'negro' });
+  assert.equal(run.lootSeen, true, 'the first drop introduces the mechanic');
+  delete run.lootNotice; // the shell consumed it
+  kill(2);
+  assert.equal(run.lootNotice, undefined, 'the second drop does not write again');
+  assert.equal(run.lootSeen, true, 'the mechanic stays introduced');
+  assert.equal(run.pickups.length, 2, 'both drops still fall');
 });
 
 test('walking over the object heals, caps at the top and consumes it', () => {

@@ -10,6 +10,7 @@ import lotusAlchemist from '../npcs/lotus-alchemist.mjs';
 import taskmaster from '../npcs/taskmaster.mjs';
 import esclavista from '../npcs/esclavista.mjs';
 import maxiBlanco from '../npcs/maxi-blanco.mjs';
+import { drawPickups, pickupFor } from '../pickups.mjs';
 
 // Narrative actors may be NPCs without entering the playable roster.
 const STAGE_SPRITES = { ...CHARACTERS, jhony, papafrita, yorick, lordZir, lilith, lotusAlchemist, taskmaster, esclavista, 'maxi-blanco': maxiBlanco };
@@ -194,12 +195,22 @@ export function createPresenter(root, catalog, onError) {
     const layout = character.portraitLayout === 'extended' ? ' portrait-extended' : '';
     return `<img class="narrative-portrait${layout}" src="${escape(character.expressions[expression])}" alt="${escape(character.name)} — ${escape(expression)}">`;
   };
+  // The Administrator's box carries the object instead of a face: it is painted
+  // with the same ground-layer painter the arena uses, so the icon cannot drift
+  // from the drop.
+  const paintLootIcon = (canvas, character, scale = 2) => {
+    if (!canvas || !character) return;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+    drawPickups(ctx, { pickups: [{ character, x: canvas.width / 2, y: canvas.height - 12, ttl: 9 }] }, 0, { scale });
+  };
   const restoreFocus = () => {
     if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     previousFocus = null;
   };
   return {
-    render(player, banter, error, { preview = false } = {}) {
+    render(player, banter, error, { preview = false, notice = null } = {}) {
       const active = player?.active, showStage = player && (active || preview);
       canvas.hidden = !showStage;
       // Portraits overlay the scene; actors remain present on the stage.
@@ -269,7 +280,7 @@ export function createPresenter(root, catalog, onError) {
           ctx.restore();
         }
       }
-      const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, player?.notice, player?.flash, banter]);
+      const signature = JSON.stringify([Boolean(active), player?.dialogue, player?.splash, player?.notice, player?.flash, banter, notice]);
       if (signature !== previous) {
         previous = signature;
         const currentRevision = ++revision;
@@ -282,7 +293,24 @@ export function createPresenter(root, catalog, onError) {
         // character panel, in the same corner, and it must re-enable pointer
         // events: the narrative layer otherwise passes the click to the game.
         const heldActions = '<div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div>';
-        if (spoken?.layout === 'stage') {
+        if (notice) {
+          // The Administrator's screen: it owns the whole layer and pauses the
+          // run. The object is painted with the arena's own drop painter.
+          const percent = Math.round((notice.progress ?? 0) * 100);
+          const bar = typeof notice.progress === 'number'
+            ? `<div class="admin-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><span style="width:${percent}%"></span></div>`
+            : '';
+          const label = notice.item ? pickupFor(notice.item).label : '';
+          // No empty slot: the picture exists only once the object does.
+          const icon = notice.item
+            ? `<canvas class="loot-icon" width="112" height="128" aria-label="${escape(label)}"></canvas>`
+            : '';
+          const actions = notice.waiting
+            ? '<div class="actions"><button class="primary" data-action="narrative-next">CONTINUAR</button></div>'
+            : '';
+          content.innerHTML = `<div class="narrative-notice loot" role="dialog" aria-modal="true" aria-label="Administrador"><strong>${escape(notice.title)}</strong>${icon}<div class="loot-lines">${notice.lines.map(text => `<p>${escape(text)}</p>`).join('')}</div>${bar}${actions}</div>`;
+          paintLootIcon(content.querySelector('.loot-icon'), notice.item, 4);
+        } else if (spoken?.layout === 'stage') {
           // Keep moving sprites visible; a compact subtitle panel replaces the
           // large portraits only for dialogue that explicitly opts into it.
           content.innerHTML = `<div class="narrative-dialog narrative-stage-dialog" role="dialog" aria-modal="true" aria-label="Scene conversation"><div class="narrative-text"><strong>${escape(spoken.name ?? catalog.characters[spoken.speaker].name)}</strong><p>${escape(spoken.text)}</p><div class="actions"><button class="primary" data-action="narrative-next">Continue</button><button class="secondary" data-action="narrative-skip">Skip scene</button></div></div></div>`;
@@ -331,7 +359,7 @@ export function createPresenter(root, catalog, onError) {
         if (active) content.querySelector('button')?.focus({ preventScroll: true });
         else restoreFocus();
       }
-      root.hidden = !showStage && !banter && !error;
+      root.hidden = !showStage && !banter && !error && !notice;
       errorBox.hidden = !error; errorBox.textContent = error ?? '';
     },
     dispose() { disposed = true; revision++; restoreFocus(); root.innerHTML = ''; root.hidden = true; },
