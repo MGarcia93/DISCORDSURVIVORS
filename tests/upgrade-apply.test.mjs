@@ -20,7 +20,7 @@ test('chooseUpgrade delegates to apply and preserves exact stat effects', () => 
   assert.equal(buy('damage').damage, 22.6 * 1.3);
   // attackSpeed is authored as a percentage of the sheet's own rate, so the
   // upgrade keeps Kenney's exact interval factor (0.92).
-  assert.ok(Math.abs(buy('rate').shotInterval - (1 / 1.9) * 0.92) < 0.001);
+  assert.ok(Math.abs(buy('rate').shotInterval - (1 / 1.8) * 0.92) < 0.001);
   const health = buy('health');
   assert.equal(health.maxHp, 145);
   assert.equal(health.hp, 145);

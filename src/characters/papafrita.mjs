@@ -143,7 +143,7 @@ const SHEET = {
   life: 90,
   defense: 85,
   attack: 269,           // 26.9 per wave: ranged pays twice, it never has to close
-  attackSpeed: 180,      // 1.8 waves/s: the reach is paid in damage, not in cadence
+  attackSpeed: 171,      // 1.71 waves/s: the reach is paid in damage, not in cadence
   attackDistance: 320,
   moveSpeed: 3300,
 };

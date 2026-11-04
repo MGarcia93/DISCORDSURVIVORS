@@ -52,7 +52,7 @@ test('Papafrita runs on the percentage core and throws voice waves, not weapons'
   assert.equal(p.defense, 0.425);
   assert.equal(p.damage, 26.9);
   assert.equal(p.attackRange, 320 * UNIT_PX);
-  assert.ok(Math.abs(p.shotInterval - 100 / 180) < 1e-9);
+  assert.ok(Math.abs(p.shotInterval - 100 / 171) < 1e-9);
   assert.equal(p.speed, 165 * WORLD_SCALE);
   assert.equal(CHARACTERS.papafrita.attack.device, 'voice', 'his voice is the weapon');
   assert.equal(CHARACTERS.papafrita.attack.straight, true, 'the wave keeps one heading, it never re-targets');
