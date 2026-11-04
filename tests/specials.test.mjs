@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { activateSpecial, createRun, step, WORLD_SCALE } from '../src/engine.mjs';
+import { activateSpecial, createRun, seedWave, step, WORLD_SCALE } from '../src/engine.mjs';
 import { CHARACTERS } from '../src/characters/index.mjs';
 
 function actors() {
@@ -69,6 +69,19 @@ test('Strong enemies take the drop instead of the floor: bosses are only slowed'
   assert.equal(boss.confusionStacks, 1, 'bosses cap at one stack: slow, never stunned');
   assert.equal(boss.stunTtl ?? 0, 0, 'no immobilization for a boss');
   assert.ok(Math.abs(boss.hp - (2200 - 7.08)) < 1e-6, 'the circle still deals its tick damage');
+});
+
+test('a wave boundary clears every active special and halves what it still owes', () => {
+  const run = createRun(() => 0.5, 'negro');
+  assert.equal(activateSpecial(run, 'chair'), true);
+  assert.equal(activateSpecial(run, 'anime'), true);
+  run.player.chairCooldown = 18;
+  run.player.animeCooldown = 6;
+  seedWave(run, 2);
+  assert.equal(run.player.chair, 0, 'the seat never crosses the boundary');
+  assert.equal(run.player.anime, 0, 'neither does the waifu');
+  assert.equal(run.player.chairCooldown, 9, 'and what was owed opens at half price');
+  assert.equal(run.player.animeCooldown, 3);
 });
 
 test('El sillón tapa también el anillo del jefe, no solo el contacto y los tiros', () => {

@@ -203,7 +203,11 @@ const papazito = {
   // Especial «Liquido todo, me voy de putas» (ficha §4.3): invented inventory,
   // engine-routine sale; the app renders the pause menu from this exact table.
   specials: [{
-    key: 'sell', name: 'Liquidó todo', hotkey: 'e', duration: 0, cooldown: 0,
+    key: 'sell', name: 'Liquidó todo', hotkey: 'e', duration: 0, cooldown: 45,
+    // One belonging per sale: the counter closes as soon as something leaves and
+    // the ability owes its cooldown, so the chango empties across the act
+    // instead of at the first shop.
+    cooldownOnSale: true,
     items: {
       psp: { label: 'PSP', coins: 20, ttl: 10, quote: 'Vendió la PSP',
         modifiers: [percent('attack', 10), percent('moveSpeed', -15)] },

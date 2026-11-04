@@ -245,10 +245,14 @@ document.addEventListener('click', event => {
   if (action === 'sell-menu-close') { state.sellMenuOpen = false; state.lastPhase = ''; state.keys.clear(); overlay(); updateHUD(); }
   if (action === 'next-wave') { narrative.nextWave(() => startNextWave(state.run)); state.keys.clear(); }
   if (button.dataset.sale && state.run) {
-    sellBelonging(state.run, button.dataset.sale);
+    // One belonging per sale: the counter closes on a successful sale and the
+    // ability takes its cooldown, so the chango empties across the act.
+    if (sellBelonging(state.run, button.dataset.sale)) {
+      state.sellMenuOpen = false;
+      state.lastPhase = '';
+    }
     const stock = state.run.player.characterDef.specials.find(s => s.key === 'sell')?.items ?? {};
     if (!Object.keys(stock).some(key => !state.run.player.soldItems?.[key])) state.sellMenuOpen = false;
-    state.lastPhase = '';
     overlay(); updateHUD();
   }
   if (button.dataset.special && state.run && !state.paused) activateSpecial(state.run, button.dataset.special);

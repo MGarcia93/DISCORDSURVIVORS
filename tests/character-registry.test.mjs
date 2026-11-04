@@ -230,6 +230,19 @@ test('the sheet can relabel its ability HUD per state, so an empty change stays 
   assert.equal(def.specialHudLabel(anamencua, run.player), '¡ANAMENCUÁ!', 'other specials keep their own name');
 });
 
+test('one sale per use: opening the counter is free and the sale starts the clock', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  const p = run.player;
+  const sell = p.characterDef.specials.find(s => s.key === 'sell');
+  assert.equal(sell.cooldownOnSale, true, 'a merchant pays when something is sold');
+  assert.ok(sell.cooldown > 0, 'and one sale is one use: ' + sell.cooldown + 's');
+  assert.equal(activateSpecial(run, 'sell'), true);
+  assert.equal(p.sellCooldown, 0, 'opening the counter costs nothing');
+  assert.equal(sellBelonging(run, 'psp'), true);
+  assert.equal(p.sellCooldown, sell.cooldown, 'the sale is what spends the ability');
+  assert.equal(activateSpecial(run, 'sell'), false, 'and it cannot reopen while it owes');
+});
+
 test('sale buffs expire: after their ttl the damage and debuffs stop applying', () => {
   const run = createRun(() => 0.5, 'papazito');
   const p = run.player;

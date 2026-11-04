@@ -93,7 +93,9 @@ export function activateSpecial(run, type) {
   }
   if (player[`${type}Cooldown`] > 0) return false;
   player[type] = spec.duration + (player.rewardBonuses[spec.durationBonus] ?? 0);
-  player[`${type}Cooldown`] = spec.cooldown;
+  // A sheet may pay for the use at the moment it lands instead of at the press:
+  // a merchant pays when something is sold, not when the counter is opened.
+  if (!spec.cooldownOnSale) player[`${type}Cooldown`] = spec.cooldown;
   spec.onStart?.(run, player);
   emit('specialActivated', { run, player, special: type });
   return true;
@@ -156,6 +158,10 @@ export function sellBelonging(run, key) {
   p.tempTtls = { ...(p.tempTtls ?? {}), [key]: item.ttl };
   const proceeds = salePrice(run, item);
   run.coins += proceeds;
+  // The sale, not the menu, is what spends the ability: opening the counter and
+  // walking away costs nothing, and one sale closes it for the cooldown.
+  const sale = p.characterDef.specials?.find(s => s.key === 'sell');
+  if (sale?.cooldownOnSale) p[`${sale.key}Cooldown`] = sale.cooldown;
   p.characterDef.onSaleIncome?.(run, p, proceeds);
   if (item.visionTtl) p.sellVisionTtl = Math.max(p.sellVisionTtl ?? 0, item.visionTtl);
   if ((p.rewardBonuses?.saleNext ?? 0) > 0) p.sellNextMult = 1 + p.rewardBonuses.saleNext;
@@ -206,6 +212,15 @@ export function seedWave(run, wave) {
   run.enemies = [];
   run.projectiles = [];
   delete run.minibossLine;
+  // A wave boundary is a fresh start for the whole kit: nothing stays active
+  // across it, and a clock that was still running opens the next wave at half
+  // price so the ability comes back sooner instead of the same dead wait.
+  const sheet = run.player.characterDef;
+  for (const special of sheet.specials) {
+    run.player[special.key] = 0;
+    const clock = run.player[`${special.key}Cooldown`] ?? 0;
+    if (clock > 0) run.player[`${special.key}Cooldown`] = clock / 2;
+  }
   run.player.characterDef.onStageStart?.(run, run.player);
   // The act may declare mini-bosses before the boss: they arrive on their own
   // wave, one at a time, and killing one never closes the run.
