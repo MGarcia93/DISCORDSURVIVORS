@@ -10,10 +10,14 @@ const SMILE_BLOCK = 40;
 // Sustain comes from her kit, never from farming a horde: the laugh pays back a
 // share of what it actually swallowed, and each ability hands something over the
 // moment it starts. Kills pay nothing.
-const SMILE_HEAL_SHARE = 0.25;
-const SMILE_HEAL_CAP = 10;
-const PERMISSION_HEAL = 3;
-const PATRONA_HEAL = 6;
+const SMILE_HEAL_SHARE = 0.35;
+const SMILE_HEAL_CAP = 14;
+// While the laugh is up she pays for being aggressive, not only for being hit:
+// every bite hands back a point and every kill a mouthful.
+const SMILE_HIT_HEAL = 1;
+const SMILE_KILL_HEAL = 3;
+const PERMISSION_HEAL = 5;
+const PATRONA_HEAL = 10;
 
 // How far the scissors cut, in world units, from Solago's body. It has to pass
 // the longest ranged reach (an archer parks at 231 px) or the ultimate leaves
@@ -47,10 +51,10 @@ const solago = {
       <p class="character-desc">Dientón, sin voz ni voto en su casa: hasta las hijas le sacan las cosas. Vive mirando de reojo, con miedo de que lo vuelvan a apuñalar por la espalda con una tijera.</p>
       <p class="character-quote">«Su mayor fortaleza son las paletas. Su mayor debilidad, que lo llamen de otra habitación».</p>
       ${statBlock(SHEET)}
-      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada baja le devuelve 4 de vida. Pega fuerte, no rápido, y empuja lo que muerde.</p></div></div>
-      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Si no le pegan, no sirve de nada. Igual que en su casa.</p></div></div>
+      <div class="skill"><kbd>∞</kbd><div><b>MORDIDA DE PALETA</b><p>Mordidas automáticas de corto alcance y pegada pesada. Acercate para que cuenten: cada 6 bajas recupera 5 de vida. Pega fuerte, no rápido, y empuja lo que muerde.</p></div></div>
+      <div class="skill"><kbd>◈</kbd><div><b>SONRISA BLINDADA</b><p>Cada tanto se ríe mostrando las paletas: bloquea 40 de daño durante 2,5 segundos. Mientras se ríe, cada mordida le devuelve 1 de vida y cada baja 3, y además recupera el 35% de lo que bloqueó, hasta 14. Si no le pegan ni pega, no sirve de nada. Igual que en su casa.</p></div></div>
       <div class="skill"><kbd>6×</kbd><div><b>PERMISO PARA JUGAR</b><p>Cada 6 bajas completás tareas y ganás +30% de daño y velocidad de ataque durante 8 segundos.</p></div></div>
-      <div class="skill"><kbd>Q</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos: mientras la patrona está en escena, a Solago no le entra nada. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
+      <div class="skill"><kbd>Q</kbd><div><b>STAND: ¡LA PATRONA!</b><p>Solago se agacha y queda quieto mientras ella tijeretea en área durante 7 segundos: mientras la patrona está en escena, a Solago no le entra nada y al entrar recupera 10 de vida. Al final también le pega. Recarga: 26 segundos.</p></div></div>`,
   unlockNote: {
     locked: 'SOLAGO · BLOQUEADO · ENCUENTRO DEL ACTO 2',
     unlocked: 'SOLAGO DESBLOQUEADO · DISPONIBLE PARA JUGAR',
@@ -154,7 +158,14 @@ const solago = {
       },
     },
   ],
+  // Landing a bite while she laughs pays a point; the wall keeps doing its own
+  // job, so being hit still pays through the passive.
+  onMeleeHit(run, p) {
+    if ((p.smile ?? 0) <= 0) return;
+    p.hp = Math.min(p.maxHp, p.hp + SMILE_HIT_HEAL);
+  },
   onKill(run, p, enemy, ctx) {
+    if ((p.smile ?? 0) > 0) p.hp = Math.min(p.maxHp, p.hp + SMILE_KILL_HEAL);
     p.taskKills++;
     if (p.taskKills >= p.permissionNeeded) {
       p.taskKills = 0;

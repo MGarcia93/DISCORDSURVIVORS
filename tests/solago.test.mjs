@@ -89,24 +89,38 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   assert.equal(p.hp, p.maxHp);
 });
 
-test('the smile pays back a quarter of what it blocks, capped per cycle', () => {
+test('the smile pays back a third of what it blocks, capped per cycle', () => {
   const run = createRun(() => 0.5, 'solago');
   const p = run.player;
   const smile = p.characterDef.passives.find(passive => passive.key === 'smile');
   p.smile = 2.5; p.smileBlock = 40; p.shield = 40; p.shieldSeen = 40; p.smileHealed = 0;
   p.hp = 100;
-  // 20 blocked points: a quarter is 5 back.
+  // 20 blocked points: 35% is 7 back.
   p.shield = 20; smile.tick(run, p, 0.016);
-  assert.equal(p.hp, 105);
-  // The rest of the block keeps paying until the cap of 10.
+  assert.equal(p.hp, 107);
+  // The rest of the block keeps paying until the cap of 14.
   p.shield = 0; smile.tick(run, p, 0.016);
-  assert.equal(p.hp, 110, 'the cycle never pays more than ten');
+  assert.equal(p.hp, 114, 'the cycle never pays more than fourteen');
   p.shield = 0; smile.tick(run, p, 0.016);
-  assert.equal(p.hp, 110, 'and it stays capped');
+  assert.equal(p.hp, 114, 'and it stays capped');
   // No smile, no healing: the block only pays while the laugh lasts.
   p.smile = 0; p.hp = 100; p.shieldSeen = 40; p.shield = 20;
   smile.tick(run, p, 0.016);
   assert.equal(p.hp, 100, 'damage taken outside the smile is just damage');
+});
+
+test('while she laughs, biting and killing pay health', () => {
+  const run = createRun(() => 0.5, 'solago');
+  const p = run.player;
+  const def = p.characterDef;
+  p.hp = 100;
+  def.onKill(run, p, {}, {});
+  assert.equal(p.hp, 100, 'without the laugh a kill pays nothing');
+  p.smile = 2;
+  def.onMeleeHit(run, p, {}, {});
+  assert.equal(p.hp, 101, 'a bite under the laugh hands back a point');
+  def.onKill(run, p, {}, {});
+  assert.equal(p.hp, 104, 'a kill under the laugh hands back three');
 });
 
 test('six chore-task kills trigger a temporary damage and attack-speed buff', () => {
@@ -242,9 +256,9 @@ test('kills pay nothing; Permiso and La Patrona pay when they start', () => {
   assert.equal(p.hp, 40, 'a kill is not a heal any more');
   for (let kill = 1; kill < 6; kill++) p.characterDef.onKill(run, p, {}, {});
   assert.equal(p.permissionActive, 8, 'the sixth kill hands over the permission');
-  assert.equal(p.hp, 43, 'and the permission pays three back when it starts');
+  assert.equal(p.hp, 45, 'and the permission pays five back when it starts');
 
   p.hp = 40;
   assert.equal(activateSpecial(run, 'stand'), true);
-  assert.equal(p.hp, 46, 'La Patrona covers her for six on arrival');
+  assert.equal(p.hp, 50, 'La Patrona covers her for ten on arrival');
 });

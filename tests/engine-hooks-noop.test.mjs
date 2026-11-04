@@ -24,9 +24,16 @@ function contactDamage(id, setup = () => {}) {
   return before - p.hp;
 }
 
-test('the new engine hooks stay undefined for every ficha but Jhony', () => {
+test('the new engine hooks stay undefined for every ficha but the ones that own them', () => {
+  // Solago's laugh pays per bite, so `onMeleeHit` is hers now; every other hook
+  // still belongs to Jhony alone.
+  const OWNED = { solago: ['onMeleeHit'] };
   for (const id of OTHERS) {
     for (const hook of ['onTick', 'onDamaged', 'onMeleeHit', 'passiveDamageMult', 'passiveDefenseMult']) {
+      if (OWNED[id]?.includes(hook)) {
+        assert.equal(typeof CHARACTERS[id][hook], 'function', `${id}.${hook} is declared on purpose`);
+        continue;
+      }
       assert.equal(CHARACTERS[id][hook], undefined, `${id}.${hook} must stay undefined`);
     }
     assert.equal(CHARACTERS[id].combat?.hitText, undefined);
