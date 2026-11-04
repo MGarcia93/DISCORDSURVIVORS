@@ -26,6 +26,16 @@ test('the act 3 roster authors its own sheets, reach and roles', () => {
   assert.equal(ENEMY_KINDS.shaman.projectile, 'hex');
   // The burning elite is the only common kind that carries an ability.
   assert.deepEqual(ENEMY_KINDS.burningElite.actions.map(action => action.key), ['swipe', 'flames']);
+  // Its fire is drawn by the same radius that damages, so the two numbers live
+  // in one place: a ring that reaches further than it burns is the mismatch
+  // Papazito's bricks shipped with. The trigger has to match too, or the elite
+  // spends the action on a target the ring never reaches.
+  const flames = ENEMY_KINDS.burningElite.actions.find(action => action.key === 'flames');
+  const waves = [];
+  flames.run({ effects: [] }, { x: 10, y: 20 }, { shockwave: options => waves.push(options) });
+  assert.equal(waves.length, 1, 'the action throws exactly one ring');
+  assert.equal(waves[0].maxRadius, flames.range,
+    'the ring reaches exactly as far as the distance that triggers it');
   // Lord Zir is the mini-boss and Lilith is the boss.
   assert.equal(ENEMY_KINDS.lordZir.boss, true);
   assert.equal(ENEMY_KINDS.lilith.boss, true);

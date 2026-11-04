@@ -62,9 +62,12 @@ function sheet() {
   const def = ENEMY_KINDS[kind] ?? ENEMY_KINDS.zombie;
   const mitigation = Math.round(enemyDefense(kind, wave) * 100);
   const interval = enemyAttackInterval(kind, wave);
+  const abilities = (def.actions ?? []).filter(action => (action.range ?? 0) > 0)
+    .map(action => `${action.key} a ${Math.round(action.range)} px`).join(', ');
   return `Wave ${wave} — ${Math.round(enemyHp(kind, wave))} hp, ${mitigation}% mitigation, `
     + `${enemyContactDamage(kind, wave)} per hit every ${interval.toFixed(2)} s, `
-    + `reach ${Math.round(enemyAttackRange(kind, wave))} px, ${Math.round(enemySpeed(kind, wave))} px/s, `
+    + `reach ${Math.round(enemyAttackRange(kind, wave))} px${abilities ? ` (${abilities})` : ''}, `
+    + `${Math.round(enemySpeed(kind, wave))} px/s, `
     + `radius ${Math.round(def.radius * WORLD_SCALE)} px, bounty ${enemyBounty(kind)}.`;
 }
 
@@ -74,16 +77,24 @@ function status() {
 }
 
 // Reach is measured from the collision edges, so the ring is the point where
-// the enemy stops walking: attack distance plus both bodies.
+// the enemy stops walking: attack distance plus both bodies. An ability carries
+// its own reach too — the burning elite's fire is the one attack a player can
+// out-range without the stat line ever saying so, so the sandbox draws it.
 function reachRing(ctx, enemy, player) {
-  const radius = (enemy.attackRange ?? 0) + enemy.radius + player.hitRadius;
+  const rings = [
+    { radius: (enemy.attackRange ?? 0) + enemy.radius + player.hitRadius, color: '#7fd0c8' },
+    ...(enemy.actions ?? []).filter(action => (action.range ?? 0) > 0)
+      .map(action => ({ radius: action.range, color: '#ffb473' })),
+  ];
   ctx.save();
   ctx.globalAlpha *= 0.55;
-  ctx.fillStyle = '#7fd0c8';
-  for (let i = 0; i < 64; i++) {
-    const angle = i / 64 * Math.PI * 2;
-    ctx.fillRect(Math.round((enemy.x + Math.cos(angle) * radius) / 4) * 4,
-      Math.round((enemy.y + Math.sin(angle) * radius) / 4) * 4, 3, 3);
+  for (const ring of rings) {
+    ctx.fillStyle = ring.color;
+    for (let i = 0; i < 64; i++) {
+      const angle = i / 64 * Math.PI * 2;
+      ctx.fillRect(Math.round((enemy.x + Math.cos(angle) * ring.radius) / 4) * 4,
+        Math.round((enemy.y + Math.sin(angle) * ring.radius) / 4) * 4, 3, 3);
+    }
   }
   ctx.restore();
 }

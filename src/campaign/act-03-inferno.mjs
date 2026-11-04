@@ -33,18 +33,24 @@ export default {
     },
     {
       wave: 4,
-      perMinute: 90,
+      perMinute: 80,
       // The spike arrives as a slope that ends at the wave's own maximum: half
-      // the wave never has an elite, then they climb to the declared 30%.
+      // the wave never has an elite, then they climb to the declared share.
       // Every kind is on the table from the first second; the ramp only makes
       // the elites more likely as the clock runs.
+      //
+      // The first version climbed to 80% elites on a 90-a-minute wave: 29 bodies
+      // of 370 life, 15.062 points of health at level 16 — act-seven density at
+      // half the level. The shelf now peaks at 45% and the wave spawns 80, which
+      // keeps the last third heavy without turning the wave into a wall.
       ramp: [
-        { until: 0.5, mix: { skeleton: 0.6, shaman: 0.32, burningElite: 0.08 } },
-        { until: 0.7, mix: { skeleton: 0.45, shaman: 0.35, burningElite: 0.2 } },
-        { until: 1, mix: { burningElite: 0.8, skeleton: 0.1, shaman: 0.1 } },
+        { until: 0.5, mix: { skeleton: 0.7, shaman: 0.22, burningElite: 0.08 } },
+        { until: 0.7, mix: { skeleton: 0.55, shaman: 0.25, burningElite: 0.2 } },
+        { until: 1, mix: { burningElite: 0.45, skeleton: 0.4, shaman: 0.15 } },
       ],
-      // The wave's own total: the ramp only decides when they arrive.
-      mix: { burningElite: 0.32, skeleton: 0.42, shaman: 0.26 },
+      // The wave's own total: the ramp only decides when they arrive. It is the
+      // weighted average of the three stages, which is what the loader checks.
+      mix: { burningElite: 0.215, skeleton: 0.58, shaman: 0.205 },
     },
     // Lord Zir arrives once at the start of this wave; his court of bats keeps
     // him company and gives the wave its pressure. His death closes the wave,
