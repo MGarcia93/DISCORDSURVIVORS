@@ -45,6 +45,20 @@ test('the resistant zombie is a slow wall: more life, mitigation and punch, less
   assert.equal(enemyBounty('brute'), 5);
 });
 
+test('the act 2 mist walkers run and leap: the pack is pressure, not a wall', () => {
+  assert.equal(enemySpeed('mistWalker'), 1300 * 5 / 100 * WORLD_SCALE);
+  assert.ok(enemySpeed('mistWalker') > enemySpeed('zombie'), 'it runs faster than the act 1 walker');
+  assert.ok(enemySpeed('mistWalker') < 100, 'and never outruns a player who walks away');
+  // The leap is the pack's one move of its own: it closes the gap, and the body
+  // still has to touch to land the hit.
+  assert.deepEqual(ENEMY_KINDS.mistWalker.actions.map(action => action.key), ['swipe', 'lunge']);
+  const lunge = ENEMY_KINDS.mistWalker.actions[1];
+  assert.ok(lunge.range > 0, 'it starts at a distance');
+  assert.ok(lunge.cooldown > 0, 'and it is not free');
+  assert.ok(lunge.when, 'from contact it never fires');
+  assert.equal(enemyAttackRange('mistWalker'), 0, 'its body still has to touch');
+});
+
 test('enemy sheets are percentages over the base stats, with life as one number', () => {
   assert.equal(enemyHp('zombie', 1), 46);
   assert.equal(enemyHp('zombie', 10), 46, 'life is one value: the wave never re-authors it');

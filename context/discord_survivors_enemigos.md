@@ -228,6 +228,16 @@ pendientes: son catálogo de patrones, no ficha.
 - **`yorick` — el enterrador** (acto 2, jefe de la oleada 6): `swipe`,
   `summon` (tres caminantes, recarga 10 s), `wall` (recarga 14 s) y `maiden`
   (una sola vez, cuando está por debajo de la mitad de su vida).
+- **`mistWalker` — el caminante de la niebla** (acto 2, oleadas 3, 4 y 5, y lo
+  que invocan Yorick y la Doncella): `swipe` (peso 3) y `lunge` (peso 1,
+  recarga 6 s, rango 420). El salto es un pico de velocidad (`chargeBoost` 2.6
+  durante medio segundo), nunca un proyectil; sólo arranca con más de 150 px de
+  por medio, porque una embestida pegada al cuerpo se lee como teletransporte.
+  Corre a 1300%: más que el caminante del acto 1 y todavía menos de la mitad del
+  jugador más lento. Es el ghoul del LoL que salta a lo que la niebla tocó,
+  traducido a una ficha sin marca: la manada cierra la brecha en vez de esperar
+  a que el jugador se acerque. No lleva texto flotante porque una oleada de
+  ochenta caminantes por minuto taparía la pantalla con sus propios carteles.
 
 ### Primitivas nuevas: muro de tierra y acciones por fase
 

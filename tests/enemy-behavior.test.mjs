@@ -393,6 +393,31 @@ test('the jagras lunges: a burst of speed, not a wave', () => {
   assert.equal(run.projectiles.length, 0, 'no shot either');
 });
 
+test('the mist walker leaps: a burst of speed from a distance, never a shot', () => {
+  const run = quietRun();
+  const walker = createEnemy(run, 'mistWalker', run.player.x + 320, run.player.y);
+  run.enemies.push(walker);
+  run.random = () => 0.9; // the leap quarter of the roll
+  step(run, 0.05, {});
+  assert.equal(walker.chargeBoost, 2.6, 'it accelerates');
+  assert.ok(walker.chargeTtl > 0, 'for a short burst');
+  assert.equal(walker.actionCds.lunge, 6, 'and pays the leap cooldown');
+  assert.equal(walker.attackCd, walker.attackInterval, 'the leap costs it a swing');
+  assert.equal(run.projectiles.length, 0, 'nothing leaves its body');
+  assert.equal(run.player.hp, 1000, 'the leap is movement, not damage');
+});
+
+test('the mist walker walks the last stretch instead of leaping on top of the player', () => {
+  const run = quietRun();
+  const walker = createEnemy(run, 'mistWalker', run.player.x + 40, run.player.y);
+  run.enemies.push(walker);
+  run.random = () => 0.9; // even rolling the leap slot, the guard refuses it
+  const before = walker.x;
+  step(run, 0.05, {});
+  assert.equal(walker.chargeBoost, undefined, 'a burst from the body would read as a teleport');
+  assert.ok(walker.x < before, 'it closes the last stretch on foot');
+});
+
 test('the great jagras swallows once and then rolls into the group', () => {
   const run = quietRun();
   const great = createEnemy(run, 'greatJagras', run.player.x + 400, run.player.y);
