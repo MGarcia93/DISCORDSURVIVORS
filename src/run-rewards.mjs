@@ -166,7 +166,7 @@ export function skipEmptyChoice(run) {
 // campaign's inflation. The first copy keeps its author price, so a multiplier
 // here only makes the second and third copies expensive: the whole shelf has to
 // stay out of reach in the middle of the campaign instead of being swept once.
-export const COPY_MARKUP = 6;
+export const COPY_MARKUP = 3;
 export const WAVE_MARKUP = 0.2;
 
 export function itemPrice(item, owned = 0, wave = 1) {
