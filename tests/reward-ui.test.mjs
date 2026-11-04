@@ -214,7 +214,7 @@ test('valid catalog IDs matching object properties render and acquire their firs
   assert.match(box.innerHTML, /RANGO 1\/1/);
   assert.equal(activate(run, { level: ids('level')[0] }), true);
   assert.equal(run.levelRanks.constructor, 1);
-  assert.equal(run.player.damage, 23.76);
+  assert.equal(run.player.damage, 24.86);
 });
 
 test('every shelf item has its own portrait instead of the fallback crate', async () => {

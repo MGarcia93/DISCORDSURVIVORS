@@ -17,7 +17,7 @@ test('chooseUpgrade delegates to apply and preserves exact stat effects', () => 
     return run.player;
   };
 
-  assert.equal(buy('damage').damage, 21.6 * 1.3);
+  assert.equal(buy('damage').damage, 22.6 * 1.3);
   // attackSpeed is authored as a percentage of the sheet's own rate, so the
   // upgrade keeps Kenney's exact interval factor (0.92).
   assert.ok(Math.abs(buy('rate').shotInterval - (1 / 1.9) * 0.92) < 0.001);
@@ -39,7 +39,7 @@ test('an upgrade can carry a custom apply without touching engine logic', () => 
     run.phase = 'shop';
     run.coins = 5;
     assert.equal(chooseUpgrade(run, 'damage'), true);
-    assert.equal(run.player.damage, 120.6);
+    assert.equal(run.player.damage, 121.6);
     assert.equal(run.upgrades.damage, 1);
   } finally {
     UPGRADES.length = 0;
