@@ -87,13 +87,13 @@ function itemCards(run) {
   return DEFAULT_CATALOG.items.map(item => {
     const id = escapeText(item.id);
     const owned = countOf(state.balanceItems, item.id);
-    const blocked = itemBlocked(item, { coins: run.coins, items: state.balanceItems, wave: state.balanceWave });
+    const blocked = itemBlocked(item, { coins: run.coins, items: state.balanceItems, world: run.act.order });
     const preview = blocked ? null : previewReward(run, `balance-item:${item.id}`, item);
     const reason = blocked ?? (preview ? null : 'incompatible');
     const remove = owned > 0
       ? `<button class="balance-remove" data-unitem="${id}" aria-label="Remove one ${escapeText(item.name)} (−1)">−1</button>`
       : '';
-    const price = reason ? null : itemPrice(item, owned, state.balanceWave);
+    const price = reason ? null : itemPrice(item, owned, run.act.order);
     const count = `${owned}/${item.maxCopies}`;
     return `<div class="balance-pick">
       <button class="upgrade${reason ? ' blocked' : ''}" data-item="${id}" data-blocked="${reason ?? ''}" title="${reason ? REASONS[reason] ?? REASONS.unknown : 'Left click buys one, right click takes one back'}">

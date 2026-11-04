@@ -78,7 +78,7 @@ export function overlay() {
       const item = state.run.rewardCatalog.items.find(entry => entry.id === offer.id);
       const count = countOf(state.run.items, item.id);
       const preview = offer.bought ? [] : rewardPreviewLines(state.run, `item-preview:${item.id}`, item);
-      const price = itemPrice(item, count, state.run.wave);
+      const price = itemPrice(item, count, state.run.act.order);
       const disabled = offer.bought || count >= item.maxCopies || state.run.coins < price || !preview;
       const description = describeReward(item, EFFECTS).map(escapeText).join(' · ');
       return `<button class="reward-card item-card ${offer.bought ? 'bought' : ''}" data-item="${escapeText(item.id)}" ${disabled ? 'disabled' : ''}>

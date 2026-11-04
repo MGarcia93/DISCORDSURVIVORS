@@ -84,7 +84,7 @@ export function runShop(run, character, { policy = 'optimal', spend = 'normal', 
       if (!offer || offer.bought) continue;
       const item = run.rewardCatalog.items.find(candidate => candidate.id === offer.id);
       if (!item) continue;
-      const price = itemPrice(item, countOf(run.items, item.id));
+      const price = itemPrice(item, countOf(run.items, item.id), run.act.order);
       if (!judge(run, item, price, run.random)) continue;
       buyItem(run, offer.id);
     }

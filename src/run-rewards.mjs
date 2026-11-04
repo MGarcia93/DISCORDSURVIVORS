@@ -162,16 +162,23 @@ export function skipEmptyChoice(run) {
 // Every copy of an item costs more than the one before, and the shelf gets
 // pricier as the campaign goes on: the shop stays a decision instead of a
 // shopping spree once a boss pays. The base price is the first copy in the
-// first world; each owned copy multiplies it again and every wave adds the
+// first world; each owned copy multiplies it again and each world adds the
 // campaign's inflation. The first copy keeps its author price, so a multiplier
 // here only makes the second and third copies expensive: the whole shelf has to
 // stay out of reach in the middle of the campaign instead of being swept once.
+//
+// The wave inside a world is deliberately NOT a price signal. An enemy pays the
+// same coins on wave one and wave five, so charging more by wave taxed the
+// player for playing the act. Worse, `run.wave` restarts at 1 in every world,
+// so the old per-wave markup sawtoothed: the same copy cost twice as much on the
+// last shop of a world as on the first shop of the next one. Inflation follows
+// the world, which is the one counter the campaign never resets.
 export const COPY_MARKUP = 3;
-export const WAVE_MARKUP = 0.2;
+export const WORLD_MARKUP = 0.2;
 
-export function itemPrice(item, owned = 0, wave = 1) {
+export function itemPrice(item, owned = 0, world = 1) {
   const copies = 1 + COPY_MARKUP * Math.max(0, owned);
-  const inflation = 1 + WAVE_MARKUP * Math.max(0, wave - 1);
+  const inflation = 1 + WORLD_MARKUP * Math.max(0, world - 1);
   return Math.round(item.price * copies * inflation);
 }
 
@@ -192,7 +199,7 @@ export function buyItem(run, id) {
   const item = run.rewardCatalog.items.find(entry => entry.id === id);
   const count = countOf(run.items, id);
   if (!offer || !item || count >= item.maxCopies) return false;
-  const price = itemPrice(item, count, run.wave);
+  const price = itemPrice(item, count, run.act.order);
   if (run.coins < price) return false;
   if (!grantItem(run, id)) return false;
   run.coins -= price;

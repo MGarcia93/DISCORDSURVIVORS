@@ -39,7 +39,29 @@ test('approved XP curve carries overflow and queues each earned level without st
 test('each copy of an item costs more than the one before, and later waves charge more', () => {
   const item = { price: 40 };
   assert.deepEqual([0, 1, 2, 3].map(owned => itemPrice(item, owned)), [40, 160, 280, 400]);
-  assert.equal(itemPrice(item, 0, 3), 56, 'the shelf inflates with the campaign');
+  assert.equal(itemPrice(item, 0, 3), 56, 'the shelf inflates with the world');
+});
+
+// The wave inside a world pays the same coins per kill as the first one, so it
+// cannot be a price signal: run.wave also restarts at 1 in every world, which
+// made the same copy cost twice as much on a world's last shop as on the next
+// world's first one. The purchase reads the act order, never the wave.
+test('a copy is priced by the world, not by the wave it is bought on', () => {
+  const act = PLAYABLE_ACTS[3];
+  const run = createRun(() => 0.25, 'negro', {}, act);
+  initializeRewards(run);
+  const item = run.rewardCatalog.items.find(entry => entry.id === 'slipper');
+  for (const wave of [1, act.waves.length]) {
+    run.wave = wave;
+    run.phase = 'shop';
+    run.pendingLevels = [];
+    run.coins = 10_000;
+    run.shopOffers = [{ id: 'slipper', bought: false }];
+    assert.equal(buyItem(run, 'slipper'), true);
+    assert.equal(run.coins, 10_000 - itemPrice(item, 0, act.order));
+    run.items = {};
+  }
+  assert.equal(itemPrice(item, 0, act.order), 64, 'world four pays the fourth rung');
 });
 
 test('invalid XP awards leave every state field unchanged', () => {
