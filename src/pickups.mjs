@@ -8,7 +8,7 @@ import { emit } from './bus.mjs';
 // floor at the wave boundary.
 //
 // The drop is deliberately rare in the first worlds: act one pays 0.5% per
-// kill and act two 1%, then the curve climbs to 4.5% by the last one. It also
+// kill and each world adds half a point, up to 3.5% in the last one. It also
 // grows as the body's health falls, so the last sliver of life is the one time
 // the game leans in. The `dropChance` / `dropHeal` effects are the upgrade's
 // own contribution and stack on top of both.
@@ -16,7 +16,7 @@ export const DROP_HEAL = 14;
 export const PICKUP_TTL = 12;
 // One entry per world, so the first two can stay stingy without dragging the
 // rest of the campaign down with them.
-const ACT_CHANCE = Object.freeze([0.005, 0.010, 0.025, 0.030, 0.035, 0.040, 0.045]);
+const ACT_CHANCE = Object.freeze([0.005, 0.010, 0.015, 0.020, 0.025, 0.030, 0.035]);
 // Exported so the development sandbox states the real number instead of a copy
 // that drifts the moment the drop is tuned.
 export const MISSING_HEALTH_CHANCE = 0.08;

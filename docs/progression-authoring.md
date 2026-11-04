@@ -185,9 +185,9 @@ purse, water ice pop, mushroom, chipá, whisky and a handheld console — and al
 six have the same effect: only the object and its drawing change. The engine rolls it once
 per kill, collects it on contact and clears the floor at the wave boundary.
 
-The chance is deliberately low in the first worlds — 0.5% per kill in act one,
-1% in act two, 4.5% by the last — and rises with the missing health, up to
-+8 points, plus the `dropChance` effect, capped at `0.25`. A body at full
+The chance is deliberately low in the first worlds — 0.5% per kill in act one
+and half a point more each world, 3.5% by the last — and rises with the missing
+health, up to +8 points, plus the `dropChance` effect, capped at `0.25`. A body at full
 health leaves the object where it fell instead of wasting it, and a fresh drop
 arms for 0.35 s so a melee kill still shows it before the body swallows it. The
 heal is `14` points plus the `dropHeal` effect, never past the top.

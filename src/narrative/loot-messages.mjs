@@ -32,6 +32,10 @@ const VERDICTS = {
   solago: [
     'Objeto personalizado generado: Paleta de agua.',
     'Nota del sistema: consumila rápido, antes de que se derrita como tu elo.',
+    'Error detectado.',
+    'El análisis prolongado de este usuario está afectando mis capacidades lingüísticas.',
+    'Era paleta pero de diente, no de agua.',
+    'Olvídenlo. Ya está.',
   ],
   warrior: [
     'Objeto personalizado generado: Hongo de Jujuy.',
