@@ -29,7 +29,9 @@ function quietRun(random = () => 0.5, character = 'negro', order = 1) {
 }
 
 function dyingEnemy(run) {
-  run.enemies.push({ id: 1, x: 560, y: 340, hp: 1, maxHp: 10, speed: 0, radius: 15, kind: 'zombie', defense: 0 });
+  // Far enough that the corpse (and its drop) stays out of the player's reach:
+  // these tests are about the roll, not about collection.
+  run.enemies.push({ id: 1, x: 760, y: 340, hp: 1, maxHp: 10, speed: 0, radius: 15, kind: 'zombie', defense: 0 });
   for (let i = 0; i < 20 && run.kills === 0; i++) step(run, 0.05, {});
   return run;
 }
@@ -48,26 +50,33 @@ test('every ficha leaves its own object and no two share one', () => {
 });
 
 test('the first world drops almost nothing and later worlds pay more', () => {
-  const chance = order => dropChance(quietRun(() => 0.5, 'negro', order));
-  assert.equal(chance(1), 0.005, 'act one is the rarest');
-  assert.equal(chance(2), 0.01, 'act two barely pays more');
-  assert.ok(chance(1) < 0.02, `act one is rare (${chance(1)})`);
-  assert.ok(chance(1) < chance(3) && chance(3) < chance(6));
+  // The ceiling is only reached with a missing-health body: at full life every
+  // world pays exactly zero.
+  const chance = order => {
+    const run = quietRun(() => 0.5, 'negro', order);
+    run.player.hp = run.player.maxHp / 2;
+    return dropChance(run);
+  };
+  assert.ok(chance(1) < 0.05, `act one is rare (${chance(1)})`);
+  assert.ok(chance(1) < chance(2) && chance(2) < chance(3));
+  assert.ok(chance(3) < chance(6));
 });
 
-test('the drop gets more likely as health falls, and never runs away', () => {
+test('a full bar never drops, and the chance grows as health falls', () => {
   const run = quietRun();
   const healthy = dropChance(run);
   run.player.hp = run.player.maxHp / 2;
   const hurt = dropChance(run);
   run.player.hp = 1;
   const dying = dropChance(run);
+  assert.equal(healthy, 0, 'no rescue is written for a healthy body');
   assert.ok(healthy < hurt && hurt < dying);
   assert.ok(dying <= 0.25, `a dying body still misses most kills (${dying})`);
 });
 
 test('a kill that rolls the drop leaves the object on the floor', () => {
   const run = quietRun(() => 0.001);
+  run.player.hp = run.player.maxHp / 2;
   dyingEnemy(run);
   assert.equal(run.kills, 1);
   assert.equal(run.pickups.length, 1);
@@ -83,6 +92,7 @@ test('a kill that misses the roll leaves nothing', () => {
 
 test('a fresh drop arms before it can be taken', () => {
   const run = quietRun(() => 0.001);
+  run.player.hp = run.player.maxHp / 2;
   run.player.hp = run.player.maxHp - 40;
   dyingEnemy(run);
   const pickup = run.pickups[0];
@@ -96,8 +106,9 @@ test('a fresh drop arms before it can be taken', () => {
 
 test('the Administrator writes once per run, on the first drop', () => {
   const run = quietRun(() => 0.001);
+  run.player.hp = run.player.maxHp / 2;
   const kill = id => {
-    run.enemies.push({ id, x: 560, y: 340, hp: 1, maxHp: 10, speed: 0, radius: 15, kind: 'zombie', defense: 0 });
+    run.enemies.push({ id, x: 760, y: 340, hp: 1, maxHp: 10, speed: 0, radius: 15, kind: 'zombie', defense: 0 });
     for (let i = 0; i < 20; i++) step(run, 0.05, {});
   };
   kill(1);
@@ -149,6 +160,7 @@ test('an object nobody reaches expires', () => {
 
 test('the upgrade raises the chance and the heal', () => {
   const run = quietRun();
+  run.player.hp = run.player.maxHp / 2;
   const entry = DEFAULT_CATALOG.upgrades.find(item => item.id === 'loot');
   assert.ok(entry, 'the drop upgrade ships in the catalog');
   assert.equal(entry.characters, 'all');

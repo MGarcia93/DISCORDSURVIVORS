@@ -39,9 +39,9 @@ function rules() {
   const snack = DEFAULT_CATALOG.upgrades.find(entry => entry.id === 'snack');
   const chance = snack?.ranks[0].effects.find(effect => effect.type === 'dropChance')?.value ?? 0;
   const heal = snack?.ranks[0].effects.find(effect => effect.type === 'dropHeal')?.value ?? 0;
-  return `Every ficha heals ${DROP_HEAL} health with its own drop. ${percent(actDropChance(1))} per kill`
-    + ` in world 1 and ${percent(actDropChance(7))} in world 7, rising up to +${percent(MISSING_HEALTH_CHANCE)}`
-    + ` as its health falls. «Botín inesperado» adds +${percent(chance)} and +${heal} heal per rank.`;
+  return `Every ficha heals ${DROP_HEAL} health with its own drop. The chance is zero at full health and`
+    + ` scales with what you are missing: ${percent(actDropChance(1))} per kill in world 1 up to`
+    + ` ${percent(actDropChance(7))} in world 7. «Botín inesperado» adds +${percent(chance)} and +${heal} heal per rank.`;
 }
 
 function legend() {

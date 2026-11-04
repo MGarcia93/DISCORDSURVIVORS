@@ -7,8 +7,9 @@ import { emit } from './bus.mjs';
 // The engine only rolls it on a kill, collects it on contact and clears the
 // floor at the wave boundary.
 //
-// The drop is deliberately rare in the first worlds: act one pays 0.5% per
-// kill and each world adds half a point, up to 3.5% in the last one. It also
+// The drop is deliberately rare in the first worlds: act one tops out at 0.5%
+// per kill and each world adds half a point, up to 3.5% in the last one. Those
+// are ceilings at one point of life missing: at full health the chance is zero. It also
 // grows as the body's health falls, so the last sliver of life is the one time
 // the game leans in. The `dropChance` / `dropHeal` effects are the upgrade's
 // own contribution and stack on top of both.
@@ -291,10 +292,13 @@ export function actDropChance(order = 1) {
 
 export function dropChance(run) {
   const p = run.player;
-  const missing = p.maxHp > 0 ? Math.max(0, 1 - p.hp / p.maxHp) : 0;
-  return Math.min(MAX_CHANCE,
-    actDropChance(run.act?.order ?? 1) + missing * MISSING_HEALTH_CHANCE
-    + (p.rewardBonuses?.dropChance ?? 0));
+  const missing = p.maxHp > 0 ? Math.max(0, Math.min(1, 1 - p.hp / p.maxHp)) : 0;
+  // At full health there is no rescue to write: the whole chance is scaled by
+  // what the body is missing, so a healthy player never sees a drop. The world
+  // and the upgrade set the ceiling, the wounds decide how close to it you get.
+  const ceiling = actDropChance(run.act?.order ?? 1) + MISSING_HEALTH_CHANCE
+    + (p.rewardBonuses?.dropChance ?? 0);
+  return Math.min(MAX_CHANCE, missing * ceiling);
 }
 
 export function dropHeal(run) {
