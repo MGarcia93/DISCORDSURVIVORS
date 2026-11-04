@@ -9,7 +9,11 @@ import { art, CONTOUR, disc, glow, noise } from './paint.mjs';
 // The pen is deliberately empty. The floor is the brightest large surface and
 // everything else is dark timber, iron or cloth: that contrast is what makes
 // the reference read, not the amount of props.
-const EARTH = { base: '#bf8b4f', light: '#c8955a', dark: '#b5834a', deep: '#a2763f', shadow: '#87603a' };
+// The earth sits a full step below the cast's skin. Solago's bare forearms are
+// `#c88b67`; the old `#bf8b4f` floor was five points away in luminance and the
+// arms dissolved into the ground. Keeping the floor dark is also the rule the
+// arena follows: the sprites carry the contrast, never the backdrop.
+const EARTH = { base: '#966a35', light: '#a87a40', dark: '#875e2d', deep: '#755028', shadow: '#5c3f20' };
 const WOOD = { body: '#4a3524', light: '#5c422c', dark: '#3a2a1c', deep: '#2e2016', edge: '#1f150e' };
 const IRON = { body: '#33332f', light: '#55554d', dark: '#22221f' };
 const CANVAS = { body: '#8e2b2b', light: '#a83a35', dark: '#5e1a1a' };
@@ -76,9 +80,9 @@ export default {
       const y = Math.round((0.14 + (noise(i, 19) / 97) * 0.56) * ah);
       const s = 8 + (noise(i, 23) % 3) * 4;
       px(x + 3, y + 3, s, s, EARTH.shadow);
-      px(x, y, s, s, '#6f6a62');
-      px(x, y, s, 3, '#8a8478');
-      px(x, y + s - 3, s, 3, '#57534b');
+      px(x, y, s, s, '#4f4b44');
+      px(x, y, s, 3, '#827c72');
+      px(x, y + s - 3, s, 3, '#3f3b35');
     }
     // Blood: irregular pools with droplets, the only saturated thing on the floor.
     const splat = (fx, fy, size, seed) => {
@@ -312,8 +316,8 @@ export default {
       const y = Math.round(bottomWall - 26 - (noise(i, 103) % 5) * 10);
       const s = 6 + (noise(i, 105) % 3) * 2;
       px(x + 2, y + 2, s, s, EARTH.shadow);
-      px(x, y, s, s, '#6f6a62');
-      px(x, y, s, 2, '#8a8478');
+      px(x, y, s, s, '#4f4b44');
+      px(x, y, s, 2, '#827c72');
     }
     // --- Braziers on square pedestals -------------------------------------
     // Drawn last so a brazier is never buried by the wall behind it, and big
