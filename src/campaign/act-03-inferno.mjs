@@ -44,13 +44,13 @@ export default {
       // half the level. The shelf now peaks at 45% and the wave spawns 80, which
       // keeps the last third heavy without turning the wave into a wall.
       ramp: [
-        { until: 0.5, mix: { skeleton: 0.7, shaman: 0.22, burningElite: 0.08 } },
+        { until: 0.5, mix: { skeleton: 0.69, shaman: 0.22, burningElite: 0.09 } },
         { until: 0.7, mix: { skeleton: 0.55, shaman: 0.25, burningElite: 0.2 } },
-        { until: 1, mix: { burningElite: 0.45, skeleton: 0.4, shaman: 0.15 } },
+        { until: 1, mix: { burningElite: 0.55, skeleton: 0.3, shaman: 0.15 } },
       ],
       // The wave's own total: the ramp only decides when they arrive. It is the
       // weighted average of the three stages, which is what the loader checks.
-      mix: { burningElite: 0.215, skeleton: 0.58, shaman: 0.205 },
+      mix: { burningElite: 0.25, skeleton: 0.545, shaman: 0.205 },
     },
     // Lord Zir arrives once at the start of this wave; his court of bats keeps
     // him company and gives the wave its pressure. His death closes the wave,

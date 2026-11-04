@@ -164,6 +164,12 @@ export function sellBelonging(run, key) {
   if (sale?.cooldownOnSale) p[`${sale.key}Cooldown`] = sale.cooldown;
   p.characterDef.onSaleIncome?.(run, p, proceeds);
   if (item.visionTtl) p.sellVisionTtl = Math.max(p.sellVisionTtl ?? 0, item.visionTtl);
+  // A belonging may also pay in health: the chair is where he rests, so losing
+  // it patches him up. It never heals past the top.
+  if (item.heal) {
+    p.hp = Math.min(p.maxHp, p.hp + item.heal);
+    run.effects.push({ x: p.x, y: p.y - 96 * WORLD_SCALE, text: `+${item.heal} VIDA`, ttl: 1.2, kind: 'sale' });
+  }
   if ((p.rewardBonuses?.saleNext ?? 0) > 0) p.sellNextMult = 1 + p.rewardBonuses.saleNext;
   run.effects.push({ x: p.x, y: p.y - 66 * WORLD_SCALE, text: item.quote, ttl: 1.5, kind: 'sale' });
   return true;
@@ -426,13 +432,13 @@ function shockwave(run, { x, y, damage, speed = 320 * WORLD_SCALE, maxRadius = 3
 // is a wall, not a bullet: every brick crosses the bodies in its path instead of
 // dying on the first one, which is what made the ability look like it reached
 // the screen edge while only the closest body took anything.
-function fireRadial(run, source, damage, { count, speed, radius }) {
+function fireRadial(run, source, damage, { count, speed, radius, through = false, ttl = 2.4, hit = [] }) {
   for (let i = 0; i < count; i++) {
     const direction = i * Math.PI * 2 / count;
     const dx = Math.cos(direction), dy = Math.sin(direction);
     run.projectiles.push({ x: source.x + dx * radius, y: source.y + dy * radius,
       vx: dx * speed, vy: dy * speed, damage, kind: 'brick', device: 'brick',
-      through: true, hit: [], ttl: 2.4, angle: direction, radius: 3 * WORLD_SCALE });
+      through, hit: [...hit], ttl, angle: direction, radius: 3 * WORLD_SCALE });
   }
 }
 
@@ -451,7 +457,7 @@ function hurtPlayer(run, enemy, damage, { defenseBonus = 0, contactFactor = 1 } 
   if (invulnerable(p)) return 0;
   const defenseMult = p.characterDef.passiveDefenseMult?.(p) ?? 1;
   let incoming = damage
-    * (1 - Math.min(0.75, p.defense * defenseMult + defenseBonus))
+    * (1 - Math.min(DEFENSE_MITIGATION_CAP, p.defense * defenseMult + defenseBonus))
     * contactFactor;
   if ((p.shield ?? 0) > 0 && incoming > 0) {
     const absorbed = Math.min(p.shield, incoming);
@@ -782,7 +788,7 @@ export function step(run, seconds, input = {}) {
     const gap = distance(wave, p);
     if (!wave.hit && p.immune <= 0 && !invulnerable(p) && gap + p.hitRadius >= before && gap - p.hitRadius <= wave.radius) {
       wave.hit = true;
-      p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)) * contactFactor);
+      p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(DEFENSE_MITIGATION_CAP, p.defense)) * contactFactor);
       p.hurtFlash = 0.3;
       p.immune = 0.65;
     }
@@ -823,6 +829,10 @@ export function step(run, seconds, input = {}) {
           ((enemy.x - shot.x) * dx + (enemy.y - shot.y) * dy) / lengthSquared)) : 0;
         return { enemy, t, distance: Math.hypot(enemy.x - shot.x - dx * t, enemy.y - shot.y - dy * t) };
       }).filter(collision => collision.distance <= collision.enemy.radius + shot.radius)
+        // A body the shot already hit never blocks it again: that is what lets a
+        // brick's fragments leave the body they just exploded on, and what keeps
+        // a piercing shot from stopping on its own history.
+        .filter(collision => !shot.hit.includes(collision.enemy.id))
         .sort((a, b) => a.t - b.t);
       if (collisions.length) {
         // A wave passes through: every uncrossed body in reach takes it, and the
@@ -878,7 +888,12 @@ export function step(run, seconds, input = {}) {
       if (shot.kind === 'brick') {
         const fragments = p.rewardBonuses.brickFragments ?? 0;
         if (fragments > 0) {
-          fireRadial(run, target, shot.damage * 0.35, { count: fragments, speed: 260 * WORLD_SCALE, radius: 6 });
+          // A fragment is the splash around the impact, not a second wave: it
+          // stops on the first body it reaches and dies where its damage does.
+          // Four shards split one brick, so each lands a quarter of it: the whole
+          // splash is worth a ladrillazo, never four of them.
+          fireRadial(run, target, shot.damage * 0.25,
+            { count: fragments, speed: 260 * WORLD_SCALE, radius: 6, ttl: 0.45, hit: [target.id] });
           run.effects.push({ x: target.x, y: target.y - target.radius, text: 'FRAGMENTOS', ttl: 0.7, kind: 'shard' });
         }
       }

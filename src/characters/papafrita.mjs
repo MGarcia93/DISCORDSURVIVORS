@@ -141,11 +141,11 @@ function tickCompanion(run, p, dt, ctx) {
 // card and the engine read this one sheet, so they cannot disagree.
 const SHEET = {
   life: 90,
-  defense: 85,
+  defense: 45,           // 4.5 points -> 22.5% mitigation
   attack: 269,           // 26.9 per wave: ranged pays twice, it never has to close
   attackSpeed: 171,      // 1.71 waves/s: the reach is paid in damage, not in cadence
-  attackDistance: 320,
-  moveSpeed: 3300,
+  attackDistance: 270,   // 297px reach
+  moveSpeed: 3050,       // 152.5 scaled px/s
 };
 
 const papafrita = {

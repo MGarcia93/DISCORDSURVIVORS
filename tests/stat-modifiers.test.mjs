@@ -103,12 +103,12 @@ test('invalid modifiers fail with source and field evidence without changing sta
   }
 });
 
-test('existing defense mitigation cap is reflected by the same resolved preview and application', () => {
+test('defense keeps buying mitigation past the old 75% and stops at a full hit', () => {
   const p = player();
   const state = createStatState(p);
   const effects = [modifier('defense', 'flat', 100)];
   const preview = previewStatSource(state, 'armor', effects);
-  assert.equal(preview.after.defense, 0.75);
+  assert.equal(preview.after.defense, 1, 'the only ceiling is arithmetic: nothing heals');
   applyStatState(p, withStatSource(state, 'armor', effects));
   assert.equal(p.defense, preview.after.defense);
 });

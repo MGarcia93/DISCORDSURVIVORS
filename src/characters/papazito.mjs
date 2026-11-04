@@ -23,10 +23,10 @@ const hasStock = (special, p) =>
 // one sheet, so they cannot disagree.
 const SHEET = {
   life: 110,             // 110 hp
-  defense: 110,          // 11 points -> 55% mitigation
+  defense: 45,           // 4.5 points -> 22.5% mitigation
   attack: 255,           // 25.5 per brick: ranged pays twice, it never has to close
   attackSpeed: 85,       // 0.85 bricks/s: the slow heavy cadence of §4.1
-  attackDistance: 280,   // 308px reach, slightly longer than El Negro's 286px
+  attackDistance: 260,   // 286px reach, the same as El Negro's: no free extra range
   moveSpeed: 2970,       // 148.5 scaled px/s: -10% mobility
 };
 
@@ -209,15 +209,15 @@ const papazito = {
     // instead of at the first shop.
     cooldownOnSale: true,
     items: {
-      psp: { label: 'PSP', coins: 20, ttl: 10, quote: 'Vendió la PSP',
+      psp: { label: 'PSP', coins: 20, ttl: 10, heal: 20, quote: 'Vendió la PSP',
         modifiers: [percent('attack', 10), percent('moveSpeed', -15)] },
-      monitor: { label: 'Monitor', coins: 35, ttl: 10, quote: 'Vendió el monitor', visionTtl: 10,
+      monitor: { label: 'Monitor', coins: 35, ttl: 10, heal: 35, quote: 'Vendió el monitor', visionTtl: 10,
         modifiers: [percent('attack', 15)] },
-      keyboard: { label: 'Teclado', coins: 25, ttl: 10, quote: 'Vendió el teclado',
+      keyboard: { label: 'Teclado', coins: 25, ttl: 10, heal: 25, quote: 'Vendió el teclado',
         modifiers: [percent('attack', 15), percent('attackSpeed', -20)] },
-      chair: { label: 'Silla gamer', coins: 30, ttl: 10, quote: 'Vendió la silla gamer', flavor: 'Con lo que tenía de trono improvisado',
+      chair: { label: 'Silla gamer', coins: 30, ttl: 10, heal: 40, quote: 'Vendió la silla gamer', flavor: 'Con lo que tenía de trono improvisado',
         modifiers: [percent('attack', 20), percent('defense', -15)] },
-      pc: { label: 'PC completa', coins: 100, ttl: 15, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa',
+      pc: { label: 'PC completa', coins: 100, ttl: 15, heal: 80, quote: 'Vendió hasta la PC', flavor: 'El Pentium de la casa',
         modifiers: [percent('attack', 50), percent('moveSpeed', -30), percent('attackSpeed', -30)] },
     },
   }, {
@@ -237,8 +237,10 @@ const papazito = {
       if (run.anamencuaIn > 0) return;
       // The sale's damage buff is already in `p.damage` (it is a stat source),
       // so every path that swings uses it: the brick, the ring and the burst.
+      // A ring is a wall: its bricks cross every body in the path instead of
+      // dying on the first one.
       ctx.fireRadial(run, p, p.damage * this.damageMult,
-        { count: this.bricksPerBurst, speed: this.speed, radius: this.spawnRadius });
+        { count: this.bricksPerBurst, speed: this.speed, radius: this.spawnRadius, through: true });
       run.anamencuaBursts++;
       run.anamencuaIn += this.burstInterval;
     },

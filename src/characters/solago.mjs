@@ -24,7 +24,7 @@ const STAND_RADIUS = 240;
 // card and the engine read this one sheet, so they cannot disagree.
 const SHEET = {
   life: 150,            // 150 points of damage: the tank of the roster
-  defense: 45,          // 4.5 defense points -> 22.5% mitigation
+  defense: 70,          // 7 defense points -> 35% mitigation: the tank of the ladder
   attack: 440,          // 44 per bite: just under a walker's 46, one upgrade finishes it
   attackSpeed: 120,     // 1.2 bites per second: the boss answer has to earn its window
   attackDistance: 83,   // close to Jhony: a bite that lands without living inside the boss

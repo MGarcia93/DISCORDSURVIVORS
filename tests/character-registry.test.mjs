@@ -20,14 +20,15 @@ test('Papazito is a registered heavy ranged bruiser running on the percentage co
   const p = createRun(Math.random, 'papazito').player;
   // Stat sheet from context/personajes/papazito_el_paraguayo_trucho.md §3:
   // life +10% -> 110, damage 25.5 (ranged pays twice: less damage, no need to close),
-  // attackSpeed -5% -> 85 (interval ~1.18s), defense +10% -> 11 points (0.55 mitigation),
+  // attackSpeed -5% -> 85 (interval ~1.18s), defense 45% -> 4.5 points (0.225 mitigation),
   // moveSpeed -10% -> 2970 (148.5 scaled px/s). Attack distance is
-  // 280% (308px), slightly longer than El Negro's 260% (286px).
+  // 260% (286px), the same reach as El Negro: no free extra range.
   assert.equal(p.maxHp, 110);
-  assert.equal(p.defense, 0.55);
+  assert.equal(p.defense, 0.225);
   assert.equal(p.damage, 25.5, 'heavier than El Negro: the cadence pays for it');
-  assert.equal(p.attackRange, 280 * UNIT_PX);
-  assert.ok(p.attackRange > createRun(Math.random, 'negro').player.attackRange);
+  assert.equal(p.attackRange, 260 * UNIT_PX);
+  assert.equal(p.attackRange, createRun(Math.random, 'negro').player.attackRange,
+    'the same reach as El Negro');
   assert.ok(Math.abs(p.shotInterval - 100 / 85) < 1e-9);
   assert.equal(p.speed, 148.5 * WORLD_SCALE);
   assert.equal(CHARACTERS.papazito.attack.type, 'ranged');
@@ -39,17 +40,17 @@ test('Warrior is a registered controller running on the percentage core', () => 
   assert.equal(CHARACTERS.warrior.id, 'warrior');
   const w = createRun(Math.random, 'warrior').player;
   // Stat sheet from the character md, translated to percentages of BASE_STATS:
-  // life 90%, defense 100% (10 standard points),
+  // life 90%, defense 50% (5 points),
   // attack 150% base (15), bomb multiplier x3.25,
   // attackSpeed 71% (0.71 bombs/s),
-  // attackDistance 300%, moveSpeed 3300% (normal game mobility).
+  // attackDistance 300%, moveSpeed 3100%.
   assert.equal(w.maxHp, 90);
-  assert.equal(w.defense, 0.5);
+  assert.equal(w.defense, 0.25);
   assert.equal(w.damage, 11.8);
   assert.equal(w.attackRange, 300 * UNIT_PX);
   assert.ok(Math.abs(w.shotInterval - 100 / 71) < 1e-9);
   assert.equal(CHARACTERS.warrior.attack.damageMultiplier, 3.25);
-  assert.equal(w.speed, 165 * WORLD_SCALE);
+  assert.equal(w.speed, 155 * WORLD_SCALE);
   assert.equal(CHARACTERS.warrior.attack.device, 'shroom', 'his basic attack config lives in the sheet');
 });
 
@@ -242,6 +243,19 @@ test('the chango keeps its marks across waves and refills the wave after it empt
   seedWave(run, 3);
   assert.deepEqual(run.player.soldItems, {}, 'the wave after the last sale opens a fresh counter');
   assert.equal(run.player.characterDef.specialAvailable(sell, run.player), true);
+});
+
+test('the chair heals when it is sold, and a sale never overheals', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  const chair = run.player.characterDef.specials.find(s => s.key === 'sell').items.chair;
+  assert.ok(chair.heal > 0, 'the chair is the belonging that patches him up');
+  run.player.hp = 30;
+  assert.equal(sellBelonging(run, 'chair'), true);
+  assert.equal(run.player.hp, 30 + chair.heal);
+  run.player.hp = run.player.maxHp - 5;
+  run.player.soldItems = {};
+  assert.equal(sellBelonging(run, 'chair'), true);
+  assert.equal(run.player.hp, run.player.maxHp, 'it never heals past the top');
 });
 
 test('one sale per use: opening the counter is free and the sale starts the clock', () => {

@@ -24,12 +24,14 @@ const alchemist = {
     {
       key: 'spores',
       chance: 1,
-      cooldown: 8,
-      range: 300,
-      // "Hongos que liberan esporas": the pod bursts outward. Step out of the
-      // cloud or breathe it.
+      cooldown: 10,
+      range: 220,
+      // "Hongos que liberan esporas": the pod bursts outward. The cloud reaches
+      // the same 220 px it takes to provoke it — drawn by the number that
+      // damages — and it breathes every ten seconds instead of eight, because
+      // with twenty-odd alchemists on stage eight made it rain.
       run(run, enemy, ctx) {
-        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 18, speed: 380, maxRadius: 300 });
+        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 18, speed: 380, maxRadius: 220 });
         run.effects.push({ x: enemy.x, y: enemy.y - 74, text: 'ESPORAS', ttl: 0.8, kind: 'summon' });
       },
     },

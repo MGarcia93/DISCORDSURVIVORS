@@ -33,7 +33,7 @@ test('Jhony runs on the percentage core with the sheet from the character doc', 
   // botellazo) because the doc's "+15%" dies on the first wave; see the sheet's
   // comment and the balance table in odd/tasks/jhony-playable.md.
   assert.equal(p.maxHp, 110);
-  assert.equal(p.defense, 0.45);
+  assert.equal(p.defense, 0.3);
   assert.equal(p.damage, 44);
   assert.equal(p.attackRange, 85 * UNIT_PX);
   assert.ok(Math.abs(p.shotInterval - 100 / 105) < 1e-9);

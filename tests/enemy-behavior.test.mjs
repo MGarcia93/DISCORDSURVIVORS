@@ -333,7 +333,7 @@ test('the alchemist throws a lotus flask and bursts spores up close', () => {
   bursting.random = () => 0.9; // the spore band
   step(bursting, 0.05, {});
   assert.equal(bursting.shockwaves.length, 1, 'the pod bursts in a ring');
-  assert.equal(burster.actionCds.spores, 8);
+  assert.equal(burster.actionCds.spores, 10, 'the pod breathes every ten seconds, not eight');
 });
 
 test('the lotus alchemist fills the room with visions of his own alchemists', () => {

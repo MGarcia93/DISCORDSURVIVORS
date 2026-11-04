@@ -13,7 +13,7 @@ test('the base stats table matches the neutral reference entity of the stat md',
     attackSpeed: 1, attackDistance: 100, moveSpeed: 5,
   });
   assert.equal(UNIT_PX, WORLD_SCALE);
-  assert.equal(DEFENSE_MITIGATION_CAP, 0.75);
+  assert.equal(DEFENSE_MITIGATION_CAP, 1, 'no stat ceiling below a full hit');
 });
 
 test('a neutral entity at 100% in every stat resolves to the base table values', () => {
@@ -54,7 +54,7 @@ test('SOLAGO resolves its wider melee reach and heavier bite', () => {
   assert.ok(Math.abs(solago.attackRange - 78 * UNIT_PX) < 1e-9);
 });
 
-test('defense resolves into 5% mitigation per point and caps at 75%', () => {
+test('defense resolves into 5% mitigation per point and stops at a full hit', () => {
   assert.equal(resolveDefensePercent(30), 0.15);
   assert.equal(resolveDefensePercent(40), 0.2);
   assert.equal(resolveDefensePercent(120), 0.6);

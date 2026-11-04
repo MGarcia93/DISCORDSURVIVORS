@@ -47,7 +47,7 @@ test('rate and armor upgrades improve fire cooldown and damage reduction', () =>
   assert.equal(chooseUpgrade(run, 'rate'), true);
   assert.ok(run.player.shotInterval < 1 / 1.52);
   assert.equal(chooseUpgrade(run, 'armor'), true);
-  assert.equal(run.player.defense, 0.2, 'base 15% plus the armor upgrade');
+  assert.equal(run.player.defense, 0.25, 'base 20% plus the armor upgrade');
 });
 
 test('upgrade levels persist between waves and are not reset by the shop', () => {

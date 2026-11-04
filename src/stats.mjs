@@ -22,7 +22,11 @@ export const BASE_STATS = {
 
 // Combat formula constants.
 export const DEFENSE_MITIGATION_PER_POINT = 0.05; // fraction of damage blocked per defense point
-export const DEFENSE_MITIGATION_CAP = 0.75;       // hard cap on the mitigation fraction
+export const DEFENSE_MITIGATION_CAP = 1;          // no ceiling below 100%: a hit never heals
+// Stocking defense past the old 75% used to buy nothing. The only real limit is
+// arithmetic: at 100% mitigation the blow lands for zero, and it never turns
+// into a heal. Every ficha's own `statCaps` still says which statistics may not
+// grow forever; this is not one of them.
 // 1 world unit of the stat table resolves to WORLD_SCALE engine pixels, so the
 // calibrated pixel values already used by the game map cleanly onto percentages.
 export const UNIT_PX = WORLD_SCALE;
@@ -42,7 +46,7 @@ function percentOf(percent, base) {
 }
 
 // Defense percentage -> mitigation fraction the engine compares defensively.
-// defense points = defense% x 10; each point blocks 5% of damage, capped.
+// defense points = defense% x 10; each point blocks 5% of damage, up to a full hit.
 export function resolveDefensePercent(percent) {
   const points = percentOf(percent, BASE_STATS.defense);
   // points * 5 / 100 (not points * 0.05) keeps binary-exact results.

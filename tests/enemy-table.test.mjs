@@ -26,16 +26,22 @@ test('the act 3 roster authors its own sheets, reach and roles', () => {
   assert.equal(ENEMY_KINDS.shaman.projectile, 'hex');
   // The burning elite is the only common kind that carries an ability.
   assert.deepEqual(ENEMY_KINDS.burningElite.actions.map(action => action.key), ['swipe', 'flames']);
-  // Its fire is drawn by the same radius that damages, so the two numbers live
+  // Its fire is drawn by the same radius that damages, so those two numbers live
   // in one place: a ring that reaches further than it burns is the mismatch
-  // Papazito's bricks shipped with. The trigger has to match too, or the elite
-  // spends the action on a target the ring never reaches.
+  // Papazito's bricks shipped with. Its clock does not depend on the distance —
+  // it bursts where it stands — so `range` cannot be the trigger anymore.
   const flames = ENEMY_KINDS.burningElite.actions.find(action => action.key === 'flames');
   const waves = [];
   flames.run({ effects: [] }, { x: 10, y: 20 }, { shockwave: options => waves.push(options) });
   assert.equal(waves.length, 1, 'the action throws exactly one ring');
-  assert.equal(waves[0].maxRadius, flames.range,
-    'the ring reaches exactly as far as the distance that triggers it');
+  assert.equal(waves[0].maxRadius, flames.radius, 'the ring burns exactly the radius it declares');
+  assert.equal(flames.range, Infinity, 'and it fires on its own clock, whatever the distance');
+  // The alchemist's pod follows the same rule: the cloud is drawn by the radius
+  // that damages it, and the distance that provokes it has to be that radius.
+  const spores = ENEMY_KINDS.alchemist.actions.find(action => action.key === 'spores');
+  const clouds = [];
+  spores.run({ effects: [] }, { x: 10, y: 20 }, { shockwave: options => clouds.push(options) });
+  assert.equal(clouds[0].maxRadius, spores.range, 'the spores reach exactly what provokes them');
   // Lord Zir is the mini-boss and Lilith is the boss.
   assert.equal(ENEMY_KINDS.lordZir.boss, true);
   assert.equal(ENEMY_KINDS.lilith.boss, true);
@@ -155,7 +161,7 @@ test('a multiplier scales the authored sheet, and only the statistics it names',
   // every unit conversion stay exactly where they were.
   assert.equal(enemyCombatStats('zombie', 3, { attackSpeed: 2 }).attackInterval,
     enemyAttackInterval('zombie', 3) / 2, 'a faster sheet means a shorter interval');
-  assert.equal(enemyCombatStats('brute', 3, { defense: 8 }).defense, 0.75, 'the cap still wins');
+  assert.equal(enemyCombatStats('brute', 3, { defense: 8 }).defense, 1, 'a full hit is the ceiling');
   assert.equal(enemyCombatStats('zombie', 3, { life: 1 }).hp, enemyHp('zombie', 3), '1 is the neutral tier');
 });
 
@@ -177,7 +183,7 @@ test('contact damage and coin rewards read the table at runtime', () => {
     radius: 10 * 1.1, speed: 0 });
   const before = run.player.hp;
   step(run, 0.016);
-  assert.equal(run.player.hp, before - 30 * (1 - 0.15));
+  assert.equal(run.player.hp, before - 30 * (1 - 0.2));
 
   const killRun = createRun(() => 0.5);
   killRun.enemies.push({ id: 1, kind: 'alarmZombie', boss: true, hp: 1, maxHp: 1, x: killRun.player.x, y: killRun.player.y,

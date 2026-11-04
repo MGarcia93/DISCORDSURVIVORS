@@ -49,11 +49,11 @@ test('Papafrita runs on the percentage core and throws voice waves, not weapons'
   const p = createRun(Math.random, 'papafrita').player;
   // §3: a little under the average on body, above it on reach and cadence.
   assert.equal(p.maxHp, 90);
-  assert.equal(p.defense, 0.425);
+  assert.equal(p.defense, 0.225);
   assert.equal(p.damage, 26.9);
-  assert.equal(p.attackRange, 320 * UNIT_PX);
+  assert.equal(p.attackRange, 270 * UNIT_PX);
   assert.ok(Math.abs(p.shotInterval - 100 / 171) < 1e-9);
-  assert.equal(p.speed, 165 * WORLD_SCALE);
+  assert.equal(p.speed, 152.5 * WORLD_SCALE);
   assert.equal(CHARACTERS.papafrita.attack.device, 'voice', 'his voice is the weapon');
   assert.equal(CHARACTERS.papafrita.attack.straight, true, 'the wave keeps one heading, it never re-targets');
   assert.equal(CHARACTERS.papafrita.attack.pierce, undefined, 'no bounce: it is a wall of sound, not a shot');
@@ -112,8 +112,8 @@ test('2/6 adds a body to every wave, 4/6 sends a secondary wave and 6/6 doubles 
   own(six, 'and-what-else', 'fishing', 'other-console', 'not-done-yet', 'only-one', 'definitive-edition');
   six.player.waves = 2;
   dummy(six, 120);
-  dummy(six, 220);
-  dummy(six, 320);
+  dummy(six, 200);
+  dummy(six, 280);
   papafrita.onShot(six, six.player, toolbox(six), { target: 1 });
   assert.equal(six.projectiles.filter(shot => shot.kind === 'voice').length, 2, 'two collection echoes');
 });
@@ -287,7 +287,7 @@ test('6/6 keeps the 4/6 wave and sends the two echoes to different bodies', () =
   dummy(run, 100, 400, 0);
   dummy(run, 160, 400, 60);
   dummy(run, 220, 400, -60);
-  dummy(run, 280, 400, 120);
+  dummy(run, 260, 400, 90);
   papafrita.onShot(run, p, toolbox(run), { target: 1 });
   const angles = run.projectiles.map(shot => Math.round(shot.angle * 100) / 100);
   assert.equal(angles.length, 3, 'the secondary wave still fires at 6/6, plus the two echoes');

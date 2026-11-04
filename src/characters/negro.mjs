@@ -8,7 +8,7 @@ import { statBlock } from './stat-block.mjs';
 // take hits for anyone. The tank is Solago.
 const SHEET = {
   life: 120,             // 120 points of damage
-  defense: 30,           // 3 defense points -> 15% mitigation
+  defense: 40,           // 4 defense points -> 20% mitigation
   attack: 226,           // 22.6 per shot: ranged pays twice, it never has to close
   attackSpeed: 180,      // 1.8 attacks/s: faster than the cast, still not a standing wave clear
   attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)

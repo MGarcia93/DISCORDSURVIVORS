@@ -31,9 +31,9 @@ function killZombie(run, coinsPreset) {
 test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
   const p = createRun(Math.random, 'papazito').player;
   assert.equal(p.maxHp, 110);
-  assert.equal(p.defense, 0.55);
+  assert.equal(p.defense, 0.225);
   assert.equal(p.damage, 25.5);
-  assert.equal(p.attackRange, 280 * WS);
+  assert.equal(p.attackRange, 260 * WS);
   assert.ok(Math.abs(p.shotInterval - 100 / 85) < 1e-12);
   assert.equal(p.speed, 148.5 * WS);
 });

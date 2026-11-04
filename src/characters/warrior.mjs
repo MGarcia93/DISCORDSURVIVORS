@@ -9,11 +9,11 @@ import { statBlock } from './stat-block.mjs';
 // they cannot disagree.
 const SHEET = {
   life: 90,              // 90 hp: frágil, sobrevive controlando
-  defense: 100,          // defensa estándar: 10 puntos -> 50% de mitigación
+  defense: 50,           // 5 puntos -> 25% de mitigación
   attack: 118,           // 11.8 damage: ranged pays twice, the blast is the rest
   attackSpeed: 71,       // 0.71 bombs/s: one deliberate bomb every 1.41s
   attackDistance: 300,   // 330px: about 15% farther than El Negro's 286px reach
-  moveSpeed: 3300,       // movilidad normal del juego (165 scaled px/s)
+  moveSpeed: 3100,       // 155 scaled px/s
 };
 
 const warrior = {

@@ -186,7 +186,7 @@ function stompFinisher(run, p, ctx, rank) {
 // card and the engine read this one sheet, so they cannot disagree.
 const SHEET = {
   life: 110,
-  defense: 90,
+  defense: 60,           // 6 points -> 30%: second on the ladder, behind Solago
   attack: 440,           // 44: just under a walker's 46, so one attack upgrade finishes it
   attackSpeed: 105,
   attackDistance: 85,

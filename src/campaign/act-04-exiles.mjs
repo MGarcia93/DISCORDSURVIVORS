@@ -50,7 +50,13 @@ export default {
       wave: 4,
       world: 'laboratory',
       perMinute: 90,
-      mix: { barbarian: 0.35, archer: 0.35, alchemist: 0.3 },
+      // Proportionate to act three's wave four: the bodies that fight from range
+      // stay under half the wave. At 35/35/30 they were 64% of it and threw 926
+      // raw damage per second at a level-twenty player; the barbarians take the
+      // space back and the flask throwers stop being the whole wave. The slaver
+      // belongs here too: it is the act's trade, the net that makes the archers
+      // behind it matter, and it was the only wave that had left it out.
+      mix: { barbarian: 0.45, slaver: 0.1, archer: 0.24, alchemist: 0.21 },
     },
     // El Alquimista arrives once at the start of this wave; his own alchemists
     // keep him company and give the wave its pressure.

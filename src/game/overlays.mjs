@@ -44,6 +44,7 @@ export function overlay() {
         const line = `${STAT_LABELS[modifier.stat]} ${value} (${item.ttl}s)`;
         (modifier.value < 0 ? penalty : boost).push(line);
       }
+      if (item.heal) boost.push(`+${item.heal} vida`);
       if (item.visionTtl) penalty.push(`visión borrosa (${item.visionTtl}s)`);
       return { boost: boost.join(' · '), penalty: penalty.join(' · ') };
     };

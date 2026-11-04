@@ -24,7 +24,7 @@ test('chooseUpgrade delegates to apply and preserves exact stat effects', () => 
   const health = buy('health');
   assert.equal(health.maxHp, 145);
   assert.equal(health.hp, 145);
-  assert.equal(buy('armor').defense, 0.2);
+  assert.equal(buy('armor').defense, 0.25);
   assert.equal(buy('regen').regen, 6.5);
   assert.equal(buy('speed').speed, 140 * 1.1 * 1.08);
 });

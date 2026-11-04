@@ -21,14 +21,15 @@ const burningElite = {
       key: 'flames',
       chance: 1,
       cooldown: 7,
-      // Its fire reaches 220 px, well inside the ranged cast's own attack range
-      // (286-352): the ring punishes whoever commits to melee, and a shooter can
-      // trade without eating it for free. At 300 it covered a third of the arena
-      // and hit from the same distance the shooters fight at.
-      range: 220,
-      // The fire it carries bursts outward: step out of the ring or take it.
+      // The fire bursts on its own clock, whatever the distance: it is a temper,
+      // not a reaction to being approached. Walking out of the ring is the
+      // answer, not backing away before it decides to throw it.
+      range: Infinity,
+      // The ring it leaves behind. Drawn by the same number that damages, and
+      // kept inside the ranged cast's own attack range so a shooter can trade.
+      radius: 220,
       run(run, enemy, ctx) {
-        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 24, maxRadius: 220 });
+        ctx.shockwave({ x: enemy.x, y: enemy.y, damage: 24, maxRadius: this.radius });
         run.effects.push({ x: enemy.x, y: enemy.y - 96, text: 'FUEGO', ttl: 0.8, kind: 'summon' });
       },
     },
