@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRun, step, activateSpecial, sellBelonging } from '../src/engine.mjs';
+
 import { WORLD_SCALE } from '../src/constants.mjs';
 import { isCharacterUnlocked, recordMapVictory } from '../src/progression.mjs';
 import { getCharacter } from '../src/characters/index.mjs';

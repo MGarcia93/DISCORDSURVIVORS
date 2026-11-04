@@ -29,7 +29,9 @@ export function overlay() {
   if (phase === 'paused') body = `<div class="eyebrow">${lab ? 'Laboratorio de balance' : 'Micrófono silenciado'}</div><h2>UN MOMENTO DE PAJA.</h2><p>La horda puede esperar. La partida está pausada.</p>${volumeRow('music', 'Música', 'pause')}${volumeRow('sfx', 'Efectos', 'pause')}${muteRow()}<div class="actions"><button class="primary" data-action="resume">SEGUIR JUGANDO</button>${lab ? '<button class="secondary" data-action="balance-back">VOLVER AL LABORATORIO</button>' : ''}<button class="secondary" data-action="home">SALIR AL INICIO</button></div>`;
   if (phase === 'sellMenu') {
     // Data-driven merchant: every special that carries an items table owns a
-    // pause-sale menu; nothing here knows a character id.
+    // pause-sale menu; nothing here knows a character id. A belonging can also
+    // declare the world it shows up in: the big ticket waits for the big world
+    // instead of funding the first shop.
     const stockEntry = state.run.player.characterDef.specials.find(special => special.items);
     const stock = stockEntry?.items ?? {};
     const saleCopy = item => {
@@ -52,7 +54,7 @@ export function overlay() {
       return `<button class="upgrade" data-sale="${key}" ${sold ? 'disabled' : ''}><b>📦 ${item.label}</b><span>${boost}</span><small>${sold ? 'YA LO MALVENDIÓ' : penalty}</small>${!sold && settlement ? `<small>${settlement}</small>` : ''}</button>`;
     }).join('');
     const itemsLeft = Object.keys(stock).some(key => !state.run.player.soldItems?.[key]);
-    body = `<div class="eyebrow">Fondo para la cariñosa</div><h2>¿QUÉ SE VENDE HOY?</h2><p>Cada venta paga fichas y daño temporal, con su debuff correspondiente. Se vende <b>una cosa por vez</b> y la habilidad queda en recarga. Todo se vende una vez por partida. <b>«Total, no lo usaba»</b>.</p><p class="shop-hint"><b>${state.run.coins} fichas disponibles</b></p><div class="shop-grid">${cards}</div><div class="shop-footer"><button class="primary" data-action="sell-menu-close">${itemsLeft ? 'VOLVER A TIRAR LADRILLOS' : 'YA NO QUEDA NADA'} →</button></div>`;
+    body = `<div class="eyebrow">Fondo para la cariñosa</div><h2>¿QUÉ SE VENDE HOY?</h2><p>Cada venta paga fichas y daño temporal, con su debuff correspondiente. Se vende <b>una cosa por vez</b> y la habilidad queda en recarga. Cuando liquidás todo, el chango se renueva en la oleada siguiente. <b>«Total, no lo usaba»</b>.</p><p class="shop-hint"><b>${state.run.coins} fichas disponibles</b></p><div class="shop-grid">${cards}</div><div class="shop-footer"><button class="primary" data-action="sell-menu-close">${itemsLeft ? 'VOLVER A TIRAR LADRILLOS' : 'YA NO QUEDA NADA'} →</button></div>`;
   }
   if (phase === 'levelUp') {
     const cards = state.run.levelChoices.map(entry => {

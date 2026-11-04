@@ -195,8 +195,8 @@ const papazito = {
     if (special.key !== 'sell') return special.name;
     return hasStock(special, p) ? special.name : 'CHANGO VACÍO';
   },
-  // A chango with nothing left is a closed shop: the control greys out instead
-  // of promising a menu the shell would refuse to open.
+  // A chango with nothing left is a closed shop until the next wave refills it:
+  // the control greys out instead of promising a menu the shell would refuse.
   specialAvailable(special, p) {
     return special.key !== 'sell' || hasStock(special, p);
   },

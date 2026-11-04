@@ -221,6 +221,12 @@ export function seedWave(run, wave) {
     const clock = run.player[`${special.key}Cooldown`] ?? 0;
     if (clock > 0) run.player[`${special.key}Cooldown`] = clock / 2;
   }
+  // The chango refills only once it was emptied: a belonging sold stays sold
+  // across the waves, and the wave after the last one opens a fresh counter.
+  const chango = sheet.specials.find(special => special.items);
+  if (chango && Object.keys(chango.items).every(key => run.player.soldItems?.[key])) {
+    run.player.soldItems = {};
+  }
   run.player.characterDef.onStageStart?.(run, run.player);
   // The act may declare mini-bosses before the boss: they arrive on their own
   // wave, one at a time, and killing one never closes the run.

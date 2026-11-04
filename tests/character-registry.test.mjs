@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { WORLD_SCALE, createRun, activateSpecial, sellBelonging, step } from '../src/engine.mjs';
+import { WORLD_SCALE, createRun, activateSpecial, seedWave, sellBelonging, step } from '../src/engine.mjs';
 import { CHARACTERS, getCharacter } from '../src/characters/index.mjs';
 import { grantItem } from '../src/run-rewards.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
@@ -228,6 +228,20 @@ test('the sheet can relabel its ability HUD per state, so an empty change stays 
   assert.equal(def.specialAvailable(sell, run.player), false, 'and an empty one cannot open a menu');
   const anamencua = def.specials.find(s => s.key === 'anamencua');
   assert.equal(def.specialHudLabel(anamencua, run.player), '¡ANAMENCUÁ!', 'other specials keep their own name');
+});
+
+test('the chango keeps its marks across waves and refills the wave after it empties', () => {
+  const run = createRun(() => 0.5, 'papazito');
+  const sell = run.player.characterDef.specials.find(s => s.key === 'sell');
+  for (const key of ['psp', 'keyboard', 'chair', 'monitor']) assert.equal(sellBelonging(run, key), true, key);
+  seedWave(run, 2);
+  assert.equal(run.player.soldItems.psp, true, 'a chango with stock left keeps what it sold');
+  assert.equal(run.player.characterDef.specialAvailable(sell, run.player), true, 'and stays open');
+  assert.equal(sellBelonging(run, 'pc'), true);
+  assert.equal(run.player.characterDef.specialAvailable(sell, run.player), false, 'an emptied chango closes');
+  seedWave(run, 3);
+  assert.deepEqual(run.player.soldItems, {}, 'the wave after the last sale opens a fresh counter');
+  assert.equal(run.player.characterDef.specialAvailable(sell, run.player), true);
 });
 
 test('one sale per use: opening the counter is free and the sale starts the clock', () => {
