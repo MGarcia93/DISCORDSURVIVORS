@@ -5,6 +5,7 @@ import {
   skipEmptyChoice, buyItem, chooseUpgrade, buyHeal, sellBelonging,
 } from '../src/engine.mjs';
 import { BALANCE, DEFAULT_CATALOG } from '../src/reward-data.mjs';
+import { applyUpgradeRank } from '../src/run-rewards.mjs';
 
 // The shipped balance grants playtest XP; these cases pin the curve itself, so
 // they run with one XP per ordinary kill and override only what they test.
@@ -90,18 +91,21 @@ test('level choices block old purchases, healing and next wave, then expose the 
   assert.equal(startNextWave(run), true);
 });
 
-test('queued levels use individual eligibility and never auto-grant bounce', () => {
+test('a milestone level is four own upgrades, and choosing one is what grants it', () => {
   const run = createRun(() => 0.5);
-  kills(run, 50); clearWave(run);
-  assert.equal(run.level, 3);
-  assert.ok(!run.levelChoices.some(entry => entry.id === 'remote-bounce'));
-  assert.equal(run.player.rewardBonuses.bounce, undefined);
-  run.random = () => 0.99;
-  chooseLevelReward(run, run.levelChoices.find(entry => entry.characters === 'all').id);
-  assert.ok(run.levelChoices.some(entry => entry.id === 'remote-bounce'));
-  assert.equal(run.player.rewardBonuses.bounce, undefined);
-  assert.equal(chooseLevelReward(run, 'remote-bounce'), true);
-  assert.equal(run.player.rewardBonuses.bounce, 1);
+  kills(run, 140); clearWave(run);
+  assert.equal(run.level, 4);
+  // The queue starts at the first level that was pending (2); spending it is
+  // what brings the menu to the level-4 milestone.
+  assert.equal(chooseLevelReward(run, run.levelChoices[0].id), true);
+  assert.equal(chooseLevelReward(run, run.levelChoices[0].id), true);
+  assert.equal(run.pendingLevels[0], 4);
+  assert.equal(run.levelChoices.length, 4);
+  assert.ok(run.levelChoices.every(entry => entry.characters === 'negro'), 'the whole menu is his own pool');
+  const picked = run.levelChoices[0];
+  assert.equal(chooseLevelReward(run, picked.id), true);
+  assert.equal(run.levelRanks[picked.id], 1, 'the chosen signature is the one that lands');
+  assert.equal(run.player.rewardBonuses.bounce, undefined, 'and it never auto-grants another one');
 });
 
 test('legacy exported stat purchases compose with new level and item sources', () => {
@@ -132,9 +136,15 @@ test('Negro shots bounce only after the corresponding level choice', () => {
   for (const unlocked of [false, true]) {
     const run = createRun(() => 0.5);
     if (unlocked) {
-      kills(run, 50); clearWave(run); run.random = () => 0.99;
-      chooseLevelReward(run, run.levelChoices.find(entry => entry.characters === 'all').id);
-      chooseLevelReward(run, 'remote-bounce'); startNextWave(run);
+      kills(run, 50); clearWave(run);
+      while (run.pendingLevels.length) {
+        assert.equal(chooseLevelReward(run, run.levelChoices[0].id), true);
+      }
+      // The entry is gated to 14, so the test takes the rank directly: what is
+      // under test here is what the shot does once the upgrade is owned.
+      const entry = DEFAULT_CATALOG.upgrades.find(candidate => candidate.id === 'remote-bounce');
+      assert.equal(applyUpgradeRank(run, entry), true);
+      assert.equal(startNextWave(run), true);
     }
     run.spawnIn = run.shotIn = 100;
     run.enemies = [1, 2].map(id => ({ id, kind: 'zombie', hp: 100, maxHp: 100,

@@ -74,13 +74,12 @@ test('the signature slot opens a quarter of the time, and its own probability pi
 });
 
 
-test('a milestone level forces its entry even when the slot roll fails', () => {
-  const forced = { ...own('forced'), guaranteedAt: [3] };
-  const data = catalog([forced, common('attack'), common('health'), common('speed'), common('reach')]);
+test('a milestone level fills the menu from the own pool even when the slot roll fails', () => {
+  const data = catalog([own('forced'), common('attack'), common('health'), common('speed'), common('reach')]);
   const closed = () => 0.99;
-  const options = selectLevelOptions(data, { character: 'negro', level: 3, ranks: {} }, closed);
-  assert.ok(options.some(entry => entry.id === 'forced'));
-  assert.equal(options.length, 4);
+  const options = selectLevelOptions(data, { character: 'negro', level: 4, ranks: {} }, closed);
+  assert.ok(options.some(entry => entry.id === 'forced'), 'the own upgrade shows up with a closed roll');
+  assert.equal(options.length, 4, 'and the shared stats fill the rest');
 });
 
 test('invalid chance and milestone data is rejected with the entry id', () => {
@@ -137,8 +136,11 @@ test('stat descriptions derive from the same signed numeric modifiers', () => {
   assert.deepEqual(describeReward(reward), ['Ataque +10%', 'Defensa -1']);
 });
 
-test('an extra attack waits until level 14, except on its own guaranteed milestone', async () => {
+test('an extra attack waits until level 14, and a milestone level is four own upgrades', async () => {
   const { DEFAULT_CATALOG } = await import('../src/reward-data.mjs');
+  const { MILESTONE_LEVELS } = await import('../src/reward-catalog.mjs');
+  assert.deepEqual([...MILESTONE_LEVELS], [4, 8, 12, 16], 'the milestone levels are the four the run promises');
+
   const late = DEFAULT_CATALOG.upgrades.filter(entry => entry.lateLevel === 14).map(entry => entry.id);
   assert.deepEqual(late.sort(), ['brick-fan', 'brick-pierce', 'brick-shards', 'definitive-edition',
     'extra-shroom', 'only-one', 'otaku-pierce', 'other-console', 'remote-bounce', 'remote-chain'],
@@ -146,37 +148,49 @@ test('an extra attack waits until level 14, except on its own guaranteed milesto
 
   // Ranks that satisfy the prerequisites without maxing the entry itself.
   const ranksFor = entry => Object.fromEntries((entry.requires ?? []).map(requirement => [requirement.id, requirement.rank]));
-  const seen = (entry, level) => {
+  const seen = (entry, level, milestone = false) => {
     const found = new Set();
     for (let step = 0; step < 200; step++) {
       const random = () => (step + 1) / 201;
       for (const option of selectLevelOptions(DEFAULT_CATALOG,
-        { character: entry.characters, level, ranks: ranksFor(entry), ownChance: 1 }, random)) found.add(option.id);
+        { character: entry.characters, level, ranks: ranksFor(entry), ownChance: milestone ? 0 : 1 }, random)) found.add(option.id);
     }
     return found;
   };
 
+  // Any ordinary level keeps the gate: the extra attack never shows up.
+  for (const level of [5, 11, 13]) {
+    for (const id of late) {
+      const entry = DEFAULT_CATALOG.upgrades.find(candidate => candidate.id === id);
+      assert.ok(!seen(entry, level).has(id), `${id} is not offered at level ${level}`);
+    }
+  }
+  // From 14 on it is part of the ordinary pool again.
   for (const id of late) {
     const entry = DEFAULT_CATALOG.upgrades.find(candidate => candidate.id === id);
-    const atThirteen = seen(entry, 13);
-    assert.ok(!atThirteen.has(id), `${id} is not offered at level 13`);
-    if ((entry.guaranteedAt ?? []).includes(13)) continue;
     assert.ok(seen(entry, 14).has(id), `${id} opens at level 14`);
   }
 
-  // The promise survives the gate: a milestone still pays on its own level.
-  const milestone = (id, level) => {
-    const entry = DEFAULT_CATALOG.upgrades.find(candidate => candidate.id === id);
-    return seen(entry, level).has(id);
-  };
-  assert.equal(milestone('remote-bounce', 3), true, 'El Negro gets his bounce at level 3');
-  assert.equal(milestone('extra-shroom', 4), true, 'Warrior gets the extra mushroom at level 4');
-  assert.equal(milestone('brick-pierce', 3), true, 'Papazito gets the pierced brick at level 3');
+  // A milestone level ignores the gate and fills the whole menu from the own
+  // pool, rolled: the promise is the menu, never which entry.
+  for (const level of MILESTONE_LEVELS) {
+    for (const character of ['negro', 'solago', 'warrior', 'papazito', 'jhony', 'papafrita']) {
+      const pool = new Set();
+      for (let step = 0; step < 60; step++) {
+        const options = selectLevelOptions(DEFAULT_CATALOG,
+          { character, level, ranks: { 'remote-bounce': 1, 'second-bite': 1 }, ownChance: 0 }, () => step / 60);
+        assert.equal(options.length, 4, `${character} at ${level} gets four cards`);
+        for (const option of options) {
+          assert.equal(option.characters, character, `${character} at ${level}: only own upgrades`);
+          pool.add(option.id);
+        }
+      }
+      assert.ok(pool.size >= 4, `${character} at ${level} rolls from a pool of at least four`);
+    }
+  }
 
-  // Melee signatures are untouched: Solago's second bite still shows up early.
+  // Melee signatures are untouched: Solago's second bite is never gated.
   const bite = DEFAULT_CATALOG.upgrades.find(entry => entry.id === 'second-bite');
   assert.equal(bite.lateLevel, undefined, 'a melee signature is never gated');
-  // Level 4 is her guaranteed milestone (La Patrona's last cut owns that slot),
-  // so the check asks the next level where the pool is rolled again.
   assert.ok(seen(bite, 5).has('second-bite'), 'and it is offered as soon as it is eligible');
 });

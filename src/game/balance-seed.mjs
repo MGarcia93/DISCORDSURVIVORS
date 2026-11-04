@@ -1,6 +1,7 @@
 import { createRun, seedWave } from '../engine.mjs';
 import { applyUpgradeRank, countOf, grantItem, itemPrice } from '../run-rewards.mjs';
 import { BALANCE, playtestBalance } from '../reward-data.mjs';
+import { MILESTONE_LEVELS } from '../reward-catalog.mjs';
 import { waveEntryBudget } from './wave-budget.mjs';
 
 // Builds the run a player would bring to a wave, so a single wave can be played
@@ -12,14 +13,25 @@ const total = counts => Object.values(counts).reduce((sum, amount) => sum + amou
 
 // Why a level entry cannot be taken right now, or null when it can. Mirrors the
 // catalog's own gates: the character that owns it, its rank cap, its level
-// requirement and the level choices left over.
+// requirement and the level choices left over. `level` is the level this choice
+// is being spent at, and the two campaign rules ride along: a milestone level
+// only takes own upgrades, and the extra-attack entries wait for level 14.
 export function pickBlocked(upgrade, { character, level, choices, picks = {} }) {
   if (!upgrade) return 'unknown';
   if (upgrade.characters !== 'all' && upgrade.characters !== character) return 'character';
   if (countOf(picks, upgrade.id) >= upgrade.ranks.length) return 'maxed';
   if ((upgrade.minLevel ?? 1) > level) return 'level';
   if (total(picks) >= choices) return 'budget';
+  const milestone = MILESTONE_LEVELS.includes(level);
+  if (milestone) return upgrade.characters === 'all' ? 'milestone' : null;
+  if ((upgrade.lateLevel ?? 0) > level) return 'late';
   return null;
+}
+
+// The level the next spent choice lands on: the campaign gains its first level
+// at 2 and one per choice after that.
+export function nextPickLevel(picks = {}) {
+  return 2 + total(picks);
 }
 
 // Why one more copy cannot be bought right now, or null when it can.

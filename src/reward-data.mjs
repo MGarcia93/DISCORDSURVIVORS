@@ -342,7 +342,7 @@ const LEVEL_UPGRADE_BASE = [
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   { id: 'remote-bounce', name: 'Rebote del control', characters: 'negro', minLevel: 3, chance: 0.5,
-    guaranteedAt: [3], requires: [], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
+    requires: [], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
   { id: 'remote-chain', name: 'Otro salto', characters: 'negro', minLevel: 4,
     requires: [{ id: 'remote-bounce', rank: 1 }], ranks: [{ effects: [{ type: 'bounce', value: 1 }] }] },
   // Jhony's six signatures and their evolutions. Each one adds or reshapes an
@@ -354,19 +354,9 @@ const LEVEL_UPGRADE_BASE = [
 export const LEVEL_UPGRADES = LEVEL_UPGRADE_BASE.map(entry =>
   LATE_UPGRADES.has(entry.id) ? { ...entry, lateLevel: 14 } : entry);
 
-// Milestone levels: at these levels the entry is forced into the selection,
-// independently of its chance. Everything else is rolled.
-// One guaranteed entry per character and level, so a milestone never competes
-// with another guaranteed own upgrade for the single own slot.
-const MILESTONES = {
-  'remote-bounce': [3], 'waifu-pierce': [4],
-  'bite-arc': [3], 'patrona-final': [4],
-  'deeper-confusion': [3], 'extra-shroom': [4],
-  'brick-pierce': [3], 'sena-burst': [4],
-  'tilt-circle': [3],
-  'and-what-else': [3], 'fishing': [5],
-};
-for (const entry of LEVEL_UPGRADES) if (MILESTONES[entry.id]) entry.guaranteedAt = MILESTONES[entry.id];
+// Milestone levels (4, 8, 12 and 16, owned by `selectLevelOptions`) hand over
+// four signatures, and which four is rolled: a milestone promises the menu, not
+// the entry. No upgrade carries a `guaranteedAt` of its own any more.
 
 export const DEFAULT_CATALOG = createCatalog({ items: ITEMS, upgrades: LEVEL_UPGRADES }, {
   characters: Object.keys(CHARACTERS), effects: EFFECTS,

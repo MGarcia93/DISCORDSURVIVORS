@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BALANCE, DEFAULT_CATALOG, playtestBalance } from '../src/reward-data.mjs';
 import { getAct } from '../src/campaign/acts.mjs';
-import { itemBlocked, pickBlocked, removeOne, seedRun } from '../src/game/balance-seed.mjs';
+import { itemBlocked, nextPickLevel, pickBlocked, removeOne, seedRun } from '../src/game/balance-seed.mjs';
 import { waveEntryBudget } from '../src/game/wave-budget.mjs';
 
 const act1 = getAct('act-01');
@@ -119,4 +119,28 @@ test('removing an item returns its coins', () => {
   assert.equal(left.run.items.alcohol, undefined, 'and taking it back drops the entry');
   assert.ok(left.run.coins > bought.run.coins, 'the copy that came back pays for the next pick');
   assert.ok(left.run.coins > 0);
+});
+
+test('the lab follows the campaign: milestones and the level-14 gate', () => {
+  const stat = upgrade('stat-life');
+  const own = upgrade('otaku-time');
+  const bounce = upgrade('remote-bounce');
+  const at = (level, picks = {}) => ({
+    pick: id => pickBlocked(upgrade(id), { character: 'negro', level, choices: 10, picks }),
+  });
+
+  // The first choice lands on level 2, the second on the milestone level 3.
+  assert.equal(nextPickLevel({}), 2);
+  assert.equal(nextPickLevel({ 'stat-life': 1 }), 3);
+  assert.equal(at(3).pick('stat-life'), null, 'level 3 is a normal level');
+  assert.equal(at(4).pick('stat-life'), 'milestone', 'level 4 is four own upgrades');
+  assert.equal(at(4).pick('otaku-time'), null, 'own upgrades are what a milestone takes');
+  assert.equal(at(4).pick('remote-bounce'), null, 'and the gate steps aside on that level');
+  assert.equal(at(5).pick('stat-life'), null, 'level 5 is normal again');
+  assert.equal(at(5).pick('remote-bounce'), 'late', 'the extra attack waits for 14');
+  assert.equal(at(14).pick('remote-bounce'), null, 'and opens there');
+  assert.equal(at(8).pick('stat-life'), 'milestone', 'level 8 is a milestone too');
+  assert.equal(at(12).pick('stat-life'), 'milestone');
+  assert.equal(at(16).pick('stat-life'), 'milestone');
+  assert.equal(own.characters, 'negro');
 });

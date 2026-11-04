@@ -126,14 +126,19 @@ test('the señ a burst damages enemies when a charge lands', () => {
   assert.ok(target.hp < 1e6, 'the burst hit the nearby enemy');
 });
 
-test('a guaranteed milestone entry always shows up at its level', () => {
-  const catalog = createRun(() => 0.5, 'negro', { balance: oneXp }).rewardCatalog;
-  for (let attempt = 0; attempt < 20; attempt++) {
-    const random = () => attempt / 20;
-    const options = selectLevelOptions(catalog, { character: 'negro', level: 3, ranks: {} }, random);
-    assert.ok(options.some(entry => entry.id === 'remote-bounce'),
-      `attempt ${attempt} must include the level-3 milestone`);
+test('a milestone level hands over four own upgrades, rolled at random', () => {
+  const catalog = createRun(() => 0.5, 'jhony', { balance: oneXp }).rewardCatalog;
+  const seen = new Set();
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const random = () => attempt / 40;
+    const options = selectLevelOptions(catalog, { character: 'jhony', level: 4, ranks: {} }, random);
+    assert.equal(options.length, 4, `attempt ${attempt} offers four cards`);
+    for (const entry of options) {
+      assert.equal(entry.characters, 'jhony', 'no shared statistics on a milestone level');
+      seen.add(entry.id);
+    }
   }
+  assert.ok(seen.size > 4, `the four cards come from the whole pool (${seen.size})`);
 });
 
 test('unselected mechanics stay inactive, and every new entry is data-only', () => {

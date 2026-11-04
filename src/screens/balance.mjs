@@ -4,7 +4,7 @@ import { DEFAULT_CATALOG, EFFECTS } from '../reward-data.mjs';
 import { describeReward } from '../reward-catalog.mjs';
 import { countOf, itemPrice, previewReward } from '../run-rewards.mjs';
 import { state } from '../app/state.mjs';
-import { balanceForMode, itemBlocked, pickBlocked, removeOne, seedRun } from '../game/balance-seed.mjs';
+import { balanceForMode, itemBlocked, nextPickLevel, pickBlocked, removeOne, seedRun } from '../game/balance-seed.mjs';
 import { rewardEffectTotals } from '../game/reward-view.mjs';
 import { drawItemIcon } from '../game/item-icons.mjs';
 import { DEV } from '../dev-flags.mjs';
@@ -22,6 +22,8 @@ const REASONS = {
   level: 'LEVEL NOT REACHED',
   budget: 'NO CHOICES LEFT',
   character: 'OTHER CHARACTER',
+  milestone: 'MILESTONE · ONLY OWN UPGRADES',
+  late: 'WAITS FOR LEVEL 14',
   incompatible: 'NOT COMPATIBLE',
   coins: 'NOT ENOUGH COINS',
   disabled: 'NOT IN THE POOL',
@@ -52,8 +54,10 @@ function levelCards(run, entry) {
   return upgrades.map(upgrade => {
     const id = escapeText(upgrade.id);
     const rank = countOf(state.balancePicks, upgrade.id);
+    // The card is judged at the level the next choice would be spent on, so the
+    // milestones and the level gate read the same way they do in a campaign.
     const blocked = pickBlocked(upgrade, {
-      character, level: entry.level, choices: entry.choices, picks: state.balancePicks,
+      character, level: nextPickLevel(state.balancePicks), choices: entry.choices, picks: state.balancePicks,
     });
     const next = upgrade.ranks[rank];
     const preview = blocked || !next ? null : previewReward(run, `balance-level:${upgrade.id}:${rank}`, next);

@@ -129,24 +129,31 @@ function weightedEntry(entries, random) {
   return entries[entries.length - 1] ?? null;
 }
 
+// Milestone levels: the whole menu is the character's own pool, rolled at
+// random. A milestone promises four signatures, never which ones, and it is the
+// only place where a `lateLevel` is ignored: without that, a ficha whose whole
+// pool is gated could not fill four cards.
+export const MILESTONE_LEVELS = Object.freeze([4, 8, 12, 16]);
+
 export function selectLevelOptions(catalog, { character, level, ranks, ownChance = OWN_OFFER_CHANCE }, random) {
   const rankOf = id => Object.hasOwn(ranks, id) ? ranks[id] : 0;
-  // `lateLevel` keeps the upgrades that add a whole extra attack out of the pool
-  // until the run is deep enough. A level named in `guaranteedAt` is the one
-  // exception: the milestone still pays on its own level, gate or no gate.
-  const latePass = entry => level >= (entry.lateLevel ?? 0)
-    || (entry.guaranteedAt ?? []).includes(level);
   const eligible = catalog.upgrades.filter(entry =>
     (entry.characters === 'all' || entry.characters === character)
-    && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length && latePass(entry)
+    && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length
     && entry.requires.every(requirement => rankOf(requirement.id) >= requirement.rank));
-  const own = eligible.filter(entry => entry.characters === character);
-  const common = eligible.filter(entry => entry.characters === 'all');
-  const forced = own.filter(entry => (entry.guaranteedAt ?? []).includes(level));
+  // `lateLevel` keeps the upgrades that add a whole extra attack out of the
+  // ordinary levels until the run is deep enough.
+  const milestone = MILESTONE_LEVELS.includes(level);
+  const pool = milestone ? eligible : eligible.filter(entry => level >= (entry.lateLevel ?? 0));
+  const own = pool.filter(entry => entry.characters === character);
+  const common = pool.filter(entry => entry.characters === 'all');
+  if (milestone) {
+    const picks = sampleEntries(own, LEVEL_OPTIONS, random);
+    return [...picks, ...pickWithGuarantee(common, LEVEL_OPTIONS - picks.length, level, random)];
+  }
   // No signature is eligible at all: no roll is spent, so the sequence stays
   // stable for a character that cannot grow that way yet.
-  const ownPick = forced.length ? weightedEntry(forced, random)
-    : own.length > 0 && random() < ownChance ? weightedEntry(own, random) : null;
+  const ownPick = own.length > 0 && random() < ownChance ? weightedEntry(own, random) : null;
   const picks = ownPick ? [ownPick] : [];
   return [...picks, ...pickWithGuarantee(common, LEVEL_OPTIONS - picks.length, level, random)];
 }
