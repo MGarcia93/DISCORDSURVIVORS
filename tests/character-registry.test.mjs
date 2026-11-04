@@ -19,8 +19,8 @@ test('Papazito is a registered heavy ranged bruiser running on the percentage co
   assert.equal(CHARACTERS.papazito.id, 'papazito');
   const p = createRun(Math.random, 'papazito').player;
   // Stat sheet from context/personajes/papazito_el_paraguayo_trucho.md §3:
-  // life +10% -> 110, damage 27.2 (ranged pays 20% less), attackSpeed -10% -> 90
-  // (interval ~1.11s), defense +10% -> 11 points (0.55 mitigation),
+  // life +10% -> 110, damage 24.5 (ranged pays twice: less damage, no need to close),
+  // attackSpeed -10% -> 90 (interval ~1.11s), defense +10% -> 11 points (0.55 mitigation),
   // moveSpeed -10% -> 2970 (148.5 scaled px/s). Attack distance is
   // 280% (308px), slightly longer than El Negro's 260% (286px).
   assert.equal(p.maxHp, 110);
@@ -28,7 +28,7 @@ test('Papazito is a registered heavy ranged bruiser running on the percentage co
   assert.equal(p.damage, 24.5, 'heavier than El Negro: the cadence pays for it');
   assert.equal(p.attackRange, 280 * UNIT_PX);
   assert.ok(p.attackRange > createRun(Math.random, 'negro').player.attackRange);
-  assert.ok(Math.abs(p.shotInterval - 100 / 72) < 1e-9);
+  assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-9);
   assert.equal(p.speed, 148.5 * WORLD_SCALE);
   assert.equal(CHARACTERS.papazito.attack.type, 'ranged');
   assert.equal(CHARACTERS.papazito.attack.device, 'brick', 'his basic attack config lives in the sheet');
@@ -47,7 +47,7 @@ test('Warrior is a registered controller running on the percentage core', () => 
   assert.equal(w.defense, 0.5);
   assert.equal(w.damage, 10.8);
   assert.equal(w.attackRange, 300 * UNIT_PX);
-  assert.ok(Math.abs(w.shotInterval - 100 / 60) < 1e-9);
+  assert.ok(Math.abs(w.shotInterval - 100 / 75) < 1e-9);
   assert.equal(CHARACTERS.warrior.attack.damageMultiplier, 3.25);
   assert.equal(w.speed, 165 * WORLD_SCALE);
   assert.equal(CHARACTERS.warrior.attack.device, 'shroom', 'his basic attack config lives in the sheet');
@@ -96,7 +96,7 @@ test('panic from La seña gallops him exactly +30% movement and -40% shot interv
 
   run.shotIn = 0;
   step(run, 0.05, {});
-  assert.ok(Math.abs(run.shotIn - (100 / 72) * 0.6) < 1e-9, '+40% attack speed only');
+  assert.ok(Math.abs(run.shotIn - (100 / 90) * 0.6) < 1e-9, '+40% attack speed only');
   assert.equal(p.damage, 24.5, 'no extra damage from the panic');
 });
 

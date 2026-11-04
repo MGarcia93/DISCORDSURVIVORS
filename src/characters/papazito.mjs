@@ -20,7 +20,7 @@ const SHEET = {
   life: 110,             // 110 hp
   defense: 110,          // 11 points -> 55% mitigation
   attack: 245,           // 24.5 per brick: ranged pays twice, it never has to close
-  attackSpeed: 72,       // 0.72 bricks/s: -20% on top of the ranged damage cut
+  attackSpeed: 90,       // 0.9 bricks/s: the slow heavy cadence of §4.1
   attackDistance: 280,   // 308px reach, slightly longer than El Negro's 286px
   moveSpeed: 2970,       // 148.5 scaled px/s: -10% mobility
 };

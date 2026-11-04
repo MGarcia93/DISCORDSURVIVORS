@@ -10,7 +10,7 @@ const SHEET = {
   life: 120,             // 120 points of damage
   defense: 30,           // 3 defense points -> 15% mitigation
   attack: 216,           // 21.6 per shot: ranged pays twice, it never has to close
-  attackSpeed: 152,      // 1.52 attacks/s: -20% on top of the ranged damage cut
+  attackSpeed: 190,      // 1.9 attacks/s: faster than the cast, still not a standing wave clear
   attackDistance: 260,   // quarter of the screen: 286px (no sniping the whole arena)
   moveSpeed: 2800,       // 140 scaled px/s: last one to arrive, as always
 };

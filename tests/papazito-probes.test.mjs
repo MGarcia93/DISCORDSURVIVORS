@@ -33,7 +33,7 @@ test('S1 probe: papazito resolves the ficha sheet into engine stats', () => {
   assert.equal(p.defense, 0.55);
   assert.equal(p.damage, 24.5);
   assert.equal(p.attackRange, 280 * WS);
-  assert.ok(Math.abs(p.shotInterval - 100 / 72) < 1e-12);
+  assert.ok(Math.abs(p.shotInterval - 100 / 90) < 1e-12);
   assert.equal(p.speed, 148.5 * WS);
 });
 
