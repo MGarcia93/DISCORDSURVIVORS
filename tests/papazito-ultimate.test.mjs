@@ -9,6 +9,23 @@ function arena() {
   return run;
 }
 
+test('ANAMENCUÁ crosses every body in its path, not only the closest one', () => {
+  const run = arena();
+  const p = run.player;
+  const line = [120, 300, 500].map((gap, index) => ({
+    id: index + 1, x: Math.min(1100, p.x + gap), y: p.y, hp: 500, maxHp: 500,
+    radius: 12, speed: 0, kind: 'zombie', attackCd: 1e9, attackInterval: 1e9,
+  }));
+  run.enemies.push(...line);
+  activateSpecial(run, 'anamencua');
+  for (let i = 0; i < 200; i++) step(run, 1 / 60, {});
+  const damage = line.map(enemy => 500 - enemy.hp);
+  assert.ok(damage.every(value => value > 0),
+    'a ring is a wall: the closest body cannot shield the ones behind it');
+  assert.equal(new Set(damage.map(value => value.toFixed(6))).size, 1,
+    'the same bricks reach all three, so the damage does not fade with distance');
+});
+
 test('ANAMENCUÁ emits exactly three dense, evenly spaced outward rings without targets', () => {
   const run = arena();
   assert.equal(activateSpecial(run, 'anamencua'), true);

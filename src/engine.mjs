@@ -422,14 +422,17 @@ function shockwave(run, { x, y, damage, speed = 320 * WORLD_SCALE, maxRadius = 3
   run.shockwaves.push({ x, y, damage, speed, maxRadius, radius: 0, hit: false });
 }
 
-// Untargeted rings keep their launch direction, even in an empty arena.
+// Untargeted rings keep their launch direction, even in an empty arena. A ring
+// is a wall, not a bullet: every brick crosses the bodies in its path instead of
+// dying on the first one, which is what made the ability look like it reached
+// the screen edge while only the closest body took anything.
 function fireRadial(run, source, damage, { count, speed, radius }) {
   for (let i = 0; i < count; i++) {
     const direction = i * Math.PI * 2 / count;
     const dx = Math.cos(direction), dy = Math.sin(direction);
     run.projectiles.push({ x: source.x + dx * radius, y: source.y + dy * radius,
       vx: dx * speed, vy: dy * speed, damage, kind: 'brick', device: 'brick',
-      hit: [], ttl: 2.4, angle: direction, radius: 3 * WORLD_SCALE });
+      through: true, hit: [], ttl: 2.4, angle: direction, radius: 3 * WORLD_SCALE });
   }
 }
 
