@@ -188,10 +188,10 @@ test('Jhony owns six cards, one per signature, and each one states its own rank'
   state.balancePicks = {};
   state.balanceItems = {};
   balance();
-  const cards = [...content.innerHTML.matchAll(/data-pick="([^"]+)"[\s\S]*?<b>([^<]*)<\/b>\s*<span>([^<]*)<\/span>/g)]
-    .filter(([, id]) => !id.startsWith('stat-'));
+  const cards = [...content.innerHTML.matchAll(/<button class="upgrade ([^"]*)" data-pick="([^"]+)"[\s\S]*?<b>([^<]*)<\/b>\s*<span>([^<]*)<\/span>/g)]
+    .filter(([, classes]) => classes.split(' ').includes('own'));
   assert.equal(cards.length, 6, 'six signatures, not twelve cards');
-  const texts = cards.map(([, , , text]) => text);
+  const texts = cards.map(([, , , , text]) => text);
   assert.equal(new Set(texts).size, texts.length, 'no two signatures sell the same thing');
 
   // The rank being sold is the one described: rank II is the evolution, never

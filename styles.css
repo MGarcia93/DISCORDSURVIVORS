@@ -333,6 +333,10 @@ kbd { display: inline-grid; place-items: center; border: 1px solid #8c7694; bord
 #world-status { margin-top: 10px; color: var(--muted); font-size: 11px; }
 .enemy-viewer input[type="number"] { width: 70px; padding: 10px; background: #242335; color: #fff; border: 2px solid #786b95; }
 #enemy-status { margin-top: 10px; color: var(--muted); font-size: 11px; }
+#item-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 12px 0 0; padding: 0; font-size: 11px; letter-spacing: 1px; }
+#item-legend b { color: #bfd890; font-weight: 700; }
+#item-legend span { color: var(--muted); }
+#item-status { margin-top: 10px; color: var(--muted); font-size: 11px; }
 @media (max-width: 650px) {
   .narrative-text { padding: 8px; }
   .narrative-text p { font-size: 12px; line-height: 1.4; margin: 6px 0; min-height: 0; max-height: 22vh; }

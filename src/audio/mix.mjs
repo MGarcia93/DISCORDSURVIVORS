@@ -113,6 +113,9 @@ export const SFX = {
   // The car alarm a wave declares: two short beats on the same note, the sound
   // of a horn that nobody is coming back to switch off.
   alarm: { frequency: 190, duration: 0.22, gain: 0.045, release: true },
+  // The drop a body leaves behind: one short, quiet blip. It sits under the
+  // kill on purpose, so a drop never reads as another hit.
+  pickup: { frequency: 880, duration: 0.11, gain: 0.05, release: true },
 };
 
 // UI feedback: the clicks the player makes, not the world reacting. Same bus as

@@ -41,6 +41,7 @@ before changing a scene that needs travel, pursuit or a camera move.
 | `src/campaign/` | the campaign map: one module per act with its waves, boss and world; validated on load |
 | `src/characters/` | playable fichas; each owns its stats, profile and drawing |
 | `src/enemies/` | enemy fichas; each owns its sheet and drawing, `index.mjs` is the registry |
+| `src/pickups.mjs` | the drop a body leaves: chance, heal, one object per ficha and its drawing |
 | `assets/narrative/` | scene JSON, portraits, manifest |
 | `assets/audio/` | music tracks, one file per act |
 | `docs/narrative-authoring.md` | authoring contract for scenes and worlds |
@@ -110,8 +111,9 @@ here is deleted, and `npm run dev` keeps all of it.
 | `?dev=enemies` | a throwaway run of one enemy kind on a chosen world: it walks in, stops at its own attack distance and swings on its own cadence against a dummy that never moves. Shows the resolved sheet for the chosen wave |
 | `?dev=narrative` | select, play, restart and skip standalone scenes |
 | `?dev=balance` | balance lab: pick a character, a world and a wave, spend that wave's entry budget on level upgrades and items (left click adds, right click or `−1` takes one back, the headings count what is left, a maxed card reads `RANK 5/5`), then play the wave for real. Its **Cinematics** switch is off by default; on, it plays the act's scenes, banter and wave boundaries on the chosen wave, and either way it records nothing. It never advances: pause, clear or die and you can repeat the wave or go back to the build |
+| `?dev=items` | the drop each ficha leaves on kill, at the arena's own scale rule on the run's ground layer: six objects, their ficha and the drop rules. Same effect for all of them, only the drawing changes |
 
-All four are isolated: they never write progress or unlocks. The balance lab is
+All five are isolated: they never write progress or unlocks. The balance lab is
 the only place that turns the playtest pacing on from the interface; anywhere
 else it is `?playtest`, and without it the game runs the real balance.
 

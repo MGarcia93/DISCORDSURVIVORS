@@ -228,6 +228,11 @@ export const EFFECTS = {
     describe: value => value > 1 ? 'El animal encadena y golpea en área' : 'Un animal ataca objetivos secundarios' },
   echo: { max: 3, cumulative: true, validate: value => Number.isSafeInteger(value) && value > 0,
     describe: value => `Eco demorado cada ${7 - value} ataques` },
+  // The drop a body leaves behind: the first effect raises how often it falls,
+  // the second how much it gives back. Both are read by `src/pickups.mjs`.
+  dropChance: { max: 0.09, validate: value => Number.isFinite(value) && value > 0,
+    describe: value => `Probabilidad de botín +${Math.round(value * 100)}%` },
+  dropHeal: points('Curación del botín', 9, ''),
 };
 
 // Jhony's six signatures and their evolutions (§5). Each one adds or reshapes
@@ -284,6 +289,13 @@ const LEVEL_UPGRADE_BASE = [
     id: `stat-${id}`, name, characters: 'all', minLevel: 2, requires: [],
     ranks: Array.from({ length: 5 }, () => ({ modifiers: [modifier] })),
   })),
+  // The drop upgrade. It touches no combat statistic, so it is offered with the
+  // shared pool from level two: the first ranks make the drop a plan and the
+  // last one turns a bad fight into a small rescue.
+  { id: 'loot', name: 'Botín inesperado', characters: 'all', minLevel: 2,
+    requires: [], ranks: Array.from({ length: 3 }, () => ({
+      effects: [{ type: 'dropChance', value: 0.03 }, { type: 'dropHeal', value: 3 }],
+    })) },
   ...[
     ['otaku-time', 'Un capítulo más', 'negro', 'waifuDuration'],
     ['patrona-time', 'No terminó de cortar', 'solago', 'standDuration'],

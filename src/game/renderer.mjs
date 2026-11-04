@@ -3,6 +3,7 @@ import { drawAnime, drawCompanion, drawSmokeCloud, drawShroomBlast, drawAstralAu
 import { drawProjectiles } from './projectiles.mjs';
 import { drawEnemyFigure } from './figures.mjs';
 import { pixelText } from '../scenes.mjs';
+import { drawPickups } from '../pickups.mjs';
 import { drawBackground } from '../backgrounds/index.mjs';
 import { state } from '../app/state.mjs';
 import { waveConfig } from '../waves.mjs';
@@ -68,6 +69,9 @@ export function drawRunScene(ctx, run, {
     ctx.fillStyle = '#a18aff12'; ctx.strokeStyle = '#a18aff66'; ctx.lineWidth = 2;
     pixelRing(ctx, p.x, p.y, 145 * 1.1, '#a18aff');
   }
+  // The drop a body left on the floor sits on the ground layer, under every
+  // figure: a body walking over it covers it instead of floating above it.
+  drawPickups(ctx, run, time);
   const figures = [...run.enemies];
   if (p.chair > 0) figures.push({ x: p.x, y: p.y - 0.6, kind: 'chair' });
   if (p.stand > 0) figures.push({ x: p.x + 13 * WORLD_SCALE, y: p.y - 1, kind: 'stand' });

@@ -33,7 +33,8 @@ test('the initial catalog contains the fifteen approved generic items with diffe
 
 test('all six common stats and each character have initial data-authored options', () => {
   const common = DEFAULT_CATALOG.upgrades.filter(entry => entry.characters === 'all');
-  assert.equal(new Set(common.flatMap(entry => entry.ranks[0].modifiers.map(effect => effect.stat))).size, 6);
+  const statCommons = common.filter(entry => entry.ranks[0].modifiers);
+  assert.equal(new Set(statCommons.flatMap(entry => entry.ranks[0].modifiers.map(effect => effect.stat))).size, 6);
   for (const character of ['negro', 'solago', 'warrior', 'papazito']) {
     const choices = selectLevelOptions(DEFAULT_CATALOG, { character, level: 2, ranks: {} }, () => 0);
     assert.equal(choices.length, 4);

@@ -27,6 +27,7 @@ import { DEFAULT_ACT } from './campaign/acts.mjs';
 import { emit } from './bus.mjs';
 import { createStatState, applyLiveStats } from './stat-modifiers.mjs';
 import { initializeRewards, awardXP, beginRewards, finishRewards, recordLegacyUpgrade } from './run-rewards.mjs';
+import { collectPickups, dropPickup } from './pickups.mjs';
 export { chooseLevelReward, skipEmptyChoice, buyItem, nextLevelXP } from './run-rewards.mjs';
 
 // Safety net: the per-wave budget is the real limiter, this only stops a wave
@@ -56,7 +57,7 @@ export function createRun(random = Math.random, character = 'negro', rewards = {
       swingFacing: 1,
       smile: 0, smileCooldown: 0,
     },
-    enemies: [], projectiles: [], effects: [],
+    enemies: [], projectiles: [], effects: [], pickups: [],
     upgrades: { damage: 0, rate: 0, health: 0, armor: 0, regen: 0, speed: 0 },
   };
   for (const special of characterDef.specials) {
@@ -217,6 +218,9 @@ export function seedWave(run, wave) {
   run.phase = 'playing';
   run.enemies = [];
   run.projectiles = [];
+  // A boundary clears the floor: a drop left on the previous wave is not carried
+  // into the next one, the same way enemies and projectiles are not.
+  run.pickups = [];
   delete run.minibossLine;
   // A wave boundary is a fresh start for the whole kit: nothing stays active
   // across it, and a clock that was still running opens the next wave at half
@@ -919,6 +923,9 @@ export function step(run, seconds, input = {}) {
     awardCoins(run, bounty);
     awardXP(run, run.rewardBalance.xp.rewards[enemy.kind] ?? 0);
     run.effects.push({ x: enemy.x, y: enemy.y, text: `+${bounty}`, ttl: 0.9, loot: true });
+    // The body may leave a drop behind. The roll is the module's own rule; the
+    // engine only asks whether this kill dropped something.
+    dropPickup(run, enemy);
     const spread = p.rewardBonuses.confusionChain ?? 0;
     if (spread > 0 && (enemy.confusionStacks ?? 0) >= 3) {
       for (const other of run.enemies) {
@@ -944,6 +951,7 @@ export function step(run, seconds, input = {}) {
   }
   run.enemies = run.enemies.filter(enemy => enemy.hp > 0);
   run.projectiles = run.projectiles.filter(shot => shot.ttl > 0);
+  collectPickups(run, dt);
   for (const effect of run.effects) {
     effect.ttl -= dt;
     if (typeof effect.text === 'string') effect.y -= dt * 20;
@@ -964,6 +972,7 @@ export function step(run, seconds, input = {}) {
   run.effects = run.effects.filter(effect => effect.ttl > 0);
   if (p.hp <= 0) {
     run.phase = 'dead';
+    run.pickups = [];
     emit('playerDown', { run, player: p });
   } else if (killed.some(enemy => enemy.boss && enemy.kind === run.act.boss?.kind)) {
     // The world boss closes its world the same way every wave closes: the shop
@@ -974,6 +983,7 @@ export function step(run, seconds, input = {}) {
     awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
     run.enemies = [];
     run.projectiles = [];
+    run.pickups = [];
     beginRewards(run);
     emit('waveCleared', { run });
   // A wave ends on its clock, except one that declares itself untimed and holds
@@ -983,6 +993,7 @@ export function step(run, seconds, input = {}) {
     awardCoins(run, run.rewardBalance.gold?.survival ?? 20);
     run.enemies = [];
     run.projectiles = [];
+    run.pickups = [];
     beginRewards(run);
     emit('waveCleared', { run });
   }

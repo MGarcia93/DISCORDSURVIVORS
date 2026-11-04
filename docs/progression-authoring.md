@@ -130,6 +130,8 @@ New mechanics implemented as parameter-driven behavior:
 | `smokeBonus` | Splash (`spore`) damage rises against enemies breathing smoke. | `src/engine.mjs` |
 | `brickPierce` | Bricks continue to the next enemy after a hit. | `src/engine.mjs` |
 | `brickFragments` | A brick impact spawns that many radial fragments at 35% damage. | `src/engine.mjs` |
+| `dropChance` | Raises how often a killed body leaves its drop on the floor. | `src/pickups.mjs` |
+| `dropHeal` | Raises how much health that drop gives back. | `src/pickups.mjs` |
 
 Second batch, assigned to later levels with their own probability:
 
@@ -175,6 +177,31 @@ levels, not as independent bonuses:
 A character sheet may declare `ownOfferChance` to open its own upgrade slot more
 often than the default quarter; Papafrita uses it so a collector can actually
 collect in a run.
+
+## The drop a body leaves behind
+
+`src/pickups.mjs` owns the drop. Each ficha leaves its own object — a Kuromi
+purse, water ice pop, mushroom, chipá, whisky and a handheld console — and all
+six have the same effect: only the object and its drawing change. The engine rolls it once
+per kill, collects it on contact and clears the floor at the wave boundary.
+
+The chance is deliberately low in the first worlds: `0.015` plus `0.005` per
+world order, plus up to `0.08` as the body's health falls, plus the
+`dropChance` effect, capped at `0.25`. A body at full health leaves the object
+where it fell instead of wasting it, and a fresh drop arms for 0.35 s so a melee
+kill still shows it before the body swallows it. The heal is `14` points plus
+the `dropHeal` effect, never past the top.
+
+Every object is drawn by writing its art as rectangles; the module then computes
+the silhouette and adds the two-step outline — one black pixel against the body,
+one warm-white pixel outside it — so the same drop reads on a light floor and on
+a dark street. The ring is computed from the drawing, never authored by hand,
+and an enclosed hole (the chipá's) stays open. A new object gets all of it for
+free.
+
+The upgrade is `loot` ("Botín inesperado"), a common entry with three ranks of
+`+3%` chance and `+3` heal. It touches no combat statistic, so it is offered
+from level two with the shared pool.
 
 ## When an upgrade is offered
 

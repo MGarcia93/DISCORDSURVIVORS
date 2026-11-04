@@ -16,6 +16,7 @@ import { story } from './screens/story.mjs';
 import { characters, drawPreview } from './screens/characters.mjs';
 import { worldsScreen, drawWorldPreview, isWorldDevelopment, isWorldKey } from './screens/worlds.mjs';
 import { enemiesScreen, drawEnemyPreview, isEnemyDevelopment } from './screens/enemies.mjs';
+import { itemsScreen, drawItemsPreview, isItemsDevelopment } from './screens/items.mjs';
 import { balance, isBalanceDevelopment } from './screens/balance.mjs';
 import { balanceForMode, seedRun } from './game/balance-seed.mjs';
 import { game } from './screens/game.mjs';
@@ -42,6 +43,7 @@ on('waveCleared', ({ run: clearedRun }) => {
 // thrown remote, joystick or phone.
 on('shot', () => audio.playSound(SFX.throw, 'throw'));
 on('kill', () => audio.playSound(SFX.kill, 'kill'));
+on('pickup', () => audio.playSound(SFX.pickup, 'pickup'));
 on('playerDown', () => audio.playSound(SFX.down));
 
 // A sale-menu special (ficha-defined items) pauses the run for its merchant UI.
@@ -66,6 +68,7 @@ function show(name, previousRun = null) {
   if (name === 'characters') characters();
   if (name === 'worlds') worldsScreen();
   if (name === 'enemies') enemiesScreen();
+  if (name === 'items') itemsScreen();
   if (name === 'balance') balance();
   if (name === 'story') story();
   if (name === 'game') {
@@ -166,6 +169,7 @@ function frame(timestamp) {
   if (state.screen === 'story') drawStory(document.querySelector('#story-scene'), storyPages[state.storyPage] ?? storyPages[0], animationTime);
   if (state.screen === 'worlds') drawWorldPreview(dt, animationTime);
   if (state.screen === 'enemies') drawEnemyPreview(dt);
+  if (state.screen === 'items') drawItemsPreview(animationTime);
   // The bed follows the state the shell already has: screen, run phase, wave,
   // pause and whether a scene owns the screen. One call, one signature check.
   audio.setCue(musicCue({
@@ -379,7 +383,8 @@ window.addEventListener('blur', suspend);
 window.addEventListener('focus', resumeNarrative);
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); else resumeNarrative(); });
 show(isNarrativeDevelopment() ? 'narrative' : isWorldDevelopment() ? 'worlds'
-  : isEnemyDevelopment() ? 'enemies' : isBalanceDevelopment() ? 'balance' : 'home');
+  : isEnemyDevelopment() ? 'enemies' : isItemsDevelopment() ? 'items'
+  : isBalanceDevelopment() ? 'balance' : 'home');
 // ?dev=warp replays the world transfer on the menu, so it can be looked at
 // without winning a world first.
 if (DEV && ['warp', 'portal'].includes(new URLSearchParams(globalThis.location?.search ?? '').get('dev'))) {

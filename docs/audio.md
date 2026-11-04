@@ -163,6 +163,11 @@ Two rules:
 UI gains stay under the gameplay hits (`0.05`–`0.08` against `kill`'s `0.076`),
 so a menu never shouts louder than the arena.
 
+The drop a killed body leaves behind (`SFX.pickup`) is one short, quiet 880 Hz
+blip. A drop is a rescue, not an impact: it sits under the kill on purpose, so
+the arena never sounds like it is raining hits. It is an oscillator, so it
+carries `release` like every other tone.
+
 ## The tracks
 
 One file per world, keyed by campaign act id. The mix was judged on Act 1, so
