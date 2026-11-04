@@ -4,6 +4,7 @@ import { DEFAULT_ACT, nextPlayableAct } from '../campaign/acts.mjs';
 import { HEAL_COST } from '../engine.mjs';
 import { beginRewards, countOf, itemPrice } from '../run-rewards.mjs';
 import { createNextWorldRun } from './campaign-run.mjs';
+import { postgameOpen } from '../progression.mjs';
 import { ITEM_PRIORITY, POLICIES, SKILLS, SPENDING, botInput, botSpecialKeys, offerValue, shouldUseSpecial } from './bot.mjs';
 
 // Headless campaign runner: the same engine the browser runs, with the bot from
@@ -103,7 +104,11 @@ export function runCampaign({ character = 'negro', seed = 1, act = DEFAULT_ACT, 
     if (phase !== 'shop') return { won: false, run, waves, reason: phase };
     if (!runShop(run, character, { policy, spend, buy })) return { won: false, run, waves, reason: 'shop' };
     if (run.worldCleared) {
-      if (!nextPlayableAct(run.act.id, { postgame: true })) return { won: true, run, waves };
+      // Same gate createNextWorldRun uses: an act that is not open cannot be
+      // chained, and asking with `postgame: true` regardless made the sim claim
+      // a next world, get `null` back and crash while measuring. Clearing the
+      // last open act is the campaign, won.
+      if (!nextPlayableAct(run.act.id, { postgame: postgameOpen() })) return { won: true, run, waves };
       run = createNextWorldRun(run);
       if (!run) return { won: false, run, waves, reason: 'chain' };
       continue;
