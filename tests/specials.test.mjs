@@ -71,6 +71,34 @@ test('Strong enemies take the drop instead of the floor: bosses are only slowed'
   assert.ok(Math.abs(boss.hp - (2200 - 7.08)) < 1e-6, 'the circle still deals its tick damage');
 });
 
+test('El sillón tapa también el anillo del jefe, no solo el contacto y los tiros', () => {
+  const ring = run => {
+    const p = run.player;
+    p.immune = 0;
+    run.shockwaves = [{ x: p.x, y: p.y, radius: 0, maxRadius: 400, speed: 300 * WORLD_SCALE, damage: 30, hit: false }];
+    step(run, 0.05, {});
+    return p;
+  };
+  const bare = createRun(() => 0.5, 'negro');
+  bare.spawnIn = 100;
+  bare.shotIn = 100;
+  const caught = ring(bare);
+  const standing = caught.maxHp - caught.hp;
+  assert.ok(standing > 0, 'a ring is one attack and it lands');
+
+  // Sentado, el factor de contacto de la silla se aplica al anillo: el 80% de
+  // reducción que la ficha promete no puede desaparecer contra el único enemigo
+  // que importa.
+  const seated = createRun(() => 0.5, 'negro');
+  seated.spawnIn = 100;
+  seated.shotIn = 100;
+  assert.equal(activateSpecial(seated, 'chair'), true);
+  const before = seated.player.hp;
+  ring(seated);
+  assert.ok(Math.abs((before - seated.player.hp) - standing * 0.2) < 1e-6,
+    'el sillón cobra el anillo al 20%, como el resto del daño');
+});
+
 test('Me Desaparezco also swallows the boss ring, not just bodies and bolts', () => {
   const ring = run => {
     const p = run.player;

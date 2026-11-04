@@ -81,7 +81,17 @@ export function activateSpecial(run, type) {
   if (run.phase !== 'playing' || (run.specialsLocked ?? 0) > 0) return false;
   const player = run.player;
   const spec = player.characterDef.specials.find(special => special.key === type);
-  if (!spec || player[`${type}Cooldown`] > 0) return false;
+  if (!spec) return false;
+  // A cancellable special is a seat, not a sentence: the same key ends the
+  // window early and the cooldown it already paid stays spent. The window keeps
+  // a sliver of time instead of dropping to zero, so the next step still sees
+  // it active and runs the special's own onExpire.
+  if (spec.cancellable && (player[type] ?? 0) > 0) {
+    player[type] = Math.min(player[type], Number.EPSILON);
+    emit('specialCancelled', { run, player, special: type });
+    return true;
+  }
+  if (player[`${type}Cooldown`] > 0) return false;
   player[type] = spec.duration + (player.rewardBonuses[spec.durationBonus] ?? 0);
   player[`${type}Cooldown`] = spec.cooldown;
   spec.onStart?.(run, player);
@@ -748,7 +758,7 @@ export function step(run, seconds, input = {}) {
     const gap = distance(wave, p);
     if (!wave.hit && p.immune <= 0 && !invulnerable(p) && gap + p.hitRadius >= before && gap - p.hitRadius <= wave.radius) {
       wave.hit = true;
-      p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)));
+      p.hp = Math.max(0, p.hp - wave.damage * (1 - Math.min(0.75, p.defense)) * contactFactor);
       p.hurtFlash = 0.3;
       p.immune = 0.65;
     }

@@ -24,7 +24,7 @@ export function game(previousRun = null) {
   const hotkeyOrder = 'qer';
   const abilityButtons = [...def.specials]
     .sort((a, b) => hotkeyOrder.indexOf(a.hotkey) - hotkeyOrder.indexOf(b.hotkey))
-    .map(special => `<button class="ability" data-special="${special.key}"><kbd>${special.hotkey.toUpperCase()}</kbd> <span>${special.name}</span></button>`)
+    .map(special => `<button class="ability" data-special="${special.key}"><b class="ability-timer" hidden></b><kbd>${special.hotkey.toUpperCase()}</kbd> <span>${special.name}</span></button>`)
     .join('');
   state.content.innerHTML = `
     <section class="game-screen">

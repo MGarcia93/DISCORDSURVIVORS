@@ -31,7 +31,13 @@ try {
   // may already have eaten it.
   await page.waitForFunction(() => /^00:\d\d$/.test(document.querySelector('#timer')?.textContent ?? ''));
   await page.keyboard.press('q');
-  await page.waitForFunction(() => document.querySelector('[data-special="chair"]')?.disabled);
+  // The chair is cancellable, so its control never greys out while seated: the
+  // countdown badge above it carries the remaining cooldown, not the name.
+  await page.waitForFunction(() => {
+    const button = document.querySelector('[data-special="chair"]');
+    return button?.classList.contains('seated')
+      && /\ds/.test(button.querySelector('.ability-timer')?.textContent ?? '');
+  });
   await page.keyboard.press('e');
   await page.waitForFunction(() => document.querySelector('[data-special="anime"]')?.disabled);
   await page.getByRole('button', { name: 'PAUSA', exact: false }).click();

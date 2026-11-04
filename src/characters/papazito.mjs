@@ -12,6 +12,11 @@ const percent = (stat, value) => ({ stat, operation: 'percent', value });
 // the way it owns every other name it prints.
 const SALE_LABELS = { attack: 'DAÑO', moveSpeed: 'VELOCIDAD', attackSpeed: 'VELOCIDAD DE ATAQUE', defense: 'DEFENSA' };
 
+// The merchant's stock: an item is gone once it was sold, and the ficha says so
+// to the HUD label and to the control itself, so the two never disagree.
+const hasStock = (special, p) =>
+  Object.keys(special.items ?? {}).some(key => !p.soldItems?.[key]);
+
 // Papazito — El Paraguayo Trucho. Stat sheet: percentual values over
 // BASE_STATS (src/stats.mjs) per context/personajes/papazito_el_paraguayo_trucho.md §3
 // and the playtesting balance so far. The selector card and the engine read this
@@ -188,8 +193,12 @@ const papazito = {
   // HUD relabel hook for the merchant special: an emptied chango is visible.
   specialHudLabel(special, p) {
     if (special.key !== 'sell') return special.name;
-    const items = special.items ?? {};
-    return Object.keys(items).some(key => !p.soldItems?.[key]) ? special.name : 'CHANGO VACÍO';
+    return hasStock(special, p) ? special.name : 'CHANGO VACÍO';
+  },
+  // A chango with nothing left is a closed shop: the control greys out instead
+  // of promising a menu the shell would refuse to open.
+  specialAvailable(special, p) {
+    return special.key !== 'sell' || hasStock(special, p);
   },
   // Especial «Liquido todo, me voy de putas» (ficha §4.3): invented inventory,
   // engine-routine sale; the app renders the pause menu from this exact table.

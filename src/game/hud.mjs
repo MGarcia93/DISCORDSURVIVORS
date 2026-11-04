@@ -57,9 +57,28 @@ export function updateHUD() {
   renderBuffs(p);
   for (const special of p.characterDef.specials) {
     const button = document.querySelector(`[data-special="${special.key}"]`);
-    const cooldown = p[`${special.key}Cooldown`];
-    button.disabled = cooldown > 0 || state.paused || state.sellMenuOpen || state.run.phase !== 'playing';
-    button.querySelector('span').textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s`
+    const cooldown = p[`${special.key}Cooldown`] ?? 0;
+    // A cancellable window stays tappable: the control that sat him down has to
+    // be the one that stands him up. A disabled button never fires a click, so
+    // leaving it greyed for the whole window locked touch out of the escape.
+    const seated = special.cancellable === true && (p[special.key] ?? 0) > 0.01;
+    // A sheet may close its own control: an empty merchant cart greys out the
+    // button instead of opening a menu with nothing in it.
+    const available = p.characterDef.specialAvailable?.(special, p) ?? true;
+    button.disabled = !available || (!seated && cooldown > 0)
+      || state.paused || state.sellMenuOpen || state.run.phase !== 'playing';
+    button.classList.toggle('seated', seated);
+    // The name never turns into a clock. A live, cancellable window swaps it for
+    // the way out — the only thing the same key can do while it runs — and the
+    // seconds left are a scrim over a control the player cannot use.
+    button.querySelector('span').textContent = seated
+      ? (special.cancelLabel ?? special.name)
       : (p.characterDef.specialHudLabel?.(special, p) ?? special.name);
+    const timer = button.querySelector('.ability-timer');
+    // The scrim only covers a control the player cannot use. While the window is
+    // still cancellable the button stays live, so a countdown over it would hide
+    // the very thing that stands him up.
+    timer.textContent = cooldown > 0 ? `${Math.ceil(cooldown)}s` : '';
+    timer.hidden = !(cooldown > 0) || seated;
   }
 }

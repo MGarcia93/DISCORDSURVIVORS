@@ -56,14 +56,22 @@ test('surviving a wave opens the shop and upgrades can stack', () => {
   assert.equal(run.duration, run.act.duration);
 });
 
-test('specials have cooldowns and the chair reduces movement', () => {
+test('specials have cooldowns, the chair reduces movement and the same key stands him up', () => {
   const run = createRun(() => 0.5);
   assert.equal(activateSpecial(run, 'chair'), true);
-  assert.equal(activateSpecial(run, 'chair'), false);
   const x = run.player.x;
   step(run, 0.05, { x: 1 });
   assert.ok(run.player.x - x < run.player.speed * 0.05);
+  // The chair is cancellable: the same key ends the window early, and the
+  // cooldown it already paid stays spent instead of becoming a free recast.
+  assert.equal(activateSpecial(run, 'chair'), true);
+  step(run, 0.05, {});
+  assert.equal(run.player.chair, 0);
+  assert.ok(run.player.chairCooldown > 0);
+  assert.equal(activateSpecial(run, 'chair'), false, 'a cancelled chair is not a refund');
+  // The waifu is not cancellable: it runs its whole window.
   assert.equal(activateSpecial(run, 'anime'), true);
+  assert.ok(run.player.anime > 0);
 });
 
 test('death is terminal and retry starts a clean run', () => {

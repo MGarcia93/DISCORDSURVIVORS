@@ -222,8 +222,10 @@ test('the sheet can relabel its ability HUD per state, so an empty change stays 
   const sell = def.specials.find(s => s.key === 'sell');
   assert.equal(typeof def.specialHudLabel, 'function');
   assert.equal(def.specialHudLabel(sell, run.player), 'Liquidó todo');
+  assert.equal(def.specialAvailable(sell, run.player), true, 'a full chango is an open shop');
   for (const key of ['psp', 'monitor', 'keyboard', 'chair', 'pc']) run.player.soldItems = { ...run.player.soldItems, [key]: true };
   assert.equal(def.specialHudLabel(sell, run.player), 'CHANGO VACÍO');
+  assert.equal(def.specialAvailable(sell, run.player), false, 'and an empty one cannot open a menu');
   const anamencua = def.specials.find(s => s.key === 'anamencua');
   assert.equal(def.specialHudLabel(anamencua, run.player), '¡ANAMENCUÁ!', 'other specials keep their own name');
 });
