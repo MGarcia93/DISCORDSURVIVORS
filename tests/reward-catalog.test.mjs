@@ -136,3 +136,47 @@ test('stat descriptions derive from the same signed numeric modifiers', () => {
   ] };
   assert.deepEqual(describeReward(reward), ['Ataque +10%', 'Defensa -1']);
 });
+
+test('an extra attack waits until level 14, except on its own guaranteed milestone', async () => {
+  const { DEFAULT_CATALOG } = await import('../src/reward-data.mjs');
+  const late = DEFAULT_CATALOG.upgrades.filter(entry => entry.lateLevel === 14).map(entry => entry.id);
+  assert.deepEqual(late.sort(), ['brick-fan', 'brick-pierce', 'brick-shards', 'definitive-edition',
+    'extra-shroom', 'only-one', 'otaku-pierce', 'other-console', 'remote-bounce', 'remote-chain'],
+  'the list is the extra attack and extra target signatures, never the melee ones');
+
+  // Ranks that satisfy the prerequisites without maxing the entry itself.
+  const ranksFor = entry => Object.fromEntries((entry.requires ?? []).map(requirement => [requirement.id, requirement.rank]));
+  const seen = (entry, level) => {
+    const found = new Set();
+    for (let step = 0; step < 200; step++) {
+      const random = () => (step + 1) / 201;
+      for (const option of selectLevelOptions(DEFAULT_CATALOG,
+        { character: entry.characters, level, ranks: ranksFor(entry), ownChance: 1 }, random)) found.add(option.id);
+    }
+    return found;
+  };
+
+  for (const id of late) {
+    const entry = DEFAULT_CATALOG.upgrades.find(candidate => candidate.id === id);
+    const atThirteen = seen(entry, 13);
+    assert.ok(!atThirteen.has(id), `${id} is not offered at level 13`);
+    if ((entry.guaranteedAt ?? []).includes(13)) continue;
+    assert.ok(seen(entry, 14).has(id), `${id} opens at level 14`);
+  }
+
+  // The promise survives the gate: a milestone still pays on its own level.
+  const milestone = (id, level) => {
+    const entry = DEFAULT_CATALOG.upgrades.find(candidate => candidate.id === id);
+    return seen(entry, level).has(id);
+  };
+  assert.equal(milestone('remote-bounce', 3), true, 'El Negro gets his bounce at level 3');
+  assert.equal(milestone('extra-shroom', 4), true, 'Warrior gets the extra mushroom at level 4');
+  assert.equal(milestone('brick-pierce', 3), true, 'Papazito gets the pierced brick at level 3');
+
+  // Melee signatures are untouched: Solago's second bite still shows up early.
+  const bite = DEFAULT_CATALOG.upgrades.find(entry => entry.id === 'second-bite');
+  assert.equal(bite.lateLevel, undefined, 'a melee signature is never gated');
+  // Level 4 is her guaranteed milestone (La Patrona's last cut owns that slot),
+  // so the check asks the next level where the pool is rolled again.
+  assert.ok(seen(bite, 5).has('second-bite'), 'and it is offered as soon as it is eligible');
+});

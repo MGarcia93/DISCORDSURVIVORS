@@ -7,10 +7,13 @@ import { statBlock } from './stat-block.mjs';
 // spent by the hits that land while she laughs, and what nobody uses is gone
 // when the smile ends.
 const SMILE_BLOCK = 40;
-// Every bite that lands a kill feeds her: without it a melee body cannot walk
-// through a six-wave act, let alone five of them. Two points, the same flat
-// mouthful Jhony gets, so no build can turn her kills into a heal.
-const BITE_HEAL = 2;
+// Sustain comes from her kit, never from farming a horde: the laugh pays back a
+// share of what it actually swallowed, and each ability hands something over the
+// moment it starts. Kills pay nothing.
+const SMILE_HEAL_SHARE = 0.25;
+const SMILE_HEAL_CAP = 10;
+const PERMISSION_HEAL = 3;
+const PATRONA_HEAL = 6;
 
 // How far the scissors cut, in world units, from Solago's body. It has to pass
 // the longest ranged reach (an archer parks at 231 px) or the ultimate leaves
@@ -71,10 +74,8 @@ const solago = {
   },
   attack: { type: 'melee' },
   decays: ['permissionActive'],
-  // The lightest of the six stats is the one a whole item dominates. Her bite is
-  // melee on purpose, so the ceiling sits just inside the shortest ranged
-  // enemy's reach: however the build stacks, a ranged body still shoots back.
-  statCaps: { attackDistance: 155 },
+  // No reach ceiling: the shelf is tuned low enough that no build turns her into
+  // artillery, so the stat core keeps every point the build earns.
   // The heaviest bite in the cast shoves what it hits: every bite buys a step
   // forward, so standing still is not a strategy with her.
   combat: { permissionDamageMult: 1.3, permissionRateMult: 0.72, knockback: 15 },
@@ -83,6 +84,8 @@ const solago = {
     p.smile = 0;
     p.smileBlock = 0;
     p.smileCooldown = 6;
+    p.smileHealed = 0;
+    p.shieldSeen = 0;
     p.taskKills = 0;
     p.permissionNeeded = 6;
     p.permissionActive = 0;
@@ -120,25 +123,44 @@ const solago = {
       // it leaves nothing behind. The engine owns the shield pool, so the ring,
       // a projectile and a punch all hit the same wall.
       tick(run, p, dt, ctx) {
+        // What the wall swallowed since the last tick comes back as health, a
+        // quarter of it and never more than the cap: the smile pays for being
+        // hit while it lasts, which is exactly her job.
+        const seen = p.shieldSeen ?? 0, now = p.shield ?? 0;
+        if (p.smile > 0 && now < seen) {
+          const room = SMILE_HEAL_CAP - (p.smileHealed ?? 0);
+          const heal = Math.min(room, Math.round((seen - now) * SMILE_HEAL_SHARE));
+          if (heal > 0) {
+            p.hp = Math.min(p.maxHp, p.hp + heal);
+            p.smileHealed = (p.smileHealed ?? 0) + heal;
+          }
+        }
         if (p.smile <= 0 && (p.smileBlock ?? 0) > 0) {
-          p.shield = Math.max(0, (p.shield ?? 0) - p.smileBlock);
+          p.shield = Math.max(0, now - p.smileBlock);
           p.smileBlock = 0;
         }
-        if (p.smileCooldown > 0 || p.smile > 0) return;
-        p.smile = 2.5 + (p.rewardBonuses.smileDuration ?? 0);
-        p.smileCooldown = Math.max(4, 10 - (p.rewardBonuses.smileCooldown ?? 0));
-        p.smileBlock = SMILE_BLOCK;
-        p.shield = (p.shield ?? 0) + SMILE_BLOCK;
-        run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: '¡JA!', ttl: 0.8, kind: 'smile' });
+        const beforeStart = p.smile > 0;
+        if (!beforeStart && p.smileCooldown <= 0) {
+          p.smile = 2.5 + (p.rewardBonuses.smileDuration ?? 0);
+          p.smileCooldown = Math.max(4, 10 - (p.rewardBonuses.smileCooldown ?? 0));
+          p.smileBlock = SMILE_BLOCK;
+          p.smileHealed = 0;
+          p.shield = (p.shield ?? 0) + SMILE_BLOCK;
+          run.effects.push({ x: p.x, y: p.y - 40 * WORLD_SCALE, text: '¡JA!', ttl: 0.8, kind: 'smile' });
+        }
+        // Baseline after every change this tick, so the end-of-smile refund is
+        // never mistaken for damage the wall blocked.
+        p.shieldSeen = p.shield ?? 0;
       },
     },
   ],
   onKill(run, p, enemy, ctx) {
     p.taskKills++;
-    p.hp = Math.min(p.maxHp, p.hp + BITE_HEAL);
     if (p.taskKills >= p.permissionNeeded) {
       p.taskKills = 0;
       p.permissionActive = 8;
+      // The permission is the reward: it hands back a mouthful when it starts.
+      p.hp = Math.min(p.maxHp, p.hp + PERMISSION_HEAL);
       run.effects.push({ x: p.x, y: p.y - 60 * WORLD_SCALE, text: '¡PERMISO!', ttl: 1.2, kind: 'permission' });
     }
   },
@@ -146,6 +168,8 @@ const solago = {
     {
       key: 'stand', name: 'La Patrona', hotkey: 'q', duration: 7, cooldown: 26, durationBonus: 'standDuration',
       buff: 'daño en área · inmune · no te podés mover',
+      // The woman covers her: arriving is worth a mouthful, leaving costs 15.
+      onStart(run, p) { p.hp = Math.min(p.maxHp, p.hp + PATRONA_HEAL); },
       immobilize: true,
       // She covers up and the woman fights: no bite of her own while the stand
       // is up. The engine reads this flag next to `immobilize`.

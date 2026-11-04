@@ -59,6 +59,9 @@ export function createCatalog(input, { characters = [], effects = {} } = {}) {
         fail(upgrade.id, 'guaranteedAt', 'expected an array of positive levels');
       }
     }
+    if (upgrade.lateLevel !== undefined && !positiveInteger(upgrade.lateLevel)) {
+      fail(upgrade.id, 'lateLevel', 'expected a positive level');
+    }
     if (!Array.isArray(upgrade.ranks) || !upgrade.ranks.length) fail(upgrade.id, 'ranks', 'expected at least one rank');
     for (const rank of upgrade.ranks) validateReward(upgrade.id, rank, effects);
     upgrade.requires ??= [];
@@ -128,9 +131,14 @@ function weightedEntry(entries, random) {
 
 export function selectLevelOptions(catalog, { character, level, ranks, ownChance = OWN_OFFER_CHANCE }, random) {
   const rankOf = id => Object.hasOwn(ranks, id) ? ranks[id] : 0;
+  // `lateLevel` keeps the upgrades that add a whole extra attack out of the pool
+  // until the run is deep enough. A level named in `guaranteedAt` is the one
+  // exception: the milestone still pays on its own level, gate or no gate.
+  const latePass = entry => level >= (entry.lateLevel ?? 0)
+    || (entry.guaranteedAt ?? []).includes(level);
   const eligible = catalog.upgrades.filter(entry =>
     (entry.characters === 'all' || entry.characters === character)
-    && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length
+    && level >= entry.minLevel && rankOf(entry.id) < entry.ranks.length && latePass(entry)
     && entry.requires.every(requirement => rankOf(requirement.id) >= requirement.rank));
   const own = eligible.filter(entry => entry.characters === character);
   const common = eligible.filter(entry => entry.characters === 'all');

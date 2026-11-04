@@ -34,6 +34,12 @@ function copyModifiers(source, modifiers) {
     const field = `modifiers[${index}]`;
     if (!modifier || !STAT_KEYS.includes(modifier.stat)) invalid(source, `${field}.stat`, 'unknown statistic');
     if (!['flat', 'percent'].includes(modifier.operation)) invalid(source, `${field}.operation`, 'unknown operation');
+    // Reach is the one statistic that never takes a percentage: a share of the
+    // sheet grows the long bodies into artillery and nothing caps it. Flat
+    // points are the only way to raise it.
+    if (modifier.stat === 'attackDistance' && modifier.operation === 'percent') {
+      invalid(source, `${field}.operation`, 'reach is flat points, never a percentage');
+    }
     if (!Number.isFinite(modifier.value)) invalid(source, `${field}.value`, 'expected a finite number');
     return Object.freeze({ stat: modifier.stat, operation: modifier.operation, value: modifier.value });
   }));
@@ -72,7 +78,10 @@ export function resolveStatState(state, changedSource = 'base') {
       percentages[stat] = Infinity;
       continue;
     }
-    const value = (base + flat[stat]) * (100 + percent[stat]) / 100;
+    // Percentages grow the base; flat points land on the result. A flat bonus
+    // never gets multiplied by the percentage pool, and a percentage never moves
+    // because someone added a flat item: each source speaks in its own unit.
+    const value = base * (100 + percent[stat]) / 100 + flat[stat];
     const positive = stat === 'life' || stat === 'attackSpeed';
     if (!Number.isFinite(value) || value < 0 || (positive && value === 0)) {
       invalid(changedSource, stat, `result must be ${positive ? 'positive' : 'nonnegative'} and finite`);

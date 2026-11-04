@@ -59,7 +59,8 @@ test('S2: item and level modifiers compose in any acquisition order', () => {
     run.pendingLevels = [2, 3]; run.levelChoices = null; beginRewards(run);
     while (run.pendingLevels.length) assert.equal(chooseLevelReward(run, run.levelChoices[0].id), true);
     if (!itemFirst) assert.equal(buyItem(run, 'flat2'), true);
-    assert.ok(Math.abs(run.player.damage - (base + 2) * 1.2) < 1e-9, `${run.player.damage}`);
+    // Percentages grow the base and the flat item lands on the result.
+    assert.ok(Math.abs(run.player.damage - (base * 1.2 + 2)) < 1e-9, `${run.player.damage}`);
     results.push(run.player.damage);
   }
   assert.equal(results[0], results[1]);
@@ -76,7 +77,8 @@ test('S2: a legacy purchase after an item keeps both sources', () => {
   assert.equal(startNextWave(run), true);
   endWave(run);
   assert.equal(buyItem(run, 'atk10'), true);
-  assert.ok(Math.abs(run.player.damage - 33.696) < 1e-9, `${run.player.damage}`);
+  // Second copy: the pool grows to +20% on the sheet, the legacy points stay.
+  assert.ok(Math.abs(run.player.damage - 33.048) < 1e-9, `${run.player.damage}`);
 });
 
 test('S4: exact XP examples; income and sales never award XP', () => {

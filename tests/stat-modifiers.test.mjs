@@ -12,7 +12,7 @@ const player = () => ({
   shotInterval: 1, attackRange: 100 * UNIT_PX, speed: 5 * UNIT_PX,
 });
 
-test('flat points precede summed percentages regardless of source acquisition order', () => {
+test('percentages grow the base and flat points land after them, in any acquisition order', () => {
   const p = player();
   const initial = createStatState(p);
   const sources = [
@@ -21,7 +21,7 @@ test('flat points precede summed percentages regardless of source acquisition or
     ['level:2', [modifier('attack', 'percent', 10)]],
   ];
   const build = entries => entries.reduce((state, [id, effects]) => withStatSource(state, id, effects), initial);
-  assert.equal(resolveStatState(build(sources)).damage, 14.4);
+  assert.equal(resolveStatState(build(sources)).damage, 14);
   assert.deepEqual(resolveStatState(build(sources)), resolveStatState(build(sources.toReversed())));
   assert.deepEqual(initial.sources, {});
   assert.equal(p.damage, 10);
@@ -74,7 +74,7 @@ test('replacing or removing a source recalculates without losing other sources',
   const item = withStatSource(initial, 'item', [modifier('attack', 'flat', 2)]);
   const level = withStatSource(item, 'level', [modifier('attack', 'percent', 10)]);
   const replaced = withStatSource(level, 'item', [modifier('attack', 'flat', 4)]);
-  assert.ok(Math.abs(resolveStatState(replaced).damage - 15.4) < 1e-12);
+  assert.ok(Math.abs(resolveStatState(replaced).damage - 15) < 1e-12);
   assert.equal(resolveStatState(withStatSource(replaced, 'item', null)).damage, 11);
   assert.equal(resolveStatState(item).damage, 12);
 });

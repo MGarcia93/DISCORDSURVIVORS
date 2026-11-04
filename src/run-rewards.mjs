@@ -220,19 +220,15 @@ export function recordLegacyUpgrade(run, before, source) {
     const percent = existing
       .filter(modifier => modifier.stat === stat && modifier.operation === 'percent')
       .reduce((sum, modifier) => sum + modifier.value, 0);
-    const points = run.statState.base[stat] + existing
+    const flats = existing
       .filter(modifier => modifier.stat === stat && modifier.operation === 'flat')
       .reduce((sum, modifier) => sum + modifier.value, 0);
-    const factor = 1 + percent / 100;
-    if (factor !== 0) {
-      modifiers.push({ stat, operation: 'flat', value: after[stat] / factor - points });
-    } else if (points !== 0) {
-      // A zero multiplier cannot be inverted with a point contribution.
-      modifiers.push({ stat, operation: 'percent', value: after[stat] * 100 / points });
-    } else {
-      modifiers.push({ stat, operation: 'flat', value: after[stat] });
-      modifiers.push({ stat, operation: 'percent', value: 100 });
-    }
+    // The inverse of the composition: percentages grow the base and flat points
+    // land on top, so the point contribution is what is left after the pool.
+    modifiers.push({
+      stat, operation: 'flat',
+      value: after[stat] - run.statState.base[stat] * (1 + percent / 100) - flats,
+    });
   }
   run.statState = withStatSource(run.statState, source, modifiers);
 }

@@ -70,9 +70,12 @@ const flat = (stat, value) => ({ stat, operation: 'flat', value });
 const percent = (stat, value) => ({ stat, operation: 'percent', value });
 
 export const ITEMS = [
-  { id: 'scissors', name: 'Tijera', price: 45, maxCopies: 3,
+  // The cheap flat hit. Two points is the same 7% the Zapatilla pays on the
+  // roster's average damage, and it costs less because flat damage never grows
+  // with the build: whoever buys it is buying the early game.
+  { id: 'scissors', name: 'Tijera', price: 30, maxCopies: 3,
     lore: 'Cuenta la leyenda que una asesina utilizó estas tijeras para apuñalar a alguien por la espalda. Algunos dicen que fue un accidente. Fuente: Solago.',
-    modifiers: [flat('attack', 1.5)] },
+    modifiers: [flat('attack', 2)] },
   { id: 'bleach', name: 'Lejía', price: 60, maxCopies: 3,
     lore: 'Dicen que cura cualquier enfermedad. El primero que lo comprobó no sobrevivió para confirmarlo.',
     modifiers: [flat('life', 10)] },
@@ -94,11 +97,37 @@ export const ITEMS = [
   { id: 'alcohol', name: 'Alcohol', price: 35, maxCopies: 2,
     lore: 'Te vuelve más agresivo e intolerante. También te hace tanto daño que terminás considerando volver al LoL. Y eso ya es tocar fondo.',
     modifiers: [percent('attack', 10), flat('defense', -0.6)] },
-  // The range assignment is confirmed: three chickens, +10% reach each, the
-  // same shape the other shelf items use.
+  // Reach is the one statistic that never takes a percentage: a share of the
+  // sheet grows the long bodies into artillery. Every source is flat points, the
+  // same reach on every ficha, and the value is small on purpose: it is what
+  // keeps the worst-case build inside the screen instead of a cap.
   { id: 'chicken', name: 'Gallina', price: 40, maxCopies: 3,
     lore: 'Cuenta la leyenda que alguien pasó horas cuidando de esta gallina, hasta que otro llegó y le pegó un saque. Por alguna razón, a Maxi Negro todavía le cuesta hablar del tema.',
-    modifiers: [percent('attackDistance', 10)] },
+    modifiers: [flat('attackDistance', 5)] },
+  // The peer-pressure shelf: the hardware and the purchases the Discord keeps
+  // bringing up. Each one buffs a stat; the four that tax another keep the
+  // trade-off shape Alcohol already uses.
+  { id: 'extra-monitor', name: 'Monitor innecesario', price: 45, maxCopies: 2,
+    lore: 'Cuatro monitores y una tele. Igual sigue preguntando quién entró al Discord.',
+    modifiers: [flat('attackDistance', 5)] },
+  { id: 'free-epic-game', name: 'Juego gratis de Epic', price: 60, maxCopies: 3,
+    lore: 'Canjealo que está gratis. No lo vas a instalar, no lo vas a jugar, pero por las dudas tenelo.',
+    modifiers: [flat('life', 10)] },
+  { id: 'broken-headset', name: 'Auricular roto', price: 60, maxCopies: 3,
+    lore: 'Cada vez que entra al Discord parece que está hablando desde una licuadora. Lo acomoda y se arregla. Comprate unos auriculares, hijo de puta.',
+    modifiers: [flat('defense', 0.6)] },
+  { id: 'steam-sale', name: 'Descuento de Steam', price: 40, maxCopies: 2,
+    lore: 'Estaba al 90% de descuento. No lo necesitabas, probablemente nunca lo juegues, pero mirá toda la plata que ahorraste.',
+    modifiers: [flat('attackSpeed', 0.07), percent('moveSpeed', -6)] },
+  { id: 'pokemon-card', name: 'Carta Pokémon', price: 35, maxCopies: 2,
+    lore: 'Pagó una fortuna por un pedazo de cartón con un Pikachu. No juega, no vende, no recupera la plata. Pero mirá qué linda carta.',
+    modifiers: [flat('defense', 0.6), flat('attackSpeed', -0.07)] },
+  { id: 'bad-internet', name: 'Internet de mierda', price: 35, maxCopies: 2,
+    lore: 'La señal llega a todos lados, menos a donde tiene que llegar. Si lo ves teletransportarse, no es una habilidad, es el ping.',
+    modifiers: [flat('attackDistance', 5), flat('attack', -1.5)] },
+  { id: 'broken-joystick', name: 'Joystick roto', price: 35, maxCopies: 2,
+    lore: 'Tiene tantos botones rotos que jugar al Brawlhalla ya es un desafío de supervivencia. Igual insiste en que todavía sirve.',
+    modifiers: [flat('attackSpeed', 0.07), percent('attack', -7)] },
 ];
 
 // Effect execution is wired at integration; this registry owns validation,
@@ -232,10 +261,22 @@ const PAPAFRITA_UPGRADES = [
   ranks: [1, 2, 3].map(() => ({ effects: [{ type, value: 1 }] })),
 }));
 
-export const LEVEL_UPGRADES = [
+// Upgrades that add a whole extra attack or target: a bounce, a pierce, an
+// extra projectile, a second copy, a companion. The campaign does not roll them
+// before level 14, so the first acts stay about the six statistics instead of
+// about a screen-clearing build. A guaranteed milestone still lands on its own
+// level; a milestone is a promise, not a roll.
+const LATE_UPGRADES = new Set([
+  'remote-bounce', 'remote-chain', 'otaku-pierce',
+  'brick-pierce', 'brick-shards', 'brick-fan',
+  'extra-shroom',
+  'other-console', 'only-one', 'definitive-edition',
+]);
+
+const LEVEL_UPGRADE_BASE = [
   ...[
     ['life', 'Más vida', flat('life', 14)], ['defense', 'Más defensa', flat('defense', 0.7)],
-    ['attack', 'Más ataque', percent('attack', 7)], ['attackDistance', 'Más alcance', percent('attackDistance', 12)],
+    ['attack', 'Más ataque', percent('attack', 7)], ['attackDistance', 'Más alcance', flat('attackDistance', 5)],
     ['attackSpeed', 'Más cadencia', flat('attackSpeed', 0.07)], ['moveSpeed', 'Más velocidad', percent('moveSpeed', 6)],
   ].map(([id, name, modifier]) => ({
     id: `stat-${id}`, name, characters: 'all', minLevel: 2, requires: [],
@@ -264,13 +305,12 @@ export const LEVEL_UPGRADES = [
     ranks: Array.from({ length: 2 }, () => ({ effects: [{ type, value }] })),
   })),
   // The jackpot of her own pool: the mouth grows and the bite stops being melee.
-  // Three ranks, each one a bigger mouth: 114 px, 137 px, 160 px. Long enough to
-  // pick a body off, never long enough to outrange it — her reach has a ceiling
-  // (statCaps in the ficha) and this ladder stays under it. It is a jackpot, so
-  // it is the rarest offer in her pool, not the most common one.
+  // Flat, like every reach source: +8 points a rank, the same reach any ficha
+  // gains. It is a jackpot, so it is the rarest offer in her pool, not the most
+  // common one.
   { id: 'paleta-growth', name: 'Crecimiento de paleta', characters: 'solago',
     minLevel: 3, chance: 0.15, requires: [],
-    ranks: Array.from({ length: 3 }, () => ({ modifiers: [percent('attackDistance', 25)] })) },
+    ranks: Array.from({ length: 3 }, () => ({ modifiers: [flat('attackDistance', 5)] })) },
   ...[
     ['second-bite', 'Doble paleta', 'solago', 'secondBite', 0.5, 0.6],
     ['bite-push', 'Mordida que empuja', 'solago', 'knockback', 25, 0.5],
@@ -310,6 +350,9 @@ export const LEVEL_UPGRADES = [
   ...JHONY_UPGRADES,
   ...PAPAFRITA_UPGRADES,
 ];
+
+export const LEVEL_UPGRADES = LEVEL_UPGRADE_BASE.map(entry =>
+  LATE_UPGRADES.has(entry.id) ? { ...entry, lateLevel: 14 } : entry);
 
 // Milestone levels: at these levels the entry is forced into the selection,
 // independently of its chance. Everything else is rolled.

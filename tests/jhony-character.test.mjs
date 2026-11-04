@@ -60,11 +60,12 @@ test('receiving damage fills the Tilt bar and 100 snaps into Furia', () => {
   const run = solo();
   const p = run.player;
   p.characterDef.onDamaged(run, p, 20);
-  assert.equal(p.tilt, 30, 'damage feeds the bar');
+  assert.equal(p.tilt, 16, 'damage feeds the bar');
   assert.equal(p.fury, 0);
 
-  p.tilt = 99;
-  p.characterDef.onDamaged(run, p, 1);
+  // The bar is 25 s of pressure; a hit takes 0,2 s off per point of damage.
+  p.tilt = 95;
+  p.characterDef.onDamaged(run, p, 10);
   assert.equal(p.fury, 6, 'Furia starts at 100');
   assert.equal(p.tilt, 0, 'and the bar restarts from zero');
   assert.ok(run.effects.some(effect => effect.text === '¡ME TIENEN LOS HUEVOS LLENOS!'));
@@ -83,7 +84,7 @@ test('the horde alone fills the bar, so taking hits is not the only way in', () 
 
   dummy(run, 60);
   for (let i = 0; i < 20; i++) p.characterDef.onTick(run, p, 0.05);
-  assert.ok(p.tilt > 8 && p.tilt < 10, `pressure fills the bar (${p.tilt})`);
+  assert.ok(p.tilt > 3.9 && p.tilt < 4.1, `one second of pressure is 1/25 of the bar (${p.tilt})`);
 });
 
 test('Furia trades defence for +40% damage and +25% attack speed', () => {
@@ -118,7 +119,7 @@ test('«Un traguito más» quickens the botellazos and amplifies the Tilt gain',
   p.drink = 5;
   p.tilt = 0;
   p.characterDef.onDamaged(run, p, 20);
-  assert.equal(p.tilt, 48, '30 points of Tilt become 48 while the whisky lasts');
+  assert.ok(Math.abs(p.tilt - 25.6) < 1e-9, `16 points of Tilt become 25,6 while the whisky lasts (${p.tilt})`);
 });
 
 test('«ME VI UNA GUÍA» throws bouncing bottles for ten seconds', () => {
@@ -197,8 +198,8 @@ test('«¡ERA UN CÍRCULO!» clears the area when Furia starts, and the evolutio
   const ctx = toolbox(run);
   const near = dummy(run, 80, 200);
   p.rewardBonuses = { tiltWave: 1 };
-  p.tilt = 99;
-  p.characterDef.onDamaged(run, p, 1, ctx);
+  p.tilt = 95;
+  p.characterDef.onDamaged(run, p, 10, ctx);
   assert.equal(p.fury, 6);
   assert.ok(near.hp < 200, 'the wave hits everything around him');
   assert.ok(near.x > p.x + 80, 'and shoves it away');
@@ -209,8 +210,8 @@ test('«¡ERA UN CÍRCULO!» clears the area when Furia starts, and the evolutio
   const ectx = toolbox(evolved);
   const crowd = dummy(evolved, 70, 400);
   ep.rewardBonuses = { tiltWave: 2 };
-  ep.tilt = 99;
-  ep.characterDef.onDamaged(evolved, ep, 1, ectx);
+  ep.tilt = 95;
+  ep.characterDef.onDamaged(evolved, ep, 10, ectx);
   assert.ok(evolved.effects.some(effect => effect.kind === 'tiltZone'), 'the evolved circle stays');
   const before = crowd.hp;
   ep.characterDef.onTick(evolved, ep, 0.5, ectx);
@@ -388,17 +389,26 @@ test('standing still, the shout turns to the enemy instead of a fixed heading', 
   assert.ok(left.hp < 300, 'the cone follows the body at his left');
 });
 
-test('a kill heals a flat mouthful, the same rule as Solago, never a share of the pool', () => {
-  const kills = (pool) => {
+test('the bottle pays three points every three swings, whatever the pool', () => {
+  const swings = (pool) => {
     const run = createRun(() => 0.5, 'jhony');
     run.spawnIn = 100;
-    run.player.maxHp = pool;
-    run.player.hp = pool - 40;
-    dummy(run, 40, 1);
-    for (let frame = 0; frame < 240 && run.enemies.length; frame++) step(run, 1 / 60, {});
-    assert.equal(run.enemies.length, 0, 'the bottle lands');
-    return run.player.hp - (pool - 40);
+    const p = run.player;
+    p.maxHp = pool;
+    p.hp = pool - 40;
+    const enemy = dummy(run, 40, 500);
+    const swing = () => p.characterDef.onMeleeHit(run, p, enemy, {});
+    const healed = [];
+    for (let swingNumber = 1; swingNumber <= 6; swingNumber++) {
+      const before = p.hp;
+      swing();
+      healed.push(p.hp - before);
+    }
+    return healed;
   };
-  assert.equal(kills(110), 2, 'one kill, two points, whatever the pool');
-  assert.equal(kills(400), 2, 'a big pool never turns a kill into a bigger heal');
+  assert.deepEqual(swings(110), [0, 0, 3, 0, 0, 3], 'every third swing, three points');
+  assert.deepEqual(swings(400), [0, 0, 3, 0, 0, 3], 'a big pool never turns one into more');
+  // Kills no longer pay anything: the heal is tied to the swing.
+  const run = createRun(() => 0.5, 'jhony');
+  assert.equal(run.player.characterDef.onKill, undefined, 'no heal on kill any more');
 });

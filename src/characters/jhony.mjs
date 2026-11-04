@@ -6,9 +6,15 @@ import { statBlock } from './stat-block.mjs';
 // «TILT» (§4.2): a 0..100 bar. Damage taken and the pressure of the horde fill
 // it; at 100 he snaps into Furia for six seconds and the bar restarts from
 // zero. Receiving hits feeds it, but standing under the horde must be enough.
+// A full bar is twenty-five seconds of pressure alone, and every hit takes time
+// off it: the horde builds it, the damage shortens it. At the first rate the bar
+// closed in eleven seconds and Furia was up a third of every wave, which is what
+// made the burst heal feel free.
 const TILT_MAX = 100;
-const TILT_PER_DAMAGE = 1.5;
-const TILT_PRESSURE = 9;        // points per second with the horde on top
+const TILT_FILL_SECONDS = 25;
+const TILT_PRESSURE = TILT_MAX / TILT_FILL_SECONDS;  // 4 points per second
+const TILT_SECONDS_PER_DAMAGE = 0.2;                 // each hit takes this much off
+const TILT_PER_DAMAGE = TILT_PRESSURE * TILT_SECONDS_PER_DAMAGE;
 const PRESSURE_RADIUS = 170;    // scaled px around him
 const FURY_SECONDS = 6;
 const FURY_DAMAGE = 1.4;        // +40% ataque
@@ -34,9 +40,11 @@ const STOMP_EXECUTE = 0.35;     // only finishes enemies below this share of hp
 const BOTTLE_EVERY = 4;         // «UNA BIRRA MÁS» swings between throws
 const BOTTLE_RANGE = 300;
 const SHARD_COUNT = 1;          // «BOTELLA ROTA»: one shard, more when evolved
-// Sustain: one flat mouthful per kill, the same rule as Solago's bite. Never a
-// share of the pool, which would grow every kill into a full heal.
-const KILL_HEAL = 2;
+// Sustain: the bottle pays every few swings, not every kill. Tying the heal to
+// kills made a horde a health fountain; tying it to the swing makes it the price
+// of standing at contact range. Flat points, never a share of the pool.
+const SIP_EVERY = 3;            // swings between mouthfuls
+const SIP_HEAL = 3;             // points each mouthful gives back
 
 // Every ficha-owned hit scales with the same multipliers the engine applies to
 // the basic attack, so an ability never lags behind the sheet.
@@ -276,18 +284,13 @@ const jhony = {
       },
     },
   ],
-  // Sustain on kill: one flat mouthful, exactly like Solago's bite. A flat
-  // number never grows with the health pool, so a big build cannot turn every
-  // kill into a full heal.
-  onKill(run, p) {
-    p.hp = Math.min(p.maxHp, p.hp + KILL_HEAL);
-  },
   initPlayer(p) {
     p.tilt = 0;
     p.fury = 0;
     p.shoutIn = SHOUT_EVERY;
     p.stompIn = STOMP_EVERY;
     p.bottleSwings = 0;
+    p.bottleHits = 0;
   },
   // The tilt bar and its Furia window are the character's readout.
   taskHudTitle: 'TILT',
@@ -339,6 +342,13 @@ const jhony = {
   // The botellazo's follow-ups: glass past the target and, every few swings,
   // one more bottle thrown at whoever is nearby.
   onMeleeHit(run, p, enemy, ctx) {
+    // Every few swings the bottle pours a mouthful back, whether or not the
+    // swing killed anything.
+    p.bottleHits = (p.bottleHits ?? 0) + 1;
+    if (p.bottleHits >= SIP_EVERY) {
+      p.bottleHits = 0;
+      p.hp = Math.min(p.maxHp, p.hp + SIP_HEAL);
+    }
     if ((p.rewardBonuses.bottleShards ?? 0) > 0) glassShards(run, p, enemy, p.rewardBonuses.bottleShards);
     const extra = p.rewardBonuses.extraBottle ?? 0;
     if (extra > 0) {

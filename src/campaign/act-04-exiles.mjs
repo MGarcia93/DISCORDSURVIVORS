@@ -24,6 +24,16 @@ export default {
   narrative: 'acts/act-04/manifest.json',
   miniboss: { wave: 5, kind: 'lotusAlchemist', name: 'EL ALQUIMISTA DEL LOTO' },
   boss: { wave: 6, kind: 'taskmaster', name: 'EL CAPATAZ DE LA RUEDA DEL DOLOR' },
+  // The Conan raiders were the softest stop of the campaign: a developed build
+  // could stand through a wave. Their sheets still speak, and this act brings
+  // the four common kinds one notch harder — one or two points on the 20-24
+  // they already hit for, so the early acts keep their pacing.
+  statMultipliers: {
+    barbarian: { attack: 1.08 },
+    slaver: { attack: 1.08 },
+    archer: { attack: 1.08 },
+    alchemist: { attack: 1.08 },
+  },
   waves: [
     { wave: 1, perMinute: 54, mix: { barbarian: 1 } },
     {

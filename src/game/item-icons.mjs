@@ -87,6 +87,70 @@ const DRAWINGS = {
     r(10, 24, 2, 4, C.orange); r(17, 24, 2, 4, C.orange);
     r(6, 13, 4, 4, C.cream);
   },
+  // The peer-pressure shelf: two screens, a free case, a snapped headset, a
+  // discount tag, a trading card, a router and a gamepad with a crack.
+  'extra-monitor'(r) {
+    r(3, 7, 12, 9, C.outline); r(4, 8, 10, 7, C.blue);
+    r(15, 6, 14, 11, C.outline); r(16, 7, 12, 9, C.blueDark);
+    r(18, 9, 4, 2, C.white);
+    r(17, 17, 10, 2, C.steelDark); r(21, 19, 2, 4, C.steelDark);
+    r(16, 23, 12, 2, C.steel);
+    r(5, 16, 8, 2, C.steelDark); r(8, 18, 2, 3, C.steelDark);
+  },
+  'free-epic-game'(r) {
+    r(8, 6, 16, 20, C.steelDark);
+    r(9, 7, 14, 18, C.blueDark);
+    r(12, 12, 8, 8, C.white);
+    r(13, 13, 6, 6, C.blue);
+    r(10, 23, 12, 2, C.steel);
+    r(19, 4, 9, 9, C.yellow);
+    r(21, 6, 5, 5, C.orange);
+  },
+  'broken-headset'(r) {
+    r(8, 7, 16, 3, C.steelDark);
+    r(11, 9, 2, 4, C.steel);
+    r(18, 9, 2, 4, C.steel);
+    r(5, 12, 6, 11, C.steelDark); r(6, 13, 4, 9, C.blue);
+    r(21, 12, 6, 11, C.steelDark); r(22, 13, 4, 9, C.blueDark);
+    r(16, 14, 3, 2, C.red);
+    r(14, 10, 2, 3, C.outline);
+  },
+  'steam-sale'(r) {
+    r(5, 5, 14, 14, C.blue);
+    r(6, 6, 12, 2, C.blueDark);
+    r(8, 8, 4, 4, C.white);
+    r(9, 9, 2, 2, C.outline);
+    r(13, 14, 2, 2, C.white); r(17, 10, 2, 2, C.white);
+    r(15, 11, 2, 2, C.white); r(15, 10, 2, 1, C.white);
+    r(18, 16, 2, 2, C.blueDark);
+    r(18, 20, 9, 3, C.yellow);
+    r(18, 17, 6, 3, C.yellow);
+  },
+  'pokemon-card'(r) {
+    r(9, 4, 14, 23, C.outline);
+    r(10, 5, 12, 21, C.cream);
+    r(11, 7, 10, 9, C.blue);
+    r(14, 8, 3, 6, C.yellow);
+    r(16, 8, 2, 3, C.yellow);
+    r(14, 12, 5, 2, C.yellow);
+    r(11, 18, 10, 2, C.brownDark);
+    r(11, 21, 7, 2, C.brownDark);
+  },
+  'bad-internet'(r) {
+    r(8, 16, 16, 8, C.steelDark);
+    r(9, 17, 14, 3, C.steel);
+    r(11, 21, 2, 2, C.green); r(15, 21, 2, 2, C.orange);
+    r(9, 5, 2, 11, C.outline); r(21, 5, 2, 11, C.outline);
+    r(12, 9, 3, 2, C.orange); r(16, 7, 3, 2, C.orange); r(18, 11, 2, 2, C.red);
+  },
+  'broken-joystick'(r) {
+    r(5, 12, 22, 10, C.steelDark);
+    r(6, 13, 20, 8, C.steel);
+    r(8, 16, 5, 2, C.steelDark); r(9, 15, 3, 4, C.steelDark);
+    r(15, 16, 3, 3, C.blue);
+    r(20, 14, 3, 3, C.red); r(24, 16, 3, 3, C.yellow);
+    r(13, 7, 2, 6, C.outline); r(15, 8, 4, 2, C.outline);
+  },
 };
 
 const FALLBACK = r => {

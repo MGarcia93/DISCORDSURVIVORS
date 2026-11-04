@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WORLD_SCALE, createRun, step, activateSpecial } from '../src/engine.mjs';
 import { UNIT_PX } from '../src/stats.mjs';
-import { createStatState, resolveStatState, withStatSource, applyStatState } from '../src/stat-modifiers.mjs';
+import { createStatState, resolveStatState, withStatSource } from '../src/stat-modifiers.mjs';
 import { enemyAttackRange } from '../src/enemies/index.mjs';
 
 test('Solago is the tanky melee: more health and defense than the baseline, a little faster, and no projectiles', () => {
@@ -89,15 +89,24 @@ test('Sonrisa blindada blocks the hit instead of raising her defense', () => {
   assert.equal(p.hp, p.maxHp);
 });
 
-test('every kill feeds her a mouthful, never past her ceiling', () => {
+test('the smile pays back a quarter of what it blocks, capped per cycle', () => {
   const run = createRun(() => 0.5, 'solago');
   const p = run.player;
-  p.hp = 50;
-  p.characterDef.onKill(run, p, {}, {});
-  assert.equal(p.hp, 52, 'a bite that lands a kill gives 2 back');
-  p.hp = p.maxHp - 1;
-  p.characterDef.onKill(run, p, {}, {});
-  assert.equal(p.hp, p.maxHp);
+  const smile = p.characterDef.passives.find(passive => passive.key === 'smile');
+  p.smile = 2.5; p.smileBlock = 40; p.shield = 40; p.shieldSeen = 40; p.smileHealed = 0;
+  p.hp = 100;
+  // 20 blocked points: a quarter is 5 back.
+  p.shield = 20; smile.tick(run, p, 0.016);
+  assert.equal(p.hp, 105);
+  // The rest of the block keeps paying until the cap of 10.
+  p.shield = 0; smile.tick(run, p, 0.016);
+  assert.equal(p.hp, 110, 'the cycle never pays more than ten');
+  p.shield = 0; smile.tick(run, p, 0.016);
+  assert.equal(p.hp, 110, 'and it stays capped');
+  // No smile, no healing: the block only pays while the laugh lasts.
+  p.smile = 0; p.hp = 100; p.shieldSeen = 40; p.shield = 20;
+  smile.tick(run, p, 0.016);
+  assert.equal(p.hp, 100, 'damage taken outside the smile is just damage');
 });
 
 test('six chore-task kills trigger a temporary damage and attack-speed buff', () => {
@@ -114,22 +123,16 @@ test('six chore-task kills trigger a temporary damage and attack-speed buff', ()
   assert.ok(p.permissionNeeded > 0);
 });
 
-test('the range build never outranges a ranged enemy: her reach has a ceiling', () => {
+test('she has no reach ceiling: flat points land in full and percentages are refused', () => {
   const run = createRun(() => 0.5, 'solago');
-  const p = run.player;
-  const stacked = withStatSource(createStatState(p), 'probe',
-    [{ stat: 'attackDistance', operation: 'percent', value: 500 }]);
-  applyStatState(p, stacked);
-  assert.ok(p.attackRange <= 155 * UNIT_PX + 1e-9, 'the stack cannot push her past her ceiling');
-  assert.ok(p.attackRange < enemyAttackRange('alchemist'), 'the shortest ranged enemy still reaches her');
-  assert.ok(p.attackRange < enemyAttackRange('archer'), 'and so does the longest one');
-
-  // A character that declares no ceiling keeps the whole stack: this is hers,
-  // not a global rule.
-  const negro = createRun(() => 0.5, 'negro');
-  const wide = resolveStatState(withStatSource(createStatState(negro.player), 'probe',
-    [{ stat: 'attackDistance', operation: 'percent', value: 10 }]));
-  assert.ok(wide.attackRange > negro.player.attackRange, 'El Negro still grows with the same item');
+  const base = run.player.attackRange;
+  const stacked = flat => resolveStatState(withStatSource(
+    createStatState(run.player), 'probe', [{ stat: 'attackDistance', operation: 'flat', value: flat }])).attackRange;
+  assert.ok(Math.abs(stacked(10) - (base + 10 * UNIT_PX)) < 1e-9, 'flat points land in full');
+  assert.ok(Math.abs(stacked(100) - (base + 100 * UNIT_PX)) < 1e-9, 'and nothing clamps them');
+  assert.throws(() => withStatSource(createStatState(run.player), 'probe',
+    [{ stat: 'attackDistance', operation: 'percent', value: 10 }]), /never a percentage/,
+  'reach takes flat points only');
 });
 
 test('the woman covers her: Solago never bites while La Patrona is on stage', () => {
@@ -231,13 +234,17 @@ test('La Patrona holds Solago still, deals area damage, and nicks him when she l
   assert.equal(activateSpecial(run, 'anime'), false);
 });
 
-test('her bite heals a flat two points per kill, the same mouthful as Jhony', () => {
+test('kills pay nothing; Permiso and La Patrona pay when they start', () => {
   const run = createRun(() => 0.5, 'solago');
-  run.spawnIn = 100;
-  run.player.hp = 40;
   const p = run.player;
-  run.enemies.push({ id: 1, x: p.x + p.attackRange - 4, y: p.y, hp: 1, maxHp: 1, speed: 0, radius: 10, kind: 'zombie' });
-  for (let frame = 0; frame < 240 && run.enemies.length; frame++) step(run, 1 / 60, {});
-  assert.equal(run.enemies.length, 0, 'the bite lands');
-  assert.equal(p.hp, 42, 'two points, not a share of her pool');
+  p.hp = 40;
+  p.characterDef.onKill(run, p, {}, {});
+  assert.equal(p.hp, 40, 'a kill is not a heal any more');
+  for (let kill = 1; kill < 6; kill++) p.characterDef.onKill(run, p, {}, {});
+  assert.equal(p.permissionActive, 8, 'the sixth kill hands over the permission');
+  assert.equal(p.hp, 43, 'and the permission pays three back when it starts');
+
+  p.hp = 40;
+  assert.equal(activateSpecial(run, 'stand'), true);
+  assert.equal(p.hp, 46, 'La Patrona covers her for six on arrival');
 });

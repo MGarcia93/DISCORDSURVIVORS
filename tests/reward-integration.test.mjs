@@ -116,6 +116,9 @@ test('legacy exported stat purchases compose with new level and item sources', (
   assert.equal(chooseUpgrade(run, 'damage'), true);
   assert.ok(Math.abs(run.player.damage - base * ranked * 1.3) < 1e-9);
   const beforeItem = run.player.damage;
+  // The shelf roll depends on how many items exist, so this case asks for the
+  // copy it is about instead of hoping the sample brings it.
+  run.shopOffers = [{ id: 'slipper', bought: false }];
   assert.equal(buyItem(run, 'slipper'), true);
   // The item's percentage stacks with the level rank instead of multiplying it.
   assert.ok(run.player.damage > beforeItem, 'the item adds on top of both');

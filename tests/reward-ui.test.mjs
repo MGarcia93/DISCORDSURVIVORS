@@ -216,3 +216,10 @@ test('valid catalog IDs matching object properties render and acquire their firs
   assert.equal(run.levelRanks.constructor, 1);
   assert.equal(run.player.damage, 23.76);
 });
+
+test('every shelf item has its own portrait instead of the fallback crate', async () => {
+  const { DEFAULT_CATALOG } = await import('../src/reward-data.mjs');
+  for (const item of DEFAULT_CATALOG.items) {
+    assert.ok(ILLUSTRATED_ITEMS.includes(item.id), `${item.id} needs its own drawing`);
+  }
+});
