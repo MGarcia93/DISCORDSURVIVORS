@@ -245,7 +245,7 @@ test('«AHORA SÍ COMPLETÉ LA BUILD» shoots several directions and drops an ex
   assert.ok(run.monologue, 'the ultimate drops an extra bubble');
 });
 
-test('the HUD reads the collection, and Act 5 is the unlock', () => {
+test('the HUD reads the collection, and his own epilogue is the unlock', () => {
   const run = solo();
   const p = run.player;
   own(run, 'and-what-else', 'fishing');
@@ -253,10 +253,12 @@ test('the HUD reads the collection, and Act 5 is the unlock', () => {
   assert.deepEqual(p.characterDef.taskHud(p), { percentage: 2 / 6 * 100, label: '2/6 tipos', active: false });
   p.collected = 6;
   assert.equal(p.characterDef.taskHud(p).label, '¡COLECCIÓN COMPLETA!');
-  assert.equal(CHARACTERS.papafrita.unlock.scene, 'act-05-final');
+  assert.equal(CHARACTERS.papafrita.unlock.scene, 'act-06-final');
   const store = value => ({ getItem: () => value, setItem: () => {} });
   assert.equal(isCharacterUnlocked('papafrita', store(null)), false);
-  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 2, seenScenes: ['act-05-final'] }))), true);
+  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 2, seenScenes: ['act-06-final'] }))), true);
+  assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 2, seenScenes: ['act-05-final'] }))), false,
+    'finishing Act 5 is not the unlock');
   assert.equal(isCharacterUnlocked('papafrita', store(JSON.stringify({ version: 2, seenScenes: ['act-05-administrator'] }))), false,
     'the Administrator monologue is not the unlock');
 });

@@ -151,10 +151,11 @@ const SHEET = {
 const papafrita = {
   id: 'papafrita',
   name: 'PAPAFRITA',
-  gameNote: 'COLECCIONISTA · ONDAS DE VOZ · SE DESBLOQUEA AL TERMINAR EL ACTO 5',
-  // "Condición de acceso: completar Acto 5" and the epilogue script's reward
-  // line both point here. The Administrator's monologue is NOT the unlock.
-  unlock: { flag: 'papafritaUnlocked', scene: 'act-05-final' },
+  gameNote: 'COLECCIONISTA · ONDAS DE VOZ · SE DESBLOQUEA AL TERMINAR SU EPÍLOGO',
+  // The unlock is the last scene of his own epilogue, the one that prints
+  // "PAPAFRITA DESBLOQUEADO". Finishing Act 5 is NOT the unlock, and neither is
+  // the Administrator's monologue.
+  unlock: { flag: 'papafritaUnlocked', scene: 'act-06-final' },
   label: 'Papafrita',
   detailLabel: 'Papafrita',
   previewAria: 'Pixel art de Papafrita: remera negra, bermuda de jean claro, colita y barba corta, lanzando una onda de voz',
@@ -168,7 +169,7 @@ const papafrita = {
       <div class="skill"><kbd>Q</kbd><div><b>AHORA SÍ COMPLETÉ LA BUILD</b><p>Seis segundos de ondas en varias direcciones, globos extra y sus mejoras potenciadas: escala con lo que juntó, nunca regala lo que no tiene. Recarga: 30 segundos.</p></div></div>
       <div class="skill"><kbd>E</kbd><div><b>MONÓLOGO INTERMINABLE</b><p>Tres ondas de voz que se abren desde él y golpean una vez a todo lo que atraviesan. Las tres juntas se llevan a un runner con la hoja base, y escalan con el ataque. Recarga: 18 segundos.</p></div></div>`,
   unlockNote: {
-    locked: 'PAPAFRITA · BLOQUEADO · TERMINÁ EL ACTO 5',
+    locked: 'PAPAFRITA · BLOQUEADO · EPÍLOGO DEL ACTO 6',
     unlocked: 'PAPAFRITA DESBLOQUEADO · DISPONIBLE PARA JUGAR',
   },
   deathLine: 'Y... me salió pesca.',

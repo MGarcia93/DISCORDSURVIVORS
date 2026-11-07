@@ -16,7 +16,7 @@ const encounters = [
 // way through Act 1: he only comes back to Discord when his own epilogue ends,
 // so his note is the last one a save reads.
 const encounterOrder = [...encounters,
-  { scene: 'act-05-final', character: 'papafrita' },
+  { scene: 'act-06-final', character: 'papafrita' },
   { scene: 'act-07-credits', character: 'jhony' }];
 const fetcher = async url => ({ ok: true, json: async () => JSON.parse(await readFile(url, 'utf8')) });
 function memoryStorage(initial = null) {
@@ -92,6 +92,28 @@ test('the last scene of his own epilogue is what makes Jhony selectable', async 
   playToTheEnd(director);
   assert.equal(director.player.scene.id, 'act-07-credits', 'his epilogue closes with the post-credits');
   assert.equal(isCharacterUnlocked('jhony', store), true);
+});
+
+test('finishing Act 5 does not unlock Papafrita; his own epilogue does', async () => {
+  const act5 = PLAYABLE_ACTS.find(act => act.id === 'act-05');
+  const catalog5 = await loadCatalog({ urls: [manifestURL, actManifestURL(act5)], fetcher });
+  const store = memoryStorage();
+  const director5 = new WaveDirector(catalog5, { seen: sceneSeenStore(store) });
+  director5.attach({ act: act5, character: 'negro', phase: 'won', wave: 6, time: 0 });
+  director5.observe();
+  playToTheEnd(director5);
+  assert.equal(director5.player.scene.id, 'act-05-final', 'the campaign still ends with the final scene');
+  assert.equal(isCharacterUnlocked('papafrita', store), false, 'the campaign ending is not the unlock');
+
+  const act6 = PLAYABLE_ACTS.find(act => act.id === 'act-06');
+  const catalog6 = await loadCatalog({ urls: [manifestURL, actManifestURL(act6)], fetcher });
+  const director6 = new WaveDirector(catalog6, { seen: sceneSeenStore(store) });
+  director6.attach({ act: act6, character: 'negro', phase: 'won', wave: 6, time: 0 });
+  assert.equal(isCharacterUnlocked('papafrita', store), false, 'not before his epilogue ends');
+  director6.observe();
+  playToTheEnd(director6);
+  assert.equal(director6.player.scene.id, 'act-06-credits', 'his epilogue closes with the post-credits');
+  assert.equal(isCharacterUnlocked('papafrita', store), true);
 });
 
 test('victories no longer unlock the next played-character successor', () => {
